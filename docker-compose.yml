@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:16.0-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    volumes:
+      - ./docker-data/postgres:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.6
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_LISTEN_PORT: 80
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    ports:
+        - "7502:80"
+    networks:
+      - backend
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak
+    environment:
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: "8080"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+    command:
+      - start-dev
+#      - --log-level=DEBUG
+    volumes:
+      - ./docker-data/keycloak:/opt/keycloak/data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pgadmin_data:
