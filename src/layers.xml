@@ -13,7 +13,7 @@
             <include>*:*:*SNAPSHOT</include>
         </into>
         <into layer="internal-dependencies">
-            <include>com.finaxys.*:*</include>
+            <include>com.lsadf.*:*</include>
         </into>
         <into layer="dependencies" />
     </dependencies>
