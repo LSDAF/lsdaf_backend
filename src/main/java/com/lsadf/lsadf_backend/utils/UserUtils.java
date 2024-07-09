@@ -4,6 +4,9 @@ import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import lombok.experimental.UtilityClass;
 
+/**
+ * Utility class for User instantiation
+ */
 @UtilityClass
 public class UserUtils {
     public static User createUserFromEntity(UserEntity userEntity) {

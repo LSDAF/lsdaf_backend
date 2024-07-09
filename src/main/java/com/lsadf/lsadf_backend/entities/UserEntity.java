@@ -9,6 +9,9 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * User Entity
+ */
 @Data
 @Entity(name = EntityAttributes.User.USER_ENTITY)
 @Table(name = EntityAttributes.User.USER_ENTITY)

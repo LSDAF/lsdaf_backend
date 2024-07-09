@@ -8,6 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementation of UserService
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Import;
 
 import java.net.UnknownHostException;
 
+/**
+ * Main class for the application
+ */
 @SpringBootApplication
 @Import(LsadfBackendConfiguration.class)
 @Slf4j

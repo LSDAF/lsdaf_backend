@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Properties for configuring Swagger
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

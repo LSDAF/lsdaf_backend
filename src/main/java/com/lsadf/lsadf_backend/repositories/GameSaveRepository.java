@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository class for BankAccountEntity
+ * Repository class for GameSaveEntity
  */
 @Repository
 public interface GameSaveRepository extends CrudRepository<GameSaveEntity, String> {

@@ -9,6 +9,9 @@ import com.lsadf.lsadf_backend.services.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for the services.
+ */
 @Configuration
 public class ServiceConfiguration {
 

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Properties for configuring CORS
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -3,6 +3,9 @@ package com.lsadf.lsadf_backend.constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Constant class containing all property names for JSON transfer objects
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonAttributes {
     public static final String ID = "id";

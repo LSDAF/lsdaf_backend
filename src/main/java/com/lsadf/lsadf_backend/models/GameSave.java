@@ -15,6 +15,9 @@ import java.util.Date;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 
+/**
+ * Game Save DTO
+ */
 @Data
 @RequiredArgsConstructor
 @Schema(name = "GameSave", description = "Game Save Object")

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
+ * Controller for game save operations
  */
 @RequestMapping(value = ControllerConstants.GAME_SAVE)
 @Tag(name = ControllerConstants.Swagger.GAME_SAVE_CONTROLLER)

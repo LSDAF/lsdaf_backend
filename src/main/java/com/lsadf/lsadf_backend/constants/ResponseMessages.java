@@ -3,6 +3,9 @@ package com.lsadf.lsadf_backend.constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Constant class containing all response messages for the application
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResponseMessages {
     public static final String OK = "OK";

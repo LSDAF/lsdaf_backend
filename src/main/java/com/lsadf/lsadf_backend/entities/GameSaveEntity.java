@@ -4,6 +4,9 @@ import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Game Save Entity to persist data of a game save
+ */
 @Data
 @Entity(name = EntityAttributes.GameSave.GAME_SAVE_ENTITY)
 @Table(name = EntityAttributes.GameSave.GAME_SAVE_ENTITY)

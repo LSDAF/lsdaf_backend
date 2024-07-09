@@ -6,6 +6,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+/**
+ * Configuration class for the .env properties resolver.
+ */
 @Configuration
 public class EnvPropertiesResolverConfiguration {
     private static final String ENV_FILE = ".env";

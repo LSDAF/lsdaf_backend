@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+/**
+ * Implementation of the GameSaveController.
+ */
 @RestController
 @Slf4j
 public class GameSaveControllerImpl implements GameSaveController {

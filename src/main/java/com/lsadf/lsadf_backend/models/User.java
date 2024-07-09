@@ -14,6 +14,9 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.EMAIL;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.NAME;
 
+/**
+ * User DTO
+ */
 @Builder
 @Data
 @AllArgsConstructor

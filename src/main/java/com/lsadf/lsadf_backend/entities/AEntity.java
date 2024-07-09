@@ -13,7 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 /**
- * Abstact class for all database entities of KeyHab
+ * Abstract class for all database entities of Backend
  */
 @MappedSuperclass
 @AllArgsConstructor
