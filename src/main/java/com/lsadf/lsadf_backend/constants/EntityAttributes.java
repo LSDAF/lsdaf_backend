@@ -16,23 +16,15 @@ public final class EntityAttributes {
 
     // GAME SAVE
     public static class GameSave {
-        public static final String GAME_SAVE_ENTITY = "game_save";
+        public static final String GAME_SAVE_ENTITY = "t_game_save";
         public static final String GAME_SAVE_ID = "game_save_id";
         public static final String GAME_SAVE_USER_ID = "game_save_user_id";
         public static final String GAME_SAVE_BANK_ACCOUNT_ID = "game_save_game_state";
     }
 
-    // BANK ACCOUNT
-    public static class BankAccount {
-        public static final String BANK_ACCOUNT_ENTITY = "bank_account";
-        public static final String BANK_ACCOUNT_ID = "bank_account_id";
-        public static final String BANK_ACCOUNT_USER_ID = "bank_account_id";
-        public static final String BANK_ACCOUNT_BALANCE = "bank_account_balance";
-    }
-
     // USER
     public static class User {
-        public static final String USER_ENTITY = "user";
+        public static final String USER_ENTITY = "t_user";
         public static final String USER_ID = "user_id";
         public static final String USER_NAME = "user_name";
         public static final String USER_EMAIL = "user_email";
