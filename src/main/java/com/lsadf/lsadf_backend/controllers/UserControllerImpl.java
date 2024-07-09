@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.services.UserServiceImpl;
+import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class UserControllerImpl implements UserController {
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userServiceImpl;
 
-    public UserControllerImpl(UserServiceImpl userServiceImpl) {
+    public UserControllerImpl(UserService userServiceImpl) {
         this.userServiceImpl = userServiceImpl;
     }
 }

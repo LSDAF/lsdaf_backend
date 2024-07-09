@@ -25,7 +25,8 @@ public interface GameSaveController {
 
     /**
      * Generates a new game, returns the generated game save
-     * @return
+     *
+     * @return the generated game save
      */
     @PostMapping(value = ControllerConstants.GameSave.GENERATE)
     @Operation(summary = "Generates a new game, returns the generated game save")
@@ -39,8 +40,8 @@ public interface GameSaveController {
 
     /**
      * Gets a save game by its id
-     * @param id
-     * @return
+     * @param id the id of the game save
+     * @return the game save
      */
     @GetMapping(value = ControllerConstants.GameSave.GAME_SAVE_ID)
     @Operation(summary = "Gets a save game by its id")
@@ -55,8 +56,8 @@ public interface GameSaveController {
 
     /**
      * Updates a game in function of its id
-     * @param id
-     * @param save
+     * @param gameSaveId the id of the game save
+     * @param save       the game save to update
      * @return
      */
     @PostMapping(value = ControllerConstants.GameSave.GAME_SAVE_ID)

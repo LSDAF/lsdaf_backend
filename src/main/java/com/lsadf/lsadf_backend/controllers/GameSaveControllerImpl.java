@@ -45,9 +45,8 @@ public class GameSaveControllerImpl implements GameSaveController {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@org.hibernate.validator.constraints.UUID @PathVariable(value = GAME_SAVE_ID) String id) {
+    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@PathVariable(value = GAME_SAVE_ID) String id) {
         try {
-            String userId = UUID.randomUUID().toString();
 
             GameSave gameSave = gameSaveService.getGameSave(id);
 
