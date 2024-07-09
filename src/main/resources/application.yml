@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: LSADF Backend
+
+swagger:
+  contact:
+    name: Louis SANTUCCI
+    email: louissantucci1998@gmail.com
+    url: https://www.example.com
+  title: Example API
+  description: Example API Description
+  version: 1.0.0
