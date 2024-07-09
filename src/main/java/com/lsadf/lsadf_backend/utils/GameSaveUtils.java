@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.entity.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.entity.UserEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
