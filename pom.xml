@@ -43,8 +43,8 @@
         <zonky-embedded-postgres.version>2.0.7</zonky-embedded-postgres.version>
         <azure-okhttp.version>1.11.18</azure-okhttp.version>
         <springdoc-openapi.version>1.7.0</springdoc-openapi.version>
-        <start-class>com.lsdaf.lsadf_backend.LsadfBackendApplication</start-class>
-        <delombok.output>${project.build.directory}/generated-sources/delombok</delombok.output>
+        <start-class>com.lsadf.lsadf_backend.LsadfBackendApplication</start-class>
+        <delombok.output>${project.build.directory}/delombok</delombok.output>
     </properties>
 
     <build>
