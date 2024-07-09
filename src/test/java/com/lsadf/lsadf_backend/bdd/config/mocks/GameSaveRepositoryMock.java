@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks;
 
-import com.lsadf.lsadf_backend.models.entity.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.entity.UserEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 
 import java.util.Date;
 import java.util.UUID;

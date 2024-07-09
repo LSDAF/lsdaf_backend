@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.entity.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.entity.UserEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.GameSaveService;

@@ -1,8 +1,9 @@
 package com.lsadf.lsadf_backend.bdd;
 
+import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.entity.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.GameSaveService;
@@ -63,10 +64,21 @@ public class BddThenStepDefinitions extends BddLoader {
         });
     }
 
+    @Then("^I should have no game save entries in DB$")
+    public void i_should_have_no_game_save_entries_in_db() {
+        assertThat(gameSaveRepository.count()).isEqualTo(0);
+    }
+
     @Then("^I should throw a NotFoundException$")
-    public void i_should_throw_a_specific_exception() {
+    public void i_should_throw_a_not_found_exception() {
         Exception exception = exceptionStack.peek();
         assertThat(exception).isInstanceOf(NotFoundException.class);
+    }
+
+    @Then("^I should throw a ForbiddenException$")
+    public void i_should_throw_a_forbidden_exception() {
+        Exception exception = exceptionStack.peek();
+        assertThat(exception).isInstanceOf(ForbiddenException.class);
     }
 
 

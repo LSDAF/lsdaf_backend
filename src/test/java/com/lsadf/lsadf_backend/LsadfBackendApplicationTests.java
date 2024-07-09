@@ -1,4 +1,4 @@
-package com.lsdaf.lsadf_backend;
+package com.lsadf.lsadf_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
