@@ -1,0 +1,8 @@
+swagger:
+  contact:
+    name: John Doe
+    email: john.doe@example.com
+    url: https://www.example.com
+  title: Example API
+  description: Example API Description
+  version: 1.0.0

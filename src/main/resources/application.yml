@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+
+spring:
+  application:
+    name: LSADF Backend
+  banner:
+    location: classpath:lsadf_banner.txt
+  jpa:
+    show-sql: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    database-platform: ${DB_PLATFORM}
+
+db:
+  url: ${DB_URL}
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+
+swagger:
+  contact:
+    name: ${SWAGGER_CONTACT_NAME}
+    email: ${SWAGGER_CONTACT_EMAIL}
+    url: ${SWAGGER_CONTACT_URL}
+  title: ${SWAGGER_TITLE}
+  description: ${SWAGGER_DESCRIPTION}
+  version: ${SWAGGER_VERSION}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+logging:
+  file:
+    path: classpath:logback.xml
