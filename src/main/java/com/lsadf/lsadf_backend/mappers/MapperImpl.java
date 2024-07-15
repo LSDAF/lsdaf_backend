@@ -12,7 +12,7 @@ public class MapperImpl implements Mapper {
     @Override
     public GameSave mapToGameSave(GameSaveEntity gameSaveEntity) {
         return GameSave.builder()
-                .userId(gameSaveEntity.getUser().getId())
+                .id(gameSaveEntity.getUser().getId())
                 .gold(gameSaveEntity.getGold())
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())

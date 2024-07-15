@@ -2,15 +2,16 @@ package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.utils.GameSaveUtils;
+import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
-import com.lsadf.lsadf_backend.utils.UserUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -18,18 +19,18 @@ import java.util.Objects;
  * Implementation of GameSaveService
  */
 @Slf4j
+@RequiredArgsConstructor
 public class GameSaveServiceImpl implements GameSaveService {
     private final UserRepository userRepository;
     private final GameSaveRepository gameSaveRepository;
+    private final Mapper mapper;
 
 
-    public GameSaveServiceImpl(UserRepository userRepository,
-                               GameSaveRepository gameSaveRepository) {
-        this.userRepository = userRepository;
-        this.gameSaveRepository = gameSaveRepository;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @Transactional
     public GameSave createGameSave(String userEmail) throws NotFoundException {
         log.info("Creating new save for user {}", userEmail);
         UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail).orElseThrow(NotFoundException::new);
@@ -40,17 +41,24 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .build();
 
         GameSaveEntity newGameSaveEntity = gameSaveRepository.save(gameSaveEntity);
-        User user = UserUtils.createUserFromEntity(userEntity);
 
-        return GameSaveUtils.createGameSaveFromEntity(newGameSaveEntity, user);
+        return mapper.mapToGameSave(newGameSaveEntity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @Transactional(readOnly = true)
     public GameSave getGameSave(String saveId) throws ForbiddenException, NotFoundException {
         return getGameSave(saveId, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @Transactional(readOnly = true)
     public GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
         log.info("Getting save by id: {}", saveId);
         GameSaveEntity gameSave = gameSaveRepository.findById(saveId)
@@ -58,13 +66,16 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         validateGameSaveOwnership(gameSave, userEmail);
 
-        return GameSaveUtils.createGameSaveFromEntity(gameSave, UserUtils.createUserFromEntity(gameSave.getUser()));
+        return mapper.mapToGameSave(gameSave);
+
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @Transactional
     public GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException {
-
-        User currentUser = newSaveGame.getUser();
 
         // Assert userEmail is the same as the game user id
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
@@ -76,10 +87,14 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         GameSaveEntity updatedGameSaveEntity = updateGameSaveEntity(currentGameSave, newSaveGame);
 
-        return GameSaveUtils.createGameSaveFromEntity(updatedGameSaveEntity, currentUser);
+        return mapper.mapToGameSave(updatedGameSaveEntity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @Transactional
     public void deleteGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
 
         // Assert userEmail is the same as the game user id

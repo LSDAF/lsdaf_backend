@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<UserEntity, String> {
     Optional<UserEntity> findUserEntityByEmail(String email);
     void deleteUserEntityByEmail(String email);
+    boolean existsByEmail(String email);
 }

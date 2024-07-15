@@ -14,7 +14,7 @@ public interface UserDetailsService extends org.springframework.security.core.us
     LocalUser loadUserById(String id);
 
     /**
-     *
+     * Loads a user by email
      */
     LocalUser loadUserByEmail(String email);
 }

@@ -4,6 +4,8 @@ import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
+
 /**
  * Game Save Entity to persist data of a game save
  */
@@ -15,6 +17,11 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class GameSaveEntity extends AEntity {
+
+    @Serial
+    private static final long serialVersionUID = 7786624859103259009L;
+
+
     protected GameSaveEntity() {
         super();
     }

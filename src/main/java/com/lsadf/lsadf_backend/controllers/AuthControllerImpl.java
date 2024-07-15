@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
@@ -68,8 +67,7 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userCreationRequest) {
         try {
             Optional<Set<UserRole>> roles = Optional.of(Sets.newHashSet(UserRole.getDefaultRole()));
-            SocialProvider socialProvider = SocialProvider.getDefaultSocialProvider();
-            UserEntity userEntity = userService.createUser(userCreationRequest.getName(), userCreationRequest.getEmail(), userCreationRequest.getPassword(), socialProvider, roles);
+            UserEntity userEntity = userService.createUser(userCreationRequest.getName(), userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles);
             UserInfo userInfo = userService.buildUserInfoFromUserEntity(userEntity);
 
             return ResponseUtils.generateResponse(HttpStatus.OK, "User registered successfully", userInfo);

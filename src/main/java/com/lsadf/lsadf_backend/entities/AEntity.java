@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -20,7 +22,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public abstract class AEntity {
+public abstract class AEntity implements Serializable {
+
     private static final String UUID_HIBERNATE_GENERATOR = "uuid-hibernate-generator";
     private static final String UUID_GENERATOR_STRATEGY = "org.hibernate.id.UUIDGenerator";
 
