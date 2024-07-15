@@ -35,3 +35,5 @@ build/
 src/**/.env
 
 docker-data/
+
+**/env.properties
