@@ -38,7 +38,7 @@
         <maven-javadoc.version>3.7.0</maven-javadoc.version>
         <postgresql.version>42.7.3</postgresql.version>
         <swagger.version>2.5.0</swagger.version>
-        <jjwt.version>0.9.1</jjwt.version>
+        <jjwt.version>0.11.5</jjwt.version>
         <zonky.version>2.5.0</zonky.version>
         <zonky-embedded-postgres.version>2.0.7</zonky-embedded-postgres.version>
         <azure-okhttp.version>1.11.18</azure-okhttp.version>
@@ -146,8 +146,8 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>${project.basedir}/env/.env</sourceFile>
-                            <destinationFile>${project.basedir}/src/main/resources/.env</destinationFile>
+                            <sourceFile>env/env.properties</sourceFile>
+                            <destinationFile>src/main/resources/env.properties</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -162,7 +162,7 @@
                         <fileset>
                             <directory>${project.basedir}/src/main/resources</directory>
                             <includes>
-                                <include>.env</include>
+                                <include>env.properties</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -188,6 +188,20 @@
         </dependency>
 
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -195,9 +209,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -235,7 +253,7 @@
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <artifactId>jjwt-api</artifactId>
             <version>${jjwt.version}</version>
         </dependency>
 
@@ -286,7 +304,14 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
