@@ -20,8 +20,9 @@ public class ServiceConfiguration {
 
     @Bean
     public UserService userService(final UserRepository userRepository,
-                                   final PasswordEncoder passwordEncoder) {
-        return new UserServiceImpl(userRepository, passwordEncoder);
+                                   final PasswordEncoder passwordEncoder,
+                                   final Mapper mapper) {
+        return new UserServiceImpl(userRepository, passwordEncoder, mapper);
     }
 
     @Bean
