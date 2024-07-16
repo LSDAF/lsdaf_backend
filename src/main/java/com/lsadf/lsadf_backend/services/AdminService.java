@@ -3,6 +3,9 @@ package com.lsadf.lsadf_backend.services;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.requests.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 
 import java.util.List;
@@ -38,10 +41,10 @@ public interface AdminService {
     /**
      * Creates a new user
      *
-     * @param user the user to create
+     * @param creationRequest the user to create
      * @return
      */
-    User createUser(User user);
+    User createUser(UserCreationRequest creationRequest);
 
     /**
      * Updates a user
@@ -88,10 +91,10 @@ public interface AdminService {
     /**
      * Creates a new game save
      *
-     * @param userEmail the email of the user
+     * @param adminGameSaveCreationRequest the game save request
      * @return the created game save
      */
-    GameSave createGameSave(String userEmail);
+    GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest);
 
     /**
      * Searches users

@@ -5,8 +5,9 @@ import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.requests.SortingOrderParameter;
+import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
 import com.lsadf.lsadf_backend.requests.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -172,8 +173,8 @@ public interface AdminController {
     ResponseEntity<GenericResponse<GameSave>> updateGameSave(String gameSaveId, GameSave gameSave);
 
     /**
-     * Deletes a game save
-     *
+     * Creates a game save
+     * @param creationRequest the creation request
      * @return the deleted game save
      */
     @ApiResponses(value = {
@@ -183,7 +184,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Generates a new game save")
-    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame();
+    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(AdminGameSaveCreationRequest creationRequest);
 
     /**
      * Searches for users in function of the given search criteria
