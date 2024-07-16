@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16.0-alpine
+    platform: linux/amd64
     profiles:
       - db
       - backend
@@ -19,6 +20,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8.6
+    platform: linux/amd64
     container_name: pgadmin
     profiles:
       - db
@@ -36,6 +38,7 @@ services:
       - backend
 
   lsadf_backend:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
