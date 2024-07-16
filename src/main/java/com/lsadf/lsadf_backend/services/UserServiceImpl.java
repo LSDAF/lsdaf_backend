@@ -4,6 +4,8 @@ import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.OAuth2AuthenticationProcessingException;
+import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
@@ -31,14 +33,19 @@ import java.util.stream.Collectors;
  * Implementation of UserService
  */
 @Slf4j
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private static final String CHANGEIT = "changeit";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Mapper mapper;
 
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Mapper mapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
+    }
 
     /**
      * {@inheritDoc}
@@ -217,4 +224,18 @@ public class UserServiceImpl implements UserService {
         return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<GameSave> getUserGameSaves(String userEmail) {
+        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User with email " + userEmail + " not found"));
+
+
+        return userEntity.getGameSaves().stream()
+                .map(mapper::mapToGameSave)
+                .toList();
+    }
 }
