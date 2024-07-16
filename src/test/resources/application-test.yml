@@ -7,6 +7,10 @@ swagger:
   description: Example API Description
   version: 1.0.0
 
+db:
+  init:
+    enabled: false
+    users:
 
 cors:
   allowed-origins:
