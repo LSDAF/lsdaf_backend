@@ -109,7 +109,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.finaxys.keyhab.KeyhabApiApplication</mainClass>
+                    <mainClass>com.lsadf.lsadf_backend.LsadfBackendApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
