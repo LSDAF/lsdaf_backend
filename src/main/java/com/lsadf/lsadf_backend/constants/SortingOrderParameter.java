@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.requests;
+package com.lsadf.lsadf_backend.constants;
 
 public enum SortingOrderParameter {
     ASCENDING,

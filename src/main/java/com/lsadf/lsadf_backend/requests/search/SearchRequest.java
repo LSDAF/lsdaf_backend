@@ -11,4 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchRequest {
     private List<FilterRequest> filters;
+    private List<OrderByRequest> orderByList;
 }
