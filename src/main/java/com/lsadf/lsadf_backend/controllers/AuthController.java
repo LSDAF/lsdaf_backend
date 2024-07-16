@@ -30,8 +30,6 @@ public interface AuthController {
     @PostMapping(value = ControllerConstants.Auth.LOGIN)
     @Operation(summary = "Logins a user, returns a JWT object contaning the token to request the API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
@@ -45,8 +43,6 @@ public interface AuthController {
     @PostMapping(value = ControllerConstants.Auth.REGISTER)
     @Operation(summary = "Registers a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })

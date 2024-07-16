@@ -46,23 +46,6 @@ public class GameSaveControllerImpl implements GameSaveController {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@PathVariable(value = GAME_SAVE_ID) String id) {
-        try {
-
-            GameSave gameSave = gameSaveService.getGameSave(id);
-
-            return ResponseUtils.generateResponse(HttpStatus.OK, "", gameSave);
-
-        } catch (Exception e) {
-            log.error("Exception {} while saving game: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting game save.", e.getMessage());
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ResponseEntity<GenericResponse<Void>> saveGame(@org.hibernate.validator.constraints.UUID @PathVariable(value = GAME_SAVE_ID) String id,
                                                           GameSave save) {
         try {

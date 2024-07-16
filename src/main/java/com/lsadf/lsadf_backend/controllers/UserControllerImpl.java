@@ -2,9 +2,12 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -23,9 +26,11 @@ import java.util.List;
 @Slf4j
 public class UserControllerImpl implements UserController {
     private final UserService userService;
+    private final Mapper mapper;
 
-    public UserControllerImpl(UserService userService) {
+    public UserControllerImpl(UserService userService, Mapper mapper) {
         this.userService = userService;
+        this.mapper = mapper;
     }
 
 
@@ -53,7 +58,8 @@ public class UserControllerImpl implements UserController {
             return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized. Didn't manage to build User info from token. Please login", null);
         }
 
-        List<GameSave> gameSaves = userService.getUserGameSaves(localUser.getEmail());
+        UserEntity user = userService.getUserByEmail(localUser.getEmail());
+        List<GameSave> gameSaves = user.getGameSaves().stream().map(mapper::mapToGameSave).toList();
 
         return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaves);
     }

@@ -39,22 +39,6 @@ public interface GameSaveController {
     ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame();
 
     /**
-     * Gets a save game by its id
-     * @param id the id of the game save
-     * @return the game save
-     */
-    @GetMapping(value = ControllerConstants.GameSave.GAME_SAVE_ID)
-    @Operation(summary = "Gets a save game by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
-            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
-            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
-            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
-    })
-    ResponseEntity<GenericResponse<GameSave>> getGameSave(@PathVariable(value = GAME_SAVE_ID) String id);
-
-    /**
      * Updates a game in function of its id
      * @param gameSaveId the id of the game save
      * @param save       the game save to update

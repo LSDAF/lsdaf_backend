@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterRequest {
-    private String filterType;
-    private String filterValue;
+    private String type;
+    private String value;
 }

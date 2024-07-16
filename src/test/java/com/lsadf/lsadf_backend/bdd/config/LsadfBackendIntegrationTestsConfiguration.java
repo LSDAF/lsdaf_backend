@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
+import java.util.List;
 import java.util.Stack;
 
 import static org.mockito.Mockito.mock;
@@ -21,7 +23,12 @@ import static org.mockito.Mockito.mock;
 public class LsadfBackendIntegrationTestsConfiguration {
 
     @Bean
-    public Stack<GameSave> gameSaveStack() {
+    public Stack<List<GameSave>> gameSaveStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<List<User>> userListStack() {
         return new Stack<>();
     }
 

@@ -48,4 +48,5 @@ public class ServiceConfiguration {
     public Mapper mapper() {
         return new MapperImpl();
     }
+
 }

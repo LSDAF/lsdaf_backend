@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,13 +24,14 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Schema(name = "GameSave", description = "Game Save Object")
 @Builder
 @AllArgsConstructor
+@JsonPropertyOrder({ID, USER_ID, GOLD, HP, ATTACK, CREATED_AT, UPDATED_AT})
 public class GameSave {
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private final String id;
 
-    @JsonIgnore
-    private final User user;
+    @JsonProperty(value = USER_ID)
+    private final String userId;
 
     @JsonProperty(value = GOLD)
     @Schema(description = "Gold amount", example = "260000")
