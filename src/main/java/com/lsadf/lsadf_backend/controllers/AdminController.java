@@ -1,11 +1,11 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.requests.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
 import com.lsadf.lsadf_backend.requests.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
@@ -25,11 +25,7 @@ import java.util.List;
 @Tag(name = ControllerConstants.Swagger.ADMIN_CONTROLLER)
 public interface AdminController {
 
-    String BEGIN_DATE_QUERY_PARAM = "begin_date";
-    String END_DATE_QUERY_PARAM = "end_date";
-    String STATUS_QUERY_PARAM = "status";
-    String TYPE_QUERY_PARAM = "type";
-    String SORTING_ORDER_QUERY_PARAM = "sort";
+    String ORDER_BY_QUERY_PARAM = "order_by";
     String USER_ID_QUERY_PARAM = "user_id";
 
     /**
@@ -60,7 +56,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets all users")
-    ResponseEntity<GenericResponse<List<User>>> getUsers(@RequestParam(value = SORTING_ORDER_QUERY_PARAM, required = false) SortingOrderParameter updateTimeSorting);
+    ResponseEntity<GenericResponse<List<User>>> getUsers(@RequestParam(value = ORDER_BY_QUERY_PARAM, required = false) GameSaveOrderBy orderBy);
 
     /**
      * Gets a user by its id
@@ -75,7 +71,22 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a user by its id")
-    ResponseEntity<GenericResponse<User>> getUser(String userId);
+    ResponseEntity<GenericResponse<User>> getUserById(String userId);
+
+    /**
+     * Gets a user by its email
+     *
+     * @param userEmail the email of the user
+     * @return the user
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Gets a user by its email")
+    ResponseEntity<GenericResponse<User>> getUserByEmail(String userEmail);
 
     /**
      * Updates a user
@@ -128,7 +139,7 @@ public interface AdminController {
     /**
      * Gets all game saves with given criterias
      *
-     * @param updateTimeSorting the sorting order
+     * @param orderBy the sorting order if any
      * @return the game saves
      */
     @ApiResponses(value = {
@@ -138,7 +149,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a save game by its id")
-    ResponseEntity<GenericResponse<GameSave>> getSaveGames(@RequestParam(value = SORTING_ORDER_QUERY_PARAM, required = false) SortingOrderParameter updateTimeSorting,
+    ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@RequestParam(value = ORDER_BY_QUERY_PARAM, required = false) GameSaveOrderBy orderBy,
                                                            @RequestParam(value = USER_ID_QUERY_PARAM, required = false) String userId);
 
     /**
