@@ -3,9 +3,13 @@ package com.lsadf.lsadf_backend.bdd;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.services.AdminService;
 import com.lsadf.lsadf_backend.services.GameSaveService;
+import com.lsadf.lsadf_backend.services.UserDetailsService;
+import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import com.lsadf.lsadf_backend.utils.MockUtils;
 import io.cucumber.datatable.DataTable;
@@ -21,12 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j(topic = "[GIVEN STEP DEFINITIONS]")
 public class BddGivenStepDefinitions extends BddLoader {
 
-    public BddGivenStepDefinitions(UserRepository userRepository,
-                                   GameSaveRepository gameSaveRepository,
-                                   GameSaveService gameSaveService,
-                                   Stack<GameSave> gameSaveStack,
-                                   Stack<Exception> exceptionStack) {
-        super(userRepository, gameSaveRepository, gameSaveService, gameSaveStack, exceptionStack);
+    public BddGivenStepDefinitions(UserRepository userRepository, GameSaveRepository gameSaveRepository, GameSaveService gameSaveService, Stack<List<GameSave>> gameSaveListStack, Stack<List<User>> userListStack, Stack<Exception> exceptionStack, UserService userService, UserDetailsService userDetailsService, AdminService adminService) {
+        super(userRepository, gameSaveRepository, gameSaveService, gameSaveListStack, userListStack, exceptionStack, userService, userDetailsService, adminService);
     }
 
     @Given("^the BDD engine is ready$")

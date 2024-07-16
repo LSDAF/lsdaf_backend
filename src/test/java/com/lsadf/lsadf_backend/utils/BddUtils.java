@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
@@ -41,6 +42,20 @@ public class BddUtils {
         gameSaveEntity.setId(id);
 
         return gameSaveEntity;
+    }
+
+    public static User mapToUser(Map<String, String> row, UserRepository userRepository) throws NotFoundException {
+        String id = row.get(BddFieldConstants.User.ID);
+        String email = row.get(BddFieldConstants.User.EMAIL);
+        String name = row.get(BddFieldConstants.User.NAME);
+
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(NotFoundException::new);
+
+        return User.builder()
+                .id(id)
+                .email(email)
+                .name(name)
+                .build();
     }
 
     /**
