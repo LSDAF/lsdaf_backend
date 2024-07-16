@@ -26,6 +26,7 @@ public final class ControllerConstants {
     public static final class Admin {
         public static final String GLOBAL_INFO = "/global_info";
         public static final String GAME_SAVE_ID = "/{game_save_id}";
+        public static final String USER_GAME_SAVES = "/{user_id}/game_saves";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,6 +43,7 @@ public final class ControllerConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String INFO = "/info";
+        public static final String USER_ME = "/me";
+        public static final String USER_ME_GAME_SAVES = "/me/game_saves";
     }
 }

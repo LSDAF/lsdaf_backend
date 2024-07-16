@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.controllers;
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Implementation of the User Controller
@@ -37,5 +40,21 @@ public class UserControllerImpl implements UserController {
         }
         UserInfo userInfo = userService.buildUserInfoFromLocalUser(localUser);
         return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user info", userInfo);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@CurrentUser LocalUser localUser) throws UnauthorizedException {
+        if (localUser == null) {
+            log.error("Didn't manage to build UserInfo from token. Please login");
+            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized. Didn't manage to build User info from token. Please login", null);
+        }
+
+        List<GameSave> gameSaves = userService.getUserGameSaves(localUser.getEmail());
+
+        return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaves);
     }
 }
