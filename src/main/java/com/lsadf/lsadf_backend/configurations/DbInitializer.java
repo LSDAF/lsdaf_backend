@@ -38,10 +38,9 @@ public class DbInitializer implements ApplicationListener<ContextRefreshedEvent>
 
         dbInitProperties.getUsers().forEach(user -> {
             if (!userService.existsByEmail(user.getEmail())) {
-                String encodedPassword = passwordEncoder.encode(user.getPassword());
                 userService.createUser(user.getName(),
                         user.getEmail(),
-                        encodedPassword,
+                        user.getPassword(),
                         SocialProvider.LOCAL,
                         Optional.of(user.getRoles()));
             }
