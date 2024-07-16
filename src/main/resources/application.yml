@@ -17,7 +17,7 @@ spring:
     import: classpath:env.properties
 
 db:
-  url: ${DB_URL}
+  url: ${DB_URL_LOCALHOST}
   username: ${DB_USERNAME}
   password: ${DB_PASSWORD}
   init:
