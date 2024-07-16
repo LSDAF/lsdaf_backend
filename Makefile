@@ -15,6 +15,9 @@ dbdown:
 	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml down
 
 build:
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
+
+build-no-cache:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
 
 up:
@@ -34,6 +37,7 @@ prune:
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
+	@echo "> build-no-cache      |-----------------------------------------|  Build docker images with --no-cache option"
 	@echo "> up                  |-----------------------------------------|  Up docker images"
 	@echo "> down                |-----------------------------------------|  Down docker images"
 	@echo "> dbup                |-----------------------------------------|  Runs postgresql db + pgadmin docker images"
