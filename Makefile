@@ -9,23 +9,23 @@ clean:
 	@mvn clean
 
 dbup:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile db up -d
+	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
 dbdown:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile db down
+	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml down
 
 build:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile backend build --no-cache
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
 
 up:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile backend up -d
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
 
 down:
-	@docker-compose --env-file env/env.properties -f dc-local.yml down
+	COMPOSE_PROFILES=db,backend docker-compose --env-file env/env.properties -f dc-local.yml down
 
 logs:
-	@docker-compose --env-file env/env.properties -f dc-local.yml logs -f
+	COMPOSE_PROFILES=db,backend docker-compose --env-file env/env.properties -f dc-local.yml logs -f
 
 prune:
 	@docker system prune -a -f
