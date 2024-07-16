@@ -28,4 +28,5 @@ public final class JsonAttributes {
     public static final class JwtAuthentication {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String USER_INFO = "user_info";
+    }
 }
