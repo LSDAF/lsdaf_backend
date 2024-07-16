@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-src/**/.env
-
 docker-data/
+
+**/env.properties

@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         DataSourceConfiguration.class,
-        EnvPropertiesResolverConfiguration.class,
         SwaggerConfiguration.class,
-        ServiceConfiguration.class
+        ServiceConfiguration.class,
+        WebConfiguration.class,
+        SecurityConfiguration.class,
+        OAuth2Configuration.class
 })
 public class LsadfBackendConfiguration {
 }

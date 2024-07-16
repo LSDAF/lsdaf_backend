@@ -57,11 +57,10 @@ public class BddUtils {
         long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
 
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
-        User user = UserUtils.createUserFromEntity(userEntity);
 
         return GameSave.builder()
                 .attack(attack)
-                .user(user)
+                .id(userEntity.getId())
                 .id(id)
                 .healthPoints(healthPoints)
                 .gold(gold)

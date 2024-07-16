@@ -2,9 +2,11 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.properties.SwaggerContactProperties;
 import com.lsadf.lsadf_backend.properties.SwaggerProperties;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,9 +50,19 @@ public class SwaggerConfiguration {
 
 
         return new OpenAPI()
+                .addSecurityItem(new SecurityRequirement().addList(BEARER_AUTHENTICATION))
+                .components(new Components()
+                        .addSecuritySchemes(BEARER_AUTHENTICATION, createApiKeyScheme()))
                 .info(info);
     }
 
+    private SecurityScheme createApiKeyScheme() {
+        return new SecurityScheme()
+                .name(AUTHORIZATION)
+                .type(SecurityScheme.Type.HTTP)
+                .bearerFormat(JWT)
+                .scheme(BEARER);
+    }
 
 
     private Contact buildContact(SwaggerContactProperties contactProperties) {

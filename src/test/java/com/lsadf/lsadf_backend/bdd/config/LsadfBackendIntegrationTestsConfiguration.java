@@ -3,8 +3,15 @@ package com.lsadf.lsadf_backend.bdd.config;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import java.util.Stack;
 
@@ -32,4 +39,31 @@ public class LsadfBackendIntegrationTestsConfiguration {
     public GameSaveRepository gameSaveRepository() {
         return mock(GameSaveRepository.class);
     }
+
+    @Bean
+    @Primary
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return mock(ClientRegistrationRepository.class);
+    }
+
+    @Bean
+    @Qualifier("oAuth2GoogleClientRegistration")
+    @Primary
+    public ClientRegistration googleClientRegistration() {
+        return mock(ClientRegistration.class);
+    }
+
+    @Bean
+    @Qualifier("oAuth2FacebookClientRegistration")
+    @Primary
+    public ClientRegistration facebookClientRegistration() {
+        return mock(ClientRegistration.class);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
 }

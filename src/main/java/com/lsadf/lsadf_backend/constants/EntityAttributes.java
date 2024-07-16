@@ -29,5 +29,7 @@ public final class EntityAttributes {
         public static final String USER_NAME = "user_name";
         public static final String USER_EMAIL = "user_email";
         public static final String USER_PASSWORD = "user_password";
+        public static final String USER_ROLES = "user_roles";
+        public static final String USER_ENABLED = "user_enabled";
     }
 }
