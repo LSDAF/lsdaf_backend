@@ -1,7 +1,9 @@
 package com.lsadf.lsadf_backend.services;
 
+import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Implementation of GameSaveService
@@ -50,21 +53,17 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional(readOnly = true)
-    public GameSave getGameSave(String saveId) throws ForbiddenException, NotFoundException {
-        return getGameSave(saveId, null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
+    public GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException {
         log.info("Getting save by id: {}", saveId);
+        if (userEmail == null || userEmail.isEmpty()) {
+            throw new IllegalArgumentException("User email is required");
+        }
         GameSaveEntity gameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
+                .orElseThrow(NotFoundException::new);
 
-        validateGameSaveOwnership(gameSave, userEmail);
+        validateGameSaveOwnership(gameSave, userEntity);
 
         return mapper.mapToGameSave(gameSave);
 
@@ -75,13 +74,15 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException {
+    public GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException {
 
         // Assert userEmail is the same as the game user id
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
+                .orElseThrow(NotFoundException::new);
 
-        validateGameSaveOwnership(currentGameSave, userEmail);
+        validateGameSaveOwnership(currentGameSave, userEntity);
 
         log.info("Updating game with id {}", saveId);
 
@@ -100,12 +101,23 @@ public class GameSaveServiceImpl implements GameSaveService {
         // Assert userEmail is the same as the game user id
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
+                .orElseThrow(NotFoundException::new);
 
-        validateGameSaveOwnership(currentGameSave, userEmail);
+        validateGameSaveOwnership(currentGameSave, userEntity);
 
         log.info("Deleting game with id {}", saveId);
 
         gameSaveRepository.deleteById(saveId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Stream<GameSaveEntity> getGameSaves() {
+        return gameSaveRepository.findAllGameSaves();
     }
 
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, GameSave newGameSave) {
@@ -131,9 +143,13 @@ public class GameSaveServiceImpl implements GameSaveService {
         return gameSaveEntity;
     }
 
-    private static void validateGameSaveOwnership(GameSaveEntity gameSaveEntity, String userEmail) throws ForbiddenException {
-        if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {
-            throw new ForbiddenException("Given user with email " + userEmail + " is not the owner of the game with id " + gameSaveEntity.getId() + ".");
+    private void validateGameSaveOwnership(GameSaveEntity gameSaveEntity, UserEntity userEntity) throws ForbiddenException {
+        if (userEntity.getRoles().contains(UserRole.ADMIN)) {
+            return;
+        }
+
+        if (!Objects.equals(gameSaveEntity.getUser().getId(), userEntity.getId())) {
+            throw new ForbiddenException("User is not the owner of the game save");
         }
     }
 }

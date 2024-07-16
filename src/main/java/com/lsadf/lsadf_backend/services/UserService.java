@@ -3,17 +3,16 @@ package com.lsadf.lsadf_backend.services;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.requests.UserCreationRequest;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Service for managing users
@@ -38,6 +37,13 @@ public interface UserService {
      * @return the created user
      */
     UserEntity createUser(UserCreationRequest creationRequest);
+
+    /**
+     * Gets all users
+     *
+     * @return the list of users
+     */
+    Stream<UserEntity> getUsers();
 
     /**
      * Gets user by email
@@ -102,14 +108,6 @@ public interface UserService {
      * @return user info
      */
     UserInfo buildUserInfoFromUserEntity(UserEntity userEntity);
-
-    /**
-     * Gets user game saves by its id
-     *
-     * @param userEmail the email of the user
-     * @return the game saves of the user
-     */
-    List<GameSave> getUserGameSaves(String userEmail);
 
     /**
      * Processes user registration

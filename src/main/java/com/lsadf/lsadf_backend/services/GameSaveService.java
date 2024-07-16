@@ -1,8 +1,12 @@
 package com.lsadf.lsadf_backend.services;
 
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
+
+import java.util.stream.Stream;
 
 /**
  * Service for managing game saves
@@ -19,21 +23,12 @@ public interface GameSaveService {
     /**
      * Gets a game save
      * @param saveId
-     * @return
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     */
-    GameSave getGameSave(String saveId) throws ForbiddenException, NotFoundException;
-
-    /**
-     * Gets a game save
-     * @param saveId
      * @param userEmail
      * @return
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
+    GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException;
 
     /**
      * Updates a game save
@@ -44,7 +39,7 @@ public interface GameSaveService {
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException;
+    GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException;
 
     /**
      * Deletes a game save
@@ -54,4 +49,10 @@ public interface GameSaveService {
      * @throws NotFoundException
      */
     void deleteGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
+
+    /**
+     * Gets all game saves
+     * @return the stream of game saves
+     */
+    Stream<GameSaveEntity> getGameSaves();
 }

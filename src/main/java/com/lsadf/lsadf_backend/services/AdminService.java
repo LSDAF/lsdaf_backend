@@ -1,11 +1,15 @@
 package com.lsadf.lsadf_backend.services;
 
+import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.requests.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 
 import java.util.List;
@@ -28,7 +32,7 @@ public interface AdminService {
      *
      * @return the list of users
      */
-    List<User> getUsers();
+    List<User> getUsers(UserOrderBy orderBy);
 
     /**
      * Gets a user by its id
@@ -37,6 +41,8 @@ public interface AdminService {
      * @return
      */
     User getUser(String userId);
+
+    User getUserById(String userEmail);
 
     /**
      * Creates a new user
@@ -53,24 +59,32 @@ public interface AdminService {
      * @param user   the user to update
      * @return
      */
-    User updateUser(String userId, User user);
+    User updateUser(String userId, User user, String userEmail);
 
     /**
      * Deletes a user
      *
      * @param userId the id of the user
      */
-    void deleteUser(String userId);
+    void deleteUser(String userId, String userEmail);
 
     // GameSave
 
     /**
      * Gets all game saves
      *
+     * @param orderBy the order by parameter
+     * @return the game save
+     */
+    List<GameSave> getGameSaves(GameSaveOrderBy orderBy);
+
+    /**
+     * Gets a game save by its id
+     *
      * @param saveId the id of the game save
      * @return the game save
      */
-    GameSave getGameSave(String saveId);
+    GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, UnauthorizedException, NotFoundException;
 
     /**
      * Updates a game save
@@ -79,14 +93,14 @@ public interface AdminService {
      * @param newSaveGame the new game save
      * @return the updated game save
      */
-    GameSave updateGameSave(String saveId, GameSave newSaveGame);
+    GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, UnauthorizedException, NotFoundException;
 
     /**
      * Deletes a game save
      *
      * @param saveId the id of the game save
      */
-    void deleteGameSave(String saveId);
+    void deleteGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
 
     /**
      * Creates a new game save

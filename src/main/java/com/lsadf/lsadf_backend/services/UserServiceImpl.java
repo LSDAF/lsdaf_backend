@@ -11,12 +11,14 @@ import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.requests.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.UserOrderBy;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfo;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfoFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Sets;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -28,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of UserService
@@ -120,6 +123,16 @@ public class UserServiceImpl implements UserService {
         log.info("Getting user by id: {}", id);
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Stream<UserEntity> getUsers() {
+        log.info("Getting all users");
+        return userRepository.findAllUsers();
     }
 
     /**
@@ -222,20 +235,5 @@ public class UserServiceImpl implements UserService {
     public UserInfo buildUserInfoFromUserEntity(UserEntity userEntity) {
         List<UserRole> roles = userEntity.getRoles().stream().toList();
         return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<GameSave> getUserGameSaves(String userEmail) {
-        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
-                .orElseThrow(() -> new EntityNotFoundException("User with email " + userEmail + " not found"));
-
-
-        return userEntity.getGameSaves().stream()
-                .map(mapper::mapToGameSave)
-                .toList();
     }
 }
