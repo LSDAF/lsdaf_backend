@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Import;
         ServiceConfiguration.class,
         WebConfiguration.class,
         SecurityConfiguration.class,
-        OAuth2Configuration.class
+        OAuth2Configuration.class,
+        LoggingConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }
