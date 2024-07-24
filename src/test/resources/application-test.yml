@@ -12,6 +12,14 @@ db:
     enabled: false
     users:
 
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+
 cors:
   allowed-origins:
     - "*"

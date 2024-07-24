@@ -2,6 +2,9 @@ package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendIntegrationTestsConfiguration;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
@@ -28,7 +31,7 @@ import java.util.Stack;
 @Slf4j
 @SpringBootTest(classes = {
         LsadfBackendConfiguration.class,
-        LsadfBackendIntegrationTestsConfiguration.class
+        LsadfBackendIntegrationTestsConfiguration.class,
 })
 @AutoConfigureEmbeddedDatabase(
         provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
@@ -47,6 +50,8 @@ public class BddLoader {
     protected final UserRepository userRepository;
     protected final GameSaveRepository gameSaveRepository;
 
+    protected final Mapper mapper;
+
     // Services
     protected final GameSaveService gameSaveService;
     protected final UserService userService;
@@ -54,8 +59,10 @@ public class BddLoader {
     protected final AdminService adminService;
 
     // BDD Specific Stacks
-    protected final Stack<List<GameSave>> gameSaveStack;
+    protected final Stack<List<GameSave>> gameSaveListStack;
+    protected final Stack<List<GameSaveEntity>> gameSaveEntityListStack;
     protected final Stack<List<User>> userListStack;
+    protected final Stack<List<UserEntity>> userEntityListStack;
     protected final Stack<Exception> exceptionStack;
 
     @Autowired
@@ -64,15 +71,21 @@ public class BddLoader {
                      GameSaveService gameSaveService,
                      Stack<List<GameSave>> gameSaveListStack,
                      Stack<List<User>> userListStack,
+                     Stack<List<UserEntity>> userEntityListStack,
+                     Stack<List<GameSaveEntity>> gameSaveEntityListStack,
                      Stack<Exception> exceptionStack,
                      UserService userService,
                      UserDetailsService userDetailsService,
-                     AdminService adminService) {
+                     AdminService adminService,
+                     Mapper mapper) {
         this.gameSaveRepository = gameSaveRepository;
+        this.mapper = mapper;
         this.userRepository = userRepository;
         this.userListStack = userListStack;
+        this.gameSaveEntityListStack = gameSaveEntityListStack;
+        this.userEntityListStack = userEntityListStack;
         this.gameSaveService = gameSaveService;
-        this.gameSaveStack = gameSaveListStack;
+        this.gameSaveListStack = gameSaveListStack;
         this.exceptionStack = exceptionStack;
         this.userService = userService;
         this.adminService = adminService;

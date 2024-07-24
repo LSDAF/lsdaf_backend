@@ -4,17 +4,29 @@ Feature: Game Save Features
     Given the BDD engine is ready
     And a clean database
 
-
-  Scenario: Create a new GameSave
-
+  Scenario: Create a new GameSave from userEmail
     Given the following users
       | id                                   | name        | email                |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
-    When the user with email paul.ochon@test.com creates a new game save
-    Then I should return the following game save
+
+    When we want to create a new game save for the user with email paul.ochon@test.com
+    Then I should return the following game saves
       | userId                               | gold | healthPoints | attack |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 0    | 10           | 1      |
+
+  Scenario: Create a new GameSave from AdminGameSaveCreationRequest
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+    When we want to create a new game save with the following AdminGameSaveCreationRequest
+      | userEmail            | gold | healthPoints | attack |
+      | paul.itesse@test.com | 500  | 11289        | 5000   |
+
+    Then I should return the following game saves
+      | userEmail            | gold | healthPoints | attack |
+      | paul.itesse@test.com | 500  | 11289        | 5000   |
 
 
   Scenario: Get an existing GameSave
@@ -25,9 +37,9 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email paul.ochon@test.com gets the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
+    When we want to get the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
-    Then I should return the following game save
+    Then I should return the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
 
@@ -40,24 +52,9 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email paul.ochon@test.com gets the game save with id 21524a69-dd46-475e-a152-9032477df41e
+    When we want to get the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0be
 
     Then I should throw a NotFoundException
-
-
-  Scenario: Get a GameSave with non-owner user
-    Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
-
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 5630280 | 124          | 1072   |
-
-    When the user with email paul.ochon@test.com gets the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
-
-    Then I should throw a ForbiddenException
 
 
   Scenario: Update an existing GameSave
@@ -68,12 +65,12 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email paul.ochon@test.com updates the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
-      | id                                   | userId                               | gold      | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
-    Then I should return the following game save
-      | id                                   | userId                               | gold      | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
+    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+      | gold | healthPoints | attack |
+      | 0    | 200          | 3000   |
+    Then I should return the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 0    | 200          | 3000   |
 
 
   Scenario: Update a non-existing GameSave
@@ -84,25 +81,21 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email paul.ochon@test.com updates the game save with id 21524a69-dd46-475e-a152-9032477df41e
+    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0be with the following GameSaveUpdateRequest
       | id                                   | userId                               | gold      | healthPoints | attack |
-      | 21524a69-dd46-475e-a152-9032477df41e | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
+      | 21524a69-dd46-475e-a152-9032477df41d | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
     Then I should throw a NotFoundException
 
-
-  Scenario: Update a GameSave with non-owner user
+  Scenario: Get all game saves
     Given the following users
       | id                                   | name        | email                |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 5630280 | 124          | 1072   |
-    When the user with email paul.ochon@test.com updates the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
-      | id                                   | userId                               | gold      | healthPoints | attack |
-      | 21524a69-dd46-475e-a152-9032477df41e | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
-    Then I should throw a ForbiddenException
-
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
+      | d90b8f0f-68da-44ca-9d79-f564a0a33c59 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3       | 2            | 11111  |
+    When we want to get all game saves
 
   Scenario: Delete an existing GameSave
     Given the following users
@@ -113,7 +106,7 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d deletes a game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
+    When we want to delete the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
     Then I should have no game save entries in DB
 
@@ -127,11 +120,24 @@ Feature: Game Save Features
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When the user with email 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d deletes a game save with id 21524a69-dd46-475e-a152-9032477df41e
+    When we want to delete the game save with id 21524a69-dd46-475e-a152-9032477df41e
 
     Then I should throw a NotFoundException
 
-  Scenario: Delete a GameSave with non-owner user
+  Scenario: Check GameSave Ownership for owner
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 806c8d75-6d20-4980-973b-6c5185d41eb0 | Paul ITESSE | paul.itesse@test.com |
+
+    And the following game saves
+      | id                                   | userId                               | gold    | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
+    When we check the game save ownership with id 0530e1fe-3428-4edd-bb32-cb563419d0bd for the user with email paul.ochon@test.com
+
+    Then I should throw no Exception
+
+  Scenario: Check GameSave Ownership for non-owner
     Given the following users
       | id                                   | name        | email                |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
@@ -139,7 +145,18 @@ Feature: Game Save Features
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 5630280 | 124          | 1072   |
-    When the user with email 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d deletes a game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
-
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
+    When we check the game save ownership with id 0530e1fe-3428-4edd-bb32-cb563419d0bd for the user with email paul.itesse@test.com
     Then I should throw a ForbiddenException
+
+  Scenario: Check GameSave Ownership for non-existing GameSave
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+
+    And the following game saves
+      | id                                   | userId                               | gold    | healthPoints | attack |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
+    When we check the game save ownership with id 0530e1fe-3428-4edd-bb32-cb563419d0bd for the user with email paul.itesse@test.com
+    Then I should throw a NotFoundException

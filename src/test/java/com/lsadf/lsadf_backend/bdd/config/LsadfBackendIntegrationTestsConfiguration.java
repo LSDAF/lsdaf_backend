@@ -1,5 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
@@ -29,6 +31,16 @@ public class LsadfBackendIntegrationTestsConfiguration {
 
     @Bean
     public Stack<List<User>> userListStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<List<UserEntity>> userEntityListStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<List<GameSaveEntity>> gameSaveEntityListStack() {
         return new Stack<>();
     }
 
