@@ -1,5 +1,7 @@
 package com.lsadf.lsadf_backend.requests.search;
 
+import com.lsadf.lsadf_backend.requests.common.SearchFilter;
+
 public enum UserSearchFilter implements SearchFilter {
     ID("id"),
     NAME("name"),

@@ -1,7 +1,8 @@
-package com.lsadf.lsadf_backend.requests;
+package com.lsadf.lsadf_backend.requests.game_save;
 
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
+import com.lsadf.lsadf_backend.requests.common.OrderBy;
 
 public enum GameSaveOrderBy implements OrderBy {
     CREATED_AT(JsonAttributes.CREATED_AT, SortingOrderParameter.ASCENDING),

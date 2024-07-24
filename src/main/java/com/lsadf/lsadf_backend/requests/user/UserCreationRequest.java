@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.requests;
+package com.lsadf.lsadf_backend.requests.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lsadf.lsadf_backend.constants.SocialProvider;

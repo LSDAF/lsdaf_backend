@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.requests;
+package com.lsadf.lsadf_backend.requests.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

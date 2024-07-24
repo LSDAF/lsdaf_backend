@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.requests.search;
 
-import com.lsadf.lsadf_backend.requests.OrderBy;
+import com.lsadf.lsadf_backend.requests.common.Filter;
+import com.lsadf.lsadf_backend.requests.common.OrderBy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
-    private List<FilterRequest> filters;
+    private List<Filter> filters;
     private OrderBy orderBy;
 }
