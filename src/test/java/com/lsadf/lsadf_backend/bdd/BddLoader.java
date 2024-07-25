@@ -4,6 +4,8 @@ import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.AuthController;
 import com.lsadf.lsadf_backend.controllers.AuthControllerImpl;
+import com.lsadf.lsadf_backend.controllers.GameSaveControllerImpl;
+import com.lsadf.lsadf_backend.controllers.UserControllerImpl;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
@@ -40,8 +42,9 @@ import java.util.Stack;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
         LsadfBackendConfiguration.class,
         LsadfBackendBddTestsConfiguration.class,
-        AuthController.class,
         AuthControllerImpl.class,
+        GameSaveControllerImpl.class,
+        UserControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
