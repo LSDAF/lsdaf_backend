@@ -1,8 +1,11 @@
 package com.lsadf.lsadf_backend.controllers;
 
+import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +39,7 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame();
+    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser);
 
     /**
      * Updates a game in function of its id
@@ -53,5 +56,5 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<Void>> saveGame(String gameSaveId, GameSave save);
+    ResponseEntity<GenericResponse<Void>> saveGame(@CurrentUser LocalUser localUser, String gameSaveId, GameSaveUpdateRequest request);
 }

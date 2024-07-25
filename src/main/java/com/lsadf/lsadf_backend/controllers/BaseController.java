@@ -4,6 +4,9 @@ import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import org.slf4j.Logger;
 
+/**
+ * Base controller for all controllers
+ */
 public abstract class BaseController {
 
     /**

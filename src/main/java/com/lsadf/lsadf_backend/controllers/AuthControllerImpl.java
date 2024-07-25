@@ -4,11 +4,13 @@ import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
-import com.lsadf.lsadf_backend.requests.UserCreationRequest;
-import com.lsadf.lsadf_backend.requests.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
@@ -17,6 +19,7 @@ import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Sets;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,21 +32,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 import java.util.Set;
 
+
+/**
+ * Implementation of the Auth Controller
+ */
 @RestController(value = ControllerConstants.AUTH)
 @Slf4j
-public class AuthControllerImpl implements AuthController {
+public class AuthControllerImpl extends BaseController implements AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final UserDetailsService userDetailsService;
+    private final Mapper mapper;
 
     public AuthControllerImpl(AuthenticationManager authenticationManager,
                               UserService userService,
-                              TokenProvider tokenProvider, UserDetailsService userDetailsService) {
+                              TokenProvider tokenProvider,
+                              UserDetailsService userDetailsService,
+                              Mapper mapper) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
+        this.mapper = mapper;
         this.userDetailsService = userDetailsService;
     }
 
@@ -51,13 +62,21 @@ public class AuthControllerImpl implements AuthController {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+    protected Logger getLogger() {
+        return log;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String email = (String) authentication.getPrincipal();
         LocalUser localUser = userDetailsService.loadUserByEmail(email);
         String jwt = tokenProvider.createToken(localUser);
-        return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully logged in", new JwtAuthentication(jwt, userService.buildUserInfoFromLocalUser(localUser)));
+        return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully logged in", new JwtAuthentication(jwt, mapper.mapLocalUserToUserInfo(localUser)));
     }
 
     /**
@@ -68,7 +87,7 @@ public class AuthControllerImpl implements AuthController {
         try {
             Optional<Set<UserRole>> roles = Optional.of(Sets.newHashSet(UserRole.getDefaultRole()));
             UserEntity userEntity = userService.createUser(userCreationRequest.getName(), userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles);
-            UserInfo userInfo = userService.buildUserInfoFromUserEntity(userEntity);
+            UserInfo userInfo = mapper.mapUserEntityToUserInfo(userEntity);
 
             return ResponseUtils.generateResponse(HttpStatus.OK, "User registered successfully", userInfo);
         } catch (AlreadyExistingUserException e) {
