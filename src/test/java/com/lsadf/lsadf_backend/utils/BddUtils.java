@@ -63,6 +63,11 @@ public class BddUtils {
         return gameSaveEntity;
     }
 
+    /**
+     * Maps a row from a BDD table to a UserInfo
+     * @param row row from BDD table
+     * @return UserInfo
+     */
     public static UserInfo mapToUserInfo(Map<String, String> row) {
         String id = row.get(BddFieldConstants.UserInfo.ID);
         String email = row.get(BddFieldConstants.UserInfo.EMAIL);
