@@ -12,9 +12,17 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
-    database-platform: ${DB_PLATFORM}
+    open-in-view: false
   config:
     import: classpath:env.properties
+
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
 
 db:
   url: ${DB_URL_LOCALHOST}
