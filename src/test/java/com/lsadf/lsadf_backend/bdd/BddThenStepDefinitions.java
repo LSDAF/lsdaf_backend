@@ -1,18 +1,9 @@
 package com.lsadf.lsadf_backend.bdd;
 
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
-import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
@@ -20,16 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Slf4j(topic = "[THEN STEP DEFINITIONS]")
 public class BddThenStepDefinitions extends BddLoader {
-
-    public BddThenStepDefinitions(UserRepository userRepository, GameSaveRepository gameSaveRepository, GameSaveService gameSaveService, Stack<List<GameSave>> gameSaveListStack, Stack<List<User>> userListStack, Stack<List<UserEntity>> userEntityListStack, Stack<List<GameSaveEntity>> gameSaveEntityListStack, Stack<Exception> exceptionStack, UserService userService, UserDetailsService userDetailsService, AdminService adminService, Mapper mapper) {
-        super(userRepository, gameSaveRepository, gameSaveService, gameSaveListStack, userListStack, userEntityListStack, gameSaveEntityListStack, exceptionStack, userService, userDetailsService, adminService, mapper);
-    }
 
     @Then("^I should return the following game saves$")
     public void then_i_should_return_the_following_game_saves(DataTable dataTable) throws NotFoundException {
@@ -54,6 +40,31 @@ public class BddThenStepDefinitions extends BddLoader {
                     .ignoringFields("user", "id", "createdAt", "updatedAt")
                     .isEqualTo(expected);
         }
+    }
+
+    @Then("^the response status code should be (.*)$")
+    public void then_the_response_status_code_should_be(int statusCode) {
+        int actual = responseStack.peek().getStatus();
+        assertThat(actual).isEqualTo(statusCode);
+    }
+
+    @Then("^the response should have the following UserInfo$")
+    public void then_the_response_should_have_the_following_user_info(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        var row = rows.get(0);
+
+        UserInfo actual = (UserInfo) responseStack.peek().getData();
+        UserInfo expected = BddUtils.mapToUserInfo(row);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(expected);
     }
 
     @Then("^I should have the following game saves in DB$")

@@ -36,3 +36,9 @@ cors:
 spring:
   main:
     allow-bean-definition-overriding: true
+
+auth:
+  refresh-token-expiration-ms: 86_400_000
+  refresh-token-secret: ${REFRESH_TOKEN_SECRET}
+  token-secret: ${TOKEN_SECRET}
+  token-expiration-ms: 3_600_000

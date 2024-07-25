@@ -4,6 +4,7 @@ import com.lsadf.lsadf_backend.bdd.config.mocks.GameSaveRepositoryMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.UserRepositoryMock;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import lombok.experimental.UtilityClass;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.when;
 /**
  * Utility class for initializing mock objects
  */
+@UtilityClass
 public class MockUtils {
     /**
      * Initialize the UserRepository mock
@@ -26,6 +28,8 @@ public class MockUtils {
         UserRepositoryMock userRepositoryMock = new UserRepositoryMock();
         when(userRepository.findAll()).thenReturn(userRepositoryMock.findAll());
         when(userRepository.count()).thenReturn(userRepositoryMock.count());
+        when(userRepository.existsById(any())).thenAnswer(invocation -> userRepositoryMock.findById(invocation.getArgument(0)));
+        when(userRepository.existsByEmail(any())).thenAnswer(invocation -> userRepositoryMock.findUserEntityByEmail(invocation.getArgument(0)).isPresent());
         when(userRepository.findById(Mockito.anyString())).thenAnswer(invocation -> userRepositoryMock.findById(invocation.getArgument(0)));
         when(userRepository.save(Mockito.any())).thenAnswer(invocation -> userRepositoryMock.save(invocation.getArgument(0)));
         when(userRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> userRepositoryMock.saveAll(invocation.getArgument(0)));

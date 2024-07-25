@@ -1,16 +1,7 @@
 package com.lsadf.lsadf_backend.bdd;
 
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
-import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import com.lsadf.lsadf_backend.utils.MockUtils;
 import io.cucumber.datatable.DataTable;
@@ -19,16 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j(topic = "[GIVEN STEP DEFINITIONS]")
 public class BddGivenStepDefinitions extends BddLoader {
-
-    public BddGivenStepDefinitions(UserRepository userRepository, GameSaveRepository gameSaveRepository, GameSaveService gameSaveService, Stack<List<GameSave>> gameSaveListStack, Stack<List<User>> userListStack, Stack<List<UserEntity>> userEntityListStack, Stack<List<GameSaveEntity>> gameSaveEntityListStack, Stack<Exception> exceptionStack, UserService userService, UserDetailsService userDetailsService, AdminService adminService, Mapper mapper) {
-        super(userRepository, gameSaveRepository, gameSaveService, gameSaveListStack, userListStack, userEntityListStack, gameSaveEntityListStack, exceptionStack, userService, userDetailsService, adminService, mapper);
-    }
 
     @Given("^the BDD engine is ready$")
     public void given_the_bdd_engine_is_ready() {
@@ -37,7 +23,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.gameSaveEntityListStack.clear();
         this.userListStack.clear();
         this.userEntityListStack.clear();
-        log.info("BDD engine is ready");
+        log.info("BDD engine is ready. Using port: {}", this.serverPort);
     }
 
     @Given("^a clean database$")

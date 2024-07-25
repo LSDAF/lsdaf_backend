@@ -32,4 +32,17 @@ public class BddFieldConstants {
         public static final String CREATED_AT = BddFieldConstants.CREATED_AT;
         public static final String UPDATED_AT = BddFieldConstants.UPDATED_AT;
     }
+
+    public static final class UserCreationRequest {
+        public static final String NAME = "name";
+        public static final String PASSWORD = "password";
+        public static final String EMAIL = "email";
+    }
+
+    public static final class UserInfo {
+        public static final String ID = BddFieldConstants.ID;
+        public static final String NAME = "name";
+        public static final String EMAIL = "email";
+        public static final String ROLES = "roles";
+    }
 }

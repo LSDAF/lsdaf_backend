@@ -8,10 +8,14 @@ import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import lombok.experimental.UtilityClass;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,6 +61,19 @@ public class BddUtils {
         gameSaveEntity.setId(id);
 
         return gameSaveEntity;
+    }
+
+    public static UserInfo mapToUserInfo(Map<String, String> row) {
+        String id = row.get(BddFieldConstants.UserInfo.ID);
+        String email = row.get(BddFieldConstants.UserInfo.EMAIL);
+        String name = row.get(BddFieldConstants.UserInfo.NAME);
+        var rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
+        List<UserRole> roles = Collections.emptyList();
+        if (rolesString != null) {
+            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).toList();
+        }
+
+        return new UserInfo(id, name, email, roles);
     }
 
     /**
@@ -179,4 +196,43 @@ public class BddUtils {
 
         return userEntity;
     }
+
+    /**
+     * Maps a row from a BDD table to a UserCreationRequest
+     * @param row row from BDD table
+     * @return UserCreationRequest
+     */
+    public static UserCreationRequest mapToUserCreationRequest(Map<String, String> row) {
+        String email = row.get(BddFieldConstants.UserCreationRequest.EMAIL);
+        String name = row.get(BddFieldConstants.UserCreationRequest.NAME);
+        String password = row.get(BddFieldConstants.UserCreationRequest.PASSWORD);
+
+        return UserCreationRequest.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .build();
+    }
+
+    /**
+     * Builds a URL from the server port and the endpoint to call
+     * @param port port
+     * @param endpoint endpoint
+     * @return the URL
+     */
+    public static String buildUrl(int port, String endpoint) {
+        return "http://localhost:" + port + endpoint;
+    }
+
+    /**
+     * Builds an HttpEntity with the given body and headers
+     * @param body body
+     * @param httpHeaders headers
+     * @return HttpEntity
+     * @param <T> type of the body
+     */
+    public static <T> HttpEntity<T> buildHttpEntity(T body, HttpHeaders httpHeaders) {
+        return new HttpEntity<>(body, httpHeaders);
+    }
+
 }

@@ -1,32 +1,27 @@
 package com.lsadf.lsadf_backend.bdd;
 
+import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
 @Slf4j(topic = "[WHEN STEP DEFINITIONS]")
 public class BddWhenStepDefinitions extends BddLoader {
-
-    public BddWhenStepDefinitions(UserRepository userRepository, GameSaveRepository gameSaveRepository, GameSaveService gameSaveService, Stack<List<GameSave>> gameSaveListStack, Stack<List<User>> userListStack, Stack<List<UserEntity>> userEntityListStack, Stack<List<GameSaveEntity>> gameSaveEntityListStack, Stack<Exception> exceptionStack, UserService userService, UserDetailsService userDetailsService, AdminService adminService, Mapper mapper) {
-        super(userRepository, gameSaveRepository, gameSaveService, gameSaveListStack, userListStack, userEntityListStack, gameSaveEntityListStack, exceptionStack, userService, userDetailsService, adminService, mapper);
-    }
 
     @When("^the user with email (.*) gets the game save with id (.*)$")
     public void when_the_user_with_email_gets_a_game_save_with_id(String userEmail, String gameSaveId) {
@@ -38,7 +33,39 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
+    private ParameterizedTypeReference<GenericResponse<UserInfo>> buildParameterizedUserInfoResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
 
+    @When("^the user requests the endpoint to register a user with the following UserCreationRequest$")
+    public void when_the_user_request_the_endpoint_to_register_a_user_with_the_following_UserCreationRequest(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        // it should have only one line
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+        UserCreationRequest userCreationRequest = BddUtils.mapToUserCreationRequest(row);
+        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REGISTER;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-Type", "application/json");
+        HttpEntity<UserCreationRequest> request = BddUtils.buildHttpEntity(userCreationRequest, httpHeaders);
+        try {
+
+            ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedUserInfoResponse());
+            var body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
 
     @When("^we want to delete the game save with id (.*)$")
     public void when_the_user_with_email_deletes_a_game_save(String saveId) {

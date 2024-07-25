@@ -9,7 +9,6 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-@WebMvcTest(controllers = {AdminController.class, UserController.class, GameSaveController.class, AuthController.class})
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = {"classpath:features"},
