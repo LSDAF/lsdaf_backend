@@ -1,18 +1,33 @@
 package com.lsadf.lsadf_backend.mappers;
 
+import com.lsadf.lsadf_backend.constants.SocialProvider;
+import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 public class MapperImpl implements Mapper {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameSave mapToGameSave(GameSaveEntity gameSaveEntity) {
         return GameSave.builder()
-                .id(gameSaveEntity.getUser().getId())
+                .id(gameSaveEntity.getId())
+                .userEmail(gameSaveEntity.getUser().getEmail())
+                .userId(gameSaveEntity.getUser().getId())
                 .gold(gameSaveEntity.getGold())
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())
@@ -22,6 +37,9 @@ public class MapperImpl implements Mapper {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User mapToUser(UserEntity userEntity) {
         return User.builder()
@@ -32,5 +50,47 @@ public class MapperImpl implements Mapper {
                 .updatedAt(userEntity.getUpdatedAt())
                 .email(userEntity.getEmail())
                 .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserAdminDetails mapToUserAdminDetails(UserEntity userEntity) {
+        SocialProvider provider = userEntity.getProvider() == null ? null : userEntity.getProvider();
+        return UserAdminDetails.builder()
+                .id(userEntity.getId())
+.email(userEntity.getEmail())
+                .password(userEntity.getPassword())
+                .name(userEntity.getName())
+                .provider(provider)
+                .enabled(userEntity.isEnabled())
+                .roles(new ArrayList<>(userEntity.getRoles()))
+                .gameSaves(userEntity.getGameSaves().stream()
+                        .map(this::mapToGameSave)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserInfo mapLocalUserToUserInfo(LocalUser localUser) {
+        List<UserRole> roles = localUser.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(UserRole::fromRole)
+                .collect(Collectors.toList());
+        UserEntity user = localUser.getUserEntity();
+        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
+        List<UserRole> roles = userEntity.getRoles().stream().toList();
+        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
     }
 }
