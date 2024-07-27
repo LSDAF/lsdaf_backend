@@ -3,6 +3,8 @@ package com.lsadf.lsadf_backend.bdd;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
@@ -113,5 +115,52 @@ public class BddThenStepDefinitions extends BddLoader {
     @Then("^I should throw no Exception$")
     public void then_i_should_throw_no_exception() {
         assertThat(exceptionStack.isEmpty()).isTrue();
+    }
+
+    @Then("^the token from the response should be valid$")
+    public void then_the_token_from_the_response_should_be_valid() {
+        JwtAuthentication jwtAuthentication = (JwtAuthentication) responseStack.peek().getData();
+        assertThat(jwtAuthentication.getAccessToken()).isNotNull();
+        boolean validToken = tokenProvider.validateToken(jwtAuthentication.getAccessToken());
+        assertThat(validToken).isTrue();
+    }
+
+    @Then("^the JwtAuthentication should contain the following UserInfo$")
+    public void then_the_jwt_authentication_should_contain_the_following_user_info(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        var row = rows.get(0);
+
+        JwtAuthentication actual = (JwtAuthentication) responseStack.peek().getData();
+        UserInfo actualUserInfo = actual.getUserInfo();
+        UserInfo expectedUserInfo = BddUtils.mapToUserInfo(row);
+
+        assertThat(actualUserInfo)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(expectedUserInfo);
+    }
+
+    @Then("^the response should have the following GameSave$")
+    public void then_the_response_should_have_the_following_game_save(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        var row = rows.get(0);
+
+        GameSave actual = (GameSave) responseStack.peek().getData();
+        GameSave expected = BddUtils.mapToGameSave(row);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "createdAt", "updatedAt")
+                .isEqualTo(expected);
     }
 }

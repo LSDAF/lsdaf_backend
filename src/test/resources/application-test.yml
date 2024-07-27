@@ -39,6 +39,6 @@ spring:
 
 auth:
   refresh-token-expiration-ms: 86_400_000
-  refresh-token-secret: ${REFRESH_TOKEN_SECRET}
-  token-secret: ${TOKEN_SECRET}
+  refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf
+  token-secret: knshjdvzuhdvkjnbduhfgsxtyzafshkfkcbndugsèarsyutfzxersdkjzdiuzguizh
   token-expiration-ms: 3_600_000

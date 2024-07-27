@@ -1,9 +1,15 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.config.mocks.GameSaveRepositoryMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.UserDetailsServiceMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.UserRepositoryMock;
+import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.services.UserDetailsService;
+import com.lsadf.lsadf_backend.services.UserService;
 import lombok.experimental.UtilityClass;
 import org.mockito.Mockito;
 
@@ -20,6 +26,7 @@ import static org.mockito.Mockito.when;
 public class MockUtils {
     /**
      * Initialize the UserRepository mock
+     *
      * @param userRepository
      */
     public static void initUserRepositoryMock(UserRepository userRepository) {
@@ -44,8 +51,26 @@ public class MockUtils {
         }).when(userRepository).deleteUserEntityByEmail(Mockito.anyString());
     }
 
+
+    /**
+     * Initialize the UserDetailsService mock
+     *
+     * @param userDetailsService the UserDetailsService mock
+     */
+    public static void initUserDetailsServiceMock(UserDetailsService userDetailsService,
+                                                  UserService userService,
+                                                  Mapper mapper) throws NotFoundException {
+        Mockito.reset(userDetailsService);
+
+        UserDetailsServiceMock userDetailsServiceMock = new UserDetailsServiceMock(userService, mapper);
+
+        when(userDetailsService.loadUserByUsername(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByUsername(invocation.getArgument(0)));
+        when(userDetailsService.loadUserByEmail(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByEmail(invocation.getArgument(0)));
+    }
+
     /**
      * Initialize the GameSaveRepository mock
+     *
      * @param gameSaveRepository
      */
     public static void initGameSaveRepositoryMock(GameSaveRepository gameSaveRepository) {

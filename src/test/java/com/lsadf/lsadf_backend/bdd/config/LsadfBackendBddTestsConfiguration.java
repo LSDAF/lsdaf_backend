@@ -15,9 +15,8 @@ import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +29,7 @@ import java.util.Stack;
 
 import static org.mockito.Mockito.mock;
 
-@Configuration
+@TestConfiguration
 public class LsadfBackendBddTestsConfiguration {
 
     @Bean
@@ -40,6 +39,12 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     public Stack<List<User>> userListStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    @Qualifier("jwtStack")
+    public Stack<String> jwtStack() {
         return new Stack<>();
     }
 
@@ -121,5 +126,4 @@ public class LsadfBackendBddTestsConfiguration {
                                          Mapper mapper) {
         return new AuthControllerImpl(authenticationManager, userService, tokenProvider, userDetailsService, mapper);
     }
-
 }

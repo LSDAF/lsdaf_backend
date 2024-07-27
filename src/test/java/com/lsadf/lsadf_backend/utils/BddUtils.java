@@ -5,6 +5,7 @@ import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
@@ -13,10 +14,19 @@ import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
+import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,10 +85,27 @@ public class BddUtils {
         var rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
         List<UserRole> roles = Collections.emptyList();
         if (rolesString != null) {
-            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).toList();
+            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).sorted().toList();
         }
 
         return new UserInfo(id, name, email, roles);
+    }
+
+
+    /**
+     * Initializes the RestTemplate inside TestRestTemplate
+     * @param testRestTemplate the TestRestTemplate
+     */
+    public void initTestRestTemplate(TestRestTemplate testRestTemplate) {
+        var template = testRestTemplate.getRestTemplate();
+        template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        template.setErrorHandler(new DefaultResponseErrorHandler() {
+            @Override
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                HttpStatus status = HttpStatus.resolve(response.getStatusCode().value());
+                return status.series() == HttpStatus.Series.SERVER_ERROR;
+            }
+        });
     }
 
     /**
@@ -232,12 +259,57 @@ public class BddUtils {
     /**
      * Builds an HttpEntity with the given body and headers
      * @param body body
-     * @param httpHeaders headers
      * @return HttpEntity
      * @param <T> type of the body
      */
-    public static <T> HttpEntity<T> buildHttpEntity(T body, HttpHeaders httpHeaders) {
+    public static <T> HttpEntity<T> buildHttpEntity(T body) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-Type", "application/json");
         return new HttpEntity<>(body, httpHeaders);
     }
 
+    /**
+     * Maps a row from a BDD table to a UserLoginRequest
+     * @param row row from BDD table
+     * @return UserLoginRequest
+     */
+    public static UserLoginRequest mapToUserLoginRequest(Map<String, String> row) {
+        String email = row.get(BddFieldConstants.UserLoginRequest.EMAIL);
+        String password = row.get(BddFieldConstants.UserLoginRequest.PASSWORD);
+
+        return new UserLoginRequest(email, password);
+    }
+
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of UserInfo
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<UserInfo>> buildParameterizedUserInfoResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of JwtAuthentication
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<JwtAuthentication>> buildParameterizedJwtAuthenticationResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of GameSave
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<GameSave>> buildParameterizedGameSaveResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    public static ParameterizedTypeReference<GenericResponse<Void>> buildParameterizedVoidResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
 }
