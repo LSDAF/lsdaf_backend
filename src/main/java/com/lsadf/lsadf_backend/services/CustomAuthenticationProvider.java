@@ -17,12 +17,8 @@ public class CustomAuthenticationProvider implements org.springframework.securit
         if (email == null) {
             throw new IllegalArgumentException("Email is required");
         }
-        try {
-            final UserDetails user = userDetailsService.loadUserByUsername(email);
-            return createSuccessfulAuthentication(authentication, user);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid email");
-        }
+        final UserDetails user = userDetailsService.loadUserByUsername(email);
+        return createSuccessfulAuthentication(authentication, user);
     }
 
     private Authentication createSuccessfulAuthentication(final Authentication authentication, final UserDetails user) {

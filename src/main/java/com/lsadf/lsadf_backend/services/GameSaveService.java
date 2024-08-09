@@ -5,6 +5,8 @@ import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 
 import java.util.stream.Stream;
 
@@ -14,45 +16,66 @@ import java.util.stream.Stream;
 public interface GameSaveService {
     /**
      * Creates a new game save for the user
-     * @param userEmail
-     * @return
-     * @throws NotFoundException
+     *
+     * @param userEmail the user email
+     * @return the created game save
+     * @throws NotFoundException the not found exception
      */
-    GameSave createGameSave(String userEmail) throws NotFoundException;
+    GameSaveEntity createGameSave(String userEmail) throws NotFoundException;
+
+    /**
+     * Creates a new game save
+     *
+     * @param creationRequest the admin creation request
+     * @return the created game save
+     * @throws NotFoundException the not found exception
+     */
+    GameSaveEntity createGameSave(AdminGameSaveCreationRequest creationRequest) throws NotFoundException;
 
     /**
      * Gets a game save
-     * @param saveId
-     * @param userEmail
-     * @return
-     * @throws ForbiddenException
-     * @throws NotFoundException
+     *
+     * @param saveId the save id
+     * @return the game save
+     * @throws ForbiddenException the forbidden exception
+     * @throws NotFoundException  the not found exception
      */
-    GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException;
+    GameSaveEntity getGameSave(String saveId) throws NotFoundException;
 
     /**
      * Updates a game save
-     * @param saveId
-     * @param newSaveGame
-     * @param userEmail
-     * @return
-     * @throws ForbiddenException
-     * @throws NotFoundException
+     *
+     * @param saveId        the save id
+     * @param updateRequest the update request
+     * @return the updated game save
+     * @throws ForbiddenException the forbidden exception
+     * @throws NotFoundException  the not found exception
      */
-    GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, NotFoundException, UnauthorizedException;
+    GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException;
 
     /**
      * Deletes a game save
-     * @param saveId
-     * @param userEmail
-     * @throws ForbiddenException
-     * @throws NotFoundException
+     *
+     * @param saveId the save id
+     * @throws ForbiddenException the forbidden exception
+     * @throws NotFoundException  the not found exception
      */
-    void deleteGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
+    void deleteGameSave(String saveId) throws NotFoundException;
 
     /**
      * Gets all game saves
+     *
      * @return the stream of game saves
      */
     Stream<GameSaveEntity> getGameSaves();
+
+    /**
+     * Checks if the user owns the game save
+     *
+     * @param saveId    the game save id
+     * @param userEmail the user email
+     * @throws ForbiddenException the forbidden exception
+     * @throws NotFoundException  the not found exception
+     */
+    void checkGameSaveOwnership(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
 }

@@ -3,33 +3,27 @@ package com.lsadf.lsadf_backend.services;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.OAuth2AuthenticationProcessingException;
+import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.requests.UserCreationRequest;
-import com.lsadf.lsadf_backend.requests.UserOrderBy;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfo;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfoFactory;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Sets;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -70,6 +64,16 @@ public class UserServiceImpl implements UserService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
+    @Override
+    public boolean validateUserPassword(String email, String password) throws NotFoundException {
+        UserEntity userEntity = getUserByEmail(email);
+        return passwordEncoder.matches(password, userEntity.getPassword());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public UserEntity createUser(String name, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles) {
@@ -77,16 +81,15 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
 
-        log.info("Creating user with name: {}, email: {}", name, email);
-
         Set<UserRole> userRoles = optionalUserRoles.orElse(Sets.newHashSet(UserRole.getDefaultRole()));
         String encodedPassword = passwordEncoder.encode(password);
         UserEntity userEntity = UserEntity
                 .builder()
                 .roles(userRoles)
                 .email(email)
+                .enabled(true)
                 .name(name)
-                .provider(provider.getProviderType())
+                .provider(provider)
                 .password(encodedPassword)
                 .build();
 
@@ -98,10 +101,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(readOnly = true)
-    public UserEntity getUserByEmail(String email) {
-        log.info("Getting user by email: {}", email);
+    public UserEntity getUserByEmail(String email) throws NotFoundException {
         return userRepository.findUserEntityByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found"));
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
     }
 
     /**
@@ -119,10 +121,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(readOnly = true)
-    public UserEntity getUserById(String id) {
-        log.info("Getting user by id: {}", id);
+    public UserEntity getUserById(String id) throws NotFoundException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
     }
 
     /**
@@ -131,7 +132,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Stream<UserEntity> getUsers() {
-        log.info("Getting all users");
         return userRepository.findAllUsers();
     }
 
@@ -140,8 +140,15 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void deleteUser(String id) {
-        log.info("Deleting user by id: {}", id);
+    public void deleteUser(String id) throws NotFoundException {
+        if (id == null) {
+            throw new NotFoundException("User id is null");
+        }
+        if (!userRepository.existsById(id)) {
+            log.error("User with id {} not found", id);
+            throw new NotFoundException("User with id " + id + " not found");
+        }
+
         userRepository.deleteById(id);
     }
 
@@ -150,8 +157,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void deleteUserByEmail(String email) {
-        log.info("Deleting user by email: {}", email);
+    public void deleteUserByEmail(String email) throws NotFoundException {
+        if (email == null) {
+            throw new NotFoundException("User email is null");
+        }
+        if (!userRepository.existsByEmail(email)) {
+            log.error("User with email {} not found", email);
+            throw new NotFoundException("User with email " + email + " not found");
+        }
         userRepository.deleteUserEntityByEmail(email);
     }
 
@@ -160,14 +173,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity updateUser(String id, String name, String email) {
-        log.info("Updating user with id: {}", id);
-        UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+    public UserEntity updateUserPassword(String userEmail, String oldPassword, String newPassword) throws NotFoundException {
+        UserEntity userEntity = userRepository.findUserEntityByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("User with email " + userEmail + " not found"));
 
-        userEntity.setName(name);
-        userEntity.setEmail(email);
+        if (!passwordEncoder.matches(oldPassword, userEntity.getPassword())) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
 
+        if (newPassword.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long");
+        }
+
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(userEntity);
     }
 
@@ -176,7 +194,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+    public UserEntity updateUser(String id, UserUpdateRequest userUpdateRequest) throws NotFoundException {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+
+        return updateUser(userEntity, userUpdateRequest);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, attributes);
         if (oAuth2UserInfo.getName() == null) {
             throw new OAuth2AuthenticationProcessingException("Name not found from OAuth2 provider");
@@ -202,8 +232,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity updateExistingUser(UserEntity existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setName(oAuth2UserInfo.getName());
-        return userRepository.save(existingUser);
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest(oAuth2UserInfo.getName());
+        return updateUser(existingUser, userUpdateRequest);
     }
 
     private UserCreationRequest buildUserCreationRequest(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
@@ -215,25 +245,19 @@ public class UserServiceImpl implements UserService {
                 .password(CHANGEIT).build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UserInfo buildUserInfoFromLocalUser(LocalUser localUser) {
-        List<UserRole> roles = localUser.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(UserRole::fromRole)
-                .collect(Collectors.toList());
-        UserEntity user = localUser.getUserEntity();
-        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles);
-    }
+    private UserEntity updateUser(UserEntity userEntity,
+                                  UserUpdateRequest userUpdateRequest) {
+        boolean hasUpdates = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UserInfo buildUserInfoFromUserEntity(UserEntity userEntity) {
-        List<UserRole> roles = userEntity.getRoles().stream().toList();
-        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
+        if (userUpdateRequest != null && !userUpdateRequest.getName().equals(userEntity.getName())) {
+            userEntity.setName(userEntity.getName());
+            hasUpdates = true;
+        }
+
+        if (hasUpdates) {
+            return userRepository.save(userEntity);
+        }
+
+        return userEntity;
     }
 }
