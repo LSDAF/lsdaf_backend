@@ -24,7 +24,7 @@ public class UserCreationRequest implements Serializable {
     private String userId;
 
     @JsonIgnore
-    private String providerUserId ;
+    private String providerUserId;
 
     @NotBlank
     @Schema(description = "Name of user to create", example = "Toto Dupont")
