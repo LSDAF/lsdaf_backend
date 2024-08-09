@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.services;
+package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.services.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @RequiredArgsConstructor
-public class CustomAuthenticationProvider implements org.springframework.security.authentication.AuthenticationProvider {
+public class CustomAuthenticationProviderImpl implements org.springframework.security.authentication.AuthenticationProvider {
     private final UserDetailsService userDetailsService;
 
     @Override

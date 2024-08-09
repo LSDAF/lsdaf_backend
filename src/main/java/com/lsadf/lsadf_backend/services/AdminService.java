@@ -4,13 +4,16 @@ import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.requests.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.requests.UserCreationRequest;
-import com.lsadf.lsadf_backend.requests.UserOrderBy;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
+import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 
 import java.util.List;
 
@@ -38,11 +41,19 @@ public interface AdminService {
      * Gets a user by its id
      *
      * @param userId the id of the user
-     * @return
+     * @return the user details
+     * @throws NotFoundException if the user is not found
      */
-    User getUser(String userId);
+    UserAdminDetails getUserById(String userId) throws NotFoundException;
 
-    User getUserById(String userEmail);
+    /**
+     * Gets a user by its email
+     *
+     * @param userEmail the email of the user
+     * @return the user details
+     * @throws NotFoundException if the user is not found
+     */
+    UserAdminDetails getUserByEmail(String userEmail) throws NotFoundException;
 
     /**
      * Creates a new user
@@ -59,14 +70,14 @@ public interface AdminService {
      * @param user   the user to update
      * @return
      */
-    User updateUser(String userId, User user, String userEmail);
+    User updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException;
 
     /**
      * Deletes a user
      *
      * @param userId the id of the user
      */
-    void deleteUser(String userId, String userEmail);
+    void deleteUser(String userId, String userEmail) throws NotFoundException;
 
     // GameSave
 
@@ -84,23 +95,23 @@ public interface AdminService {
      * @param saveId the id of the game save
      * @return the game save
      */
-    GameSave getGameSave(String saveId, String userEmail) throws ForbiddenException, UnauthorizedException, NotFoundException;
+    GameSave getGameSave(String saveId) throws ForbiddenException, UnauthorizedException, NotFoundException;
 
     /**
      * Updates a game save
      *
-     * @param saveId      the id of the game save
-     * @param newSaveGame the new game save
+     * @param saveId        the id of the game save
+     * @param updateRequest the update request
      * @return the updated game save
      */
-    GameSave updateGameSave(String saveId, GameSave newSaveGame, String userEmail) throws ForbiddenException, UnauthorizedException, NotFoundException;
+    GameSave updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException;
 
     /**
      * Deletes a game save
      *
      * @param saveId the id of the game save
      */
-    void deleteGameSave(String saveId, String userEmail) throws ForbiddenException, NotFoundException;
+    void deleteGameSave(String saveId) throws ForbiddenException, NotFoundException;
 
     /**
      * Creates a new game save
@@ -108,7 +119,7 @@ public interface AdminService {
      * @param adminGameSaveCreationRequest the game save request
      * @return the created game save
      */
-    GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest);
+    GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest) throws NotFoundException;
 
     /**
      * Searches users
@@ -116,7 +127,7 @@ public interface AdminService {
      * @param searchRequest the filters to apply
      * @return the list of users
      */
-    List<User> searchUsers(SearchRequest searchRequest);
+    List<User> searchUsers(SearchRequest searchRequest, UserOrderBy orderBy);
 
     /**
      * Searches game saves
@@ -124,5 +135,5 @@ public interface AdminService {
      * @param searchRequest the filters to apply
      * @return the list of game saves
      */
-    List<GameSave> searchGameSaves(SearchRequest searchRequest);
+    List<GameSave> searchGameSaves(SearchRequest searchRequest, GameSaveOrderBy orderBy);
 }

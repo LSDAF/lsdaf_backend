@@ -1,9 +1,8 @@
-package com.lsadf.lsadf_backend.security.jwt;
+package com.lsadf.lsadf_backend.security.jwt.impl;
 
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +19,9 @@ import java.util.Date;
 public class TokenProviderImpl implements TokenProvider {
 
     private final AuthProperties authProperties;
-    private final UserService userService;
-    private final UserDetailsService userDetailsService;
 
-    public TokenProviderImpl(AuthProperties authProperties,
-                             UserService userService,
-                             UserDetailsService userDetailsService) {
+    public TokenProviderImpl(AuthProperties authProperties) {
         this.authProperties = authProperties;
-        this.userService = userService;
-        this.userDetailsService = userDetailsService;
     }
 
 
@@ -78,8 +71,6 @@ public class TokenProviderImpl implements TokenProvider {
                     .build()
                     .parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {

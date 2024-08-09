@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.services;
+package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -9,6 +9,8 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.services.GameSaveService;
+import com.lsadf.lsadf_backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,11 +1,10 @@
-package com.lsadf.lsadf_backend.services;
+package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.OAuth2AuthenticationProcessingException;
-import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
@@ -14,6 +13,7 @@ import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfo;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfoFactory;
+import com.lsadf.lsadf_backend.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Sets;
 import org.springframework.security.crypto.password.PasswordEncoder;

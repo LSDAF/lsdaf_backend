@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 

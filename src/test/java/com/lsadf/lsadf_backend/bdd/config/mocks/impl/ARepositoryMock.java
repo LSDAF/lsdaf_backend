@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
 
-import org.springframework.data.domain.Sort;
+import com.lsadf.lsadf_backend.bdd.config.mocks.RepositoryMock;
 
 import java.util.*;
 import java.util.stream.Collectors;
