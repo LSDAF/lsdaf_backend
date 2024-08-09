@@ -32,6 +32,8 @@ public interface AuthController {
     @Operation(summary = "Logins a user, returns a JWT object contaning the token to request the API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException;

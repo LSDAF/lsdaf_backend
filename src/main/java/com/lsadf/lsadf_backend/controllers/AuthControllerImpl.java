@@ -5,6 +5,7 @@ import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.LocalUser;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,12 +73,26 @@ public class AuthControllerImpl extends BaseController implements AuthController
      */
     @Override
     public ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String email = (String) authentication.getPrincipal();
-        LocalUser localUser = userDetailsService.loadUserByEmail(email);
-        String jwt = tokenProvider.createToken(localUser);
-        return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully logged in", new JwtAuthentication(jwt, mapper.mapLocalUserToUserInfo(localUser)));
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            LocalUser localUser = userDetailsService.loadUserByEmail(userLoginRequest.getEmail());
+            boolean isValidPassword = userService.validateUserPassword(userLoginRequest.getEmail(), userLoginRequest.getPassword());
+            if (!isValidPassword) {
+                throw new WrongPasswordException("Invalid password");
+            }
+            String jwt = tokenProvider.createToken(localUser);
+            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully logged in", new JwtAuthentication(jwt, mapper.mapLocalUserToUserInfo(localUser)));
+        } catch (NotFoundException e) {
+            log.error("User with email {} not found", userLoginRequest.getEmail(), e);
+            return ResponseUtils.generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        } catch (WrongPasswordException e) {
+            log.error("Invalid password");
+            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (AuthenticationException e) {
+            log.error("Authentication failed", e);
+            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Authentication failed", null);
+        }
     }
 
     /**
