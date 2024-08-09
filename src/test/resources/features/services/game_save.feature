@@ -1,4 +1,4 @@
-Feature: Game Save Features
+Feature: Game Save Service Features
 
   Background:
     Given the BDD engine is ready
@@ -96,6 +96,11 @@ Feature: Game Save Features
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
       | d90b8f0f-68da-44ca-9d79-f564a0a33c59 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3       | 2            | 11111  |
     When we want to get all game saves
+
+    Then I should return the following game saves
+      | id                                   | userId                               | gold    | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
+      | d90b8f0f-68da-44ca-9d79-f564a0a33c59 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3       | 2            | 11111  |
 
   Scenario: Delete an existing GameSave
     Given the following users

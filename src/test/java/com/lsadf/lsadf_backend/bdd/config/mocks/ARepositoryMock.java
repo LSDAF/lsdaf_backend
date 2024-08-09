@@ -9,6 +9,11 @@ public abstract class ARepositoryMock<T> implements RepositoryMock<T> {
     protected final Map<String, T> entities = new HashMap<>();
 
     @Override
+    public Optional<T> existsById(String id) {
+        return Optional.ofNullable(entities.get(id));
+    }
+
+    @Override
     public Optional<T> findById(String id) {
         return Optional.ofNullable(entities.get(id));
     }

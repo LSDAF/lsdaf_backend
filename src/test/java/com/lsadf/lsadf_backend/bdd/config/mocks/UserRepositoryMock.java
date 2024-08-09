@@ -5,6 +5,7 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
     @Override
@@ -44,5 +45,9 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
     public void deleteUserEntityByEmail(String email) {
         entities.values()
                 .removeIf(user -> user.getEmail().equals(email));
+    }
+
+    public Stream<UserEntity> findAllUsers() {
+        return entities.values().stream();
     }
 }

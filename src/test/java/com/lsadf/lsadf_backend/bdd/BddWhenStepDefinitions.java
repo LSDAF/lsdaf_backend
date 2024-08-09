@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
@@ -11,17 +12,19 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.utils.BddUtils.buildParameterizedJwtAuthenticationResponse;
-import static com.lsadf.lsadf_backend.utils.BddUtils.buildParameterizedUserInfoResponse;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 
 @Slf4j(topic = "[WHEN STEP DEFINITIONS]")
 public class BddWhenStepDefinitions extends BddLoader {
@@ -58,6 +61,63 @@ public class BddWhenStepDefinitions extends BddLoader {
             responseStack.push(body);
             log.info("Response: {}", result);
 
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to create a new user with the following data$")
+    public void when_we_want_to_create_a_new_user_with_the_following_data(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        // it should have only one line
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+        UserCreationRequest userCreationRequest = BddUtils.mapToUserCreationRequest(row);
+        try {
+            UserEntity user = userService.createUser(userCreationRequest);
+            userEntityListStack.push(Collections.singletonList(user));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to validate the user password with email (.*) and password (.*)$")
+    public void when_we_want_to_validate_the_user_password_with_email_and_password(String userEmail, String password) {
+        try {
+            booleanStack.push(userService.validateUserPassword(userEmail, password));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to update the user with id (.*) with the following UserUpdateRequest$")
+    public void when_we_want_to_update_the_user_with_id_with_the_following_user_update_request(String userId, DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        // it should have only one line
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+        UserUpdateRequest userUpdateRequest = BddUtils.mapToUserUpdateRequest(row);
+        try {
+            UserEntity updated = userService.updateUser(userId, userUpdateRequest);
+            userEntityListStack.push(Collections.singletonList(updated));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to update the password of the user with email (.*) from (.*) to (.*)$")
+    public void when_we_want_to_update_the_password_of_the_user_with_email_from_to(String userEmail, String oldPassword, String newPassword) {
+        try {
+            var user = userService.updateUserPassword(userEmail, oldPassword, newPassword);
+            userEntityListStack.push(Collections.singletonList(user));
         } catch (Exception e) {
             exceptionStack.push(e);
         }
@@ -193,7 +253,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
-            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, BddUtils.buildParameterizedGameSaveResponse());
+            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
             var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
@@ -210,7 +270,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
             HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
-            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, BddUtils.buildParameterizedGameSaveResponse());
+            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
             var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
@@ -236,7 +296,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<GameSaveUpdateRequest> request = new HttpEntity<>(new GameSaveUpdateRequest(), headers);
-            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, BddUtils.buildParameterizedVoidResponse());
+            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
             var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
@@ -267,11 +327,145 @@ public class BddWhenStepDefinitions extends BddLoader {
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<GameSaveUpdateRequest> request = new HttpEntity<>(updateRequest, headers);
-            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, BddUtils.buildParameterizedVoidResponse());
+            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
             var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the endpoint to get his UserInfo with no token$")
+    public void when_the_user_requests_the_endpoint_to_get_his_user_info_with_no_token() {
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
+            ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
+            var body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the endpoint to get his UserInfo$")
+    public void when_the_user_requests_the_endpoint_to_get_his_user_info() {
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+
+            String token = jwtStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
+            var body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the endpoint to get his GameSaves$")
+    public void when_the_user_requests_the_endpoint_to_get_his_game_saves() {
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME_GAME_SAVES;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+
+            String token = jwtStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
+            var body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the endpoint to get his GameSaves with no token$")
+    public void when_the_user_requests_the_endpoint_to_get_his_game_saves_with_no_token() {
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME_GAME_SAVES;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
+            ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
+            var body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to check the existence of the user with email (.*)$")
+    public void when_we_want_to_check_the_existence_of_the_user_with_email(String userEmail) {
+        try {
+            boolean exists = userService.existsByEmail(userEmail);
+            booleanStack.push(exists);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to get the user with id (.*)$")
+    public void when_we_want_to_get_the_user_with_id(String userId) {
+        try {
+            UserEntity user = userService.getUserById(userId);
+            userEntityListStack.push(Collections.singletonList(user));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to delete the user with id (.*)$")
+    public void when_we_want_to_delete_the_user_with_id(String userId) {
+        try {
+            userService.deleteUser(userId);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to delete the user with email (.*)$")
+    public void when_we_want_to_delete_the_user_with_email(String userEmail) {
+        try {
+            userService.deleteUserByEmail(userEmail);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to get the user with email (.*)$")
+    public void when_we_want_to_get_the_user_with_email(String userEmail) {
+        try {
+            UserEntity user = userService.getUserByEmail(userEmail);
+            userEntityListStack.push(Collections.singletonList(user));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^we want to get all the users$")
+    public void when_we_want_to_get_all_the_users() {
+        try {
+            var users = userService.getUsers().toList();
+            userEntityListStack.push(users);
         } catch (Exception e) {
             exceptionStack.push(e);
         }

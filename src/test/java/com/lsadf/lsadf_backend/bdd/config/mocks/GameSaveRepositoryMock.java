@@ -4,6 +4,7 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
     @Override
@@ -28,4 +29,8 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         return toUpdate;
     }
 
+
+    public Stream<GameSaveEntity> findAllSaveGames() {
+        return entities.values().stream();
+    }
 }

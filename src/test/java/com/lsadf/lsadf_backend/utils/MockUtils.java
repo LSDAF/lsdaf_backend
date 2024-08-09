@@ -35,7 +35,8 @@ public class MockUtils {
         UserRepositoryMock userRepositoryMock = new UserRepositoryMock();
         when(userRepository.findAll()).thenReturn(userRepositoryMock.findAll());
         when(userRepository.count()).thenReturn(userRepositoryMock.count());
-        when(userRepository.existsById(any())).thenAnswer(invocation -> userRepositoryMock.findById(invocation.getArgument(0)));
+        when(userRepository.findAllUsers()).thenReturn(userRepositoryMock.findAllUsers());
+        when(userRepository.existsById(any())).thenAnswer(invocation -> userRepositoryMock.existsById(invocation.getArgument(0)).isPresent());
         when(userRepository.existsByEmail(any())).thenAnswer(invocation -> userRepositoryMock.findUserEntityByEmail(invocation.getArgument(0)).isPresent());
         when(userRepository.findById(Mockito.anyString())).thenAnswer(invocation -> userRepositoryMock.findById(invocation.getArgument(0)));
         when(userRepository.save(Mockito.any())).thenAnswer(invocation -> userRepositoryMock.save(invocation.getArgument(0)));
@@ -79,6 +80,8 @@ public class MockUtils {
         GameSaveRepositoryMock gameSaveRepositoryMock = new GameSaveRepositoryMock();
         when(gameSaveRepository.findAll()).thenReturn(gameSaveRepositoryMock.findAll());
         when(gameSaveRepository.count()).thenReturn(gameSaveRepositoryMock.count());
+        when(gameSaveRepository.findAllGameSaves()).thenReturn(gameSaveRepositoryMock.findAllSaveGames());
+        when(gameSaveRepository.existsById(any())).thenAnswer(invocation -> gameSaveRepositoryMock.existsById(invocation.getArgument(0)).isPresent());
         when(gameSaveRepository.findById(Mockito.anyString())).thenAnswer(invocation -> gameSaveRepositoryMock.findById(invocation.getArgument(0)));
         when(gameSaveRepository.save(Mockito.any())).thenAnswer(invocation -> gameSaveRepositoryMock.save(invocation.getArgument(0)));
         when(gameSaveRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> gameSaveRepositoryMock.saveAll(invocation.getArgument(0)));

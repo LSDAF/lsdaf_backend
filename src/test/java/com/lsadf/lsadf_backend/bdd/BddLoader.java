@@ -127,6 +127,9 @@ public class BddLoader {
     protected Stack<GenericResponse<?>> responseStack;
 
     @Autowired
+    protected Stack<Boolean> booleanStack;
+
+    @Autowired
     @Qualifier("jwtStack")
     protected Stack<String> jwtStack;
 

@@ -28,6 +28,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.userInfoListStack.clear();
         this.responseStack.clear();
         this.jwtStack.clear();
+        this.booleanStack.clear();
 
         BddUtils.initTestRestTemplate(testRestTemplate);
 

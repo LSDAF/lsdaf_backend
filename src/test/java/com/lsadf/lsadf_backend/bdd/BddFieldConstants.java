@@ -51,6 +51,10 @@ public class BddFieldConstants {
         public static final String PASSWORD = "password";
     }
 
+    public static final class UserUpdateRequest {
+        public static final String NAME = "name";
+    }
+
     public static final class JwtAuthentication {
         public static final String NAME = "name";
         public static final String ID = "id";

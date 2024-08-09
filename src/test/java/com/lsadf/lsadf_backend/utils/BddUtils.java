@@ -15,6 +15,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -280,36 +281,9 @@ public class BddUtils {
         return new UserLoginRequest(email, password);
     }
 
+    public static UserUpdateRequest mapToUserUpdateRequest(Map<String, String> row) {
+        String name = row.get(BddFieldConstants.UserUpdateRequest.NAME);
 
-    /**
-     * Builds a ParameterizedTypeReference for a GenericResponse of UserInfo
-     * @return ParameterizedTypeReference
-     */
-    public static ParameterizedTypeReference<GenericResponse<UserInfo>> buildParameterizedUserInfoResponse() {
-        return new ParameterizedTypeReference<>() {
-        };
-    }
-
-    /**
-     * Builds a ParameterizedTypeReference for a GenericResponse of JwtAuthentication
-     * @return ParameterizedTypeReference
-     */
-    public static ParameterizedTypeReference<GenericResponse<JwtAuthentication>> buildParameterizedJwtAuthenticationResponse() {
-        return new ParameterizedTypeReference<>() {
-        };
-    }
-
-    /**
-     * Builds a ParameterizedTypeReference for a GenericResponse of GameSave
-     * @return ParameterizedTypeReference
-     */
-    public static ParameterizedTypeReference<GenericResponse<GameSave>> buildParameterizedGameSaveResponse() {
-        return new ParameterizedTypeReference<>() {
-        };
-    }
-
-    public static ParameterizedTypeReference<GenericResponse<Void>> buildParameterizedVoidResponse() {
-        return new ParameterizedTypeReference<>() {
-        };
+        return new UserUpdateRequest(name);
     }
 }

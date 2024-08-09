@@ -44,6 +44,23 @@ public class BddThenStepDefinitions extends BddLoader {
         }
     }
 
+    @Then("^I should have no user entries in DB$")
+    public void then_i_should_have_no_user_entries_in_db() {
+        assertThat(userRepository.count()).isEqualTo(0);
+    }
+
+    @Then("^I should return true$")
+    public void then_i_should_return_true() {
+        boolean actual = booleanStack.peek();
+        assertThat(actual).isTrue();
+    }
+
+    @Then("^I should return false$")
+    public void then_i_should_return_false() {
+        boolean actual = booleanStack.peek();
+        assertThat(actual).isFalse();
+    }
+
     @Then("^the response status code should be (.*)$")
     public void then_the_response_status_code_should_be(int statusCode) {
         int actual = responseStack.peek().getStatus();
@@ -98,6 +115,12 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_i_should_throw_a_not_found_exception() {
         Exception exception = exceptionStack.peek();
         assertThat(exception).isInstanceOf(NotFoundException.class);
+    }
+
+    @Then("^I should throw a IllegalArgumentException$")
+    public void then_i_should_throw_a_illegal_argument_exception() {
+        Exception exception = exceptionStack.peek();
+        assertThat(exception).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Then("^I should throw a ForbiddenException$")

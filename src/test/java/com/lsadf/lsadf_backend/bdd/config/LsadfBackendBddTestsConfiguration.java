@@ -49,6 +49,11 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Stack<Boolean> booleanStack() {
+        return new Stack<>();
+    }
+
+    @Bean
     public Stack<List<UserInfo>> userInfoListStack() {
         return new Stack<>();
     }
