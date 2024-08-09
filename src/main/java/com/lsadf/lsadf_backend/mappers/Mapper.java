@@ -8,6 +8,8 @@ import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 
+import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
+
 public interface Mapper {
     /**
      * Maps GameSaveEntity to GameSave
@@ -48,4 +50,11 @@ public interface Mapper {
      * @return UserInfo
      */
     UserInfo mapUserEntityToUserInfo(UserEntity userEntity);
+
+    /**
+     * Maps UserEntity to LocalUser
+     * @param user UserEntity
+     * @return LocalUser
+     */
+    LocalUser mapUserEntityToLocalUser(UserEntity user);
 }

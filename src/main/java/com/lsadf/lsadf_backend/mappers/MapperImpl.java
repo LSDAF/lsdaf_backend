@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
+
 @NoArgsConstructor
 public class MapperImpl implements Mapper {
 
@@ -92,5 +94,21 @@ public class MapperImpl implements Mapper {
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
         List<UserRole> roles = userEntity.getRoles().stream().toList();
         return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LocalUser mapUserEntityToLocalUser(UserEntity user) {
+        return new LocalUser(user.getEmail(),
+                user.getPassword(),
+                user.isEnabled(),
+                true,
+                true,
+                true,
+                buildSimpleGrantedAuthorities(user.getRoles()),
+                user);
     }
 }
