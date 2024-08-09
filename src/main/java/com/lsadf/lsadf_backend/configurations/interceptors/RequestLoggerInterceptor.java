@@ -9,28 +9,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "[HTTP]")
 public class RequestLoggerInterceptor implements HandlerInterceptor {
 
     private static final String ANONYMOUS_USER = "anonymousUser";
 
-    private final HttpLogProperties httpLogProperties;
+    private final Set<String> loggedMethods;
 
 
     public RequestLoggerInterceptor(HttpLogProperties httpLogProperties) {
-        this.httpLogProperties = httpLogProperties;
+        this.loggedMethods = httpLogProperties.getLoggedMethods().stream().map(HttpMethod::toString).collect(Collectors.toSet());
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (httpLogProperties.getLoggedMethods()
-                .stream().map(HttpMethod::toString)
-                .anyMatch(method -> method.equals(request.getMethod()))) {
+        if (loggedMethods.contains(request.getMethod())) {
             String username = null;
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Object principal = authentication.getPrincipal();
