@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.models;
+package com.lsadf.lsadf_backend.models.admin;
 
 import lombok.Data;
 
