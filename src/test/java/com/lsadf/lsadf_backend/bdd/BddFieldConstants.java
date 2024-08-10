@@ -62,4 +62,37 @@ public class BddFieldConstants {
         public static final String EMAIL = "email";
         public static final String ROLES = "roles";
     }
+
+    public static final class UserAdminDetails {
+        public static final String ID = BddFieldConstants.ID;
+        public static final String EMAIL = "email";
+        public static final String PASSWORD = "password";
+        public static final String NAME = "name";
+        public static final String SOCIAL_PROVIDER = "socialProvider";
+        public static final String ENABLED = "enabled";
+        public static final String ROLES = "roles";
+        public static final String GAME_SAVES = "gameSaves";
+        public static final String UPDATED_AT = BddFieldConstants.UPDATED_AT;
+        public static final String CREATED_AT = BddFieldConstants.CREATED_AT;
+    }
+
+    public static final class GlobalInfo {
+        public static final String NB_GAME_SAVES = "nbGameSaves";
+        public static final String NB_USERS = "nbUsers";
+    }
+
+    public static final class AdminUserCreationRequest {
+        public static final String NAME = "name";
+        public static final String USER_ID = "userId";
+        public static final String PASSWORD = "password";
+        public static final String EMAIL = "email";
+        public static final String SOCIAL_PROVIDER = "socialProvider";
+        public static final String PROVIDER_USER_ID = "providerUserId";
+        public static final String USER_ROLES = "userRoles";
+    }
+
+    public static final class SearchRequest {
+        public static final String KEY = "key";
+        public static final String VALUE = "value";
+    }
 }

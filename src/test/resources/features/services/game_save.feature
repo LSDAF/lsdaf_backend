@@ -1,3 +1,4 @@
+
 Feature: Game Save Service Features
 
   Background:
@@ -11,7 +12,7 @@ Feature: Game Save Service Features
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
 
     When we want to create a new game save for the user with email paul.ochon@test.com
-    Then I should return the following game saves
+    Then I should return the following game save entities
       | userId                               | gold | healthPoints | attack |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 0    | 10           | 1      |
 
@@ -24,7 +25,7 @@ Feature: Game Save Service Features
       | userEmail            | gold | healthPoints | attack |
       | paul.itesse@test.com | 500  | 11289        | 5000   |
 
-    Then I should return the following game saves
+    Then I should return the following game save entities
       | userEmail            | gold | healthPoints | attack |
       | paul.itesse@test.com | 500  | 11289        | 5000   |
 
@@ -39,7 +40,7 @@ Feature: Game Save Service Features
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
     When we want to get the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
-    Then I should return the following game saves
+    Then I should return the following game save entities
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
 
@@ -68,7 +69,7 @@ Feature: Game Save Service Features
     When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
       | gold | healthPoints | attack |
       | 0    | 200          | 3000   |
-    Then I should return the following game saves
+    Then I should return the following game save entities
       | id                                   | userId                               | gold | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 0    | 200          | 3000   |
 
@@ -97,7 +98,7 @@ Feature: Game Save Service Features
       | d90b8f0f-68da-44ca-9d79-f564a0a33c59 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3       | 2            | 11111  |
     When we want to get all game saves
 
-    Then I should return the following game saves
+    Then I should return the following game save entities
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
       | d90b8f0f-68da-44ca-9d79-f564a0a33c59 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3       | 2            | 11111  |

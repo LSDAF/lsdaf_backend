@@ -5,21 +5,23 @@ import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -121,11 +123,16 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.User.ID);
         String email = row.get(BddFieldConstants.User.EMAIL);
         String name = row.get(BddFieldConstants.User.NAME);
-
+        String provider = row.get(BddFieldConstants.User.PROVIDER);
         UserEntity userEntity = userRepository.findById(id).orElseThrow(NotFoundException::new);
 
         return User.builder()
+                .userRoles(userEntity.getRoles().stream().toList())
+                .password(userEntity.getPassword())
+                .socialProvider(SocialProvider.fromString(provider))
                 .id(id)
+                .createdAt(userEntity.getCreatedAt())
+                .updatedAt(userEntity.getUpdatedAt())
                 .email(email)
                 .name(name)
                 .build();
@@ -141,9 +148,10 @@ public class BddUtils {
         long gold = Long.parseLong(row.get(BddFieldConstants.GameSave.GOLD));
         long healthPoints = Long.parseLong(row.get(BddFieldConstants.GameSave.HEALTH_POINTS));
         long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
+        String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
 
-        return new AdminGameSaveCreationRequest(userEmail, gold, healthPoints, attack);
+        return new AdminGameSaveCreationRequest(id, userEmail, gold, healthPoints, attack);
     }
 
     /**
@@ -281,9 +289,99 @@ public class BddUtils {
         return new UserLoginRequest(email, password);
     }
 
+    /**
+     * Maps a row from a BDD table to a JwtAuthentication
+     * @param row row from BDD table
+     * @return JwtAuthentication
+     */
     public static UserUpdateRequest mapToUserUpdateRequest(Map<String, String> row) {
         String name = row.get(BddFieldConstants.UserUpdateRequest.NAME);
 
         return new UserUpdateRequest(name);
+    }
+
+    /**
+     * Maps a row from a BDD table to a AdminUserCreationRequest
+     * @param row row from BDD table
+     * @return AdminUserCreationRequest
+     */
+    public static AdminUserCreationRequest mapToAdminUserCreationRequest(Map<String, String> row) {
+        String name = row.get(BddFieldConstants.AdminUserCreationRequest.NAME);
+        String email = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL);
+        String userId = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ID);
+        String password = row.get(BddFieldConstants.AdminUserCreationRequest.PASSWORD);
+        String provider = row.get(BddFieldConstants.AdminUserCreationRequest.SOCIAL_PROVIDER);
+        String providerUserId = row.get(BddFieldConstants.AdminUserCreationRequest.PROVIDER_USER_ID);
+        String userRoles = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ROLES);
+
+        List<UserRole> roles = null;
+
+        if (userRoles != null) {
+            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toList());
+        }
+        SocialProvider socialProvider = SocialProvider.fromString(provider);
+
+        return new AdminUserCreationRequest(name, userId, email, password, socialProvider, roles, providerUserId);
+
+    }
+
+    /**
+     * Maps a row from a BDD table to a SearchRequest Filter
+     * @param row row from BDD table
+     * @return Filter
+     */
+    public static Filter mapToFilter(Map<String, String> row) {
+        String key = row.get(BddFieldConstants.SearchRequest.KEY);
+        String value = row.get(BddFieldConstants.SearchRequest.VALUE);
+        return new Filter(key, value);
+    }
+
+    /**
+     * Maps a row from a BDD table to a GlobalInfo
+     * @param row row from BDD table
+     * @return GlobalInfo
+     */
+    public static GlobalInfo mapToGlobalInfo(Map<String, String> row) {
+        String nbGameSaves = row.get(BddFieldConstants.GlobalInfo.NB_GAME_SAVES);
+        String nbUsers = row.get(BddFieldConstants.GlobalInfo.NB_USERS);
+
+        Long nbGameSavesLong = nbGameSaves == null ? 0L : Long.parseLong(nbGameSaves);
+        Long nbUsersLong = nbUsers == null ? 0L : Long.parseLong(nbUsers);
+
+        return new GlobalInfo(nbGameSavesLong, nbUsersLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a UserAdminDetails
+     * @param row row from BDD table
+     * @return UserAdminDetails
+     */
+    public static UserAdminDetails mapToUserAdminDetails(Map<String, String> row) {
+        String id = row.get(BddFieldConstants.UserAdminDetails.ID);
+        String email = row.get(BddFieldConstants.UserAdminDetails.EMAIL);
+        String name = row.get(BddFieldConstants.UserAdminDetails.NAME);
+        String password = row.get(BddFieldConstants.UserAdminDetails.PASSWORD);
+        String provider = row.get(BddFieldConstants.UserAdminDetails.SOCIAL_PROVIDER);
+        String enabled = row.get(BddFieldConstants.UserAdminDetails.ENABLED);
+        String roles = row.get(BddFieldConstants.UserAdminDetails.ROLES);
+
+        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+        SocialProvider socialProvider = SocialProvider.fromString(provider);
+        Set<UserRole> roleSet = roles == null
+                ? Set.of(UserRole.USER)
+                : Arrays.stream(roles.split(COMMA))
+                .map(UserRole::valueOf)
+                .collect(Collectors.toSet());
+
+
+        return UserAdminDetails.builder()
+                .id(id)
+                .email(email)
+                .name(name)
+                .password(password)
+                .socialProvider(socialProvider)
+                .enabled(enabledBoolean)
+                .userRoles(roleSet.stream().toList())
+                .build();
     }
 }

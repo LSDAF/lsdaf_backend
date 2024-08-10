@@ -8,6 +8,8 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -43,6 +45,11 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Stack<GlobalInfo> globalInfoStack() {
+        return new Stack<>();
+    }
+
+    @Bean
     @Qualifier("jwtStack")
     public Stack<String> jwtStack() {
         return new Stack<>();
@@ -60,6 +67,11 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     public Stack<List<UserEntity>> userEntityListStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<UserAdminDetails> userAdminDetailsStack() {
         return new Stack<>();
     }
 

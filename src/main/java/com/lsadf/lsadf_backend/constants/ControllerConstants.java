@@ -25,8 +25,17 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Admin {
         public static final String GLOBAL_INFO = "/global_info";
-        public static final String GAME_SAVE_ID = "/{game_save_id}";
-        public static final String USER_GAME_SAVES = "/{user_id}/game_saves";
+
+        public static final String USERS = "/users";
+        public static final String USER_ID = USERS + "/{user_id}";
+        public static final String USER_EMAIL = USERS + "/email/{user_email}";
+        public static final String CREATE_USER = USERS + "/new";
+        public static final String SEARCH_USERS = USERS + "/search";
+
+        public static final String GAME_SAVES = "/game_saves";
+        public static final String CREATE_GAME_SAVE = GAME_SAVES + "/new";
+        public static final String SEARCH_GAME_SAVES = GAME_SAVES + "/search";
+        public static final String GAME_SAVE_ID = GAME_SAVES + "/{game_save_id}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

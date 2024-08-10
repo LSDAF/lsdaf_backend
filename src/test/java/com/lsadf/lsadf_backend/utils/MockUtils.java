@@ -1,9 +1,8 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.UserDetailsServiceMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.UserRepositoryMock;
-import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GameSaveRepositoryMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserDetailsServiceMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserRepositoryMock;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
@@ -12,8 +11,6 @@ import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import lombok.experimental.UtilityClass;
 import org.mockito.Mockito;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;

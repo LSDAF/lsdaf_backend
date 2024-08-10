@@ -1,3 +1,4 @@
+
 Feature: User Service Feature
 
   Background:
@@ -10,7 +11,7 @@ Feature: User Service Feature
       | email               | name       | password  |
       | paul.ochon@test.com | Paul OCHON | paulOchon |
 
-    Then I should return the following users
+    Then I should return the following user entities
       | name       | email               | enabled | password  | provider | roles |
       | Paul OCHON | paul.ochon@test.com | true    | paulOchon | LOCAL    | USER  |
 
@@ -43,7 +44,7 @@ Feature: User Service Feature
 
     When we want to get all the users
 
-    Then I should return the following users
+    Then I should return the following user entities
       | id                                   | name          | email                  | password |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
       | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
@@ -57,7 +58,7 @@ Feature: User Service Feature
 
     When we want to get the user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
-    Then I should return the following users
+    Then I should return the following user entities
       | id                                   | name       | email               | password |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
 
@@ -68,7 +69,7 @@ Feature: User Service Feature
 
     When we want to get the user with email paul.ochon@test.com
 
-    Then I should return the following users
+    Then I should return the following user entities
       | id                                   | name       | email               | password |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
 

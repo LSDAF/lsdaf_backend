@@ -9,6 +9,8 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -25,8 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.reactive.ReactiveOAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -34,7 +34,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -115,7 +114,13 @@ public class BddLoader {
     protected Stack<List<User>> userListStack;
 
     @Autowired
+    protected Stack<GlobalInfo> globalInfoStack;
+
+    @Autowired
     protected Stack<List<UserEntity>> userEntityListStack;
+
+    @Autowired
+    protected Stack<UserAdminDetails> userAdminDetailsStack;
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;

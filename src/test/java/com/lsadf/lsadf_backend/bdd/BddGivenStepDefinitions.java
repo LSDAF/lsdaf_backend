@@ -25,7 +25,9 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.gameSaveEntityListStack.clear();
         this.userListStack.clear();
         this.userEntityListStack.clear();
+        this.globalInfoStack.clear();
         this.userInfoListStack.clear();
+        this.userAdminDetailsStack.clear();
         this.responseStack.clear();
         this.jwtStack.clear();
         this.booleanStack.clear();

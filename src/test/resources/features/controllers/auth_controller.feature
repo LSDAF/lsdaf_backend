@@ -1,3 +1,4 @@
+
 Feature: AuthController integration tests
 
   Background:
