@@ -38,7 +38,7 @@ public class ApplicationUtils {
                         ----------------------------------------------------------------------------------
                         \tApplication '{}' is running ! Access URLs:
                         \tLocal: \t\t\t{}://localhost:{}/api\t\t\t {}://localhost:{}/swagger-ui.html
-                        \tExternal: \t\t\t{}://{}:{}/api\t\t\t {}://{}:{}/swagger-ui.html
+                        \tExternal: \t\t{}://{}:{}/api\t\t {}://{}:{}/swagger-ui.html
                         \tProfiles(s): \t{}
                         ----------------------------------------------------------------------------------""",
                 appName,

@@ -3,15 +3,18 @@ package com.lsadf.lsadf_backend.services;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.UserInfo;
-import com.lsadf.lsadf_backend.requests.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Service for managing users
@@ -20,10 +23,10 @@ public interface UserService {
     /**
      * Creates a new user
      *
-     * @param name the name of the user
-     * @param email the email of the user
-     * @param password the password of the user
-     * @param provider the social provider if any, else local
+     * @param name              the name of the user
+     * @param email             the email of the user
+     * @param password          the password of the user
+     * @param provider          the social provider if any, else local
      * @param optionalUserRoles the roles of the user if any to use
      * @return the created user
      */
@@ -38,12 +41,28 @@ public interface UserService {
     UserEntity createUser(UserCreationRequest creationRequest);
 
     /**
+     * Validates given user password
+     *
+     * @param email    the email of the user
+     * @param password the password of the user
+     * @throws WrongPasswordException if the password is wrong
+     */
+    boolean validateUserPassword(String email, String password) throws NotFoundException;
+
+    /**
+     * Gets all users
+     *
+     * @return the list of users
+     */
+    Stream<UserEntity> getUsers();
+
+    /**
      * Gets user by email
      *
      * @param email
      * @return user
      */
-    UserEntity getUserByEmail(String email);
+    UserEntity getUserByEmail(String email) throws NotFoundException;
 
     /**
      * Checks if user exists by email
@@ -59,47 +78,40 @@ public interface UserService {
      * @param id
      * @return
      */
-    UserEntity getUserById(String id);
+    UserEntity getUserById(String id) throws NotFoundException;
 
     /**
      * Updates user by id
      *
      * @param id
      * @param name
-     * @param email
      * @return
      */
-    UserEntity updateUser(String id, String name, String email);
+    UserEntity updateUser(String id, UserUpdateRequest userUpdateRequest) throws NotFoundException;
+
+    /**
+     * Updates user password with its user email
+     *
+     * @param userEmail   the user email
+     * @param oldPassword the old password
+     * @param newPassword the new password
+     * @return
+     */
+    UserEntity updateUserPassword(String userEmail, String oldPassword, String newPassword) throws NotFoundException;
 
     /**
      * Deletes user by id
      *
      * @param id
      */
-    void deleteUser(String id);
+    void deleteUser(String id) throws NotFoundException;
 
     /**
      * Deletes user by email
      *
      * @param email
      */
-    void deleteUserByEmail(String email);
-
-    /**
-     * Build user info from LocalUser
-     *
-     * @param localUser the local user
-     * @return user info
-     */
-    UserInfo buildUserInfoFromLocalUser(LocalUser localUser);
-
-    /**
-     * Build user info from UserEntity
-     *
-     * @param userEntity the user entity
-     * @return user info
-     */
-    UserInfo buildUserInfoFromUserEntity(UserEntity userEntity);
+    void deleteUserByEmail(String email) throws NotFoundException;
 
     /**
      * Processes user registration
@@ -110,5 +122,5 @@ public interface UserService {
      * @param userInfo
      * @return
      */
-    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
+    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException;
 }

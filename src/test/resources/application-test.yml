@@ -12,6 +12,14 @@ db:
     enabled: false
     users:
 
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+
 cors:
   allowed-origins:
     - "*"
@@ -28,3 +36,9 @@ cors:
 spring:
   main:
     allow-bean-definition-overriding: true
+
+auth:
+  refresh-token-expiration-ms: 86_400_000
+  refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf
+  token-secret: knshjdvzuhdvkjnbduhfgsxtyzafshkfkcbndugsèarsyutfzxersdkjzdiuzguizh
+  token-expiration-ms: 3_600_000

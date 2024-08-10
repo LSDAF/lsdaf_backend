@@ -109,7 +109,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.finaxys.keyhab.KeyhabApiApplication</mainClass>
+                    <mainClass>com.lsadf.lsadf_backend.LsadfBackendApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -180,7 +180,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

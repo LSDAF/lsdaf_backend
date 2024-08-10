@@ -9,21 +9,26 @@ clean:
 	@mvn clean
 
 dbup:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile db up
+	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
 dbdown:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile db down
+	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml down
 
 build:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile backend build
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
+
+build-no-cache:
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
 
 up:
-	@docker-compose --env-file env/env.properties -f dc-local.yml --profile backend up
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
 
 down:
-	@docker-compose --env-file env/env.properties -f dc-local.yml down
+	COMPOSE_PROFILES=db,backend docker-compose --env-file env/env.properties -f dc-local.yml down
 
+logs:
+	COMPOSE_PROFILES=db,backend docker-compose --env-file env/env.properties -f dc-local.yml logs -f
 
 prune:
 	@docker system prune -a -f
@@ -32,11 +37,13 @@ prune:
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
+	@echo "> build-no-cache      |-----------------------------------------|  Build docker images with --no-cache option"
 	@echo "> up                  |-----------------------------------------|  Up docker images"
 	@echo "> down                |-----------------------------------------|  Down docker images"
 	@echo "> dbup                |-----------------------------------------|  Runs postgresql db + pgadmin docker images"
 	@echo "> dbdown              |-----------------------------------------|  Kills postgresql db + pgadmin docker images"
 	@echo "> prune               |-----------------------------------------|  Cleans all docker local storages"
+	@echo "> logs                |-----------------------------------------|  Reads all logs from docker images"
 	@echo ""
 	@echo "[Java Project]"
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"

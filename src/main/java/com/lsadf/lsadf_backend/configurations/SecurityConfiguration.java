@@ -1,21 +1,24 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
+import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
+import com.lsadf.lsadf_backend.properties.HttpLogProperties;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
-import com.lsadf.lsadf_backend.services.CustomAuthenticationProvider;
+import com.lsadf.lsadf_backend.services.impl.CustomAuthenticationProviderImpl;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserDetailsServiceImpl;
-import com.lsadf.lsadf_backend.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.BeanIds;
@@ -26,19 +29,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
+import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
 
 @Configuration
 @Import({
@@ -47,21 +49,29 @@ import java.util.Arrays;
 })
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-public class SecurityConfiguration {
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
+public class SecurityConfiguration implements WebMvcConfigurer {
 
-    private static String[] WHITELIST_URLS = {
+    @Autowired
+    private RequestLoggerInterceptor requestLoggerInterceptor;
+
+    @Autowired
+    private HttpLogProperties httpLogProperties;
+
+    public static final String[] WHITELIST_URLS = {
             "/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/api/v1/auth/**",
             "/oauth2/**",
-            "/**"
+            "/error"
     };
 
+    public static final String ADMIN_URLS = ADMIN + "/**";
+
     @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailsService userDetailsService) {
-        return new CustomAuthenticationProvider(userDetailsService);
+    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService userDetailsService) {
+        return new CustomAuthenticationProviderImpl(userDetailsService);
     }
 
     @Bean
@@ -87,6 +97,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((configurer) -> {
                     configurer
                             .requestMatchers(WHITELIST_URLS).permitAll()
+                            .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
                             .anyRequest().authenticated();
                 })
                 .oauth2Login((configurer) -> {
@@ -107,6 +118,7 @@ public class SecurityConfiguration {
                             .failureHandler(oAuth2AuthenticationFailureHandler);
                 });
 
+        security.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return security.build();
     }
@@ -134,6 +146,8 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+
+
     @Bean
     public CorsFilter corsFilter(CorsConfigurationProperties corsConfigurationProperties) {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -151,7 +165,7 @@ public class SecurityConfiguration {
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    public AuthenticationManager authenticationManagerBean(CustomAuthenticationProvider authenticationProvider) throws Exception {
+    public AuthenticationManager authenticationManagerBean(CustomAuthenticationProviderImpl authenticationProvider) throws Exception {
         return new ProviderManager(authenticationProvider);
     }
 
@@ -161,4 +175,27 @@ public class SecurityConfiguration {
         return new CorsConfigurationProperties();
     }
 
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String roleUser = UserRole.USER.getRole();
+        String roleAdmin = UserRole.ADMIN.getRole();
+        roleHierarchy.setHierarchy(roleAdmin + " > " + roleUser);
+
+        return roleHierarchy;
+    }
+
+    @Bean
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        if (httpLogProperties.isEnabled()) {
+            registry.addInterceptor(requestLoggerInterceptor);
+        }
+    }
 }

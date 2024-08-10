@@ -2,10 +2,11 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.UserInfo;
-import com.lsadf.lsadf_backend.requests.UserCreationRequest;
-import com.lsadf.lsadf_backend.requests.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,12 +31,12 @@ public interface AuthController {
     @PostMapping(value = ControllerConstants.Auth.LOGIN)
     @Operation(summary = "Logins a user, returns a JWT object contaning the token to request the API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest);
+    ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException;
 
 
     /**
@@ -45,9 +46,8 @@ public interface AuthController {
     @PostMapping(value = ControllerConstants.Auth.REGISTER)
     @Operation(summary = "Registers a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "400", description = ResponseMessages.BAD_REQUEST),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userLoginRequest);

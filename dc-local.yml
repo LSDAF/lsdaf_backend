@@ -19,6 +19,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8.6
+    platform: linux/amd64
     container_name: pgadmin
     profiles:
       - db
@@ -34,6 +35,23 @@ services:
       - "7502:80"
     networks:
       - backend
+
+  lsadf_backend:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lsadf_backend
+    profiles:
+      - backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SLEEP_ENABLED=true
+    networks:
+      - backend
+    depends_on:
+      - postgres
 
 networks:
   backend:

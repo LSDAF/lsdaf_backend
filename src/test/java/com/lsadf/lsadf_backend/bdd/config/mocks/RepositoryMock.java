@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public interface RepositoryMock<T> {
     Optional<T> findById(String id);
+    Optional<T> existsById(String id);
     Iterable<T> findAll();
     long count();
     T save(T entity);

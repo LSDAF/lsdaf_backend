@@ -1,14 +1,11 @@
 package com.lsadf.lsadf_backend.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -19,17 +16,21 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
  * Game Save DTO
  */
 @Data
-@RequiredArgsConstructor
 @Schema(name = "GameSave", description = "Game Save Object")
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder({ID, USER_ID, GOLD, HP, ATTACK, CREATED_AT, UPDATED_AT})
 public class GameSave {
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
-    private final String id;
+    private String id;
 
-    @JsonIgnore
-    private final User user;
+    @JsonProperty(value = USER_ID)
+    private String userId;
+
+    @JsonProperty(value = USER_EMAIL)
+    private String userEmail;
 
     @JsonProperty(value = GOLD)
     @Schema(description = "Gold amount", example = "260000")
@@ -48,9 +49,9 @@ public class GameSave {
 
     @JsonProperty(value = CREATED_AT)
     @Schema(description = "Creation date", example = "2022-01-01T00:00:00.000Z")
-    private final Date createdAt;
+    private Date createdAt;
 
     @JsonProperty(value = UPDATED_AT)
     @Schema(description = "Update date", example = "2022-01-01T00:00:00.000Z")
-    private final Date updatedAt;
+    private Date updatedAt;
 }

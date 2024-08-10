@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.security.oauth2;
 
+import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -68,7 +69,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         String email = (String) authentication.getPrincipal();
-        LocalUser localUser = userDetailsService.loadUserByEmail(email);
+        LocalUser localUser;
+        try {
+            localUser = userDetailsService.loadUserByEmail(email);
+        } catch (NotFoundException e) {
+            throw new RuntimeException(e);
+        }
         String token = tokenProvider.createToken(localUser);
 
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();

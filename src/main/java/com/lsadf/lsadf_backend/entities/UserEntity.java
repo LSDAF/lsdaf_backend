@@ -1,7 +1,9 @@
 package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
+import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.converters.SocialProviderConverter;
 import com.lsadf.lsadf_backend.converters.UserRoleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -35,7 +37,7 @@ public class UserEntity extends AEntity {
                       String name,
                       String email,
                       String password,
-                      String provider) {
+                      SocialProvider provider) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -57,7 +59,8 @@ public class UserEntity extends AEntity {
     @Size(min = 8)
     private String password;
 
-    private String provider;
+    @Convert(converter = SocialProviderConverter.class)
+    private SocialProvider provider;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
@@ -67,5 +70,6 @@ public class UserEntity extends AEntity {
 
     @Column(name = EntityAttributes.User.USER_ROLES)
     @Convert(converter = UserRoleConverter.class)
+    @ToString.Exclude
     private Set<UserRole> roles;
 }

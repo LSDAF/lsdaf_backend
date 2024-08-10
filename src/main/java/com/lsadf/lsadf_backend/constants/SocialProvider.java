@@ -14,7 +14,17 @@ public enum SocialProvider {
 
     private final String providerType;
 
+
     public static SocialProvider getDefaultSocialProvider() {
         return LOCAL;
+    }
+
+    public static SocialProvider fromString(String providerType) {
+        for (SocialProvider socialProvider : SocialProvider.values()) {
+            if (socialProvider.providerType.equals(providerType)) {
+                return socialProvider;
+            }
+        }
+        return getDefaultSocialProvider();
     }
 }
