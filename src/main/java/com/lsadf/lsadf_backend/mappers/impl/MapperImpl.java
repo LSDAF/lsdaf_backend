@@ -49,6 +49,8 @@ public class MapperImpl implements Mapper {
                 .id(userEntity.getId())
                 .password(userEntity.getPassword())
                 .name(userEntity.getName())
+                .socialProvider(userEntity.getProvider())
+                .userRoles(userEntity.getRoles().stream().toList())
                 .createdAt(userEntity.getCreatedAt())
                 .updatedAt(userEntity.getUpdatedAt())
                 .email(userEntity.getEmail())
@@ -63,15 +65,17 @@ public class MapperImpl implements Mapper {
         SocialProvider provider = userEntity.getProvider() == null ? null : userEntity.getProvider();
         return UserAdminDetails.builder()
                 .id(userEntity.getId())
-.email(userEntity.getEmail())
+                .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
                 .name(userEntity.getName())
-                .provider(provider)
+                .socialProvider(provider)
                 .enabled(userEntity.isEnabled())
-                .roles(new ArrayList<>(userEntity.getRoles()))
+                .userRoles(new ArrayList<>(userEntity.getRoles()))
                 .gameSaves(userEntity.getGameSaves().stream()
                         .map(this::mapToGameSave)
                         .collect(Collectors.toList()))
+                .updatedAt(userEntity.getUpdatedAt())
+                .createdAt(userEntity.getCreatedAt())
                 .build();
     }
 
