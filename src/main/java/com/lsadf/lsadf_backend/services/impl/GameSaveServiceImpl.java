@@ -72,6 +72,10 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .user(userEntity)
                 .build();
 
+        if (creationRequest.getId() != null) {
+            entity.setId(creationRequest.getId());
+        }
+
         return gameSaveRepository.save(entity);
     }
 

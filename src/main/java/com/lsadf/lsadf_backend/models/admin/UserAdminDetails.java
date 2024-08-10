@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.PROVIDER;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.UserAdminDetails.*;
 
 @Data
 @NoArgsConstructor

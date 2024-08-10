@@ -9,8 +9,11 @@ public enum GameSaveOrderBy implements OrderBy {
     CREATED_AT_DESC(JsonAttributes.CREATED_AT, SortingOrderParameter.DESCENDING),
     UPDATED_AT(JsonAttributes.UPDATED_AT, SortingOrderParameter.ASCENDING),
     UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING),
+    GOLD(JsonAttributes.GameSave.GOLD, SortingOrderParameter.ASCENDING),
+    GOLD_DESC(JsonAttributes.GameSave.GOLD, SortingOrderParameter.DESCENDING),
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
-    ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING);
+    ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING),
+    NONE(null, null);
 
     GameSaveOrderBy(String fieldName,
                     SortingOrderParameter order) {
@@ -30,5 +33,14 @@ public enum GameSaveOrderBy implements OrderBy {
     @Override
     public SortingOrderParameter getOrder() {
         return this.order;
+    }
+
+    public static GameSaveOrderBy fromString(String orderBy) {
+        for (GameSaveOrderBy gameSaveOrderBy : GameSaveOrderBy.values()) {
+            if (gameSaveOrderBy.name().equalsIgnoreCase(orderBy)) {
+                return gameSaveOrderBy;
+            }
+        }
+        throw new IllegalArgumentException("Invalid order by parameter");
     }
 }
