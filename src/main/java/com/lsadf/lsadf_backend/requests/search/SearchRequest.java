@@ -13,5 +13,4 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchRequest {
     private List<Filter> filters;
-    private OrderBy orderBy;
 }

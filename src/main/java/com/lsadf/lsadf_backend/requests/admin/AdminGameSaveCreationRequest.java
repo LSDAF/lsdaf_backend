@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminGameSaveCreationRequest {
+    private String id;
     private String userEmail;
     private long gold;
     private long healthPoints;
