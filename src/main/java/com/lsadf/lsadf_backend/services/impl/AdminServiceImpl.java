@@ -10,6 +10,7 @@ import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
@@ -54,8 +55,15 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
     public GlobalInfo getGlobalInfo() {
-        return null;
+        Long userCount = userService.getUsers().count();
+        Long gameSaveCount = gameSaveService.getGameSaves().count();
+
+        return GlobalInfo.builder()
+                .userCounter(userCount)
+                .gameSaveCounter(gameSaveCount)
+                .build();
     }
 
     /**
@@ -65,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(readOnly = true)
     public List<User> getUsers(UserOrderBy orderBy) {
         Stream<UserEntity> stream = userService.getUsers();
-        if (orderBy != null) {
+        if (orderBy != null && !orderBy.equals(UserOrderBy.NONE)) {
             stream = StreamUtils.sortUsers(stream, orderBy);
         }
 
@@ -104,26 +112,42 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public User createUser(UserCreationRequest creationRequest) {
-        UserEntity user = userService.createUser(creationRequest);
+    public UserAdminDetails createUser(AdminUserCreationRequest creationRequest) {
+        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
+                .email(creationRequest.getEmail())
+                .name(creationRequest.getName())
+                .password(creationRequest.getPassword())
+                .userRoles(creationRequest.getUserRoles())
+                .providerUserId(creationRequest.getProviderUserId())
+                .userId(creationRequest.getUserId())
+                .build();
+        UserEntity user = userService.createUser(userCreationRequest);
 
-        return mapper.mapToUser(user);
+        return mapper.mapToUserAdminDetails(user);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException {
-        return mapper.mapToUser(userService.updateUser(userId, userUpdateRequest));
+    public UserAdminDetails updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException {
+        return mapper.mapToUserAdminDetails(userService.updateUser(userId, userUpdateRequest));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void deleteUser(String userId, String userEmail) throws NotFoundException {
+    public void deleteUser(String userId) throws NotFoundException {
         userService.deleteUser(userId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteUserByEmail(String email) throws NotFoundException {
+        userService.deleteUserByEmail(email);
     }
 
     /**
@@ -166,6 +190,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(readOnly = true)
     public List<User> searchUsers(SearchRequest searchRequest, UserOrderBy orderBy) {
         Stream<UserEntity> userStream = searchService.searchUsers(searchRequest, orderBy);
+        userStream = StreamUtils.sortUsers(userStream, orderBy);
         return userStream
                 .map(mapper::mapToUser)
                 .collect(Collectors.toList());
@@ -178,6 +203,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(readOnly = true)
     public List<GameSave> searchGameSaves(SearchRequest searchRequest, GameSaveOrderBy orderBy) {
         Stream<GameSaveEntity> gameSaveStream = searchService.searchGameSaves(searchRequest, orderBy);
+        gameSaveStream = StreamUtils.sortGameSaves(gameSaveStream, orderBy);
         return gameSaveStream
                 .map(mapper::mapToGameSave)
                 .collect(Collectors.toList());

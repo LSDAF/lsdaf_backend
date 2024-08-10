@@ -7,8 +7,8 @@ import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
@@ -61,23 +61,32 @@ public interface AdminService {
      * @param creationRequest the user to create
      * @return
      */
-    User createUser(UserCreationRequest creationRequest);
+    UserAdminDetails createUser(AdminUserCreationRequest creationRequest);
 
     /**
      * Updates a user
      *
-     * @param userId the id of the user
-     * @param user   the user to update
-     * @return
+     * @param userId            the id of the user
+     * @param userUpdateRequest the request to update the user data
+     * @return the updated user
      */
-    User updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException;
+    UserAdminDetails updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException;
 
     /**
      * Deletes a user
      *
      * @param userId the id of the user
+     * @throws NotFoundException if the user is not found
      */
-    void deleteUser(String userId, String userEmail) throws NotFoundException;
+    void deleteUser(String userId) throws NotFoundException;
+
+    /**
+     * Deletes a user by its email
+     *
+     * @param email the email of the user
+     * @throws NotFoundException if the user is not found
+     */
+    void deleteUserByEmail(String email) throws NotFoundException;
 
     // GameSave
 
@@ -95,7 +104,7 @@ public interface AdminService {
      * @param saveId the id of the game save
      * @return the game save
      */
-    GameSave getGameSave(String saveId) throws ForbiddenException, UnauthorizedException, NotFoundException;
+    GameSave getGameSave(String saveId) throws NotFoundException;
 
     /**
      * Updates a game save
