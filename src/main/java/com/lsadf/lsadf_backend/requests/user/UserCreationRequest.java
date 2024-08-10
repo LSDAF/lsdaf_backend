@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.requests.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
+import com.lsadf.lsadf_backend.constants.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -38,6 +40,9 @@ public class UserCreationRequest implements Serializable {
     @NotBlank
     @Schema(description = "Email of user to create", example = "toto@toto.fr")
     private String email;
+
+    @JsonIgnore
+    private List<UserRole> userRoles;
 
     @JsonIgnore
     @Builder.Default

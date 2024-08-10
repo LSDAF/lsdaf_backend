@@ -14,7 +14,8 @@ public enum UserOrderBy implements OrderBy {
     CREATED_AT(JsonAttributes.CREATED_AT, SortingOrderParameter.ASCENDING),
     CREATED_AT_DESC(JsonAttributes.CREATED_AT, SortingOrderParameter.DESCENDING),
     UPDATED_AT(JsonAttributes.UPDATED_AT, SortingOrderParameter.ASCENDING),
-    UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING);
+    UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING),
+    NONE(null, null);
 
     UserOrderBy(String fieldName,
                         SortingOrderParameter order) {

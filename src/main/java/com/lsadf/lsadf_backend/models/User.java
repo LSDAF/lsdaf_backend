@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
+import com.lsadf.lsadf_backend.constants.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
@@ -37,8 +39,15 @@ public class User {
     @JsonIgnore
     private final String password;
 
+    @JsonIgnore
+    private final boolean enabled;
+
+    @JsonProperty(value = USER_ROLES)
+    @Schema(description = "User roles", example = "[\"USER\"]")
+    private final List<UserRole> userRoles;
+
     @JsonProperty(value = PROVIDER)
-    private final String socialProvider;
+    private final SocialProvider socialProvider;
 
     @JsonProperty(value = CREATED_AT)
     @Schema(description = "Creation date", example = "2022-01-01T00:00:00.000Z")

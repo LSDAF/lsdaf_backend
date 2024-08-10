@@ -250,7 +250,7 @@ public class UserServiceImpl implements UserService {
         boolean hasUpdates = false;
 
         if (userUpdateRequest != null && !userUpdateRequest.getName().equals(userEntity.getName())) {
-            userEntity.setName(userEntity.getName());
+            userEntity.setName(userUpdateRequest.getName());
             hasUpdates = true;
         }
 
