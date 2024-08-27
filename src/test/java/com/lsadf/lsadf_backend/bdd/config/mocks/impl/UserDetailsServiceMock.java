@@ -4,13 +4,14 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
 
-public class UserDetailsServiceMock {
+public class UserDetailsServiceMock implements UserDetailsService {
     private final UserService userService;
     private final Mapper mapper;
 

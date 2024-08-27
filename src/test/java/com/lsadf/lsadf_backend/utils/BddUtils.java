@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.utils;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
@@ -13,10 +14,11 @@ import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
@@ -68,9 +70,11 @@ public class BddUtils {
                 .user(userOptional.orElse(null))
                 .attack(attackLong)
                 .healthPoints(healthPointsLong)
-                .gold(goldLong)
                 .build();
 
+        GoldEntity goldEntity = new GoldEntity(gameSaveEntity, gameSaveEntity.getUser().getId(), goldLong);
+
+        gameSaveEntity.setGoldEntity(goldEntity);
         gameSaveEntity.setId(id);
 
         return gameSaveEntity;
@@ -124,7 +128,7 @@ public class BddUtils {
         String email = row.get(BddFieldConstants.User.EMAIL);
         String name = row.get(BddFieldConstants.User.NAME);
         String provider = row.get(BddFieldConstants.User.PROVIDER);
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        UserEntity userEntity = userRepository.findUserEntityByEmail(email).orElseThrow(NotFoundException::new);
 
         return User.builder()
                 .userRoles(userEntity.getRoles().stream().toList())
@@ -179,24 +183,39 @@ public class BddUtils {
     }
 
     /**
-     * Maps a row from a BDD table to a GameSaveUpdateRequest
+     * Maps a row from a BDD table to a AdminGameSaveUpdateRequest
      *
      * @param row row from BDD table
-     * @return GameSaveUpdateRequest
+     * @return AdminGameSaveUpdateRequest
      */
-    public static GameSaveUpdateRequest mapToGameSaveUpdateRequest(Map<String, String> row) {
+    public static AdminGameSaveUpdateRequest mapToAdminGameSaveUpdateRequest(Map<String, String> row) {
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
-        String id = row.get(BddFieldConstants.GameSave.ID);
-        String userId = row.get(BddFieldConstants.GameSave.USER_ID);
 
         Long goldLong = gold == null ? null : Long.parseLong(gold);
         Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
         Long attackLong = attack == null ? null : Long.parseLong(attack);
 
 
-        return new GameSaveUpdateRequest(goldLong, healthPointsLong, attackLong);
+        return new AdminGameSaveUpdateRequest(goldLong, healthPointsLong, attackLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a GameSaveUpdateUserRequest
+     *
+     * @param row row from BDD table
+     * @return GameSaveUpdateRequest
+     */
+    public static GameSaveUpdateRequest mapToGameSaveUpdateUserRequest(Map<String, String> row) {
+        String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
+        String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+
+        Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
+        Long attackLong = attack == null ? null : Long.parseLong(attack);
+
+
+        return new GameSaveUpdateRequest(healthPointsLong, attackLong);
     }
 
     /**
@@ -301,6 +320,27 @@ public class BddUtils {
     }
 
     /**
+     * Maps a row from a BDD table to a AdminUserUpdateRequest
+     * @param row row from BDD table
+     * @return AdminUserUpdateRequest
+     */
+    public static AdminUserUpdateRequest mapToAdminUserUpdateRequest(Map<String, String> row) {
+        String name = row.get(BddFieldConstants.AdminUserUpdateRequest.NAME);
+        String password = row.get(BddFieldConstants.AdminUserUpdateRequest.PASSWORD);
+        String email = row.get(BddFieldConstants.AdminUserUpdateRequest.EMAIL);
+        String enabled = row.get(BddFieldConstants.AdminUserUpdateRequest.ENABLED);
+        String userRoles = row.get(BddFieldConstants.AdminUserUpdateRequest.USER_ROLES);
+
+        Set<UserRole> roles = null;
+        if (userRoles != null) {
+            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
+        }
+        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+
+        return new AdminUserUpdateRequest(name, password, email, enabledBoolean, roles);
+    }
+
+    /**
      * Maps a row from a BDD table to a AdminUserCreationRequest
      * @param row row from BDD table
      * @return AdminUserCreationRequest
@@ -308,11 +348,12 @@ public class BddUtils {
     public static AdminUserCreationRequest mapToAdminUserCreationRequest(Map<String, String> row) {
         String name = row.get(BddFieldConstants.AdminUserCreationRequest.NAME);
         String email = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL);
+        String enabled = row.get(BddFieldConstants.AdminUserCreationRequest.ENABLED);
         String userId = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ID);
         String password = row.get(BddFieldConstants.AdminUserCreationRequest.PASSWORD);
         String provider = row.get(BddFieldConstants.AdminUserCreationRequest.SOCIAL_PROVIDER);
         String providerUserId = row.get(BddFieldConstants.AdminUserCreationRequest.PROVIDER_USER_ID);
-        String userRoles = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ROLES);
+        String userRoles = row.get(BddFieldConstants.AdminUserCreationRequest.ROLES);
 
         List<UserRole> roles = null;
 
@@ -321,7 +362,9 @@ public class BddUtils {
         }
         SocialProvider socialProvider = SocialProvider.fromString(provider);
 
-        return new AdminUserCreationRequest(name, userId, email, password, socialProvider, roles, providerUserId);
+        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+
+        return new AdminUserCreationRequest(name, userId, enabledBoolean, email, password, socialProvider, roles, providerUserId);
 
     }
 
@@ -342,8 +385,8 @@ public class BddUtils {
      * @return GlobalInfo
      */
     public static GlobalInfo mapToGlobalInfo(Map<String, String> row) {
-        String nbGameSaves = row.get(BddFieldConstants.GlobalInfo.NB_GAME_SAVES);
-        String nbUsers = row.get(BddFieldConstants.GlobalInfo.NB_USERS);
+        String nbGameSaves = row.get(BddFieldConstants.GlobalInfo.GAME_SAVE_COUNTER);
+        String nbUsers = row.get(BddFieldConstants.GlobalInfo.USER_COUNTER);
 
         Long nbGameSavesLong = nbGameSaves == null ? 0L : Long.parseLong(nbGameSaves);
         Long nbUsersLong = nbUsers == null ? 0L : Long.parseLong(nbUsers);

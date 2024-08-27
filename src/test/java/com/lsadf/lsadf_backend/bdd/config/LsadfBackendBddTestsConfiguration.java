@@ -1,32 +1,33 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
-import com.lsadf.lsadf_backend.controllers.AuthController;
-import com.lsadf.lsadf_backend.controllers.AuthControllerImpl;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.TokenAuthenticationFilterMock;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import static org.mockito.Mockito.mock;
@@ -66,6 +67,11 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Map<String, LocalUser> localUserMap() {
+        return new HashMap<>();
+    }
+
+    @Bean
     public Stack<List<UserEntity>> userEntityListStack() {
         return new Stack<>();
     }
@@ -94,6 +100,12 @@ public class LsadfBackendBddTestsConfiguration {
     @Primary
     public UserRepository userRepository() {
         return mock(UserRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public GoldRepository goldRepository() {
+        return mock(GoldRepository.class);
     }
 
     @Bean
@@ -136,11 +148,9 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public AuthController authController(AuthenticationManager authenticationManager,
-                                         UserService userService,
-                                         TokenProvider tokenProvider,
-                                         UserDetailsService userDetailsService,
-                                         Mapper mapper) {
-        return new AuthControllerImpl(authenticationManager, userService, tokenProvider, userDetailsService, mapper);
+    public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider tokenProvider,
+                                                               UserDetailsService userDetailsService,
+                                                               Map<String, LocalUser> localUserMap) {
+        return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap);
     }
 }

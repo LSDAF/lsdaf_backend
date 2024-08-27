@@ -77,8 +77,16 @@ public class BddFieldConstants {
     }
 
     public static final class GlobalInfo {
-        public static final String NB_GAME_SAVES = "nbGameSaves";
-        public static final String NB_USERS = "nbUsers";
+        public static final String GAME_SAVE_COUNTER = "gameSaveCounter";
+        public static final String USER_COUNTER = "userCounter";
+    }
+
+    public static final class AdminUserUpdateRequest {
+        public static final String NAME = "name";
+        public static final String PASSWORD = "password";
+        public static final String EMAIL = "email";
+        public static final String ENABLED = "enabled";
+        public static final String USER_ROLES = "userRoles";
     }
 
     public static final class AdminUserCreationRequest {
@@ -86,9 +94,10 @@ public class BddFieldConstants {
         public static final String USER_ID = "userId";
         public static final String PASSWORD = "password";
         public static final String EMAIL = "email";
+        public static final String ENABLED = "enabled";
         public static final String SOCIAL_PROVIDER = "socialProvider";
         public static final String PROVIDER_USER_ID = "providerUserId";
-        public static final String USER_ROLES = "userRoles";
+        public static final String ROLES = "roles";
     }
 
     public static final class SearchRequest {

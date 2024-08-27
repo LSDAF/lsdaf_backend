@@ -12,6 +12,7 @@ db:
     enabled: false
     users:
 
+
 http-log:
   enabled: true
   logged-methods:
@@ -38,7 +39,10 @@ spring:
     allow-bean-definition-overriding: true
 
 auth:
-  refresh-token-expiration-ms: 86_400_000
+  refresh-token-expiration-ms: 86400000
   refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf
   token-secret: knshjdvzuhdvkjnbduhfgsxtyzafshkfkcbndugsèarsyutfzxersdkjzdiuzguizh
-  token-expiration-ms: 3_600_000
+  token-expiration-ms: 3600000
+
+cache:
+  enabled: false

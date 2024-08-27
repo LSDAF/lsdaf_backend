@@ -73,29 +73,29 @@ Feature: Admin Service Features
       | name       | email               | password | socialProvider | providerUserId | userRoles  |
       | Paul HISSE | paul.hisse@test.com | toto1234 | LOCAL          |                | USER,ADMIN |
 
-    Then I should return the following UserAdminDetails
+    Then I should return the following users
       | name       | email               | password | enabled | userRoles | socialProvider | providerUserId |
       | Paul HISSE | paul.hisse@test.com | toto1234 | true    | USER      | LOCAL          |                |
 
   Scenario: Admin: Update a user
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | roles |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | USER  |
 
-    When an admin updates a user with id a5c17332-cd02-40b8-ac45-322baef4b70a with the following UserUpdateRequest
-      | name        |
-      | Paul Emploi |
+    When an admin updates a user with id a5c17332-cd02-40b8-ac45-322baef4b70a with the following AdminUserUpdateRequest
+      | name        | enabled |
+      | Paul Emploi | false   |
 
-    Then I should return the following UserAdminDetails
-      | name        | email               | password | enabled | userRoles | socialProvider | providerUserId |
-      | Paul Emploi | paul.ochon@test.com | toto1234 | true    | USER      | LOCAL          |                |
+    Then I should return the following users
+      | id                                   | name        | email               | password | enabled | userRoles | socialProvider | providerUserId |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul Emploi | paul.ochon@test.com | toto1234 | false   | USER      | LOCAL          |                |
 
   Scenario: Admin: Update a non-existing User
     Given the following users
       | id                                   | name       | email               | password |
       | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
 
-    When an admin updates a user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d with the following UserUpdateRequest
+    When an admin updates a user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d with the following AdminUserUpdateRequest
       | name        |
       | Paul Emploi |
 
@@ -151,8 +151,8 @@ Feature: Admin Service Features
     When an admin gets the global info
 
     Then I should return the following GlobalInfo
-      | nbUsers | nbGameSaves |
-      | 2       | 3           |
+      | userCounter | gameSaveCounter |
+      | 2           | 3               |
 
   Scenario: Admin: Get all game saves
     Given the following users
@@ -214,7 +214,7 @@ Feature: Admin Service Features
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
       | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
 
-    When an admin updates the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+    When an admin updates the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateAdminRequest
       | gold | healthPoints | attack |
       | 500  | 11289        | 5000   |
 
@@ -230,7 +230,7 @@ Feature: Admin Service Features
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
       | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
 
-    When an admin updates the game save with id 7be1f95f-fd42-4f0e-863c-093a6b4eeeca with the following GameSaveUpdateRequest
+    When an admin updates the game save with id 7be1f95f-fd42-4f0e-863c-093a6b4eeeca with the following GameSaveUpdateAdminRequest
       | gold | healthPoints | attack |
       | 500  | 11289        | 5000   |
 

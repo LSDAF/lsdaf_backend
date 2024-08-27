@@ -3,22 +3,25 @@ package com.lsadf.lsadf_backend.bdd;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
+import com.lsadf.lsadf_backend.controllers.impl.AdminControllerImpl;
+import com.lsadf.lsadf_backend.controllers.impl.AuthControllerImpl;
+import com.lsadf.lsadf_backend.controllers.impl.GameSaveControllerImpl;
+import com.lsadf.lsadf_backend.controllers.impl.UserControllerImpl;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
-import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.services.*;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +41,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 @Slf4j
@@ -75,6 +79,9 @@ public class BddLoader {
 
     // Repositories
     @Autowired
+    protected GoldRepository goldRepository;
+
+    @Autowired
     protected UserRepository userRepository;
 
     @Autowired
@@ -90,6 +97,9 @@ public class BddLoader {
     protected PasswordEncoder passwordEncoder;
 
     // Services
+    @Autowired
+    protected GoldService goldService;
+
     @Autowired
     protected GameSaveService gameSaveService;
 
@@ -124,6 +134,9 @@ public class BddLoader {
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;
+
+    @Autowired
+    protected Map<String, LocalUser> localUserMap;
 
     @Autowired
     protected Stack<Exception> exceptionStack;

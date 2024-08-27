@@ -1,11 +1,13 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GameSaveRepositoryMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GoldRepositoryMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserDetailsServiceMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserRepositoryMock;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -69,12 +71,13 @@ public class MockUtils {
     /**
      * Initialize the GameSaveRepository mock
      *
-     * @param gameSaveRepository
+     * @param gameSaveRepository the GameSaveRepository mock
      */
-    public static void initGameSaveRepositoryMock(GameSaveRepository gameSaveRepository) {
+    public static void initGameSaveRepositoryMock(GameSaveRepository gameSaveRepository,
+                                                  GoldRepository goldRepository) {
         Mockito.reset(gameSaveRepository);
 
-        GameSaveRepositoryMock gameSaveRepositoryMock = new GameSaveRepositoryMock();
+        GameSaveRepositoryMock gameSaveRepositoryMock = new GameSaveRepositoryMock(goldRepository);
         when(gameSaveRepository.findAll()).thenReturn(gameSaveRepositoryMock.findAll());
         when(gameSaveRepository.count()).thenReturn(gameSaveRepositoryMock.count());
         when(gameSaveRepository.findAllGameSaves()).thenReturn(gameSaveRepositoryMock.findAllSaveGames());
@@ -82,5 +85,20 @@ public class MockUtils {
         when(gameSaveRepository.findById(Mockito.anyString())).thenAnswer(invocation -> gameSaveRepositoryMock.findById(invocation.getArgument(0)));
         when(gameSaveRepository.save(Mockito.any())).thenAnswer(invocation -> gameSaveRepositoryMock.save(invocation.getArgument(0)));
         when(gameSaveRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> gameSaveRepositoryMock.saveAll(invocation.getArgument(0)));
+    }
+
+    /**
+     * Initialize the GoldRepository mock
+     * @param goldRepository the GoldRepository mock
+     */
+    public static void initGoldRepositoryMock(GoldRepository goldRepository) {
+        Mockito.reset(goldRepository);
+        GoldRepositoryMock goldRepositoryMock = new GoldRepositoryMock();
+        when(goldRepository.findAll()).thenReturn(goldRepositoryMock.findAll());
+        when(goldRepository.count()).thenReturn(goldRepositoryMock.count());
+        when(goldRepository.existsById(any())).thenAnswer(invocation -> goldRepositoryMock.existsById(invocation.getArgument(0)).isPresent());
+        when(goldRepository.findById(Mockito.anyString())).thenAnswer(invocation -> goldRepositoryMock.findById(invocation.getArgument(0)));
+        when(goldRepository.save(Mockito.any())).thenAnswer(invocation -> goldRepositoryMock.save(invocation.getArgument(0)));
+        when(goldRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> goldRepositoryMock.saveAll(invocation.getArgument(0)));
     }
 }

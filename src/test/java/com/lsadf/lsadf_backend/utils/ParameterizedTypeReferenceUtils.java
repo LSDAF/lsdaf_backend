@@ -2,7 +2,10 @@ package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
+import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.ParameterizedTypeReference;
@@ -53,6 +56,42 @@ public class ParameterizedTypeReferenceUtils {
      * @return ParameterizedTypeReference
      */
     public static ParameterizedTypeReference<GenericResponse<List<GameSave>>> buildParameterizedGameSaveListResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of GlobalInfo
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<GlobalInfo>> buildParameterizedGlobalInfoResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of UserAdminDetails
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<UserAdminDetails>> buildParameterizedUserAdminDetailsResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of list of User
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<List<User>>> buildParameterizedUserListResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of User
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<User>> buildParamaterizedUserResponse() {
         return new ParameterizedTypeReference<>() {
         };
     }
