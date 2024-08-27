@@ -36,7 +36,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException;
+    ResponseEntity<GenericResponse<JwtAuthentication>> login(UserLoginRequest userLoginRequest) throws NotFoundException;
 
 
     /**
@@ -50,5 +50,5 @@ public interface AuthController {
             @ApiResponse(responseCode = "400", description = ResponseMessages.BAD_REQUEST),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userLoginRequest);
+    ResponseEntity<GenericResponse<UserInfo>> register(UserCreationRequest userLoginRequest);
 }
