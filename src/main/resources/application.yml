@@ -8,7 +8,7 @@ spring:
   banner:
     location: classpath:lsadf_banner.txt
   jpa:
-    show-sql: false
+    show-sql: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
@@ -65,6 +65,7 @@ cors:
   allowed-methods:
     - GET
     - POST
+    - PUT
   allow-credentials: true
   exposed-headers:
     - Access-Control-Allow-Origin
@@ -96,3 +97,12 @@ auth:
   refresh-token-secret: ${REFRESH_TOKEN_SECRET}
   token-secret: ${TOKEN_SECRET}
   token-expiration-ms: 3_600_000
+
+
+cache:
+  enabled: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DATABASE}
