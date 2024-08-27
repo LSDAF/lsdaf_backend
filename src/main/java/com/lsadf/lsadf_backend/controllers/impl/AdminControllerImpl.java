@@ -1,9 +1,11 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
@@ -13,7 +15,6 @@ import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.AdminService;
@@ -55,7 +56,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo() {
+    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(@CurrentUser LocalUser localUser) {
         try {
             GlobalInfo globalInfo = adminService.getGlobalInfo();
             return generateResponse(HttpStatus.OK, "Successfully got global info", globalInfo);
@@ -71,7 +72,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<User>>> getUsers(@RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<List<User>>> getUsers(@CurrentUser LocalUser localUser,
+                                                                @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
             var users = adminService.getUsers(orderBy);
             int count = users.size();
@@ -88,7 +90,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserById(@PathVariable(value = USER_ID) String userId) {
+    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserById(@CurrentUser LocalUser localUser,
+                                                                                 @PathVariable(value = USER_ID) String userId) {
         try {
             UserAdminDetails user = adminService.getUserById(userId);
             return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
@@ -107,7 +110,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserByEmail(@PathVariable(value = USER_EMAIL) String userEmail) {
+    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserByEmail(@CurrentUser LocalUser localUser,
+                                                                                    @PathVariable(value = USER_EMAIL) String userEmail) {
         try {
             UserAdminDetails user = adminService.getUserByEmail(userEmail);
             return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
@@ -126,7 +130,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> updateUser(@PathVariable(value = USER_ID) String userId, @Valid @RequestBody AdminUserUpdateRequest user) {
+    public ResponseEntity<GenericResponse<User>> updateUser(@CurrentUser LocalUser localUser,
+                                                            @PathVariable(value = USER_ID) String userId,
+                                                            @Valid @RequestBody AdminUserUpdateRequest user) {
         try {
             User updatedUser = adminService.updateUser(userId, user);
             return generateResponse(HttpStatus.OK, "Successfully updated user", updatedUser);
@@ -145,7 +151,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteUser(@PathVariable(value = USER_ID) String userId) {
+    public ResponseEntity<GenericResponse<Void>> deleteUser(@CurrentUser LocalUser localUser,
+                                                            @PathVariable(value = USER_ID) String userId) {
         try {
             adminService.deleteUser(userId);
             return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully deleted user", null);
@@ -164,7 +171,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> createUser(@Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest) {
+    public ResponseEntity<GenericResponse<User>> createUser(@CurrentUser LocalUser localUser,
+                                                            @Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest) {
         try {
             User user = adminService.createUser(adminUserCreationRequest);
             return generateResponse(HttpStatus.OK, "Successfully created user", user);
@@ -183,7 +191,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@RequestParam(value = ORDER_BY, required = false) GameSaveOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@CurrentUser LocalUser localUser,
+                                                                        @RequestParam(value = ORDER_BY, required = false) GameSaveOrderBy orderBy) {
         try {
             List<GameSave> gameSaves = adminService.getGameSaves(orderBy);
             int count = gameSaves.size();
@@ -200,7 +209,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
+    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@CurrentUser LocalUser localUser,
+                                                                 @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
             GameSave gameSave = adminService.getGameSave(gameSaveId);
             return generateResponse(HttpStatus.OK, "Successfully got game save", gameSave);
@@ -219,7 +229,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(@PathVariable(value = GAME_SAVE_ID) String gameSaveId,
+    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(@CurrentUser LocalUser localUser,
+                                                                    @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                                     @Valid @RequestBody AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
         try {
             GameSave gameSave = adminService.updateGameSave(gameSaveId, adminGameSaveUpdateRequest);
@@ -239,7 +250,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@Valid @RequestBody AdminGameSaveCreationRequest creationRequest) {
+    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser,
+                                                                         @Valid @RequestBody AdminGameSaveCreationRequest creationRequest) {
         try {
             GameSave gameSave = adminService.createGameSave(creationRequest);
             return generateResponse(HttpStatus.OK, "Successfully created game save", gameSave);
@@ -255,7 +267,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> searchUsers(@Valid @RequestBody SearchRequest searchRequest,
+    public ResponseEntity<GenericResponse<User>> searchUsers(@CurrentUser LocalUser localUser,
+                                                             @Valid @RequestBody SearchRequest searchRequest,
                                                              @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
             var gameSaves = adminService.searchUsers(searchRequest, orderBy);
@@ -277,7 +290,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(@Valid @RequestBody SearchRequest searchRequest,
+    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(@CurrentUser LocalUser localUser,
+                                                                     @Valid @RequestBody SearchRequest searchRequest,
                                                                      @RequestParam(value = ORDER_BY) GameSaveOrderBy orderBy) {
         try {
             var gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
@@ -297,7 +311,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteGameSave(@PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
+    public ResponseEntity<GenericResponse<Void>> deleteGameSave(@CurrentUser LocalUser localUser,
+                                                                @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
             adminService.deleteGameSave(gameSaveId);
 
