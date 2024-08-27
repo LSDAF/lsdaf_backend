@@ -45,31 +45,8 @@ public class SearchServiceImpl implements SearchService {
                 case ID -> userStream = userStream.filter(user -> user.getId().equals(filter.getValue()));
                 case EMAIL -> userStream = userStream.filter(user -> user.getEmail().equals(filter.getValue()));
                 case PROVIDER -> userStream = userStream.filter(user -> user.getProvider().toString().equals(filter.getValue()));
+                case USER_ROLES -> userStream = userStream.filter(user -> user.getRoles().stream().anyMatch(role -> role.toString().equals(filter.getValue())));
                 default -> throw new IllegalArgumentException("Invalid filter type");
-            }
-        }
-        switch (orderBy) {
-            case ID -> {
-            }
-            case ID_DESC -> {
-            }
-            case EMAIL -> {
-            }
-            case EMAIL_DESC -> {
-            }
-            case NAME -> {
-            }
-            case NAME_DESC -> {
-            }
-            case CREATED_AT -> {
-            }
-            case CREATED_AT_DESC -> {
-            }
-            case UPDATED_AT -> {
-            }
-            case UPDATED_AT_DESC -> {
-            }
-            case NONE -> {
             }
         }
         return userStream;
