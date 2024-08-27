@@ -10,12 +10,13 @@ import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.services.AdminService;
@@ -95,7 +96,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public GameSave updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException {
+    public GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException {
         return mapper.mapToGameSave(gameSaveService.updateGameSave(saveId, updateRequest));
     }
 
@@ -112,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public UserAdminDetails createUser(AdminUserCreationRequest creationRequest) {
+    public User createUser(AdminUserCreationRequest creationRequest) {
         UserCreationRequest userCreationRequest = UserCreationRequest.builder()
                 .email(creationRequest.getEmail())
                 .name(creationRequest.getName())
@@ -122,16 +123,17 @@ public class AdminServiceImpl implements AdminService {
                 .userId(creationRequest.getUserId())
                 .build();
         UserEntity user = userService.createUser(userCreationRequest);
+        user.setEnabled(creationRequest.isEnabled());
 
-        return mapper.mapToUserAdminDetails(user);
+        return mapper.mapToUser(user);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public UserAdminDetails updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException {
-        return mapper.mapToUserAdminDetails(userService.updateUser(userId, userUpdateRequest));
+    public User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException {
+        return mapper.mapToUser(userService.updateUser(userId, userUpdateRequest));
     }
 
     /**
