@@ -1,14 +1,10 @@
 package com.lsadf.lsadf_backend.mappers;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
-
-import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
 
 public interface Mapper {
     /**
@@ -57,4 +53,11 @@ public interface Mapper {
      * @return LocalUser
      */
     LocalUser mapUserEntityToLocalUser(UserEntity user);
+
+    /**
+     * Maps GoldEntity to Gold
+     * @param goldEntity GoldEntity
+     * @return Gold
+     */
+    Gold mapGoldEntityToGold(GoldEntity goldEntity);
 }
