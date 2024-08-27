@@ -2,8 +2,10 @@ package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
@@ -58,8 +60,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     @Override
     public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(@CurrentUser LocalUser localUser) {
         try {
+            validateUser(localUser);
             GlobalInfo globalInfo = adminService.getGlobalInfo();
             return generateResponse(HttpStatus.OK, "Successfully got global info", globalInfo);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting global info: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while getting global info: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
@@ -75,10 +81,14 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<List<User>>> getUsers(@CurrentUser LocalUser localUser,
                                                                 @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
+            validateUser(localUser);
             var users = adminService.getUsers(orderBy);
             int count = users.size();
 
             return generateResponse(HttpStatus.OK, "Successfully got " + count + " users", users);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting users: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
@@ -93,8 +103,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserById(@CurrentUser LocalUser localUser,
                                                                                  @PathVariable(value = USER_ID) String userId) {
         try {
+            validateUser(localUser);
             UserAdminDetails user = adminService.getUserById(userId);
             return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting user by id: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Error while getting user by id: ", e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -113,8 +127,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserByEmail(@CurrentUser LocalUser localUser,
                                                                                     @PathVariable(value = USER_EMAIL) String userEmail) {
         try {
+            validateUser(localUser);
             UserAdminDetails user = adminService.getUserByEmail(userEmail);
             return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting user by id: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Error while getting user by id: ", e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -134,8 +152,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                             @PathVariable(value = USER_ID) String userId,
                                                             @Valid @RequestBody AdminUserUpdateRequest user) {
         try {
+            validateUser(localUser);
             User updatedUser = adminService.updateUser(userId, user);
             return generateResponse(HttpStatus.OK, "Successfully updated user", updatedUser);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while updating user: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Error while updating user: ", e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -154,8 +176,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<Void>> deleteUser(@CurrentUser LocalUser localUser,
                                                             @PathVariable(value = USER_ID) String userId) {
         try {
+            validateUser(localUser);
             adminService.deleteUser(userId);
             return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully deleted user", null);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while deleting user: ", e);
+            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Error while deleting user: ", e);
             return ResponseUtils.generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -174,8 +200,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<User>> createUser(@CurrentUser LocalUser localUser,
                                                             @Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest) {
         try {
+            validateUser(localUser);
             User user = adminService.createUser(adminUserCreationRequest);
             return generateResponse(HttpStatus.OK, "Successfully created user", user);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while creating user: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (AlreadyExistingUserException e) {
             log.error("Error while creating user: ", e);
             return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
@@ -194,9 +224,13 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@CurrentUser LocalUser localUser,
                                                                         @RequestParam(value = ORDER_BY, required = false) GameSaveOrderBy orderBy) {
         try {
+            validateUser(localUser);
             List<GameSave> gameSaves = adminService.getGameSaves(orderBy);
             int count = gameSaves.size();
             return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting game saves: ", e);
+            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while getting game saves: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
@@ -212,8 +246,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<GameSave>> getGameSave(@CurrentUser LocalUser localUser,
                                                                  @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
+            validateUser(localUser);
             GameSave gameSave = adminService.getGameSave(gameSaveId);
             return generateResponse(HttpStatus.OK, "Successfully got game save", gameSave);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while getting game save: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Game Save with id {} not found", gameSaveId);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -233,8 +271,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                                     @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                                     @Valid @RequestBody AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
         try {
+            validateUser(localUser);
             GameSave gameSave = adminService.updateGameSave(gameSaveId, adminGameSaveUpdateRequest);
             return generateResponse(HttpStatus.OK, "Successfully updated game save", gameSave);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while updating game save: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Game Save with id {} not found", gameSaveId);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -253,8 +295,15 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser,
                                                                          @Valid @RequestBody AdminGameSaveCreationRequest creationRequest) {
         try {
+            validateUser(localUser);
             GameSave gameSave = adminService.createGameSave(creationRequest);
             return generateResponse(HttpStatus.OK, "Successfully created game save", gameSave);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while creating game save: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (AlreadyExistingGameSaveException e) {
+            log.error("Game Save with id {} already exists", creationRequest.getId());
+            return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while creating game save: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
@@ -271,10 +320,14 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                              @Valid @RequestBody SearchRequest searchRequest,
                                                              @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
+            validateUser(localUser);
             var gameSaves = adminService.searchUsers(searchRequest, orderBy);
             int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while searching users: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (IllegalArgumentException e) {
             log.error("IllegalArgumentException exception while searching users: ", e);
             return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
@@ -294,10 +347,14 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                                      @Valid @RequestBody SearchRequest searchRequest,
                                                                      @RequestParam(value = ORDER_BY) GameSaveOrderBy orderBy) {
         try {
+            validateUser(localUser);
             var gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
             int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while searching game saves: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (IllegalArgumentException e) {
             log.error("IllegalArgumentException exception while searching users: ", e);
             return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
@@ -314,9 +371,13 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<Void>> deleteGameSave(@CurrentUser LocalUser localUser,
                                                                 @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
-            adminService.deleteGameSave(gameSaveId);
+            validateUser(localUser);
 
+            adminService.deleteGameSave(gameSaveId);
             return generateResponse(HttpStatus.OK, "Successfully deleted game save", null);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while deleting game save: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Game Save with id {} not found", gameSaveId);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);

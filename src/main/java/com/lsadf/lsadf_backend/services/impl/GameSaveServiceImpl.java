@@ -1,6 +1,8 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.entities.GoldEntity;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
@@ -84,6 +86,9 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .build();
 
         if (creationRequest.getId() != null) {
+            if (gameSaveRepository.existsById(creationRequest.getId())) {
+                throw new AlreadyExistingGameSaveException("Game save with id " + creationRequest.getId() + " already exists");
+            }
             entity.setId(creationRequest.getId());
         }
 
