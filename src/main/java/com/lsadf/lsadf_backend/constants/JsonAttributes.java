@@ -39,6 +39,18 @@ public final class JsonAttributes {
         public static final String GAME_SAVES = "game_saves";
     }
 
+    public static final class UserInfo {
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String EMAIL = "email";
+        public static final String ROLES = "roles";
+    }
+
+    public static final class Gold {
+        public static final String GAME_SAVE_ID = "game_save_id";
+        public static final String AMOUNT = "amount";
+    }
+
     public static final class JwtAuthentication {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String USER_INFO = "user_info";
