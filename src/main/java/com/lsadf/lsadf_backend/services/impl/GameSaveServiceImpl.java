@@ -1,13 +1,14 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -39,9 +40,14 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         UserEntity userEntity = userService.getUserByEmail(userEmail);
 
+        GoldEntity goldEntity = GoldEntity.builder()
+                .userEmail(userEntity.getEmail())
+                .build();
+
         GameSaveEntity gameSaveEntity = GameSaveEntity
                 .builder()
                 .user(userEntity)
+                .goldEntity(goldEntity)
                 .build();
 
         return gameSaveRepository.save(gameSaveEntity);
@@ -65,8 +71,13 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         UserEntity userEntity = userService.getUserByEmail(creationRequest.getUserEmail());
 
+        GoldEntity goldEntity = GoldEntity.builder()
+                .userEmail(userEntity.getEmail())
+                .goldAmount(creationRequest.getGold())
+                .build();
+
         GameSaveEntity entity = GameSaveEntity.builder()
-                .gold(creationRequest.getGold())
+                .goldEntity(goldEntity)
                 .healthPoints(creationRequest.getHealthPoints())
                 .attack(creationRequest.getAttack())
                 .user(userEntity)
@@ -84,7 +95,18 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException {
+    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException {
+        GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
+                .orElseThrow(NotFoundException::new);
+        return updateGameSaveEntity(currentGameSave, updateRequest);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
         return updateGameSaveEntity(currentGameSave, updateRequest);
@@ -126,8 +148,30 @@ public class GameSaveServiceImpl implements GameSaveService {
             gameSaveEntity.setHealthPoints(updateRequest.getHealthPoints());
             hasUpdates = true;
         }
-        if (gameSaveEntity.getGold() != updateRequest.getGold()) {
-            gameSaveEntity.setGold(updateRequest.getGold());
+
+        if (hasUpdates) {
+            return gameSaveRepository.save(gameSaveEntity);
+        }
+
+        return gameSaveEntity;
+    }
+
+    private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, AdminGameSaveUpdateRequest adminUpdateRequest) {
+        boolean hasUpdates = false;
+
+        if (gameSaveEntity.getAttack() != adminUpdateRequest.getAttack()) {
+            gameSaveEntity.setAttack(adminUpdateRequest.getAttack());
+            hasUpdates = true;
+        }
+        if (gameSaveEntity.getHealthPoints() != adminUpdateRequest.getHealthPoints()) {
+            gameSaveEntity.setHealthPoints(adminUpdateRequest.getHealthPoints());
+            hasUpdates = true;
+        }
+
+        GoldEntity goldEntity = gameSaveEntity.getGoldEntity();
+
+        if (goldEntity.getGoldAmount() != adminUpdateRequest.getGold()) {
+            goldEntity.setGoldAmount(adminUpdateRequest.getGold());
             hasUpdates = true;
         }
 

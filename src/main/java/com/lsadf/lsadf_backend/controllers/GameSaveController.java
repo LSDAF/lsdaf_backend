@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
@@ -12,8 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,12 +36,13 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser);
+    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(LocalUser localUser);
 
     /**
      * Updates a game in function of its id
+     *
      * @param gameSaveId the id of the game save
-     * @param save       the game save to update
+     * @param request    the game save to update
      * @return
      */
     @PostMapping(value = ControllerConstants.GameSave.GAME_SAVE_ID)
@@ -56,5 +54,5 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<Void>> saveGame(@CurrentUser LocalUser localUser, String gameSaveId, GameSaveUpdateRequest request);
+    ResponseEntity<GenericResponse<Void>> saveGame(LocalUser localUser, String gameSaveId, GameSaveUpdateRequest request);
 }

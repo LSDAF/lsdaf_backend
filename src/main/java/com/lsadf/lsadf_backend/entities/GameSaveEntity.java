@@ -2,6 +2,8 @@ package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.io.Serial;
@@ -31,11 +33,15 @@ public class GameSaveEntity extends AEntity {
     private UserEntity user;
 
     @Builder.Default
-    private long gold = 0L;
-
-    @Builder.Default
+    @Positive
+    @Column(name = EntityAttributes.GameSave.GAME_SAVE_HEALTH_POINTS)
     private long healthPoints = 10L;
 
     @Builder.Default
+    @PositiveOrZero
+    @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
     private long attack = 1L;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    private GoldEntity goldEntity;
 }
