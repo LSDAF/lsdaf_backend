@@ -43,7 +43,7 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<UserInfo>> getUserInfo(@CurrentUser LocalUser localUser) throws UnauthorizedException;
+    ResponseEntity<GenericResponse<UserInfo>> getUserInfo(LocalUser localUser) throws UnauthorizedException;
 
 
     /**
@@ -59,5 +59,5 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@CurrentUser LocalUser localUser) throws UnauthorizedException;
+    ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(LocalUser localUser) throws UnauthorizedException;
 }
