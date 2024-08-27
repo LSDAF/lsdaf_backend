@@ -38,11 +38,10 @@ public class DbInitializer implements ApplicationListener<ContextRefreshedEvent>
 
         dbInitProperties.getUsers().forEach(user -> {
             if (!userService.existsByEmail(user.getEmail())) {
-                userService.createUser(user.getName(),
-                        user.getEmail(),
+                userService.createUser(user.getEmail(),
                         user.getPassword(),
                         SocialProvider.LOCAL,
-                        Optional.of(user.getRoles()));
+                        Optional.of(user.getRoles()), user.getName());
             }
         });
     }
