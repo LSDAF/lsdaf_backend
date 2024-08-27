@@ -1,7 +1,7 @@
-package com.lsadf.lsadf_backend.controllers;
+package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -16,7 +16,6 @@ import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +43,7 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      */
     @Override
     protected Logger getLogger() {
-        return null;
+        return log;
     }
     /**
      * {@inheritDoc}

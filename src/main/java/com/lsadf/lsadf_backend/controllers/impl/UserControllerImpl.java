@@ -1,7 +1,8 @@
-package com.lsadf.lsadf_backend.controllers;
+package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;

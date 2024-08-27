@@ -1,5 +1,6 @@
-package com.lsadf.lsadf_backend.bdd;
+package com.lsadf.lsadf_backend.bdd.given;
 
+import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -27,10 +28,12 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.userEntityListStack.clear();
         this.globalInfoStack.clear();
         this.userInfoListStack.clear();
+        this.localUserMap.clear();
         this.userAdminDetailsStack.clear();
         this.responseStack.clear();
         this.jwtStack.clear();
         this.booleanStack.clear();
+        this.localUserMap.clear();
 
         BddUtils.initTestRestTemplate(testRestTemplate);
 
@@ -49,8 +52,9 @@ public class BddGivenStepDefinitions extends BddLoader {
 
 
         // Init all repository mocks
-        MockUtils.initGameSaveRepositoryMock(gameSaveRepository);
+        MockUtils.initGameSaveRepositoryMock(gameSaveRepository, goldRepository);
         MockUtils.initUserRepositoryMock(userRepository);
+        MockUtils.initGoldRepositoryMock(goldRepository);
 
         // Init all other service mocks
         MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);
