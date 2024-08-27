@@ -5,6 +5,7 @@ services:
       - db
       - backend
     container_name: postgres
+    env_file: env/env.properties
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
@@ -16,11 +17,11 @@ services:
     volumes:
       - ./docker-data/postgres:/var/lib/postgresql/data
 
-
   pgadmin:
     image: dpage/pgadmin4:8.6
     platform: linux/amd64
     container_name: pgadmin
+    env_file: env/env.properties
     profiles:
       - db
     environment:
@@ -36,8 +37,24 @@ services:
     networks:
       - backend
 
+  redis:
+    image: redis:7.4.0-alpine
+    container_name: redis
+    env_file: env/env.properties
+    tty: true
+    command: "sh -c redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli config set notify-keyspace-events KEA && sleep infinity"
+    profiles:
+      - db
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    volumes:
+      - ./docker-data/redis_data:/data
+
   lsadf_backend:
     platform: linux/amd64
+    env_file: env/env.properties
     build:
       context: .
       dockerfile: Dockerfile
