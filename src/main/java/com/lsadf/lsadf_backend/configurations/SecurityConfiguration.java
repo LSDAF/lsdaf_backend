@@ -129,11 +129,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         return new TokenAuthenticationFilter(tokenProvider, userDetailsService);
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "auth")
-    public AuthProperties authProperties() {
-        return new AuthProperties();
-    }
+
 
     @Bean
     public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
@@ -167,12 +163,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean(CustomAuthenticationProviderImpl authenticationProvider) throws Exception {
         return new ProviderManager(authenticationProvider);
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "cors")
-    public CorsConfigurationProperties corsConfigurationProperties() {
-        return new CorsConfigurationProperties();
     }
 
     @Bean

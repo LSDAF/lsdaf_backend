@@ -1,8 +1,11 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
+import com.lsadf.lsadf_backend.properties.CacheProperties;
+import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.impl.TokenProviderImpl;
@@ -11,6 +14,7 @@ import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.services.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -24,6 +28,13 @@ public class ServiceConfiguration {
                                    final PasswordEncoder passwordEncoder,
                                    final Mapper mapper) {
         return new UserServiceImpl(userRepository, passwordEncoder, mapper);
+    }
+
+    @Bean
+    public GoldService goldService(GoldRepository goldRepository,
+                                   CacheService cacheService,
+                                   GameSaveService gameSaveService) {
+        return new GoldServiceImpl(goldRepository, cacheService, gameSaveService);
     }
 
     @Bean

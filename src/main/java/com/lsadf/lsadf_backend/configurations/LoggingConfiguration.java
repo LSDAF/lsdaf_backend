@@ -11,11 +11,7 @@ import org.springframework.core.annotation.Order;
 @Configuration
 public class LoggingConfiguration {
 
-    @Bean
-    @ConfigurationProperties(prefix = "http-log")
-    public HttpLogProperties httpLogProperties() {
-        return new HttpLogProperties();
-    }
+
 
     @Bean
     public RequestLoggerInterceptor requestLoggerInterceptor(HttpLogProperties httpLogProperties) {
