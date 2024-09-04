@@ -19,13 +19,14 @@ public final class EntityAttributes {
         public static final String GAME_SAVE_ENTITY = "t_game_save";
         public static final String GAME_SAVE_HEALTH_POINTS = "game_save_health_points";
         public static final String GAME_SAVE_ATTACK = "game_save_attack";
+        public static final String GAME_SAVE_GOLD_ID = "game_save_gold_id";
     }
 
     // GOLD
     public static class Gold {
         public static final String GOLD_ENTITY = "t_gold";
         public static final String GOLD_AMOUNT = "gold_amount";
-        public static final String GOLD_USER_ID = "gold_user_id";
+        public static final String GOLD_USER_EMAIL = "gold_user_email";
     }
 
     // USER
