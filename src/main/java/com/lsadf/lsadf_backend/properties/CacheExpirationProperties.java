@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CacheProperties {
-    private boolean enabled;
-    private RedisProperties redisProperties;
-    private CacheExpirationProperties cacheExpirationProperties;
+public class CacheExpirationProperties {
+    private long goldExpirationSeconds;
+    private long gameSaveOwnershipExpirationSeconds;
 }
