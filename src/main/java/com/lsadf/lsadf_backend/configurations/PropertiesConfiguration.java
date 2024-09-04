@@ -21,6 +21,12 @@ public class PropertiesConfiguration {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "cache.expiration")
+    public CacheExpirationProperties cacheExpirationProperties() {
+        return new CacheExpirationProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "cache.redis")
     public RedisProperties redisProperties() {
         return new RedisProperties();

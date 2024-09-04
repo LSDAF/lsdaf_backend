@@ -14,7 +14,6 @@ import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.services.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -33,15 +32,19 @@ public class ServiceConfiguration {
     @Bean
     public GoldService goldService(GoldRepository goldRepository,
                                    CacheService cacheService,
-                                   GameSaveService gameSaveService) {
-        return new GoldServiceImpl(goldRepository, cacheService, gameSaveService);
+                                   GameSaveService gameSaveService,
+                                   CacheProperties cacheProperties) {
+        return new GoldServiceImpl(goldRepository, cacheService, gameSaveService, cacheProperties);
     }
 
     @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
+                                           CacheService cacheService,
+                                           GoldRepository goldRepository,
+                                           CacheProperties cacheProperties,
                                            Mapper mapper) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, mapper);
+        return new GameSaveServiceImpl(userService, gameSaveRepository, goldRepository, cacheService, mapper, cacheProperties);
     }
 
     @Bean

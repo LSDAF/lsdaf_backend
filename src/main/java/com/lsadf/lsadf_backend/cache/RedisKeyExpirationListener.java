@@ -1,5 +1,6 @@
-package com.lsadf.lsadf_backend.configurations;
+package com.lsadf.lsadf_backend.cache;
 
+import com.lsadf.lsadf_backend.constants.RedisConstants;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.services.GoldService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,18 +23,23 @@ public class RedisKeyExpirationListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = message.toString();
-        if (expiredKey.startsWith("gold:")) {
-            String gameSaveId = expiredKey.substring(5);
-            Long gold = redisTemplate.opsForValue().get(expiredKey);
-            if (gold == null) {
-                return;
-            }
-            try {
-                goldService.saveGold(gameSaveId, gold, false);
-            } catch (NotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            log.info("Gold of game save {} has been saved to DB -> {}", gameSaveId, gold);
+        log.info("Redis entry expired -> {}", expiredKey);
+        if (expiredKey.startsWith(RedisConstants.GOLD)) {
+            handleExpiredGold(expiredKey);
         }
+    }
+
+    private void handleExpiredGold(String expiredKey) {
+        String gameSaveId = expiredKey.substring(5);
+        Long gold = redisTemplate.opsForValue().get(expiredKey);
+        if (gold == null) {
+            return;
+        }
+        try {
+            goldService.saveGold(gameSaveId, gold, false);
+        } catch (NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Gold of game save {} has been saved to DB -> {}", gameSaveId, gold);
     }
 }

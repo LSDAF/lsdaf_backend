@@ -1,8 +1,10 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.RedisKeyExpirationListener;
 import com.lsadf.lsadf_backend.cache.impl.NoOpCacheServiceImpl;
 import com.lsadf.lsadf_backend.cache.impl.RedisCacheServiceImpl;
+import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.services.GoldService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,6 +18,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -31,8 +34,22 @@ public class CacheConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public CacheService redisCacheService(RedisTemplate<String, String> redisTemplate) {
-        return new RedisCacheServiceImpl(redisTemplate);
+    public RedisTemplate<String, Long> redisLongTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Long> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericToStringSerializer<>(Long.class));
+        return template;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
+    public CacheService redisCacheService(CacheExpirationProperties cacheExpirationProperties,
+                                          RedisTemplate<String, String> stringRedisTemplate,
+                                          RedisTemplate<String, Long> longRedisTemplate) {
+        return new RedisCacheServiceImpl(cacheExpirationProperties,
+                stringRedisTemplate,
+                longRedisTemplate);
     }
 
     @Bean
@@ -54,11 +71,18 @@ public class CacheConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public RedisMessageListenerContainer keyExpirationListenerContainer(RedisConnectionFactory connectionFactory) {
+    public RedisMessageListenerContainer keyExpirationListenerContainer(RedisConnectionFactory connectionFactory,
+                                                                        RedisKeyExpirationListener redisKeyExpirationListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(new MessageListenerAdapter(this), new PatternTopic("__keyevent@0__:expired"));
+        container.addMessageListener(redisKeyExpirationListener, new PatternTopic("__keyevent@0__:expired"));
         return container;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
+    MessageListenerAdapter messageListener(RedisKeyExpirationListener redisKeyExpirationListener) {
+        return new MessageListenerAdapter(redisKeyExpirationListener);
     }
 
 
