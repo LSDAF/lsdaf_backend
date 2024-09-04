@@ -10,14 +10,6 @@ public class NoOpCacheServiceImpl implements CacheService {
      * {@inheritDoc}
      */
     @Override
-    public boolean isCacheEnabled() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Optional<Long> getGold(String gameSaveId) {
         return Optional.empty();
     }

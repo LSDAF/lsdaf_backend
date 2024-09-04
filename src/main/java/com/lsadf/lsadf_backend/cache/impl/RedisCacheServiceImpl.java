@@ -1,29 +1,35 @@
 package com.lsadf.lsadf_backend.cache.impl;
 
 import com.lsadf.lsadf_backend.cache.CacheService;
-import com.lsadf.lsadf_backend.configurations.CacheConfiguration;
+import com.lsadf.lsadf_backend.constants.RedisConstants;
+import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
+import com.lsadf.lsadf_backend.properties.RedisProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import static com.lsadf.lsadf_backend.constants.RedisConstants.GAME_SAVE_OWNERSHIP;
+import static com.lsadf.lsadf_backend.constants.RedisConstants.GOLD;
+
+@Slf4j
 public class RedisCacheServiceImpl implements CacheService {
 
-    private static final String GOLD = "gold:";
-    private static final String GAME_SAVE_OWNERSHIP = "gamesaveownership:";
+    private final RedisTemplate<String, String> stringRedisTemplate;
+    private final RedisTemplate<String, Long> redisLongTemplate;
 
-    private final RedisTemplate<String, String> redisTemplate;
-
-    public RedisCacheServiceImpl(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
+    private final CacheExpirationProperties cacheExpirationProperties;
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isCacheEnabled() {
-        return true;
+    public RedisCacheServiceImpl(CacheExpirationProperties cacheExpirationProperties,
+                                 RedisTemplate<String, String> stringRedisTemplate,
+                                 RedisTemplate<String, Long> redisLongTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.redisLongTemplate = redisLongTemplate;
+        this.cacheExpirationProperties = cacheExpirationProperties;
     }
 
     /**
@@ -31,11 +37,13 @@ public class RedisCacheServiceImpl implements CacheService {
      */
     @Override
     public Optional<Long> getGold(String gameSaveId) {
-        String result = redisTemplate.opsForValue().get(GOLD + gameSaveId);
-        if (result == null) {
+        try {
+            Long result = redisLongTemplate.opsForValue().get(GOLD + gameSaveId);
+            return Optional.ofNullable(result);
+        } catch (DataAccessException e) {
+            log.error("Error while getting gold from redis cache", e);
             return Optional.empty();
         }
-        return Optional.of(Long.parseLong(result));
     }
 
     /**
@@ -43,7 +51,15 @@ public class RedisCacheServiceImpl implements CacheService {
      */
     @Override
     public void setGold(String gameSaveId, Long gold) {
-        redisTemplate.opsForValue().set(GOLD + gameSaveId, gold.toString());
+        try {
+            if (cacheExpirationProperties.getGoldExpirationSeconds() > 0) {
+                redisLongTemplate.opsForValue().set(GOLD + gameSaveId, gold, cacheExpirationProperties.getGoldExpirationSeconds(), TimeUnit.SECONDS);
+            } else {
+                redisLongTemplate.opsForValue().set(GOLD + gameSaveId, gold);
+            }
+        } catch (DataAccessException e) {
+            log.error("Error while setting gold in redis cache", e);
+        }
     }
 
     /**
@@ -51,7 +67,13 @@ public class RedisCacheServiceImpl implements CacheService {
      */
     @Override
     public Optional<String> getGameSaveOwnership(String gameSaveId) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(GAME_SAVE_OWNERSHIP + gameSaveId));
+        try {
+            String owner = stringRedisTemplate.opsForValue().get(GAME_SAVE_OWNERSHIP + gameSaveId);
+            return Optional.ofNullable(owner);
+        } catch (DataAccessException e) {
+            log.error("Error while getting game save ownership from redis cache", e);
+            return Optional.empty();
+        }
     }
 
     /**
@@ -59,6 +81,14 @@ public class RedisCacheServiceImpl implements CacheService {
      */
     @Override
     public void setGameSaveOwnership(String gameSaveId, String userEmail) {
-        redisTemplate.opsForValue().set(GAME_SAVE_OWNERSHIP + gameSaveId, userEmail);
+        try {
+            if (cacheExpirationProperties.getGameSaveOwnershipExpirationSeconds() > 0) {
+                stringRedisTemplate.opsForValue().set(GAME_SAVE_OWNERSHIP + gameSaveId, userEmail, cacheExpirationProperties.getGameSaveOwnershipExpirationSeconds(), TimeUnit.SECONDS);
+            } else {
+                stringRedisTemplate.opsForValue().set(GAME_SAVE_OWNERSHIP + gameSaveId, userEmail);
+            }
+        } catch (DataAccessException e) {
+            log.error("Error while setting game save ownership in redis cache", e);
+        }
     }
 }

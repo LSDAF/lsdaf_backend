@@ -5,13 +5,8 @@ import java.util.Optional;
 public interface CacheService {
 
     /**
-     * Check if the cache is enabled
-     * @return true if cache is enabled, false otherwise
-     */
-    boolean isCacheEnabled();
-
-    /**
      * Get the gold from cache if any
+     *
      * @param gameSaveId the id of the game save
      * @return the gold amount if present in cache
      */
