@@ -12,9 +12,12 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
-    open-in-view: false
   config:
     import: classpath:env.properties
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 http-log:
   enabled: true
@@ -100,9 +103,12 @@ auth:
 
 
 cache:
-  enabled: false
+  enabled: ${CACHE_ENABLED}
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
     database: ${REDIS_DATABASE}
+  expiration:
+    gold-expiration-seconds: ${GOLD_EXPIRATION_SECONDS}
+    game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
