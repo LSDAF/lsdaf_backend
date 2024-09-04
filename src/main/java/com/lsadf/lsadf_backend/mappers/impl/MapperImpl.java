@@ -121,7 +121,6 @@ public class MapperImpl implements Mapper {
     @Override
     public Gold mapGoldEntityToGold(GoldEntity goldEntity) {
         return Gold.builder()
-                .gameSaveId(goldEntity.getGameSaveEntity().getId())
                 .amount(goldEntity.getGoldAmount())
                 .build();
     }
