@@ -165,3 +165,18 @@ Feature: Game Save Service Features
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
     When we check the game save ownership with id 0530e1fe-3428-4edd-bb32-cb563419d0bd for the user with email paul.itesse@test.com
     Then I should throw a NotFoundException
+
+  Scenario: Get all game saves for a user
+    Given the following users
+      | id                                   | name       | email               |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com |
+
+    And the following game saves
+      | id                                   | userId                               | gold    | healthPoints | attack |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
+      | 0203c658-7c54-4154-b94f-8ad81d3dde1a | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 2       | 26           | 770    |
+    When we want to get all game saves for the user with email paul.ochon@test.com
+    Then I should return the following game save entities
+      | id                                   | userId                               | gold    | healthPoints | attack |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
+      | 0203c658-7c54-4154-b94f-8ad81d3dde1a | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 2       | 26           | 770    |

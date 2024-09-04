@@ -11,11 +11,6 @@ public class GoldRepositoryMock extends ARepositoryMock<GoldEntity> {
             throw new IllegalArgumentException("The gold id must not be empty, since it should be the id of the associated game save");
         }
 
-        Date date = new Date();
-
-        entity.setCreatedAt(date);
-        entity.setUpdatedAt(date);
-
         entities.put(entity.getId(), entity);
         return entity;
     }

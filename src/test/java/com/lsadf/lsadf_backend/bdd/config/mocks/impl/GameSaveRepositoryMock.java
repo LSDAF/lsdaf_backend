@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.services.GoldService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -26,13 +27,6 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
 
         GameSaveEntity toUpdate = entities.get(entity.getId());
         if (toUpdate == null) {
-
-            // Save gold entity before saving game save entity
-            GoldEntity goldEntity = saveGoldEntity(entity);
-
-            entity.setGoldEntity(goldEntity);
-            entity.setCreatedAt(goldEntity.getCreatedAt());
-            entity.setUpdatedAt(goldEntity.getUpdatedAt());
             entities.put(entity.getId(), entity);
             return entity;
         }
@@ -44,14 +38,11 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         return toUpdate;
     }
 
-    private GoldEntity saveGoldEntity(GameSaveEntity entity) {
-        GoldEntity goldEntity = entity.getGoldEntity();
-        goldEntity.setId(entity.getId());
-        goldEntity.setGameSaveEntity(entity);
-        return goldRepository.save(goldEntity);
-    }
-
     public Stream<GameSaveEntity> findAllSaveGames() {
         return entities.values().stream();
+    }
+
+    public List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userId) {
+        return entities.values().stream().filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userId)).toList();
     }
 }

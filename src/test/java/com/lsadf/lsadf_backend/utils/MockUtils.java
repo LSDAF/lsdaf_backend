@@ -81,6 +81,7 @@ public class MockUtils {
         when(gameSaveRepository.findAll()).thenReturn(gameSaveRepositoryMock.findAll());
         when(gameSaveRepository.count()).thenReturn(gameSaveRepositoryMock.count());
         when(gameSaveRepository.findAllGameSaves()).thenReturn(gameSaveRepositoryMock.findAllSaveGames());
+        when(gameSaveRepository.findGameSaveEntitiesByUserEmail(Mockito.anyString())).thenAnswer(invocation -> gameSaveRepositoryMock.findGameSaveEntitiesByUserEmail(invocation.getArgument(0)));
         when(gameSaveRepository.existsById(any())).thenAnswer(invocation -> gameSaveRepositoryMock.existsById(invocation.getArgument(0)).isPresent());
         when(gameSaveRepository.findById(Mockito.anyString())).thenAnswer(invocation -> gameSaveRepositoryMock.findById(invocation.getArgument(0)));
         when(gameSaveRepository.save(Mockito.any())).thenAnswer(invocation -> gameSaveRepositoryMock.save(invocation.getArgument(0)));

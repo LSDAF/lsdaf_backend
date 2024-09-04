@@ -72,10 +72,11 @@ public class BddUtils {
                 .healthPoints(healthPointsLong)
                 .build();
 
-        GoldEntity goldEntity = new GoldEntity(gameSaveEntity, gameSaveEntity.getUser().getId(), goldLong);
+        gameSaveEntity.setId(id);
+
+        GoldEntity goldEntity = new GoldEntity(gameSaveEntity.getId(), gameSaveEntity, userEmail, goldLong);
 
         gameSaveEntity.setGoldEntity(goldEntity);
-        gameSaveEntity.setId(id);
 
         return gameSaveEntity;
     }

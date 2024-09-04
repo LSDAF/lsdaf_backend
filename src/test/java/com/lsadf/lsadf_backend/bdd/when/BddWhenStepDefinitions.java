@@ -157,6 +157,16 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
+    @When("^we want to get all game saves for the user with email (.*)$")
+    public void when_we_want_to_get_all_game_saves_for_the_user_with_email(String email) {
+        try {
+            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUserEmail(email);
+            gameSaveEntityListStack.push(gameSaves);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
     @When("^we want to update the game save with id (.*) with the following GameSaveUpdateRequest$")
     public void when_we_want_to_update_the_game_save_with_user_id_with_the_following_GameSaveUpdateRequest(String saveId, DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
