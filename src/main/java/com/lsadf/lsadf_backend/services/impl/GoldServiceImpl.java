@@ -2,8 +2,8 @@ package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.entities.GoldEntity;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.GoldService;
@@ -21,12 +21,12 @@ public class GoldServiceImpl implements GoldService {
 
     public GoldServiceImpl(GoldRepository goldRepository,
                            CacheService cacheService,
-                           GameSaveService gameSaveService) {
+                           GameSaveService gameSaveService,
+                           CacheProperties cacheProperties) {
         this.goldRepository = goldRepository;
         this.cacheService = cacheService;
         this.gameSaveService = gameSaveService;
-
-        this.cacheEnabled = cacheService.isCacheEnabled();
+        this.cacheEnabled = cacheProperties.isEnabled();
     }
 
     /**
@@ -49,9 +49,9 @@ public class GoldServiceImpl implements GoldService {
                 return optionalCachedGold.get();
             }
         }
-        return goldRepository.findById(gameSaveId)
-                .orElseThrow(() -> new NotFoundException("Gold not found for game save " + gameSaveId))
-                .getGoldAmount();
+        GoldEntity goldEntity = getGoldEntity(gameSaveId);
+
+        return goldEntity.getGoldAmount();
     }
 
     /**
@@ -90,23 +90,10 @@ public class GoldServiceImpl implements GoldService {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Transactional(readOnly = true)
     @Override
-    public void checkGameSaveOwnership(String gameSaveId, String userEmail) throws ForbiddenException, NotFoundException {
-        if (cacheEnabled) {
-            Optional<String> cacheUserEmail = cacheService.getGameSaveOwnership(gameSaveId);
-            if (cacheUserEmail.isEmpty()) {
-                gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-                return;
-            }
-
-            if (!cacheUserEmail.get().equals(userEmail)) {
-                throw new ForbiddenException("User does not own game save " + gameSaveId);
-            }
-        } else {
-            gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-        }
+    public GoldEntity getGoldEntity(String gameSaveId) throws NotFoundException {
+        return goldRepository.findById(gameSaveId)
+                .orElseThrow(() -> new NotFoundException("Gold not found for game save id " + gameSaveId));
     }
 }
