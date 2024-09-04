@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serial;
 import java.util.HashSet;
@@ -64,6 +65,7 @@ public class UserEntity extends AEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Builder.Default
     private Set<GameSaveEntity> gameSaves = new HashSet<>();
 

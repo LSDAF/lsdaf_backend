@@ -23,7 +23,6 @@ public class GameSaveEntity extends AEntity {
     @Serial
     private static final long serialVersionUID = 7786624859103259009L;
 
-
     protected GameSaveEntity() {
         super();
     }
@@ -42,6 +41,13 @@ public class GameSaveEntity extends AEntity {
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
     private long attack = 1L;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_GOLD_ID)
+    @ToString.Exclude
     private GoldEntity goldEntity;
+
+    public void setGoldEntity(GoldEntity goldEntity) {
+        this.goldEntity = goldEntity;
+        goldEntity.setGameSave(this);
+    }
 }

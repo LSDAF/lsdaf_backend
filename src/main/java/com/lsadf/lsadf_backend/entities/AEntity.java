@@ -26,8 +26,8 @@ public class AEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 7495963088331648156L;
 
-    private static final String UUID_HIBERNATE_GENERATOR = "uuid-hibernate-generator";
-    private static final String UUID_GENERATOR_STRATEGY = "org.hibernate.id.UUIDGenerator";
+    protected static final String UUID_HIBERNATE_GENERATOR = "uuid-hibernate-generator";
+    protected static final String UUID_GENERATOR_STRATEGY = "org.hibernate.id.UUIDGenerator";
 
     @Id
     @GeneratedValue(generator = UUID_HIBERNATE_GENERATOR)
