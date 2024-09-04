@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Gold;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.GoldService;
 import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class GoldControllerImpl extends BaseController implements GoldController {
 
     private final GoldService goldService;
+    private final GameSaveService gameSaveService;
     private final Mapper mapper;
 
     public GoldControllerImpl(GoldService goldService,
+                              GameSaveService gameSaveService,
                               Mapper mapper) {
         this.goldService = goldService;
+        this.gameSaveService = gameSaveService;
         this.mapper = mapper;
     }
 
@@ -44,11 +48,9 @@ public class GoldControllerImpl extends BaseController implements GoldController
         try {
             validateUser(localUser);
 
-            String userEmail = localUser.getEmail();
-
-            goldService.checkGameSaveOwnership(gameSaveId, userEmail);
-            long gold = goldService.getGold(gameSaveId);
-            Gold goldResponse = new Gold(gameSaveId, gold);
+            String userEmail = localUser.getUsername();
+            gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+            Gold goldResponse = new Gold(goldService.getGold(gameSaveId));
 
             return ResponseUtils.generateResponse(HttpStatus.OK, "Gold amount retrieved successfully.", goldResponse);
         } catch (UnauthorizedException e) {
@@ -72,9 +74,9 @@ public class GoldControllerImpl extends BaseController implements GoldController
                                                           @RequestParam(value = GOLD_AMOUNT) long amount) {
         try {
             validateUser(localUser);
-            String userEmail = localUser.getEmail();
+            String userEmail = localUser.getUsername();
 
-            goldService.checkGameSaveOwnership(gameSaveId, userEmail);
+            gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
             goldService.saveGold(gameSaveId, amount, goldService.isCacheEnabled());
 
             return ResponseUtils.generateResponse(HttpStatus.OK, "Gold amount saved successfully.", null);

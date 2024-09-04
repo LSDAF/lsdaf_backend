@@ -3,13 +3,13 @@ package com.lsadf.lsadf_backend.controllers.impl;
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.controllers.UserController;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +30,12 @@ import java.util.List;
 public class UserControllerImpl extends BaseController implements UserController {
     private final UserService userService;
     private final Mapper mapper;
+    private final GameSaveService gameSaveService;
 
-    public UserControllerImpl(UserService userService, Mapper mapper) {
+    public UserControllerImpl(UserService userService, Mapper mapper, GameSaveService gameSaveService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.gameSaveService = gameSaveService;
     }
 
     /**
@@ -69,16 +71,18 @@ public class UserControllerImpl extends BaseController implements UserController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
             String email = localUser.getUsername();
 
-            UserEntity user = userService.getUserByEmail(email);
-            List<GameSave> gameSaves = user.getGameSaves().stream().map(mapper::mapToGameSave).toList();
+            List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(email)
+                    .stream()
+                    .map(mapper::mapToGameSave)
+                    .toList();
 
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaves);
+            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaveList);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user game saves: ", e);
             return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user game saves", null);
