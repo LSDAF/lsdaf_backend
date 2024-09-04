@@ -17,13 +17,28 @@ services:
     volumes:
       - ./docker-data/postgres:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7.4.0-alpine
+    container_name: redis
+    env_file: env/env.properties
+    tty: true
+    command: "sh -xc 'redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli -a $$REDIS_PASSWORD config set notify-keyspace-events KEA && sleep infinity'"
+    profiles:
+      - db
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    volumes:
+      - ./docker-data/redis_data:/data
+
   pgadmin:
     image: dpage/pgadmin4:8.6
     platform: linux/amd64
     container_name: pgadmin
     env_file: env/env.properties
     profiles:
-      - db
+      - monitoring
     environment:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -37,20 +52,22 @@ services:
     networks:
       - backend
 
-  redis:
-    image: redis:7.4.0-alpine
-    container_name: redis
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
     env_file: env/env.properties
-    tty: true
-    command: "sh -c redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli config set notify-keyspace-events KEA && sleep infinity"
+    environment:
+      RI_APP_PORT: 8001
     profiles:
-      - db
-    ports:
-      - "6379:6379"
+      - monitoring
     networks:
       - backend
+    ports:
+      - "8001:8001"
     volumes:
-      - ./docker-data/redis_data:/data
+      - ./docker-data/redisinsight_data:/data
+    depends_on:
+      - redis
 
   lsadf_backend:
     platform: linux/amd64
