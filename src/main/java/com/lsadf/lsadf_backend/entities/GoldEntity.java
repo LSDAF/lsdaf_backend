@@ -30,6 +30,7 @@ public class GoldEntity implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private GameSaveEntity gameSave;
 
     @Column(name = EntityAttributes.Gold.GOLD_USER_EMAIL)

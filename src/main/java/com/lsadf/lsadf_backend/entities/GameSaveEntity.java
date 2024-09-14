@@ -43,7 +43,6 @@ public class GameSaveEntity extends AEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_GOLD_ID)
-    @ToString.Exclude
     private GoldEntity goldEntity;
 
     public void setGoldEntity(GoldEntity goldEntity) {
