@@ -27,7 +27,7 @@ build-no-cache:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
 
 up:
-	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml up -d
+	COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
 down:
 	COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml down
