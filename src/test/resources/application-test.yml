@@ -45,4 +45,16 @@ auth:
   token-expiration-ms: 3600000
 
 cache:
-  enabled: false
+  redis:
+    host: localhost
+    port: 12345
+    password: JIOZHAUIHIAVAZHUSVFAZUSV
+    database: 0
+  enabled: true
+  expiration:
+    game-save-ownership-expiration-seconds: -1
+    gold-expiration-seconds: -1
+    local-user-expiration-seconds: -1
+
+shutdown:
+  flush-cache-at-shutdown: false

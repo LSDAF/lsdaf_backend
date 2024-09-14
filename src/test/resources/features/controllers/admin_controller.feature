@@ -2,6 +2,7 @@ Feature: AdminController tests
 
   Background:
     Given the BDD engine is ready
+    And the cache is enabled
     And a clean database
 
 
@@ -495,3 +496,65 @@ Feature: AdminController tests
       | toto | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f |
 
     Then the response status code should be 400
+
+  Scenario: An admin user flushes and clears the cache
+    Given the following users
+      | id                                   | name            | email                    | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON      | paul.ochon@test.com      | toto1234 | USER,ADMIN |
+      | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Camille COMBALE | camille.combale@test.com | toto2345 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack | userEmail                |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com      |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | paul.ochon@test.com      |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | camille.combale@test.com |
+    And the following gold entries in cache
+      | userId                               | gold |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5000 |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 6000 |
+    And the following game save ownerships in cache
+      | gameSaveId                           | userId                               |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to flush and clear the cache
+
+    Then the response status code should be 200
+    And the gold cache should be empty
+    And the game save ownership cache should be empty
+    And the gold histo cache should be empty
+
+  Scenario: An admin user requests the status of the cache
+    Given the following users
+      | id                                   | name            | email                    | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON      | paul.ochon@test.com      | toto1234 | USER,ADMIN |
+      | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Camille COMBALE | camille.combale@test.com | toto2345 | USER,ADMIN |
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to get the cache status
+
+    Then the response status code should be 200
+
+    And the response should have the following Boolean true
+
+  Scenario: An admin user requests the toggle of the cache
+    Given the following users
+      | id                                   | name            | email                    | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON      | paul.ochon@test.com      | toto1234 | USER,ADMIN |
+      | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Camille COMBALE | camille.combale@test.com | toto2345 | USER,ADMIN |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to toggle the cache status
+
+    Then the response status code should be 200
+
+    And the response should have the following Boolean false

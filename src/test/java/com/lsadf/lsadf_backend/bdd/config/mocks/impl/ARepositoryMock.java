@@ -5,12 +5,21 @@ import com.lsadf.lsadf_backend.bdd.config.mocks.RepositoryMock;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract class for repository mocks
+ * @param <T> the entity type
+ */
 public abstract class ARepositoryMock<T> implements RepositoryMock<T> {
     protected final Map<String, T> entities = new HashMap<>();
 
     @Override
-    public Optional<T> existsById(String id) {
-        return Optional.ofNullable(entities.get(id));
+    public boolean existsById(String id) {
+        return entities.containsKey(id);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        entities.remove(id);
     }
 
     @Override

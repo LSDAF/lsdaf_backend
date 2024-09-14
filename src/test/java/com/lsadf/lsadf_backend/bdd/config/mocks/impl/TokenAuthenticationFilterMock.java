@@ -1,5 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -22,12 +24,13 @@ public class TokenAuthenticationFilterMock extends TokenAuthenticationFilter {
 
     private final Map<String, LocalUser> localUserMap;
 
-    public TokenAuthenticationFilterMock(TokenProvider tokenProvider, UserDetailsService userDetailsService, Map<String, LocalUser> localUserMap) {
-        super(tokenProvider, userDetailsService);
+    public TokenAuthenticationFilterMock(TokenProvider tokenProvider,
+                                         UserDetailsService userDetailsService,
+                                         Map<String, LocalUser> localUserMap,
+                                         Cache<String, LocalUser> localUserCache) {
+        super(tokenProvider, userDetailsService, localUserCache);
         this.localUserMap = localUserMap;
     }
-
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,9 +38,8 @@ public class TokenAuthenticationFilterMock extends TokenAuthenticationFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && localUserMap.containsKey(jwt)) {
-                LocalUser userDetails = localUserMap.get(jwt);
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                LocalUser localUser = localUserMap.get(jwt);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

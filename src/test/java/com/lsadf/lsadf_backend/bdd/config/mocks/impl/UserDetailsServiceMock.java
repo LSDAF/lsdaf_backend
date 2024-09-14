@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
 
+/**
+ * Mock implementation of the UserDetailsService
+ */
 public class UserDetailsServiceMock implements UserDetailsService {
     private final UserService userService;
     private final Mapper mapper;

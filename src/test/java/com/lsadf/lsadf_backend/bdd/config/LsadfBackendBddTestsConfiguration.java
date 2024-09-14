@@ -1,14 +1,13 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.TokenAuthenticationFilterMock;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
@@ -16,15 +15,22 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import redis.embedded.RedisServer;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +38,31 @@ import java.util.Stack;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Configuration class for BDD tests
+ */
 @TestConfiguration
 public class LsadfBackendBddTestsConfiguration {
+
+    private final RedisServer redisServer;
+
+    public LsadfBackendBddTestsConfiguration(RedisProperties redisProperties) throws IOException {
+        this.redisServer = RedisServer.newRedisServer()
+                .setting("bind 127.0.0.1")
+                .setting("notify-keyspace-events KEA")
+                .port(redisProperties.getPort())
+                .build();
+    }
+
+    @Bean
+    public Stack<Long> longGoldStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<Gold> goldStack() {
+        return new Stack<>();
+    }
 
     @Bean
     public Stack<List<GameSave>> gameSaveStack() {
@@ -150,7 +179,28 @@ public class LsadfBackendBddTestsConfiguration {
     @Primary
     public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider tokenProvider,
                                                                UserDetailsService userDetailsService,
-                                                               Map<String, LocalUser> localUserMap) {
-        return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap);
+                                                               Map<String, LocalUser> localUserMap,
+                                                               Cache<String, LocalUser> localUserCache) {
+        return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap, localUserCache);
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
+    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName(redisProperties.getHost());
+        configuration.setPort(redisProperties.getPort());
+        return new LettuceConnectionFactory(configuration);
+    }
+
+    @PreDestroy
+    public void preDestroy() throws IOException {
+        this.redisServer.stop();
+    }
+
+    @PostConstruct
+    public void postConstruct() throws IOException {
+        this.redisServer.start();
     }
 }

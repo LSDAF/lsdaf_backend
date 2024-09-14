@@ -1,4 +1,4 @@
-Feature: Game Save Service Features
+Feature: Game Save Service tests
 
   Background:
     Given the BDD engine is ready
@@ -11,6 +11,7 @@ Feature: Game Save Service Features
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
 
     When we want to create a new game save for the user with email paul.ochon@test.com
+
     Then I should return the following game save entities
       | userId                               | gold | healthPoints | attack |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 0    | 10           | 1      |
@@ -20,13 +21,18 @@ Feature: Game Save Service Features
       | id                                   | name        | email                |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+
     When we want to create a new game save with the following AdminGameSaveCreationRequest
-      | userEmail            | gold | healthPoints | attack |
-      | paul.itesse@test.com | 500  | 11289        | 5000   |
+      | userEmail            | gold | healthPoints | attack | id                                   |
+      | paul.itesse@test.com | 500  | 11289        | 5000   | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 |
 
     Then I should return the following game save entities
-      | userEmail            | gold | healthPoints | attack |
-      | paul.itesse@test.com | 500  | 11289        | 5000   |
+      | id                                   | userEmail            | gold | healthPoints | attack |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   |
+
+    And I should have the following game saves in DB
+      | id                                   | userId                               | gold | healthPoints | attack |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 500  | 11289        | 5000   |
 
 
   Scenario: Get an existing GameSave
@@ -114,6 +120,8 @@ Feature: Game Save Service Features
     When we want to delete the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
     Then I should have no game save entries in DB
+
+
 
 
   Scenario: Delete a non-existing GameSave

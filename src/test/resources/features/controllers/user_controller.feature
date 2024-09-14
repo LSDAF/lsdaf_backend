@@ -1,5 +1,4 @@
-
-Feature: User Controller Features
+Feature: User Controller tests
 
   Background:
     Given the BDD engine is ready

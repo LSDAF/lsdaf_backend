@@ -20,6 +20,9 @@ import java.util.concurrent.TimeUnit;
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 import static org.awaitility.Awaitility.await;
 
+/**
+ * Step definitions for the when steps in the BDD scenarios
+ */
 @Slf4j(topic = "[GOLD WHEN STEP DEFINITIONS]")
 public class BddGoldWhenStepDefinitions extends BddLoader {
     @When("^the gold cache is flushed$")

@@ -1,5 +1,5 @@
 
-Feature: AuthController integration tests
+Feature: AuthController tests
 
   Background:
     Given the BDD engine is ready

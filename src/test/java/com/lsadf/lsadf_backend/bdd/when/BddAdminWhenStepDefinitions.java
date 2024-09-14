@@ -22,6 +22,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.WhereJoinTable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,6 +36,9 @@ import java.util.Map;
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Step definitions for the when steps in the BDD scenarios
+ */
 @Slf4j(topic = "[ADMIN WHEN STEP DEFINITIONS]")
 public class BddAdminWhenStepDefinitions extends BddLoader {
 
@@ -358,6 +362,85 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             GenericResponse<User> body = result.getBody();
             userListStack.push(Collections.singletonList(body.getData()));
             responseStack.push(body);
+            log.info("Response: {}", result);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^an admin flushes and clears the cache$")
+    public void when_an_admin_flushes_and_clears_the_cache() {
+        try {
+            adminService.flushAndClearCache();
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^an admin toggles the cache status$")
+    public void when_an_admin_toggles_the_cache_status() {
+        try {
+            adminService.toggleCache();
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^an admin gets the cache status$")
+    public void when_an_admin_gets_the_cache_status() {
+        try {
+            boolean cacheStatus = adminService.isCacheEnabled();
+            booleanStack.push(cacheStatus);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to get the cache status$")
+    public void when_the_user_requests_the_admin_endpoint_to_get_the_cache_status() {
+        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.CACHE_ENABLED;
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<Boolean>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedBooleanResponse());
+            responseStack.push(result.getBody());
+            log.info("Response: {}", result);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to toggle the cache status$")
+    public void when_the_user_requests_the_admin_endpoint_to_toggle_the_cache_status() {
+        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.TOGGLE_CACHE;
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<Boolean>> result = testRestTemplate.exchange(url, HttpMethod.PUT, request, buildParameterizedBooleanResponse());
+            responseStack.push(result.getBody());
+            log.info("Response: {}", result);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to flush and clear the cache$")
+    public void when_the_user_requests_the_admin_endpoint_to_clear_the_cache() {
+        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.CACHE;
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.PUT, request, buildParameterizedVoidResponse());
+            responseStack.push(result.getBody());
             log.info("Response: {}", result);
         } catch (Exception e) {
             exceptionStack.push(e);

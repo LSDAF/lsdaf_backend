@@ -1,21 +1,19 @@
 package com.lsadf.lsadf_backend.bdd;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
+import com.lsadf.lsadf_backend.cache.CacheFlushService;
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
-import com.lsadf.lsadf_backend.controllers.impl.AdminControllerImpl;
-import com.lsadf.lsadf_backend.controllers.impl.AuthControllerImpl;
-import com.lsadf.lsadf_backend.controllers.impl.GameSaveControllerImpl;
-import com.lsadf.lsadf_backend.controllers.impl.UserControllerImpl;
+import com.lsadf.lsadf_backend.controllers.impl.*;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
@@ -44,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * BDD Loader class for the Cucumber tests
+ */
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
         LsadfBackendConfiguration.class,
@@ -58,6 +59,8 @@ import java.util.Stack;
         UserControllerImpl.class,
         AdminController.class,
         AdminControllerImpl.class,
+        GoldController.class,
+        GoldControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
@@ -76,6 +79,10 @@ import java.util.Stack;
 })
 @ActiveProfiles("test")
 public class BddLoader {
+
+    // LocalUser Cache
+    @Autowired
+    protected Cache<String, LocalUser> localUserCache;
 
     // Repositories
     @Autowired
@@ -101,6 +108,12 @@ public class BddLoader {
     protected GoldService goldService;
 
     @Autowired
+    protected CacheService cacheService;
+
+    @Autowired
+    protected CacheFlushService cacheFlushService;
+
+    @Autowired
     protected GameSaveService gameSaveService;
 
     @Autowired
@@ -112,10 +125,13 @@ public class BddLoader {
     @Autowired
     protected AdminService adminService;
 
-    // BDD Specific Stacks
+    // BDD Specific Stacks & Maps
 
     @Autowired
     protected Stack<List<GameSave>> gameSaveListStack;
+
+    @Autowired
+    protected Stack<Long> longGoldStack;
 
     @Autowired
     protected Stack<List<GameSaveEntity>> gameSaveEntityListStack;
@@ -131,6 +147,9 @@ public class BddLoader {
 
     @Autowired
     protected Stack<UserAdminDetails> userAdminDetailsStack;
+
+    @Autowired
+    protected Stack<Gold> goldStack;
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;
@@ -150,6 +169,10 @@ public class BddLoader {
     @Autowired
     @Qualifier("jwtStack")
     protected Stack<String> jwtStack;
+
+    // Properties
+    @Autowired
+    protected CacheExpirationProperties cacheExpirationProperties;
 
     // Controller testing properties
 

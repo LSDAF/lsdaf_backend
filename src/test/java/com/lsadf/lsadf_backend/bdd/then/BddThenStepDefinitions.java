@@ -5,10 +5,7 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -24,6 +21,9 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Step definitions for the then steps in the BDD scenarios
+ */
 @Slf4j(topic = "[THEN STEP DEFINITIONS]")
 public class BddThenStepDefinitions extends BddLoader {
 
@@ -123,6 +123,12 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(actual).isFalse();
     }
 
+    @Then("^the response should have the following Boolean (.*)$")
+    public void then_the_response_should_have_the_following_boolean(boolean expected) {
+        boolean actual = (boolean) responseStack.peek().getData();
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @Then("^the response status code should be (.*)$")
     public void then_the_response_status_code_should_be(int statusCode) {
         int actual = responseStack.peek().getStatus();
@@ -152,25 +158,32 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_i_should_have_the_following_entities(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
-        List<GameSaveEntity> actual = gameSaveEntityListStack.peek();
+        try (var actualStream = gameSaveRepository.findAllGameSaves()) {
+            var actual = actualStream.toList();
 
-        for (Map<String, String> row : rows) {
-            GameSaveEntity expected = BddUtils.mapToGameSaveEntity(row, userRepository);
-            GameSaveEntity gameSave = actual.stream()
-                    .filter(g -> g.getId().equals(expected.getId()))
-                    .findFirst()
-                    .orElseThrow();
+            for (Map<String, String> row : rows) {
+                GameSaveEntity expected = BddUtils.mapToGameSaveEntity(row, userRepository);
+                GameSaveEntity gameSave = actual.stream()
+                        .filter(g -> g.getId().equals(expected.getId()))
+                        .findFirst()
+                        .orElseThrow();
 
-            assertThat(gameSave)
-                    .usingRecursiveComparison()
-                    .ignoringFields("user", "id", "createdAt", "updatedAt")
-                    .isEqualTo(expected);
+                assertThat(gameSave)
+                        .usingRecursiveComparison()
+                        .ignoringFields("user", "id", "createdAt", "updatedAt", "goldEntity.gameSave")
+                        .isEqualTo(expected);
+            }
         }
     }
 
     @Then("^I should have no game save entries in DB$")
     public void then_i_should_have_no_game_save_entries_in_db() {
         assertThat(gameSaveRepository.count()).isEqualTo(0);
+    }
+
+    @Then("^I should have no gold entries in DB$")
+    public void then_i_should_have_no_gold_entries_in_db() {
+        assertThat(goldRepository.count()).isEqualTo(0);
     }
 
     @Then("^I should throw a NotFoundException$")
@@ -185,10 +198,34 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(exception).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Then("^the gold amount should be (.*)$")
+    public void then_the_gold_amount_should_be(int goldAmount) {
+        Long actual = longGoldStack.peek();
+        assertThat(actual).isEqualTo(goldAmount);
+    }
+
     @Then("^I should throw a ForbiddenException$")
     public void then_i_should_throw_a_forbidden_exception() {
         Exception exception = exceptionStack.peek();
         assertThat(exception).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Then("^the response should have the following Gold$")
+    public void then_the_response_should_have_the_following_gold(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        var row = rows.get(0);
+
+        Gold expected = BddUtils.mapToGold(row);
+        Gold actual = (Gold) responseStack.peek().getData();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     @Then("^I should return the following UserAdminDetails$")

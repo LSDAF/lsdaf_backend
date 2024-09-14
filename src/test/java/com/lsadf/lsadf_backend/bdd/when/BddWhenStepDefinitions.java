@@ -21,6 +21,9 @@ import java.util.*;
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Step definitions for the when steps in the BDD scenarios
+ */
 @Slf4j(topic = "[WHEN STEP DEFINITIONS]")
 public class BddWhenStepDefinitions extends BddLoader {
 

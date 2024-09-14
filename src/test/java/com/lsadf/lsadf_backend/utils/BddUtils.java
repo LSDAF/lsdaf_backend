@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.Gold;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
@@ -66,6 +67,8 @@ public class BddUtils {
             userOptional = userRepository.findUserEntityByEmail(userEmail);
         }
 
+        UserEntity userEntity = userOptional.orElse(null);
+
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
                 .user(userOptional.orElse(null))
                 .attack(attackLong)
@@ -74,7 +77,7 @@ public class BddUtils {
 
         gameSaveEntity.setId(id);
 
-        GoldEntity goldEntity = new GoldEntity(gameSaveEntity.getId(), gameSaveEntity, userEmail, goldLong);
+        GoldEntity goldEntity = new GoldEntity(gameSaveEntity.getId(), gameSaveEntity, userEntity.getEmail(), goldLong);
 
         gameSaveEntity.setGoldEntity(goldEntity);
 
@@ -181,6 +184,17 @@ public class BddUtils {
                 .healthPoints(healthPoints)
                 .gold(gold)
                 .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a Gold
+     * @param row row from BDD table
+     * @return Gold
+     */
+    public static Gold mapToGold(Map<String, String> row) {
+        long amount = Long.parseLong(row.get(BddFieldConstants.Gold.AMOUNT));
+        String id = row.get(BddFieldConstants.Gold.ID);
+        return new Gold(id, amount);
     }
 
     /**

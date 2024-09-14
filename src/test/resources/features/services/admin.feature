@@ -1,8 +1,9 @@
-Feature: Admin Service Features
+Feature: Admin Service tests
 
   Background:
     Given the BDD engine is ready
     And a clean database
+    And the cache is enabled
 
   Scenario: Admin: Get all users
     Given the following users
@@ -251,6 +252,60 @@ Feature: Admin Service Features
     When an admin deletes the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
     Then I should have no game save entries in DB
+
+    And I should have no gold entries in DB
+
+  Scenario: Admin: Flush and clear the cache
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+    And the following game saves
+      | id                                   | userId                               | gold        | healthPoints | attack     |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
+    And the following gold entries in cache
+      | gameSaveId                           | gold       |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 6666666666 |
+    When an admin flushes and clears the cache
+
+    Then I should have the following game saves in DB
+      | id                                   | userId                               | gold        | healthPoints | attack     |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 6666666666  | 12999        | 666        |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
+    And the gold cache should be empty
+    And the gold histo cache should be empty
+    And the game save ownership cache should be empty
+
+  Scenario: Admin: Get the cache status
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+    And the following game saves
+      | id                                   | userId                               | gold        | healthPoints | attack     |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
+
+    When an admin gets the cache status
+
+    Then I should return true
+
+  Scenario: Admin: Toggle the cache enabling
+    Given the following users
+      | id                                   | name        | email                |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+    And the following game saves
+      | id                                   | userId                               | gold        | healthPoints | attack     |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
+
+    When an admin toggles the cache status
+    And an admin gets the cache status
+
+    Then I should return false
+
 
   Scenario: Admin: Delete a save game with a non-existing id
     Given the following users

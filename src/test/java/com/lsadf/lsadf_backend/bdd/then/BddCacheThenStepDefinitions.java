@@ -8,7 +8,10 @@ import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.GoldCacheEntry.GAME_
 import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.GoldCacheEntry.GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j(topic = "[GOLD THEN STEP DEFINITIONS]")
+/**
+ * Step definitions for the cache related then steps in the BDD scenarios
+ */
+@Slf4j(topic = "[CACHE THEN STEP DEFINITIONS]")
 public class BddCacheThenStepDefinitions extends BddLoader {
 
     @Then("^the gold cache should be empty$")

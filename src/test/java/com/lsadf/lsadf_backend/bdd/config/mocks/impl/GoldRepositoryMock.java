@@ -4,6 +4,9 @@ import com.lsadf.lsadf_backend.entities.GoldEntity;
 
 import java.util.Date;
 
+/**
+ * Mock implementation of the GoldRepository
+ */
 public class GoldRepositoryMock extends ARepositoryMock<GoldEntity> {
     @Override
     public GoldEntity save(GoldEntity entity) {
