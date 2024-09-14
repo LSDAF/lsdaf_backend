@@ -27,11 +27,4 @@ public class DataSourceConfiguration {
 
         return dataSourceBuilder.build();
     }
-
-    @Bean
-    public DbInitializer dbInitializer(DbInitProperties dbInitProperties,
-                                       PasswordEncoder passwordEncoder,
-                                       UserService userService) {
-        return new DbInitializer(userService, passwordEncoder, dbInitProperties);
-    }
 }

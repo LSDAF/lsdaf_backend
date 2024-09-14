@@ -33,6 +33,12 @@ public class PropertiesConfiguration {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "shutdown")
+    public ShutdownProperties shutdownProperties() {
+        return new ShutdownProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "db")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();

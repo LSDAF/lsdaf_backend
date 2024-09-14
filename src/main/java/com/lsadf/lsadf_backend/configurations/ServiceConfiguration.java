@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.cache.CacheFlushService;
 import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
@@ -41,10 +42,9 @@ public class ServiceConfiguration {
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
                                            CacheService cacheService,
-                                           GoldRepository goldRepository,
                                            CacheProperties cacheProperties,
                                            Mapper mapper) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, goldRepository, cacheService, mapper, cacheProperties);
+        return new GameSaveServiceImpl(userService, gameSaveRepository, cacheService, mapper, cacheProperties);
     }
 
     @Bean
@@ -72,8 +72,10 @@ public class ServiceConfiguration {
     public AdminService adminService(UserService userService,
                                      GameSaveService gameSaveService,
                                      Mapper mapper,
-                                     SearchService searchService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService);
+                                     SearchService searchService,
+                                     CacheService cacheService,
+                                     CacheFlushService cacheFlushService) {
+        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, cacheService, cacheFlushService);
     }
 
 }

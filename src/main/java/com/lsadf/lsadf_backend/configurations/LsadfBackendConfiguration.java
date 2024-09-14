@@ -16,7 +16,8 @@ import org.springframework.context.annotation.Import;
         SecurityConfiguration.class,
         OAuth2Configuration.class,
         LoggingConfiguration.class,
-        CacheConfiguration.class
+        CacheConfiguration.class,
+        ApplicationListenerConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

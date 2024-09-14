@@ -1,11 +1,11 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.properties.AuthProperties;
-import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
-import com.lsadf.lsadf_backend.properties.HttpLogProperties;
-import com.lsadf.lsadf_backend.properties.OAuth2Properties;
+import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.properties.*;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
@@ -13,7 +13,6 @@ import com.lsadf.lsadf_backend.services.impl.CustomAuthenticationProviderImpl;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -70,8 +69,9 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public static final String ADMIN_URLS = ADMIN + "/**";
 
     @Bean
-    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService userDetailsService) {
-        return new CustomAuthenticationProviderImpl(userDetailsService);
+    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService userDetailsService,
+                                                                         Cache<String, LocalUser> localUserCache) {
+        return new CustomAuthenticationProviderImpl(userDetailsService, localUserCache);
     }
 
     @Bean
@@ -125,8 +125,9 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
     public TokenAuthenticationFilter TokenAuthenticationFilter(TokenProvider tokenProvider,
-                                                               UserDetailsService userDetailsService) {
-        return new TokenAuthenticationFilter(tokenProvider, userDetailsService);
+                                                               UserDetailsService userDetailsService,
+                                                               Cache<String, LocalUser> localUserCache) {
+        return new TokenAuthenticationFilter(tokenProvider, userDetailsService, localUserCache);
     }
 
 

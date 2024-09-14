@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Class for initializing the database with the default users.
+ */
 @Slf4j
 public class DbInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
