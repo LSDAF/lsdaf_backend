@@ -33,7 +33,7 @@ services:
       - ./docker-data/redis_data:/data
 
   pgadmin:
-    image: dpage/pgadmin4:8.6
+    image: dpage/pgadmin4:8.11
     platform: linux/amd64
     container_name: pgadmin
     env_file: env/env.properties
