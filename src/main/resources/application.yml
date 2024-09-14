@@ -112,3 +112,7 @@ cache:
   expiration:
     gold-expiration-seconds: ${GOLD_EXPIRATION_SECONDS}
     game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
+    local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
+
+shutdown:
+  flush-cache-at-shutdown: true
