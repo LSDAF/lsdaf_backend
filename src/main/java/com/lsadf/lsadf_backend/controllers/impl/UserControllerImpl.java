@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+
 
 /**
  * Implementation of the User Controller
  */
-@RestController(value = ControllerConstants.USER)
+@RestController
 @Slf4j
 public class UserControllerImpl extends BaseController implements UserController {
     private final UserService userService;
@@ -51,18 +53,18 @@ public class UserControllerImpl extends BaseController implements UserController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public ResponseEntity<GenericResponse<UserInfo>> getUserInfo(@CurrentUser LocalUser localUser) throws UnauthorizedException {
+    @Transactional(readOnly = true)
+    public ResponseEntity<GenericResponse<UserInfo>> getUserInfo(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
             UserInfo userInfo = mapper.mapLocalUserToUserInfo(localUser);
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user info", userInfo);
+            return generateResponse(HttpStatus.OK, userInfo);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user info: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user info", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user info", null);
         } catch (Exception e) {
             log.error("Exception {} while getting user info: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user info", null);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user info", null);
         }
     }
 
@@ -82,13 +84,13 @@ public class UserControllerImpl extends BaseController implements UserController
                     .map(mapper::mapToGameSave)
                     .toList();
 
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaveList);
+            return generateResponse(HttpStatus.OK, gameSaveList);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user game saves: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user game saves", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user game saves", null);
         } catch (Exception e) {
             log.error("Exception {} while getting user game saves: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user game saves", null);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user game saves", null);
         }
     }
 }

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+
 /**
  * Implementation of the GameSaveController.
  */
@@ -45,6 +47,7 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
     protected Logger getLogger() {
         return log;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -60,13 +63,13 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
             log.info("Successfully created new game for user with email {}", email);
             GameSave newGameSave = mapper.mapToGameSave(newSave);
 
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully created new game for user with email " + email, newGameSave);
+            return generateResponse(HttpStatus.OK, newGameSave);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while generating new save: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while generating new save.", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while generating new save.", null);
         } catch (Exception e) {
             log.error("Exception {} while generating new save: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while generating new save.", e.getMessage());
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while generating new save.", e.getMessage());
         }
     }
 
@@ -82,19 +85,19 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
             gameSaveService.checkGameSaveOwnership(id, localUser.getUsername());
             gameSaveService.updateGameSave(id, updateRequest);
             log.info("Successfully saved game with id {} for user with email {}", id, localUser.getUsername());
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully saved game with id " + id + " for user with email " + localUser.getUsername(), null);
+            return generateResponse(HttpStatus.OK);
         } catch (NotFoundException e) {
             log.error("Not found exception while saving game: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.NOT_FOUND, "Game save not found.", null);
+            return generateResponse(HttpStatus.NOT_FOUND, "Game save not found.", null);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while saving game: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while saving game.", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while saving game.", null);
         } catch (ForbiddenException e) {
             log.error("Forbidden exception while saving game: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.FORBIDDEN, "The given userEmail is not the owner of the game save.", null);
+            return generateResponse(HttpStatus.FORBIDDEN, "The given userEmail is not the owner of the game save.", null);
         } catch (Exception e) {
             log.error("Exception {} while saving game: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while saving game.", e.getMessage());
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while saving game.", e.getMessage());
         }
     }
 }

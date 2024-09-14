@@ -7,15 +7,19 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
 
 /**
  * Controller for game save gold operations
  */
 @RequestMapping(value = ControllerConstants.GOLD)
 @Tag(name = ControllerConstants.Swagger.GOLD_CONTROLLER)
+@SecurityRequirement(name = BEARER_AUTHENTICATION)
 public interface GoldController {
 
     String GAME_SAVE_ID = "game_save_id";
@@ -51,6 +55,7 @@ public interface GoldController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     ResponseEntity<GenericResponse<Void>> saveGold(LocalUser localUser, String gameSaveId, long amount);

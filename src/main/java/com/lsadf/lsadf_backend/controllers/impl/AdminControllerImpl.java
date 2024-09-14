@@ -20,7 +20,6 @@ import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
@@ -62,12 +62,49 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             GlobalInfo globalInfo = adminService.getGlobalInfo();
-            return generateResponse(HttpStatus.OK, "Successfully got global info", globalInfo);
+            return generateResponse(HttpStatus.OK, globalInfo);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting global info: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while getting global info: ", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(@CurrentUser LocalUser localUser) {
+        try {
+            validateUser(localUser);
+            boolean cacheEnabled = adminService.isCacheEnabled();
+            return generateResponse(HttpStatus.OK, cacheEnabled);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while checking cache status: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Error while checking cache status: ", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Boolean>> toggleCacheEnabling(@CurrentUser LocalUser localUser) {
+        try {
+            validateUser(localUser);
+            adminService.toggleCache();
+            Boolean cacheEnabled = adminService.isCacheEnabled();
+            return generateResponse(HttpStatus.OK, cacheEnabled);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while toggling cache: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Error while toggling cache: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }
@@ -83,9 +120,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             var users = adminService.getUsers(orderBy);
-            int count = users.size();
 
-            return generateResponse(HttpStatus.OK, "Successfully got " + count + " users", users);
+            return generateResponse(HttpStatus.OK, users);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting users: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -105,7 +141,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             UserAdminDetails user = adminService.getUserById(userId);
-            return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
+            return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user by id: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -129,7 +165,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             UserAdminDetails user = adminService.getUserByEmail(userEmail);
-            return generateResponse(HttpStatus.OK, "Successfully got user by id", user);
+            return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user by id: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -154,7 +190,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             User updatedUser = adminService.updateUser(userId, user);
-            return generateResponse(HttpStatus.OK, "Successfully updated user", updatedUser);
+            return generateResponse(HttpStatus.OK, updatedUser);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while updating user: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -178,16 +214,16 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             adminService.deleteUser(userId);
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully deleted user", null);
+            return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while deleting user: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("Error while deleting user: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Exception while deleting user: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }
 
@@ -202,7 +238,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             User user = adminService.createUser(adminUserCreationRequest);
-            return generateResponse(HttpStatus.OK, "Successfully created user", user);
+            return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while creating user: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -226,11 +262,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             List<GameSave> gameSaves = adminService.getGameSaves(orderBy);
-            int count = gameSaves.size();
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+            return generateResponse(HttpStatus.OK, gameSaves);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting game saves: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while getting game saves: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
@@ -248,7 +283,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             GameSave gameSave = adminService.getGameSave(gameSaveId);
-            return generateResponse(HttpStatus.OK, "Successfully got game save", gameSave);
+            return generateResponse(HttpStatus.OK, gameSave);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting game save: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -273,7 +308,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             GameSave gameSave = adminService.updateGameSave(gameSaveId, adminGameSaveUpdateRequest);
-            return generateResponse(HttpStatus.OK, "Successfully updated game save", gameSave);
+            return generateResponse(HttpStatus.OK, gameSave);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while updating game save: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -297,7 +332,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             GameSave gameSave = adminService.createGameSave(creationRequest);
-            return generateResponse(HttpStatus.OK, "Successfully created game save", gameSave);
+            return generateResponse(HttpStatus.OK, gameSave);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while creating game save: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -324,7 +359,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             var gameSaves = adminService.searchUsers(searchRequest, orderBy);
             int count = gameSaves.size();
 
-            return generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+            return generateResponse(HttpStatus.OK, gameSaves);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while searching users: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -351,7 +386,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             var gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
             int count = gameSaves.size();
 
-            return generateResponse(HttpStatus.OK, "Successfully got " + count + " game saves", gameSaves);
+            return generateResponse(HttpStatus.OK, gameSaves);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while searching game saves: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -374,7 +409,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             validateUser(localUser);
 
             adminService.deleteGameSave(gameSaveId);
-            return generateResponse(HttpStatus.OK, "Successfully deleted game save", null);
+            return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while deleting game save: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -383,6 +418,27 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while deleting game save: ", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> flushAndClearCache(@CurrentUser LocalUser localUser) {
+        try {
+            validateUser(localUser);
+
+            adminService.flushAndClearCache();
+
+            return generateResponse(HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while clearing cache: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Error while clearing cache: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }

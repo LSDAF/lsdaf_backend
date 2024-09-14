@@ -48,6 +48,55 @@ public interface AdminController {
     @Operation(summary = "Gets the global info of the application")
     ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(LocalUser localUser);
 
+
+    // Cache
+
+    /**
+     * Clears the cache
+     * @param localUser the user
+     * @return empty response
+     */
+    @PutMapping(value = ControllerConstants.Admin.CACHE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Clears all the caches of the application")
+    ResponseEntity<GenericResponse<Void>> flushAndClearCache(LocalUser localUser);
+
+    /**
+     * Checks if the cache is enabled
+     * @param localUser the user
+     * @return true if the cache is enabled, false otherwise
+     */
+    @GetMapping(value = ControllerConstants.Admin.CACHE_ENABLED)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Checks if the cache is enabled")
+    ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(LocalUser localUser);
+
+    /**
+     * Enables/Disables the cache
+     *
+     * @param localUser the user
+     * @return empty response
+     */
+    @PutMapping(value = ControllerConstants.Admin.TOGGLE_CACHE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Enables/Disables the cache")
+    ResponseEntity<GenericResponse<Boolean>> toggleCacheEnabling(LocalUser localUser);
+
     // User
 
     /**
