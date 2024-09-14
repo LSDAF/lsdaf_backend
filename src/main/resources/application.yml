@@ -1,0 +1,118 @@
+server:
+  port: 8080
+
+
+spring:
+  application:
+    name: LSADF Backend
+  banner:
+    location: classpath:lsadf_banner.txt
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+  config:
+    import: classpath:env.properties
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+
+db:
+  url: ${DB_URL_LOCALHOST}
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+  init:
+    enabled: true
+    users:
+      - email: ${ADMIN_USER_EMAIL}
+        password: ${ADMIN_USER_PASSWORD}
+        roles:
+          - ADMIN
+          - USER
+
+swagger:
+  contact:
+    name: ${SWAGGER_CONTACT_NAME}
+    email: ${SWAGGER_CONTACT_EMAIL}
+    url: ${SWAGGER_CONTACT_URL}
+  title: ${SWAGGER_TITLE}
+  description: ${SWAGGER_DESCRIPTION}
+  version: ${SWAGGER_VERSION}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+logging:
+  file:
+    path: classpath:logback.xml
+
+cors:
+  allowed-headers:
+    - "*"
+  allowed-origins:
+    - "*"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+  allow-credentials: true
+  exposed-headers:
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Credentials
+
+oauth2:
+  authorized-redirect-uris:
+  # Redefining existing properties normally defined as spring.security.oauth2.client.registration & spring.security.oauth2.client.provider to allow property injection from env.values file
+  registration:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
+    facebook:
+      client-id: ${FACEBOOK_CLIENT_ID}
+      client-secret: ${FACEBOOK_CLIENT_SECRET}
+  provider:
+    facebook:
+      user-info-uri: https://graph.facebook.com/me?fields=id,name,email,picture
+      authorization-uri: https://www.facebook.com/v11.0/dialog/oauth
+      token-uri: https://graph.facebook.com/v11.0/oauth/access_token
+      user-name-attribute: id
+    google:
+      authorization-uri: https://accounts.google.com/o/oauth2/auth
+      token-uri: https://accounts.google.com/o/oauth2/token
+      jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+auth:
+  refresh-token-expiration-ms: 86_400_000
+  refresh-token-secret: ${REFRESH_TOKEN_SECRET}
+  token-secret: ${TOKEN_SECRET}
+  token-expiration-ms: 3_600_000
+
+
+cache:
+  enabled: ${CACHE_ENABLED}
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DATABASE}
+  expiration:
+    gold-expiration-seconds: ${GOLD_EXPIRATION_SECONDS}
+    game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
+    local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
+
+shutdown:
+  flush-cache-at-shutdown: true

@@ -1,0 +1,60 @@
+swagger:
+  contact:
+    name: John Doe
+    email: john.doe@example.com
+    url: https://www.example.com
+  title: Example API
+  description: Example API Description
+  version: 1.0.0
+
+db:
+  init:
+    enabled: false
+    users:
+
+
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+
+cors:
+  allowed-origins:
+    - "*"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+  allowed-headers:
+    - "*"
+  exposed-headers:
+    - "*"
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+auth:
+  refresh-token-expiration-ms: 86400000
+  refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf
+  token-secret: knshjdvzuhdvkjnbduhfgsxtyzafshkfkcbndugsèarsyutfzxersdkjzdiuzguizh
+  token-expiration-ms: 3600000
+
+cache:
+  redis:
+    host: localhost
+    port: 12345
+    password: JIOZHAUIHIAVAZHUSVFAZUSV
+    database: 0
+  enabled: true
+  expiration:
+    game-save-ownership-expiration-seconds: -1
+    gold-expiration-seconds: -1
+    local-user-expiration-seconds: -1
+
+shutdown:
+  flush-cache-at-shutdown: false
