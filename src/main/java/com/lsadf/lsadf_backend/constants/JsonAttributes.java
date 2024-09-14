@@ -47,6 +47,7 @@ public final class JsonAttributes {
     }
 
     public static final class Gold {
+        public static final String ID = "id";
         public static final String AMOUNT = "amount";
     }
 

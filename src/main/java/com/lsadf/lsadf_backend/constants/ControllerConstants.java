@@ -44,6 +44,10 @@ public final class ControllerConstants {
         public static final String CREATE_GAME_SAVE = GAME_SAVES + "/new";
         public static final String SEARCH_GAME_SAVES = GAME_SAVES + "/search";
         public static final String GAME_SAVE_ID = GAME_SAVES + "/{game_save_id}";
+
+        public static final String CACHE = "/cache";
+        public static final String TOGGLE_CACHE = CACHE + "/toggle";
+        public static final String CACHE_ENABLED = CACHE + "/enabled";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

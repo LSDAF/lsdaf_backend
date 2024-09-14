@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RedisConstants {
     public static final String GOLD = "gold:";
+    public static final String GOLD_HISTO = "gold_histo:";
     public static final String GAME_SAVE_OWNERSHIP = "gamesaveownership:";
+    public static final String LOCAL_USER = "local_user:";
 }
