@@ -11,15 +11,14 @@ import org.springframework.http.ResponseEntity;
  */
 @UtilityClass
 public class ResponseUtils {
-    public static final String SUCCESS = "Success";
-
     /**
      * Builds a response
-     * @param status HTTP status of the response
-     * @param message Human readable message status
+     *
+     * @param status      HTTP status of the response
+     * @param message     Human readable message status
      * @param responseObj Object to return
+     * @param <T>         Type of object to return
      * @return ResponseEntity of GenericResponse containing all inputs
-     * @param <T> Type of object to return
      */
     public static <T> ResponseEntity<GenericResponse<T>> generateResponse(HttpStatus status, String message, Object responseObj) {
         GenericResponse response = generateGenericResponse(status, message, responseObj);
@@ -27,12 +26,34 @@ public class ResponseUtils {
     }
 
     /**
-     * private method to build a GenericResponse
+     * Builds a response
      * @param status HTTP status of the response
-     * @param message Human readable message status
      * @param responseObj Object to return
-     * @return GenericResponse containing all inputs
+     * @return ResponseEntity of GenericResponse containing all inputs
      * @param <T> Type of object to return
+     */
+    public static <T> ResponseEntity<GenericResponse<T>> generateResponse(HttpStatus status, Object responseObj) {
+        return generateResponse(status, null, responseObj);
+    }
+
+    /**
+     * Builds a response
+     * @param status HTTP status of the response
+     * @return ResponseEntity of GenericResponse containing all inputs
+     * @param <T> Type of object to return
+     */
+    public static <T> ResponseEntity<GenericResponse<T>> generateResponse(HttpStatus status) {
+        return generateResponse(status, null, null);
+    }
+
+    /**
+     * private method to build a GenericResponse
+     *
+     * @param status      HTTP status of the response
+     * @param message     Human-readable message status
+     * @param responseObj Object to return
+     * @param <T>         Type of object to return
+     * @return GenericResponse containing all inputs
      */
     private static <T> GenericResponse<T> generateGenericResponse(HttpStatus status, String message, T responseObj) {
         return GenericResponse.<T>builder()

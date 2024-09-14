@@ -24,17 +24,4 @@ public class GenericResponse<T> implements Serializable {
     private int status;
     private String message;
     private T data;
-
-    public String toJsonString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"status\":").append(status).append(",");
-        sb.append("\"message\":\"").append(message).append("\",");
-        if (data != null) {
-            sb.append("\"data\":").append(data);
-        }
-        sb.append("}");
-
-        return sb.toString();
-    }
 }

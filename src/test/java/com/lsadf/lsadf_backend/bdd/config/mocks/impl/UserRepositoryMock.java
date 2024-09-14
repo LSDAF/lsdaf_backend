@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+/**
+ * Mock implementation of the UserRepository
+ */
 public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
     @Override
     public UserEntity save(UserEntity entity) {

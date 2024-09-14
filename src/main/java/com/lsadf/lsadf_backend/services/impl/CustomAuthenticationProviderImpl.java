@@ -1,5 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class CustomAuthenticationProviderImpl implements org.springframework.security.authentication.AuthenticationProvider {
     private final UserDetailsService userDetailsService;
+    private final Cache<String, LocalUser> localUserCache;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -17,7 +20,7 @@ public class CustomAuthenticationProviderImpl implements org.springframework.sec
         if (email == null) {
             throw new IllegalArgumentException("Email is required");
         }
-        final UserDetails user = userDetailsService.loadUserByUsername(email);
+        final LocalUser user = localUserCache.get(email, key -> (LocalUser) userDetailsService.loadUserByUsername(email));
         return createSuccessfulAuthentication(authentication, user);
     }
 

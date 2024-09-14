@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jdk.jfr.Enabled;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class AdminUserCreationRequest implements Serializable {
 
     @Schema(description = "User id of user to create. Can be null", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String userId;
+
+    @Schema(description = "Enabled status of user to create", example = "true")
+    private boolean enabled;
 
     @Email
     @NotBlank

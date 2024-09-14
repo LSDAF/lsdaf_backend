@@ -17,9 +17,16 @@ public final class EntityAttributes {
     // GAME SAVE
     public static class GameSave {
         public static final String GAME_SAVE_ENTITY = "t_game_save";
-        public static final String GAME_SAVE_ID = "game_save_id";
-        public static final String GAME_SAVE_USER_ID = "game_save_user_id";
-        public static final String GAME_SAVE_BANK_ACCOUNT_ID = "game_save_game_state";
+        public static final String GAME_SAVE_HEALTH_POINTS = "game_save_health_points";
+        public static final String GAME_SAVE_ATTACK = "game_save_attack";
+        public static final String GAME_SAVE_GOLD_ID = "game_save_gold_id";
+    }
+
+    // GOLD
+    public static class Gold {
+        public static final String GOLD_ENTITY = "t_gold";
+        public static final String GOLD_AMOUNT = "gold_amount";
+        public static final String GOLD_USER_EMAIL = "gold_user_email";
     }
 
     // USER

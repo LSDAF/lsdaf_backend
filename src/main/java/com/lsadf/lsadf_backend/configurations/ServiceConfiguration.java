@@ -1,8 +1,12 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.cache.CacheFlushService;
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
+import com.lsadf.lsadf_backend.properties.CacheProperties;
+import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.impl.TokenProviderImpl;
@@ -27,10 +31,20 @@ public class ServiceConfiguration {
     }
 
     @Bean
+    public GoldService goldService(GoldRepository goldRepository,
+                                   CacheService cacheService,
+                                   GameSaveService gameSaveService,
+                                   CacheProperties cacheProperties) {
+        return new GoldServiceImpl(goldRepository, cacheService, gameSaveService, cacheProperties);
+    }
+
+    @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
+                                           CacheService cacheService,
+                                           CacheProperties cacheProperties,
                                            Mapper mapper) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, mapper);
+        return new GameSaveServiceImpl(userService, gameSaveRepository, cacheService, mapper, cacheProperties);
     }
 
     @Bean
@@ -58,8 +72,10 @@ public class ServiceConfiguration {
     public AdminService adminService(UserService userService,
                                      GameSaveService gameSaveService,
                                      Mapper mapper,
-                                     SearchService searchService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService);
+                                     SearchService searchService,
+                                     CacheService cacheService,
+                                     CacheFlushService cacheFlushService) {
+        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, cacheService, cacheFlushService);
     }
 
 }

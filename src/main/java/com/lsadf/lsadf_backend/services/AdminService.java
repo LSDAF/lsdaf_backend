@@ -7,13 +7,13 @@ import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 
 import java.util.List;
 
@@ -27,6 +27,25 @@ public interface AdminService {
      * @return the global info
      */
     GlobalInfo getGlobalInfo();
+
+    // Cache
+
+    /**
+     * Clears the caches of the application
+     */
+    void flushAndClearCache();
+
+    /**
+     * Toggles the cache
+     */
+    void toggleCache();
+
+    /**
+     * Checks if the cache is enabled
+     *
+     * @return true if the cache is enabled, false otherwise
+     */
+    boolean isCacheEnabled();
 
     // Users
 
@@ -59,9 +78,9 @@ public interface AdminService {
      * Creates a new user
      *
      * @param creationRequest the user to create
-     * @return
+     * @return the created user
      */
-    UserAdminDetails createUser(AdminUserCreationRequest creationRequest);
+    User createUser(AdminUserCreationRequest creationRequest);
 
     /**
      * Updates a user
@@ -70,7 +89,7 @@ public interface AdminService {
      * @param userUpdateRequest the request to update the user data
      * @return the updated user
      */
-    UserAdminDetails updateUser(String userId, UserUpdateRequest userUpdateRequest) throws NotFoundException;
+    User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException;
 
     /**
      * Deletes a user
@@ -113,7 +132,7 @@ public interface AdminService {
      * @param updateRequest the update request
      * @return the updated game save
      */
-    GameSave updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException;
+    GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException;
 
     /**
      * Deletes a game save

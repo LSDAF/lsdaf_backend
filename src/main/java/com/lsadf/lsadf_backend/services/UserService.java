@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -23,14 +24,28 @@ public interface UserService {
     /**
      * Creates a new user
      *
-     * @param name              the name of the user
+     * @param id                the id of the user if any
      * @param email             the email of the user
      * @param password          the password of the user
      * @param provider          the social provider if any, else local
      * @param optionalUserRoles the roles of the user if any to use
+     * @param name              the name of the user
      * @return the created user
      */
-    UserEntity createUser(String name, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles);
+    UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name);
+
+    /**
+     * Creates a new user
+     *
+     * @param email             the email of the user
+     * @param password          the password of the user
+     * @param provider          the social provider if any, else local
+     * @param optionalUserRoles the roles of the user if any to use
+     * @param name              the name of the user
+     * @return the created user
+     */
+    UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name);
+
 
     /**
      * Creates a new user
@@ -88,6 +103,15 @@ public interface UserService {
      * @return
      */
     UserEntity updateUser(String id, UserUpdateRequest userUpdateRequest) throws NotFoundException;
+
+    /**
+     * Updates user by id
+     * @param id the id of the user
+     * @param adminUserUpdateRequest the request to update the user data
+     * @return the updated user
+     * @throws NotFoundException if the user is not found
+     */
+    UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException;
 
     /**
      * Updates user password with its user email

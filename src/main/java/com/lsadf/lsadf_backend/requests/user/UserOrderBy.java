@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.requests.user;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
 import com.lsadf.lsadf_backend.requests.common.OrderBy;
+import io.swagger.v3.core.util.Json;
 
 public enum UserOrderBy implements OrderBy {
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
@@ -15,6 +16,8 @@ public enum UserOrderBy implements OrderBy {
     CREATED_AT_DESC(JsonAttributes.CREATED_AT, SortingOrderParameter.DESCENDING),
     UPDATED_AT(JsonAttributes.UPDATED_AT, SortingOrderParameter.ASCENDING),
     UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING),
+    PROVIDER(JsonAttributes.User.PROVIDER, SortingOrderParameter.ASCENDING),
+    PROVIDER_DESC(JsonAttributes.User.PROVIDER, SortingOrderParameter.DESCENDING),
     NONE(null, null);
 
     UserOrderBy(String fieldName,

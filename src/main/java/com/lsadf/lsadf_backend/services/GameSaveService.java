@@ -4,10 +4,11 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
-import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -54,6 +55,18 @@ public interface GameSaveService {
     GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException;
 
     /**
+     * Updates a game save from admin side
+     *
+     * @param saveId        the save id
+     * @param updateRequest the admin update request
+     * @return the updated game save
+     * @throws ForbiddenException the forbidden exception
+     * @throws NotFoundException  the not found exception
+     */
+    GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException;
+
+
+    /**
      * Deletes a game save
      *
      * @param saveId the save id
@@ -68,6 +81,15 @@ public interface GameSaveService {
      * @return the stream of game saves
      */
     Stream<GameSaveEntity> getGameSaves();
+
+
+    /**
+     * Gets all game saves of a user
+     *
+     * @param userEmail the user email
+     * @return the stream of game saves
+     */
+    List<GameSaveEntity> getGameSavesByUserEmail(String userEmail);
 
     /**
      * Checks if the user owns the game save

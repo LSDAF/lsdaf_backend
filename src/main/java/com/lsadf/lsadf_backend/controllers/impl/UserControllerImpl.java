@@ -1,14 +1,15 @@
-package com.lsadf.lsadf_backend.controllers;
+package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -20,19 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+
 
 /**
  * Implementation of the User Controller
  */
-@RestController(value = ControllerConstants.USER)
+@RestController
 @Slf4j
 public class UserControllerImpl extends BaseController implements UserController {
     private final UserService userService;
     private final Mapper mapper;
+    private final GameSaveService gameSaveService;
 
-    public UserControllerImpl(UserService userService, Mapper mapper) {
+    public UserControllerImpl(UserService userService, Mapper mapper, GameSaveService gameSaveService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.gameSaveService = gameSaveService;
     }
 
     /**
@@ -48,18 +53,18 @@ public class UserControllerImpl extends BaseController implements UserController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public ResponseEntity<GenericResponse<UserInfo>> getUserInfo(@CurrentUser LocalUser localUser) throws UnauthorizedException {
+    @Transactional(readOnly = true)
+    public ResponseEntity<GenericResponse<UserInfo>> getUserInfo(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
             UserInfo userInfo = mapper.mapLocalUserToUserInfo(localUser);
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user info", userInfo);
+            return generateResponse(HttpStatus.OK, userInfo);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user info: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user info", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user info", null);
         } catch (Exception e) {
             log.error("Exception {} while getting user info: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user info", null);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user info", null);
         }
     }
 
@@ -68,22 +73,24 @@ public class UserControllerImpl extends BaseController implements UserController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
             String email = localUser.getUsername();
 
-            UserEntity user = userService.getUserByEmail(email);
-            List<GameSave> gameSaves = user.getGameSaves().stream().map(mapper::mapToGameSave).toList();
+            List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(email)
+                    .stream()
+                    .map(mapper::mapToGameSave)
+                    .toList();
 
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully retrieved user game saves from user", gameSaves);
+            return generateResponse(HttpStatus.OK, gameSaveList);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user game saves: ", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user game saves", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user game saves", null);
         } catch (Exception e) {
             log.error("Exception {} while getting user game saves: ", e.getClass(), e);
-            return ResponseUtils.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user game saves", null);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user game saves", null);
         }
     }
 }

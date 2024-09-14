@@ -12,10 +12,6 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameSaveUpdateRequest {
-    @JsonProperty(value = GOLD)
-    @PositiveOrZero
-    private long gold;
-
     @JsonProperty(value = HP)
     @PositiveOrZero
     private long healthPoints;

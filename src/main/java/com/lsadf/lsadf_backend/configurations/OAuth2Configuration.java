@@ -46,12 +46,6 @@ public class OAuth2Configuration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "oauth2")
-    public OAuth2Properties oAuth2Properties() {
-        return new OAuth2Properties();
-    }
-
-    @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository() {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
     }

@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.controllers;
+package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.LocalUser;

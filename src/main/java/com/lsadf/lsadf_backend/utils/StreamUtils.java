@@ -23,6 +23,8 @@ public class StreamUtils {
             case CREATED_AT_DESC -> userStream.sorted(Comparator.comparing(UserEntity::getCreatedAt).reversed());
             case UPDATED_AT -> userStream.sorted(Comparator.comparing(UserEntity::getUpdatedAt));
             case UPDATED_AT_DESC -> userStream.sorted(Comparator.comparing(UserEntity::getUpdatedAt).reversed());
+            case PROVIDER -> userStream.sorted(Comparator.comparing(UserEntity::getProvider));
+            case PROVIDER_DESC -> userStream.sorted(Comparator.comparing(UserEntity::getProvider).reversed());
             case NONE -> userStream;
         };
     }
@@ -35,8 +37,8 @@ public class StreamUtils {
             case UPDATED_AT_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getUpdatedAt).reversed());
             case ID -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getId));
             case ID_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getId).reversed());
-            case GOLD -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getGold));
-            case GOLD_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getGold).reversed());
+            case GOLD -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getGoldEntity().getGoldAmount()));
+            case GOLD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getGoldEntity().getGoldAmount()).reversed());
             case NONE -> gameSaveStream;
         };
     }

@@ -1,7 +1,8 @@
-package com.lsadf.lsadf_backend.controllers;
+package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.controllers.AuthController;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 import java.util.Set;
+
+import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 
 /**
@@ -82,16 +85,16 @@ public class AuthControllerImpl extends BaseController implements AuthController
                 throw new WrongPasswordException("Invalid password");
             }
             String jwt = tokenProvider.createToken(localUser);
-            return ResponseUtils.generateResponse(HttpStatus.OK, "Successfully logged in", new JwtAuthentication(jwt, mapper.mapLocalUserToUserInfo(localUser)));
+            return generateResponse(HttpStatus.OK, new JwtAuthentication(jwt, mapper.mapLocalUserToUserInfo(localUser)));
         } catch (NotFoundException e) {
             log.error("User with email {} not found", userLoginRequest.getEmail(), e);
-            return ResponseUtils.generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         } catch (WrongPasswordException e) {
             log.error("Invalid password");
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (AuthenticationException e) {
             log.error("Authentication failed", e);
-            return ResponseUtils.generateResponse(HttpStatus.UNAUTHORIZED, "Authentication failed", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Authentication failed", null);
         }
     }
 
@@ -102,13 +105,13 @@ public class AuthControllerImpl extends BaseController implements AuthController
     public ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userCreationRequest) {
         try {
             Optional<Set<UserRole>> roles = Optional.of(Sets.newHashSet(UserRole.getDefaultRole()));
-            UserEntity userEntity = userService.createUser(userCreationRequest.getName(), userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles);
+            UserEntity userEntity = userService.createUser(null, userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles, userCreationRequest.getName());
             UserInfo userInfo = mapper.mapUserEntityToUserInfo(userEntity);
 
-            return ResponseUtils.generateResponse(HttpStatus.OK, "User registered successfully", userInfo);
+            return generateResponse(HttpStatus.OK, userInfo);
         } catch (AlreadyExistingUserException e) {
             log.error("User with email {} already exists", userCreationRequest.getEmail(), e);
-            return ResponseUtils.generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+            return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         }
     }
 }

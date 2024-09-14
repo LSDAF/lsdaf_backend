@@ -3,12 +3,10 @@ package com.lsadf.lsadf_backend.mappers.impl;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +29,7 @@ public class MapperImpl implements Mapper {
                 .id(gameSaveEntity.getId())
                 .userEmail(gameSaveEntity.getUser().getEmail())
                 .userId(gameSaveEntity.getUser().getId())
-                .gold(gameSaveEntity.getGold())
+                .gold(gameSaveEntity.getGoldEntity().getGoldAmount())
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())
                 .id(gameSaveEntity.getId())
@@ -115,5 +113,16 @@ public class MapperImpl implements Mapper {
                 true,
                 buildSimpleGrantedAuthorities(user.getRoles()),
                 user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Gold mapGoldEntityToGold(GoldEntity goldEntity) {
+        return Gold.builder()
+                .amount(goldEntity.getGoldAmount())
+                .id(goldEntity.getId())
+                .build();
     }
 }

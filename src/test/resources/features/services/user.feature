@@ -1,5 +1,5 @@
 
-Feature: User Service Feature
+Feature: User Service tests
 
   Background:
     Given the BDD engine is ready

@@ -28,18 +28,6 @@ public class SwaggerConfiguration {
     private static final String JWT = "JWT";
     private static final String AUTHORIZATION = "Authorization";
 
-    @ConfigurationProperties(prefix = "swagger")
-    @Bean
-    public SwaggerProperties swaggerProperties() {
-        return new SwaggerProperties();
-    }
-
-    @ConfigurationProperties(prefix = "swagger.contact")
-    @Bean
-    public SwaggerContactProperties swaggerContactProperties() {
-        return new SwaggerContactProperties();
-    }
-
     @Bean
     public OpenAPI openAPI(SwaggerProperties swaggerProperties) {
         Info info = new Info();

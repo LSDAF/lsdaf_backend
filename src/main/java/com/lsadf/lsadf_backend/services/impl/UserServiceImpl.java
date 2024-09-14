@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.security.oauth2.user.OAuth2UserInfo;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -54,11 +56,11 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistingUserException("User with User id " + creationRequest.getUserId() + " already exist");
         }
 
-        return createUser(creationRequest.getName(),
+        return createUser(creationRequest.getUserId(),
                 creationRequest.getEmail(),
                 creationRequest.getPassword(),
                 creationRequest.getSocialProvider(),
-                Optional.of(Sets.newHashSet(UserRole.getDefaultRole())));
+                Optional.of(Sets.newHashSet(UserRole.getDefaultRole())), creationRequest.getName());
     }
 
     /**
@@ -76,7 +78,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String name, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles) {
+    public UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) {
+        return createUser(null, email, password, provider, optionalUserRoles, name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
@@ -92,6 +103,10 @@ public class UserServiceImpl implements UserService {
                 .provider(provider)
                 .password(encodedPassword)
                 .build();
+
+        if (id != null) {
+            userEntity.setId(id);
+        }
 
         return userRepository.save(userEntity);
     }
@@ -204,6 +219,18 @@ public class UserServiceImpl implements UserService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
+    @Override
+    public UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+
+        return updateUser(userEntity, adminUserUpdateRequest);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException {
@@ -243,6 +270,50 @@ public class UserServiceImpl implements UserService {
                 .email(oAuth2UserInfo.getEmail())
                 .socialProvider(SocialProvider.valueOf(registrationId))
                 .password(CHANGEIT).build();
+    }
+
+    private UserEntity updateUser(UserEntity userEntity,
+                                  AdminUserUpdateRequest adminUserUpdateRequest) {
+        boolean hasUpdates = false;
+
+        if (adminUserUpdateRequest != null) {
+            if (adminUserUpdateRequest.getName() != null && !adminUserUpdateRequest.getName().equals(userEntity.getName())) {
+                userEntity.setName(adminUserUpdateRequest.getName());
+                hasUpdates = true;
+            }
+
+            if (adminUserUpdateRequest.getEmail() != null && !adminUserUpdateRequest.getEmail().equals(userEntity.getEmail())) {
+                if (userRepository.existsByEmail(adminUserUpdateRequest.getEmail())) {
+                    throw new AlreadyExistingUserException("User with email " + adminUserUpdateRequest.getEmail() + " already exists");
+                }
+                userEntity.setEmail(adminUserUpdateRequest.getEmail());
+                hasUpdates = true;
+            }
+
+            if (adminUserUpdateRequest.getPassword() != null) {
+                if (!passwordEncoder.matches(adminUserUpdateRequest.getPassword(), userEntity.getPassword())) {
+                    userEntity.setPassword(passwordEncoder.encode(adminUserUpdateRequest.getPassword()));
+                    hasUpdates = true;
+                }
+            }
+
+            if (adminUserUpdateRequest.getUserRoles() != null && !adminUserUpdateRequest.getUserRoles().equals(userEntity.getRoles())) {
+                userEntity.setRoles(new HashSet<>(adminUserUpdateRequest.getUserRoles()));
+                hasUpdates = true;
+            }
+
+            if (adminUserUpdateRequest.getEnabled() != null && !adminUserUpdateRequest.getEnabled().equals(userEntity.isEnabled())) {
+                userEntity.setEnabled(adminUserUpdateRequest.getEnabled());
+                hasUpdates = true;
+            }
+        }
+
+
+        if (hasUpdates) {
+            return userRepository.save(userEntity);
+        }
+
+        return userEntity;
     }
 
     private UserEntity updateUser(UserEntity userEntity,

@@ -8,13 +8,16 @@ spring:
   banner:
     location: classpath:lsadf_banner.txt
   jpa:
-    show-sql: false
+    show-sql: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
-    open-in-view: false
   config:
     import: classpath:env.properties
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 http-log:
   enabled: true
@@ -65,6 +68,7 @@ cors:
   allowed-methods:
     - GET
     - POST
+    - PUT
   allow-credentials: true
   exposed-headers:
     - Access-Control-Allow-Origin
@@ -96,3 +100,19 @@ auth:
   refresh-token-secret: ${REFRESH_TOKEN_SECRET}
   token-secret: ${TOKEN_SECRET}
   token-expiration-ms: 3_600_000
+
+
+cache:
+  enabled: ${CACHE_ENABLED}
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DATABASE}
+  expiration:
+    gold-expiration-seconds: ${GOLD_EXPIRATION_SECONDS}
+    game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
+    local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
+
+shutdown:
+  flush-cache-at-shutdown: true

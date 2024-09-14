@@ -16,11 +16,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class DataSourceConfiguration {
-    @Bean
-    @ConfigurationProperties(prefix = "db")
-    public DataSourceProperties dataSourceProperties() {
-        return new DataSourceProperties();
-    }
+
 
     @Bean
     public DataSource dataSource(DataSourceProperties dataSourceProperties) {
@@ -30,18 +26,5 @@ public class DataSourceConfiguration {
         dataSourceBuilder.password(dataSourceProperties.getPassword());
 
         return dataSourceBuilder.build();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "db.init")
-    public DbInitProperties dbInitProperties() {
-        return new DbInitProperties();
-    }
-
-    @Bean
-    public DbInitializer dbInitializer(DbInitProperties dbInitProperties,
-                                       PasswordEncoder passwordEncoder,
-                                       UserService userService) {
-        return new DbInitializer(userService, passwordEncoder, dbInitProperties);
     }
 }

@@ -19,9 +19,13 @@ import java.util.Date;
 public class TokenProviderImpl implements TokenProvider {
 
     private final AuthProperties authProperties;
+    private final JwtParser parser;
 
     public TokenProviderImpl(AuthProperties authProperties) {
         this.authProperties = authProperties;
+        this.parser = Jwts.parserBuilder()
+                .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
+                .build();
     }
 
 
@@ -35,7 +39,6 @@ public class TokenProviderImpl implements TokenProvider {
 
         return Jwts.builder()
                 .setSubject(localUser.getUserEntity().getEmail())
-                .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .setIssuedAt(now)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512).compact();
@@ -66,10 +69,7 @@ public class TokenProviderImpl implements TokenProvider {
     @Override
     public boolean validateToken(String authToken) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
-                    .build()
-                    .parseClaimsJws(authToken);
+            Jws<Claims> claims = this.parser.parseClaimsJws(authToken);
             return true;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
