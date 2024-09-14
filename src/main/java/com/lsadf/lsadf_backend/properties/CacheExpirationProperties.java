@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CacheExpirationProperties {
     private long goldExpirationSeconds;
     private long gameSaveOwnershipExpirationSeconds;
+    private long localUserExpirationSeconds;
 }
