@@ -17,8 +17,6 @@ public class GoldServiceImpl implements GoldService {
     private final CacheService cacheService;
     private final GameSaveService gameSaveService;
 
-    private final boolean cacheEnabled;
-
     public GoldServiceImpl(GoldRepository goldRepository,
                            CacheService cacheService,
                            GameSaveService gameSaveService,
@@ -26,15 +24,6 @@ public class GoldServiceImpl implements GoldService {
         this.goldRepository = goldRepository;
         this.cacheService = cacheService;
         this.gameSaveService = gameSaveService;
-        this.cacheEnabled = cacheProperties.isEnabled();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isCacheEnabled() {
-        return cacheEnabled;
     }
 
     /**
@@ -43,7 +32,7 @@ public class GoldServiceImpl implements GoldService {
     @Transactional(readOnly = true)
     @Override
     public long getGold(String gameSaveId) throws NotFoundException {
-        if (cacheEnabled) {
+        if (cacheService.isEnabled()) {
             Optional<Long> optionalCachedGold = cacheService.getGold(gameSaveId);
             if (optionalCachedGold.isPresent()) {
                 return optionalCachedGold.get();
@@ -70,8 +59,11 @@ public class GoldServiceImpl implements GoldService {
     private void saveGoldToDatabase(String gameSaveId, long gold) throws NotFoundException {
         GoldEntity goldEntity = goldRepository.findById(gameSaveId)
                 .orElseThrow(() -> new NotFoundException("Gold not found for game save " + gameSaveId));
-        goldEntity.setGoldAmount(gold);
-        goldRepository.save(goldEntity);
+
+        if (gold != goldEntity.getGoldAmount()) {
+            goldEntity.setGoldAmount(gold);
+            goldRepository.save(goldEntity);
+        }
     }
 
     /**

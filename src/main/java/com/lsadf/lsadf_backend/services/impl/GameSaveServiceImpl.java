@@ -10,13 +10,11 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,21 +30,20 @@ import java.util.stream.Stream;
 public class GameSaveServiceImpl implements GameSaveService {
     private final UserService userService;
     private final GameSaveRepository gameSaveRepository;
-    private final GoldRepository goldRepository;
     private final CacheService cacheService;
 
     private final Mapper mapper;
 
-    private final boolean cacheEnabled;
 
-
-    public GameSaveServiceImpl(UserService userService, GameSaveRepository gameSaveRepository, GoldRepository goldRepository, CacheService cacheService, Mapper mapper, CacheProperties cacheProperties) {
+    public GameSaveServiceImpl(UserService userService,
+                               GameSaveRepository gameSaveRepository,
+                               CacheService cacheService,
+                               Mapper mapper,
+                               CacheProperties cacheProperties) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
-        this.goldRepository = goldRepository;
         this.cacheService = cacheService;
         this.mapper = mapper;
-        this.cacheEnabled = cacheProperties.isEnabled();
     }
 
     /**
@@ -100,21 +97,22 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .user(userEntity)
                 .build();
 
-        var saved = gameSaveRepository.save(entity);
-
-        GoldEntity goldEntity = GoldEntity.builder()
-                .userEmail(userEntity.getEmail())
-                .goldAmount(creationRequest.getGold())
-                .build();
-
-        saved.setGoldEntity(goldEntity);
-
         if (creationRequest.getId() != null) {
             if (gameSaveRepository.existsById(creationRequest.getId())) {
                 throw new AlreadyExistingGameSaveException("Game save with id " + creationRequest.getId() + " already exists");
             }
             entity.setId(creationRequest.getId());
         }
+
+        var saved = gameSaveRepository.save(entity);
+
+        GoldEntity goldEntity = GoldEntity.builder()
+                .userEmail(userEntity.getEmail())
+                .id(saved.getId())
+                .goldAmount(creationRequest.getGold())
+                .build();
+
+        saved.setGoldEntity(goldEntity);
 
         return gameSaveRepository.save(entity);
     }
@@ -217,7 +215,7 @@ public class GameSaveServiceImpl implements GameSaveService {
     @Override
     @Transactional(readOnly = true)
     public void checkGameSaveOwnership(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
-        if (!cacheEnabled) {
+        if (!cacheService.isEnabled()) {
             GameSaveEntity gameSaveEntity = getGameSave(saveId);
 
             if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {

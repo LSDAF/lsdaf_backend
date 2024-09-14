@@ -14,7 +14,6 @@ import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 
 import java.util.List;
 
@@ -28,6 +27,25 @@ public interface AdminService {
      * @return the global info
      */
     GlobalInfo getGlobalInfo();
+
+    // Cache
+
+    /**
+     * Clears the caches of the application
+     */
+    void flushAndClearCache();
+
+    /**
+     * Toggles the cache
+     */
+    void toggleCache();
+
+    /**
+     * Checks if the cache is enabled
+     *
+     * @return true if the cache is enabled, false otherwise
+     */
+    boolean isCacheEnabled();
 
     // Users
 

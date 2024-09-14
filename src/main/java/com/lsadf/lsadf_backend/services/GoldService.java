@@ -6,12 +6,6 @@ import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 public interface GoldService {
 
     /**
-     * Check if the cache is enabled
-     * @return true if cache is enabled, false otherwise
-     */
-    boolean isCacheEnabled();
-
-    /**
      * Get the gold of a game save
      * @param gameSaveId the id of the game save
      * @return the gold amount

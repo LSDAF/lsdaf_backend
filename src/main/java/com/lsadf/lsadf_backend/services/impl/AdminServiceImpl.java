@@ -1,5 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.lsadf.lsadf_backend.cache.CacheFlushService;
+import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
@@ -41,15 +43,21 @@ public class AdminServiceImpl implements AdminService {
     private final GameSaveService gameSaveService;
     private final Mapper mapper;
     private final SearchService searchService;
+    private final CacheService cacheService;
+    private final CacheFlushService cacheFlushService;
 
     public AdminServiceImpl(UserService userService,
                             GameSaveService gameSaveService,
                             Mapper mapper,
-                            SearchService searchService) {
+                            SearchService searchService,
+                            CacheService cacheService,
+                            CacheFlushService cacheFlushService) {
         this.userService = userService;
         this.mapper = mapper;
         this.searchService = searchService;
         this.gameSaveService = gameSaveService;
+        this.cacheService = cacheService;
+        this.cacheFlushService = cacheFlushService;
     }
 
     /**
@@ -65,6 +73,26 @@ public class AdminServiceImpl implements AdminService {
                 .userCounter(userCount)
                 .gameSaveCounter(gameSaveCount)
                 .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void flushAndClearCache() {
+        log.info("Clearing all caches");
+        cacheFlushService.flushGold();
+        cacheService.clearCaches();
+    }
+
+    @Override
+    public void toggleCache() {
+        cacheService.toggleCacheEnabling();
+    }
+
+    @Override
+    public boolean isCacheEnabled() {
+        return cacheService.isEnabled();
     }
 
     /**
