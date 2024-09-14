@@ -122,6 +122,7 @@ public class MapperImpl implements Mapper {
     public Gold mapGoldEntityToGold(GoldEntity goldEntity) {
         return Gold.builder()
                 .amount(goldEntity.getGoldAmount())
+                .id(goldEntity.getId())
                 .build();
     }
 }
