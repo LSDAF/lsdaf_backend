@@ -4,20 +4,23 @@ import com.lsadf.lsadf_backend.constants.RedisConstants;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.services.GoldService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import static com.lsadf.lsadf_backend.constants.RedisConstants.GOLD_HISTO;
 
 @Slf4j
 public class RedisKeyExpirationListener implements MessageListener {
 
     private final GoldService goldService;
-    private final RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, Long> longRedisTemplate;
 
     public RedisKeyExpirationListener(GoldService goldService,
-                                      RedisTemplate<String, Long> redisTemplate) {
+                                      RedisTemplate<String, Long> longRedisTemplate) {
         this.goldService = goldService;
-        this.redisTemplate = redisTemplate;
+        this.longRedisTemplate = longRedisTemplate;
     }
 
     @Override
@@ -25,21 +28,24 @@ public class RedisKeyExpirationListener implements MessageListener {
         String expiredKey = message.toString();
         log.info("Redis entry expired -> {}", expiredKey);
         if (expiredKey.startsWith(RedisConstants.GOLD)) {
-            handleExpiredGold(expiredKey);
+            String gameSaveId = expiredKey.substring(5);
+            handleExpiredGold(gameSaveId);
         }
     }
 
-    private void handleExpiredGold(String expiredKey) {
-        String gameSaveId = expiredKey.substring(5);
-        Long gold = redisTemplate.opsForValue().get(expiredKey);
-        if (gold == null) {
-            return;
-        }
+    private void handleExpiredGold(String gameSaveId) {
         try {
-            goldService.saveGold(gameSaveId, gold, false);
-        } catch (NotFoundException e) {
+            Long gold = longRedisTemplate.opsForValue().get(GOLD_HISTO + gameSaveId);
+            if (gold != null) {
+                goldService.saveGold(gameSaveId, gold, false);
+            }
+            var result = longRedisTemplate.delete(GOLD_HISTO + gameSaveId);
+            if (Boolean.TRUE.equals(result)) {
+                log.info("Deleted entry {}", GOLD_HISTO + gameSaveId);
+            }
+        } catch (DataAccessException | NotFoundException e) {
             throw new RuntimeException(e);
         }
-        log.info("Gold of game save {} has been saved to DB -> {}", gameSaveId, gold);
+        log.info("Gold of game save {} has been saved to DB", gameSaveId);
     }
 }
