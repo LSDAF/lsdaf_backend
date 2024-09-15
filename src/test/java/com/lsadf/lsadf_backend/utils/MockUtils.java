@@ -7,7 +7,7 @@ import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserRepositoryMock;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -80,10 +80,10 @@ public class MockUtils {
      * @param gameSaveRepository the GameSaveRepository mock
      */
     public static void initGameSaveRepositoryMock(GameSaveRepository gameSaveRepository,
-                                                  GoldRepository goldRepository) {
+                                                  CurrencyRepository currencyRepository) {
         Mockito.reset(gameSaveRepository);
 
-        GameSaveRepositoryMock gameSaveRepositoryMock = new GameSaveRepositoryMock(goldRepository);
+        GameSaveRepositoryMock gameSaveRepositoryMock = new GameSaveRepositoryMock(currencyRepository);
         when(gameSaveRepository.findAll()).thenReturn(gameSaveRepositoryMock.findAll());
         when(gameSaveRepository.count()).thenReturn(gameSaveRepositoryMock.count());
         when(gameSaveRepository.findAllGameSaves()).thenReturn(gameSaveRepositoryMock.findAllSaveGames());
@@ -106,7 +106,7 @@ public class MockUtils {
     /**
      * Initialize the GoldRepository mock
      *
-     * @param goldRepository the GoldRepository mock
+     * @param currencyRepository the GoldRepository mock
      */
     public static void initGoldRepositoryMock(GoldRepository goldRepository) {
         Mockito.reset(goldRepository);
@@ -120,10 +120,10 @@ public class MockUtils {
         doAnswer(invocation -> {
             goldRepositoryMock.clear();
             return null;
-        }).when(goldRepository).deleteAll();
+        }).when(currencyRepository).deleteAll();
         doAnswer(invocation -> {
             goldRepositoryMock.deleteById(invocation.getArgument(0));
             return null;
-        }).when(goldRepository).deleteById(Mockito.anyString());
+        }).when(currencyRepository).deleteById(Mockito.anyString());
     }
 }
