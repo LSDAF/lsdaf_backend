@@ -7,6 +7,8 @@ spring:
     name: LSADF Backend
   banner:
     location: classpath:lsadf_banner.txt
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss.SSS
   jpa:
     show-sql: true
     defer-datasource-initialization: true

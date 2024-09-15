@@ -38,8 +38,8 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         CacheEntryType cacheEntryType = CacheEntryType.fromString(currencyTypeString);
         switch (cacheEntryType) {
             case CURRENCY -> {
-                var results = cacheService.getAllCurrencies();
-                for (var entry : stringStringMap) {
+                Map<String, Currency> results = cacheService.getAllCurrencies();
+                for (Map<String, String> entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
                     String goldString = entry.get(BddFieldConstants.Currency.GOLD);
                     String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
@@ -55,8 +55,8 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 }
             }
             case CURRENCY_HISTO -> {
-                var results = cacheService.getAllCurrenciesHisto();
-                for (var entry : stringStringMap) {
+                Map<String, Currency> results = cacheService.getAllCurrenciesHisto();
+                for (Map<String, String> entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
                     String goldString = entry.get(BddFieldConstants.Currency.GOLD);
                     String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
@@ -71,10 +71,10 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 }
             }
             case GAME_SAVE_OWNERSHIP -> {
-                var results = cacheService.getAllGameSaveOwnership();
-                for (var entry : stringStringMap) {
-                    var gameSaveId = entry.get(GAME_SAVE_ID);
-                    var email = entry.get(USER_EMAIL);
+                Map<String, String> results = cacheService.getAllGameSaveOwnership();
+                for (Map<String, String> entry : stringStringMap) {
+                    String gameSaveId = entry.get(GAME_SAVE_ID);
+                    String email = entry.get(USER_EMAIL);
                     assertThat(results).containsEntry(gameSaveId, email);
                 }
             }

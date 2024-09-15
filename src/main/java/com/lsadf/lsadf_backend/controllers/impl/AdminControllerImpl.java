@@ -119,7 +119,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                                 @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
             validateUser(localUser);
-            var users = adminService.getUsers(orderBy);
+            List<User> users = adminService.getUsers(orderBy);
 
             return generateResponse(HttpStatus.OK, users);
         } catch (UnauthorizedException e) {
@@ -356,7 +356,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                              @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
             validateUser(localUser);
-            var gameSaves = adminService.searchUsers(searchRequest, orderBy);
+            List<User> gameSaves = adminService.searchUsers(searchRequest, orderBy);
             int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, gameSaves);
@@ -383,7 +383,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                                      @RequestParam(value = ORDER_BY) GameSaveOrderBy orderBy) {
         try {
             validateUser(localUser);
-            var gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
+            List<GameSave> gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
             int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, gameSaves);

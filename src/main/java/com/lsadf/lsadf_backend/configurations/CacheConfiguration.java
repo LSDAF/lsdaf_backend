@@ -83,7 +83,7 @@ public class CacheConfiguration {
 
     @Bean
     public Cache<String, LocalUser> localUserCache(CacheExpirationProperties cacheExpirationProperties) {
-        var builder = Caffeine.newBuilder()
+        Caffeine<Object, Object> builder = Caffeine.newBuilder()
                 .maximumSize(100);
         if (cacheExpirationProperties.getLocalUserExpirationSeconds() > 0) {
             builder.expireAfterWrite(cacheExpirationProperties.getLocalUserExpirationSeconds(), TimeUnit.SECONDS);
