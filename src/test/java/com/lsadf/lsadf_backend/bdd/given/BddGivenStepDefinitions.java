@@ -5,6 +5,7 @@ import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import com.lsadf.lsadf_backend.utils.MockUtils;
 import io.cucumber.datatable.DataTable;
@@ -25,8 +26,7 @@ public class BddGivenStepDefinitions extends BddLoader {
 
     @Given("^the BDD engine is ready$")
     public void given_the_bdd_engine_is_ready() {
-        this.longGoldStack.clear();
-        this.goldStack.clear();
+        this.currencyStack.clear();
         this.gameSaveListStack.clear();
         this.exceptionStack.clear();
         this.gameSaveEntityListStack.clear();
@@ -62,30 +62,45 @@ public class BddGivenStepDefinitions extends BddLoader {
         }
     }
 
+    @Given("^the cache is disabled$")
+    public void given_the_cache_is_disabled() {
+        log.info("Checking cache status...");
+        boolean cacheEnabled = cacheService.isEnabled();
+        if (cacheEnabled) {
+            log.info("Cache is enabled. Disabling cache...");
+            cacheService.toggleCacheEnabling();
+            assertThat(cacheService.isEnabled()).isFalse();
+            log.info("Cache disabled");
+        } else {
+            log.info("Cache is already disabled");
+        }
+    }
+
     @Given("^a clean database$")
     public void given_i_have_a_clean_database() throws NotFoundException {
         log.info("Cleaning database repositories...");
 
         this.gameSaveRepository.deleteAll();
-        this.goldRepository.deleteAll();
+        this.currencyRepository.deleteAll();
         this.userRepository.deleteAll();
 
         assertThat(gameSaveRepository.count()).isEqualTo(0);
         assertThat(userRepository.count()).isEqualTo(0);
-        assertThat(goldRepository.count()).isEqualTo(0);
+        assertThat(currencyRepository.count()).isEqualTo(0);
 
         // Clear caches
         cacheService.clearCaches();
 
-        assertThat(cacheService.getAllGold()).isEmpty();
+        assertThat(cacheService.getAllCurrencies()).isEmpty();
+        assertThat(cacheService.getAllCurrenciesHisto()).isEmpty();
         assertThat(cacheService.getAllGameSaveOwnership()).isEmpty();
 
         log.info("Database repositories + caches cleaned");
 
         // Init all repository mocks
-        MockUtils.initGameSaveRepositoryMock(gameSaveRepository, goldRepository);
+        MockUtils.initGameSaveRepositoryMock(gameSaveRepository, currencyRepository);
         MockUtils.initUserRepositoryMock(userRepository);
-        MockUtils.initGoldRepositoryMock(goldRepository);
+        MockUtils.initCurrencyRepositoryMock(currencyRepository);
 
         // Init all other service mocks
         MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);
@@ -122,20 +137,20 @@ public class BddGivenStepDefinitions extends BddLoader {
         log.info("Game saves created");
     }
 
-    @Given("^the following gold entries in cache$")
-    public void given_i_have_the_following_gold_entries_in_cache(DataTable dataTable) {
+    @Given("^the following currency entries in cache$")
+    public void given_i_have_the_following_currency_entries_in_cache(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        log.info("Creating gold entries in cache...");
+        log.info("Creating currency entries in cache...");
 
         rows.forEach(row -> {
-            String gameSaveId = row.get(BddFieldConstants.GoldCacheEntry.GAME_SAVE_ID);
-            Long gold = Long.parseLong(row.get(BddFieldConstants.GoldCacheEntry.GOLD));
-            cacheService.setGold(gameSaveId, gold);
-            log.info("Gold entry created: gameSaveId={}, gold={}", gameSaveId, gold);
+            String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
+            Currency currency = BddUtils.mapToCurrency(row);
+            cacheService.setCurrency(gameSaveId, currency);
         });
 
-        log.info("Gold entries in cache created");
+        log.info("currency entries in cache created");
     }
+
 
     @Given("^the following game save ownerships in cache$")
     public void given_i_have_the_following_game_save_ownerships_in_cache(DataTable dataTable) {
@@ -144,7 +159,7 @@ public class BddGivenStepDefinitions extends BddLoader {
 
         rows.forEach(row -> {
             String gameSaveId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.GAME_SAVE_ID);
-            String userId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.USER_ID);
+            String userId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.USER_EMAIL);
             cacheService.setGameSaveOwnership(gameSaveId, userId);
             log.info("Game save ownership created: gameSaveId={}, userId={}", gameSaveId, userId);
         });
@@ -155,7 +170,7 @@ public class BddGivenStepDefinitions extends BddLoader {
     @Given("^the expiration seconds properties set to (.*)$")
     public void given_the_expiration_seconds_properties_set_to(int expirationSeconds) {
         log.info("Setting expiration seconds properties to {}", expirationSeconds);
-        this.cacheExpirationProperties.setGoldExpirationSeconds(expirationSeconds);
+        this.cacheExpirationProperties.setCurrencyExpirationSeconds(expirationSeconds);
         this.cacheExpirationProperties.setGameSaveOwnershipExpirationSeconds(expirationSeconds);
     }
 

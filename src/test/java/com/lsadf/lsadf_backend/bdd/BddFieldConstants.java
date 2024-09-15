@@ -2,7 +2,6 @@ package com.lsadf.lsadf_backend.bdd;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.N;
 
 /**
  * Constants for the fields in the BDD scenarios
@@ -15,21 +14,24 @@ public class BddFieldConstants {
     private static final String UPDATED_AT = "updatedAt";
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class GoldCacheEntry {
+    public static final class CurrencyCacheEntry {
         public static final String GAME_SAVE_ID = "gameSaveId";
-        public static final String GOLD = "gold";
+        public static final String CURRENCY = "gold";
+        public static final String CURRENCY_HISTO = "gold";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Gold {
-        public static final String ID = "id";
-        public static final String AMOUNT = "amount";
+    public static final class Currency {
+        public static final String GOLD = "gold";
+        public static final String DIAMOND = "diamond";
+        public static final String EMERALD = "emerald";
+        public static final String AMETHYST = "amethyst";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSaveOwnershipCacheEntry {
         public static final String GAME_SAVE_ID = "gameSaveId";
-        public static final String USER_ID = "userId";
+        public static final String USER_EMAIL = "userEmail";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,6 +40,9 @@ public class BddFieldConstants {
         public static final String USER_ID = "userId";
         public static final String USER_EMAIL = "userEmail";
         public static final String GOLD = "gold";
+        public static final String DIAMOND = "diamond";
+        public static final String EMERALD = "emerald";
+        public static final String AMETHYST = "amethyst";
         public static final String HEALTH_POINTS = "healthPoints";
         public static final String ATTACK = "attack";
         public static final String CREATED_AT = BddFieldConstants.CREATED_AT;

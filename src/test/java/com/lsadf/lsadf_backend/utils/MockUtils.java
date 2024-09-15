@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GoldRepositoryMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.CurrencyRepositoryMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserDetailsServiceMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserRepositoryMock;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -108,21 +108,21 @@ public class MockUtils {
      *
      * @param currencyRepository the GoldRepository mock
      */
-    public static void initGoldRepositoryMock(GoldRepository goldRepository) {
-        Mockito.reset(goldRepository);
-        GoldRepositoryMock goldRepositoryMock = new GoldRepositoryMock();
-        when(goldRepository.findAll()).thenReturn(goldRepositoryMock.findAll());
-        when(goldRepository.count()).thenReturn(goldRepositoryMock.count());
-        when(goldRepository.existsById(any())).thenAnswer(invocation -> goldRepositoryMock.existsById(invocation.getArgument(0)));
-        when(goldRepository.findById(Mockito.anyString())).thenAnswer(invocation -> goldRepositoryMock.findById(invocation.getArgument(0)));
-        when(goldRepository.save(Mockito.any())).thenAnswer(invocation -> goldRepositoryMock.save(invocation.getArgument(0)));
-        when(goldRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> goldRepositoryMock.saveAll(invocation.getArgument(0)));
+    public static void initCurrencyRepositoryMock(CurrencyRepository currencyRepository) {
+        Mockito.reset(currencyRepository);
+        CurrencyRepositoryMock currencyRepositoryMock = new CurrencyRepositoryMock();
+        when(currencyRepository.findAll()).thenReturn(currencyRepositoryMock.findAll());
+        when(currencyRepository.count()).thenReturn(currencyRepositoryMock.count());
+        when(currencyRepository.existsById(any())).thenAnswer(invocation -> currencyRepositoryMock.existsById(invocation.getArgument(0)));
+        when(currencyRepository.findById(Mockito.anyString())).thenAnswer(invocation -> currencyRepositoryMock.findById(invocation.getArgument(0)));
+        when(currencyRepository.save(Mockito.any())).thenAnswer(invocation -> currencyRepositoryMock.save(invocation.getArgument(0)));
+        when(currencyRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> currencyRepositoryMock.saveAll(invocation.getArgument(0)));
         doAnswer(invocation -> {
-            goldRepositoryMock.clear();
+            currencyRepositoryMock.clear();
             return null;
         }).when(currencyRepository).deleteAll();
         doAnswer(invocation -> {
-            goldRepositoryMock.deleteById(invocation.getArgument(0));
+            currencyRepositoryMock.deleteById(invocation.getArgument(0));
             return null;
         }).when(currencyRepository).deleteById(Mockito.anyString());
     }

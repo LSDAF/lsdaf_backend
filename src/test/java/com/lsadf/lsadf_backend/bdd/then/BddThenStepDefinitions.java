@@ -67,8 +67,8 @@ public class BddThenStepDefinitions extends BddLoader {
 
 
 
-            var gold = gameSave.getGoldEntity().getGoldAmount();
-            var expectedGold = expected.getGoldEntity().getGoldAmount();
+            var gold = gameSave.getCurrencyEntity().getGoldAmount();
+            var expectedGold = expected.getCurrencyEntity().getGoldAmount();
             assertThat(gold).isEqualTo(expectedGold);
 
             var hp = gameSave.getHealthPoints();
@@ -170,7 +170,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
                 assertThat(gameSave)
                         .usingRecursiveComparison()
-                        .ignoringFields("user", "id", "createdAt", "updatedAt", "goldEntity.gameSave")
+                        .ignoringFields("user", "id", "createdAt", "updatedAt", "currencyEntity.gameSave")
                         .isEqualTo(expected);
             }
         }
@@ -183,7 +183,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should have no gold entries in DB$")
     public void then_i_should_have_no_gold_entries_in_db() {
-        assertThat(goldRepository.count()).isEqualTo(0);
+        assertThat(currencyRepository.count()).isEqualTo(0);
     }
 
     @Then("^I should throw a NotFoundException$")
@@ -198,20 +198,8 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(exception).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Then("^the gold amount should be (.*)$")
-    public void then_the_gold_amount_should_be(int goldAmount) {
-        Long actual = longGoldStack.peek();
-        assertThat(actual).isEqualTo(goldAmount);
-    }
-
-    @Then("^I should throw a ForbiddenException$")
-    public void then_i_should_throw_a_forbidden_exception() {
-        Exception exception = exceptionStack.peek();
-        assertThat(exception).isInstanceOf(ForbiddenException.class);
-    }
-
-    @Then("^the response should have the following Gold$")
-    public void then_the_response_should_have_the_following_gold(DataTable dataTable) {
+    @Then("^the currency should be the following$")
+    public void then_the_currency_amount_should_be(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
         if (rows.size() > 1) {
@@ -220,8 +208,33 @@ public class BddThenStepDefinitions extends BddLoader {
 
         var row = rows.get(0);
 
-        Gold expected = BddUtils.mapToGold(row);
-        Gold actual = (Gold) responseStack.peek().getData();
+        Currency expected = BddUtils.mapToCurrency(row);
+
+        Currency actual = currencyStack.peek();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Then("^I should throw a ForbiddenException$")
+    public void then_i_should_throw_a_forbidden_exception() {
+        Exception exception = exceptionStack.peek();
+        assertThat(exception).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Then("^the response should have the following Currency$")
+    public void then_the_response_should_have_the_following_currency(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        var row = rows.get(0);
+
+        Currency expected = BddUtils.mapToCurrency(row);
+        Currency actual = (Currency) responseStack.peek().getData();
 
         assertThat(actual)
                 .usingRecursiveComparison()

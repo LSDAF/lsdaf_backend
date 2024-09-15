@@ -3,10 +3,10 @@ package com.lsadf.lsadf_backend.utils;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.entities.GoldEntity;
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.Gold;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
@@ -19,6 +19,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
@@ -45,6 +46,25 @@ public class BddUtils {
     private static final String COMMA = ",";
 
     /**
+     * Maps a row from a BDD table to a CurrencyRequest
+     * @param row row from BDD table
+     * @return CurrencyRequest
+     */
+    public static CurrencyRequest mapToCurrencyRequest(Map<String, String> row) {
+        String gold = row.get(BddFieldConstants.Currency.GOLD);
+        String diamond = row.get(BddFieldConstants.Currency.DIAMOND);
+        String emerald = row.get(BddFieldConstants.Currency.EMERALD);
+        String amethyst = row.get(BddFieldConstants.Currency.AMETHYST);
+
+        long goldLong = gold == null ? 0 : Long.parseLong(gold);
+        long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
+        long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
+        long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
+
+        return new CurrencyRequest(goldLong, diamondLong, emeraldLong, amethystLong);
+    }
+
+    /**
      * Maps a row from a BDD table to a GameSaveEntity
      *
      * @param row            row from BDD table
@@ -56,12 +76,18 @@ public class BddUtils {
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
+        String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
+        String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
+        String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
 
         long attackLong = attack == null ? 0 : Long.parseLong(attack);
         long healthPointsLong = healthPoints == null ? 0 : Long.parseLong(healthPoints);
         long goldLong = gold == null ? 0 : Long.parseLong(gold);
+        long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
+        long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
+        long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
         Optional<UserEntity> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             userOptional = userRepository.findUserEntityByEmail(userEmail);
@@ -77,15 +103,24 @@ public class BddUtils {
 
         gameSaveEntity.setId(id);
 
-        GoldEntity goldEntity = new GoldEntity(gameSaveEntity.getId(), gameSaveEntity, userEntity.getEmail(), goldLong);
+        CurrencyEntity currencyEntity = CurrencyEntity.builder()
+                .id(id)
+                .gameSave(gameSaveEntity)
+                .goldAmount(goldLong)
+                .diamondAmount(diamondLong)
+                .emeraldAmount(emeraldLong)
+                .amethystAmount(amethystLong)
+                .userEmail(userEmail)
+                .build();
 
-        gameSaveEntity.setGoldEntity(goldEntity);
+        gameSaveEntity.setCurrencyEntity(currencyEntity);
 
         return gameSaveEntity;
     }
 
     /**
      * Maps a row from a BDD table to a UserInfo
+     *
      * @param row row from BDD table
      * @return UserInfo
      */
@@ -105,6 +140,7 @@ public class BddUtils {
 
     /**
      * Initializes the RestTemplate inside TestRestTemplate
+     *
      * @param testRestTemplate the TestRestTemplate
      */
     public void initTestRestTemplate(TestRestTemplate testRestTemplate) {
@@ -153,13 +189,34 @@ public class BddUtils {
      * @return AdminGameSaveCreationRequest
      */
     public static AdminGameSaveCreationRequest mapToAdminGameSaveCreationRequest(Map<String, String> row) {
-        long gold = Long.parseLong(row.get(BddFieldConstants.GameSave.GOLD));
-        long healthPoints = Long.parseLong(row.get(BddFieldConstants.GameSave.HEALTH_POINTS));
-        long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
+        String goldString = row.get(BddFieldConstants.GameSave.GOLD);
+        String healthPointsString = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
+        String attackString = row.get(BddFieldConstants.GameSave.ATTACK);
+        String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
+        String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
+        String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+
+
+        Long gold = goldString != null ? Long.parseLong(goldString) : null;
+        Long healthPoints = healthPointsString != null ? Long.parseLong(healthPointsString) : null;
+        Long attack = attackString != null ? Long.parseLong(attackString) : null;
+        Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
+        Long emerald = emeraldString != null ? Long.parseLong(emeraldString) : null;
+        Long amethyst = amethystString != null ? Long.parseLong(amethystString) : null;
+
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
 
-        return new AdminGameSaveCreationRequest(id, userEmail, gold, healthPoints, attack);
+        return AdminGameSaveCreationRequest.builder()
+                .diamond(diamond)
+                .gold(gold)
+                .emerald(emerald)
+                .amethyst(amethyst)
+                .healthPoints(healthPoints)
+                .attack(attack)
+                .id(id)
+                .userEmail(userEmail)
+                .build();
     }
 
     /**
@@ -172,7 +229,16 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
-        long gold = Long.parseLong(row.get(BddFieldConstants.GameSave.GOLD));
+        String goldString = row.get(BddFieldConstants.GameSave.GOLD);
+        String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
+        String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
+        String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+
+        Long gold = goldString != null ? Long.parseLong(goldString) : null;
+        Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
+        Long emerald = emeraldString != null ? Long.parseLong(emeraldString) : null;
+        Long amethyst = amethystString != null ? Long.parseLong(amethystString) : null;
+
         long healthPoints = Long.parseLong(row.get(BddFieldConstants.GameSave.HEALTH_POINTS));
         long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
 
@@ -183,18 +249,30 @@ public class BddUtils {
                 .id(id)
                 .healthPoints(healthPoints)
                 .gold(gold)
+                .diamond(diamond)
+                .emerald(emerald)
+                .amethyst(amethyst)
                 .build();
     }
 
     /**
-     * Maps a row from a BDD table to a Gold
+     * Maps a row from a BDD table to a Currency POJO
+     *
      * @param row row from BDD table
-     * @return Gold
+     * @return Currency
      */
-    public static Gold mapToGold(Map<String, String> row) {
-        long amount = Long.parseLong(row.get(BddFieldConstants.Gold.AMOUNT));
-        String id = row.get(BddFieldConstants.Gold.ID);
-        return new Gold(id, amount);
+    public static com.lsadf.lsadf_backend.models.Currency mapToCurrency(Map<String, String> row) {
+        String gold = row.get(BddFieldConstants.Currency.GOLD);
+        String diamond = row.get(BddFieldConstants.Currency.DIAMOND);
+        String emerald = row.get(BddFieldConstants.Currency.EMERALD);
+        String amethyst = row.get(BddFieldConstants.Currency.AMETHYST);
+
+        long goldLong = gold == null ? 0 : Long.parseLong(gold);
+        long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
+        long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
+        long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
+
+        return new Currency(goldLong, diamondLong, emeraldLong, amethystLong);
     }
 
     /**
@@ -205,15 +283,28 @@ public class BddUtils {
      */
     public static AdminGameSaveUpdateRequest mapToAdminGameSaveUpdateRequest(Map<String, String> row) {
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
+        String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
+        String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
+        String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
 
         Long goldLong = gold == null ? null : Long.parseLong(gold);
+        Long diamondLong = diamond == null ? null : Long.parseLong(diamond);
+        Long emeraldLong = emerald == null ? null : Long.parseLong(emerald);
+        Long amethystLong = amethyst == null ? null : Long.parseLong(amethyst);
         Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
         Long attackLong = attack == null ? null : Long.parseLong(attack);
 
 
-        return new AdminGameSaveUpdateRequest(goldLong, healthPointsLong, attackLong);
+        return AdminGameSaveUpdateRequest.builder()
+                .diamond(diamondLong)
+                .gold(goldLong)
+                .emerald(emeraldLong)
+                .amethyst(amethystLong)
+                .healthPoints(healthPointsLong)
+                .attack(attackLong)
+                .build();
     }
 
     /**
@@ -274,6 +365,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a UserCreationRequest
+     *
      * @param row row from BDD table
      * @return UserCreationRequest
      */
@@ -291,7 +383,8 @@ public class BddUtils {
 
     /**
      * Builds a URL from the server port and the endpoint to call
-     * @param port port
+     *
+     * @param port     port
      * @param endpoint endpoint
      * @return the URL
      */
@@ -301,9 +394,10 @@ public class BddUtils {
 
     /**
      * Builds an HttpEntity with the given body and headers
+     *
      * @param body body
+     * @param <T>  type of the body
      * @return HttpEntity
-     * @param <T> type of the body
      */
     public static <T> HttpEntity<T> buildHttpEntity(T body) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -313,6 +407,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a UserLoginRequest
+     *
      * @param row row from BDD table
      * @return UserLoginRequest
      */
@@ -325,6 +420,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a JwtAuthentication
+     *
      * @param row row from BDD table
      * @return JwtAuthentication
      */
@@ -336,6 +432,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a AdminUserUpdateRequest
+     *
      * @param row row from BDD table
      * @return AdminUserUpdateRequest
      */
@@ -357,6 +454,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a AdminUserCreationRequest
+     *
      * @param row row from BDD table
      * @return AdminUserCreationRequest
      */
@@ -385,6 +483,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a SearchRequest Filter
+     *
      * @param row row from BDD table
      * @return Filter
      */
@@ -396,6 +495,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a GlobalInfo
+     *
      * @param row row from BDD table
      * @return GlobalInfo
      */
@@ -411,6 +511,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a UserAdminDetails
+     *
      * @param row row from BDD table
      * @return UserAdminDetails
      */
