@@ -2,12 +2,13 @@ package com.lsadf.lsadf_backend.mappers.impl;
 
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -24,18 +25,43 @@ public class MapperImpl implements Mapper {
      * {@inheritDoc}
      */
     @Override
+    public Currency mapCurrencyRequestToCurrency(CurrencyRequest currencyRequest) {
+        return new Currency(currencyRequest.getGold(),
+                currencyRequest.getDiamond(),
+                currencyRequest.getEmerald(),
+                currencyRequest.getAmethyst());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public GameSave mapToGameSave(GameSaveEntity gameSaveEntity) {
         return GameSave.builder()
                 .id(gameSaveEntity.getId())
                 .userEmail(gameSaveEntity.getUser().getEmail())
                 .userId(gameSaveEntity.getUser().getId())
-                .gold(gameSaveEntity.getGoldEntity().getGoldAmount())
+                .gold(gameSaveEntity.getCurrencyEntity().getGoldAmount())
+                .diamond(gameSaveEntity.getCurrencyEntity().getDiamondAmount())
+                .emerald(gameSaveEntity.getCurrencyEntity().getEmeraldAmount())
+                .amethyst(gameSaveEntity.getCurrencyEntity().getAmethystAmount())
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())
                 .id(gameSaveEntity.getId())
                 .createdAt(gameSaveEntity.getCreatedAt())
                 .updatedAt(gameSaveEntity.getUpdatedAt())
                 .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Currency mapCurrencyEntityToCurrency(CurrencyEntity currencyEntity) {
+        return new Currency(currencyEntity.getGoldAmount(),
+                currencyEntity.getDiamondAmount(),
+                currencyEntity.getEmeraldAmount(),
+                currencyEntity.getAmethystAmount());
     }
 
     /**
@@ -113,16 +139,5 @@ public class MapperImpl implements Mapper {
                 true,
                 buildSimpleGrantedAuthorities(user.getRoles()),
                 user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Gold mapGoldEntityToGold(GoldEntity goldEntity) {
-        return Gold.builder()
-                .amount(goldEntity.getGoldAmount())
-                .id(goldEntity.getId())
-                .build();
     }
 }
