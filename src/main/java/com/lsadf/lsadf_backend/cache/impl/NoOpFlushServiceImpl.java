@@ -4,7 +4,7 @@ import com.lsadf.lsadf_backend.cache.CacheFlushService;
 
 public class NoOpFlushServiceImpl implements CacheFlushService {
     @Override
-    public void flushGold() {
+    public void flushCurrencies() {
         // Do nothing
     }
 }
