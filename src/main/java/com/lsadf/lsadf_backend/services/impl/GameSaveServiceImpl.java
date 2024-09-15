@@ -60,7 +60,7 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .user(userEntity)
                 .build();
 
-        var saved = gameSaveRepository.save(entity);
+        GameSaveEntity saved = gameSaveRepository.save(entity);
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
@@ -104,7 +104,7 @@ public class GameSaveServiceImpl implements GameSaveService {
             entity.setId(creationRequest.getId());
         }
 
-        var saved = gameSaveRepository.save(entity);
+        GameSaveEntity saved = gameSaveRepository.save(entity);
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())

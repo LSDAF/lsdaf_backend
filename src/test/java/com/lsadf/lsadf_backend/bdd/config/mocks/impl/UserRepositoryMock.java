@@ -34,10 +34,10 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
     }
 
     public Optional<UserEntity> findUserEntityByEmail(String email) {
-        var userEntityOptional = entities.values()
+        Optional<UserEntity> userEntityOptional = entities.values()
                 .stream()
                 .filter(user -> {
-                    var userEmail = user.getEmail();
+                    String userEmail = user.getEmail();
                     return email.equals(userEmail);
                 })
                 .findFirst();
