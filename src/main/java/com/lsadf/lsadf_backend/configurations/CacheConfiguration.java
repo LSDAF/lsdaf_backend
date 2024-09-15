@@ -9,11 +9,12 @@ import com.lsadf.lsadf_backend.cache.impl.CacheFlushServiceImpl;
 import com.lsadf.lsadf_backend.cache.impl.NoOpCacheServiceImpl;
 import com.lsadf.lsadf_backend.cache.impl.NoOpFlushServiceImpl;
 import com.lsadf.lsadf_backend.cache.impl.RedisCacheServiceImpl;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
-import com.lsadf.lsadf_backend.services.GoldService;
+import com.lsadf.lsadf_backend.services.CurrencyService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +29,15 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.embedded.RedisServer;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class CacheConfiguration {
+
+
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
@@ -54,13 +59,13 @@ public class CacheConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public RedisTemplate<String, LocalUser> redisLocalUserTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, LocalUser> template = new RedisTemplate<>();
+    public RedisTemplate<String, Currency> currencyRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Currency> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new GenericToStringSerializer<>(LocalUser.class));
+        template.setHashValueSerializer(new GenericToStringSerializer<>(Currency.class));
         return template;
     }
 
@@ -69,13 +74,11 @@ public class CacheConfiguration {
     public CacheService redisCacheService(CacheProperties cacheProperties,
                                           CacheExpirationProperties cacheExpirationProperties,
                                           RedisTemplate<String, String> stringRedisTemplate,
-                                          RedisTemplate<String, Long> longRedisTemplate,
-                                          RedisTemplate<String, LocalUser> redisLocalUserTemplate) {
+                                          RedisTemplate<String, Currency> objectRedisTemplate) {
         return new RedisCacheServiceImpl(cacheProperties,
                 cacheExpirationProperties,
                 stringRedisTemplate,
-                longRedisTemplate,
-                redisLocalUserTemplate);
+                objectRedisTemplate);
     }
 
     @Bean
@@ -116,6 +119,7 @@ public class CacheConfiguration {
         return container;
     }
 
+
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     MessageListenerAdapter messageListener(RedisKeyExpirationListener redisKeyExpirationListener) {
@@ -125,15 +129,16 @@ public class CacheConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public RedisKeyExpirationListener redisKeyExpirationListener(GoldService goldService,
-                                                                 RedisTemplate<String, Long> redisTemplate) {
-        return new RedisKeyExpirationListener(goldService, redisTemplate);
+    public RedisKeyExpirationListener redisKeyExpirationListener(CurrencyService currencyService,
+                                                                 RedisTemplate<String, Long> redisTemplate,
+                                                                 RedisTemplate<String, Currency> currencyRedisTemplate) {
+        return new RedisKeyExpirationListener(currencyService, redisTemplate, currencyRedisTemplate);
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public CacheFlushService cacheFlushService(CacheService cacheService, GoldService goldService) {
-        return new CacheFlushServiceImpl(cacheService, goldService);
+    public CacheFlushService cacheFlushService(CacheService cacheService, CurrencyService currencyService) {
+        return new CacheFlushServiceImpl(cacheService, currencyService);
     }
 
     @Bean

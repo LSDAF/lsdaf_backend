@@ -6,7 +6,7 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.properties.CacheProperties;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.impl.TokenProviderImpl;
@@ -31,11 +31,12 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public GoldService goldService(GoldRepository goldRepository,
-                                   CacheService cacheService,
-                                   GameSaveService gameSaveService,
-                                   CacheProperties cacheProperties) {
-        return new GoldServiceImpl(goldRepository, cacheService, gameSaveService, cacheProperties);
+    public CurrencyService currencyService(CurrencyRepository currencyRepository,
+                                           CacheService cacheService,
+                                           GameSaveService gameSaveService,
+                                           CacheProperties cacheProperties,
+                                           Mapper mapper) {
+        return new CurrencyServiceImpl(currencyRepository, cacheService, gameSaveService, cacheProperties, mapper);
     }
 
     @Bean
