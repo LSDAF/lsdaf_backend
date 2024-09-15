@@ -43,10 +43,10 @@ public class ParameterizedTypeReferenceUtils {
     }
 
     /**
-     * Builds a ParameterizedTypeReference for a GenericResponse of Gold
+     * Builds a ParameterizedTypeReference for a GenericResponse of Currency
      * @return ParameterizedTypeReference
      */
-    public static ParameterizedTypeReference<GenericResponse<Gold>> buildParameterizedGoldResponse() {
+    public static ParameterizedTypeReference<GenericResponse<Currency>> buildParameterizedCurrencyResponse() {
         return new ParameterizedTypeReference<>() {
         };
     }

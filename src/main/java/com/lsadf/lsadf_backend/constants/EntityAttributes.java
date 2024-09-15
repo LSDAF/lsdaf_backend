@@ -22,11 +22,15 @@ public final class EntityAttributes {
         public static final String GAME_SAVE_GOLD_ID = "game_save_gold_id";
     }
 
-    // GOLD
-    public static class Gold {
-        public static final String GOLD_ENTITY = "t_gold";
-        public static final String GOLD_AMOUNT = "gold_amount";
-        public static final String GOLD_USER_EMAIL = "gold_user_email";
+    // CURRENCIES
+    public static class Currencies {
+        public static final String CURRENCY_ENTITY = "t_currency";
+        public static final String CURRENCY_GOLD_AMOUNT = "currency_gold_amount";
+        public static final String CURRENCY_DIAMOND_AMOUNT = "currency_diamond_amount";
+        public static final String CURRENCY_EMERALD_AMOUNT = "currency_emerald_amount";
+        public static final String CURRENCY_AMETHYST_AMOUNT = "currency_amethyst_amount";
+        public static final String CURRENCY_USER_EMAIL = "currency_user_email";
+
     }
 
     // USER

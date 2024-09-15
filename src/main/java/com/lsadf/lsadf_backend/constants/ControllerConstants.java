@@ -13,7 +13,7 @@ public final class ControllerConstants {
     public static final String AUTH = "/api/v1/auth";
     public static final String USER = "/api/v1/user";
     public static final String ADMIN = "/api/admin";
-    public static final String GOLD = "/api/v1/gold";
+    public static final String CURRENCY = "/api/v1/currency";
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Swagger {
@@ -21,11 +21,11 @@ public final class ControllerConstants {
         public static final String USER_CONTROLLER = "User Controller";
         public static final String AUTH_CONTROLLER = "Auth Controller";
         public static final String ADMIN_CONTROLLER = "Admin Controller";
-        public static final String GOLD_CONTROLLER = "Gold Controller";
+        public static final String CURRENCY_CONTROLLER = "Currency Controller";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Gold {
+    public static final class Currency {
         public static final String GAME_SAVE_ID = "/{game_save_id}";
     }
 

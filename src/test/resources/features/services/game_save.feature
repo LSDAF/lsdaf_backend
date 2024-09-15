@@ -23,16 +23,16 @@ Feature: Game Save Service tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
 
     When we want to create a new game save with the following AdminGameSaveCreationRequest
-      | userEmail            | gold | healthPoints | attack | id                                   |
-      | paul.itesse@test.com | 500  | 11289        | 5000   | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 |
+      | userEmail            | gold | healthPoints | attack | id                                   | diamond | emerald | amethyst |
+      | paul.itesse@test.com | 500  | 11289        | 5000   | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 600     | 700     | 800      |
 
     Then I should return the following game save entities
-      | id                                   | userEmail            | gold | healthPoints | attack |
-      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   |
+      | id                                   | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      |
 
     And I should have the following game saves in DB
-      | id                                   | userId                               | gold | healthPoints | attack |
-      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 500  | 11289        | 5000   |
+      | id                                   | userId                               | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      |
 
 
   Scenario: Get an existing GameSave
@@ -120,8 +120,6 @@ Feature: Game Save Service tests
     When we want to delete the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
 
     Then I should have no game save entries in DB
-
-
 
 
   Scenario: Delete a non-existing GameSave

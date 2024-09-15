@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Admin controller
+ */
 @RequestMapping(value = ControllerConstants.ADMIN)
 @Tag(name = ControllerConstants.Swagger.ADMIN_CONTROLLER)
 public interface AdminController {

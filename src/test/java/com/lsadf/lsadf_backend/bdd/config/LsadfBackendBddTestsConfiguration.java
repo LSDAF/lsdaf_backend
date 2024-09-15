@@ -9,7 +9,7 @@ import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
@@ -44,23 +44,8 @@ import static org.mockito.Mockito.mock;
 @TestConfiguration
 public class LsadfBackendBddTestsConfiguration {
 
-    private final RedisServer redisServer;
-
-    public LsadfBackendBddTestsConfiguration(RedisProperties redisProperties) throws IOException {
-        this.redisServer = RedisServer.newRedisServer()
-                .setting("bind 127.0.0.1")
-                .setting("notify-keyspace-events KEA")
-                .port(redisProperties.getPort())
-                .build();
-    }
-
     @Bean
-    public Stack<Long> longGoldStack() {
-        return new Stack<>();
-    }
-
-    @Bean
-    public Stack<Gold> goldStack() {
+    public Stack<Currency> currencyStack() {
         return new Stack<>();
     }
 
@@ -133,8 +118,8 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public GoldRepository goldRepository() {
-        return mock(GoldRepository.class);
+    public CurrencyRepository goldRepository() {
+        return mock(CurrencyRepository.class);
     }
 
     @Bean
@@ -184,23 +169,14 @@ public class LsadfBackendBddTestsConfiguration {
         return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap, localUserCache);
     }
 
-    @Bean
-    @Primary
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(redisProperties.getHost());
-        configuration.setPort(redisProperties.getPort());
-        return new LettuceConnectionFactory(configuration);
-    }
-
-    @PreDestroy
-    public void preDestroy() throws IOException {
-        this.redisServer.stop();
-    }
-
-    @PostConstruct
-    public void postConstruct() throws IOException {
-        this.redisServer.start();
-    }
+//    @Bean
+//    @Primary
+//    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
+//    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
+//        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+//        configuration.setHostName(redisProperties.getHost());
+//        configuration.setPort(redisProperties.getPort());
+//
+//        return new LettuceConnectionFactory(configuration);
+//    }
 }

@@ -12,4 +12,5 @@ public class RedisProperties {
     private int port;
     private int database;
     private String password;
+    private boolean embedded;
 }

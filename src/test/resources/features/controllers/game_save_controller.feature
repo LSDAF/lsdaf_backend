@@ -1,4 +1,4 @@
-Feature: GameSaveController tests
+Feature: GameSave Controller tests
 
   Background:
     Given the BDD engine is ready
@@ -26,8 +26,8 @@ Feature: GameSaveController tests
 
     Then the response status code should be 200
     And the response should have the following GameSave
-      | userId                               | userEmail           | gold | healthPoints | attack |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 0    | 10           | 1      |
+      | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 0    | 0       | 0       | 0        | 10           | 1      |
 
   Scenario: A non-logged in user tries to update a GameSave
     Given the following users

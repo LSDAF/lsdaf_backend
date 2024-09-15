@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.cache.impl;
 
 import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.cache.KeyValueConsumer;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.CacheProperties;
@@ -27,8 +28,7 @@ import static com.lsadf.lsadf_backend.constants.RedisConstants.*;
 public class RedisCacheServiceImpl implements CacheService {
 
     private final RedisTemplate<String, String> stringRedisTemplate;
-    private final RedisTemplate<String, Long> redisLongTemplate;
-    private final RedisTemplate<String, LocalUser> redisLocalUserTemplate;
+    private final RedisTemplate<String, Currency> objectRedisTemplate;
 
     private final CacheProperties cacheProperties;
     private final CacheExpirationProperties cacheExpirationProperties;
@@ -38,15 +38,21 @@ public class RedisCacheServiceImpl implements CacheService {
     public RedisCacheServiceImpl(CacheProperties cacheProperties,
                                  CacheExpirationProperties cacheExpirationProperties,
                                  RedisTemplate<String, String> stringRedisTemplate,
-                                 RedisTemplate<String, Long> redisLongTemplate,
-                                 RedisTemplate<String, LocalUser> redisLocalUserTemplate) {
+                                 RedisTemplate<String, Currency> objectRedisTemplate) {
         this.cacheProperties = cacheProperties;
         this.stringRedisTemplate = stringRedisTemplate;
-        this.redisLongTemplate = redisLongTemplate;
-        this.redisLocalUserTemplate = redisLocalUserTemplate;
+        this.objectRedisTemplate = objectRedisTemplate;
         this.cacheExpirationProperties = cacheExpirationProperties;
 
         this.isEnabled = new AtomicBoolean(cacheProperties.isEnabled());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, Currency> getAllCurrenciesHisto() {
+        return getAllEntries(CURRENCY_HISTO, objectRedisTemplate);
     }
 
     /**
@@ -68,43 +74,12 @@ public class RedisCacheServiceImpl implements CacheService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Long> getGold(String gameSaveId) {
-        try {
-            Long result = redisLongTemplate.opsForValue().get(GOLD + gameSaveId);
-            return Optional.ofNullable(result);
-        } catch (DataAccessException e) {
-            log.error("Error while getting gold from redis cache", e);
-            return Optional.empty();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setGold(String gameSaveId, Long gold) {
-        try {
-            if (cacheExpirationProperties.getGoldExpirationSeconds() > 0) {
-                redisLongTemplate.opsForValue().set(GOLD + gameSaveId, gold, cacheExpirationProperties.getGoldExpirationSeconds(), TimeUnit.SECONDS);
-            } else {
-                redisLongTemplate.opsForValue().set(GOLD + gameSaveId, gold);
-            }
-            redisLongTemplate.opsForValue().set(GOLD_HISTO + gameSaveId, gold);
-        } catch (DataAccessException e) {
-            log.error("Error while setting gold in redis cache", e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Optional<String> getGameSaveOwnership(String gameSaveId) {
         try {
             String owner = stringRedisTemplate.opsForValue().get(GAME_SAVE_OWNERSHIP + gameSaveId);
             return Optional.ofNullable(owner);
         } catch (DataAccessException e) {
-            log.error("Error while getting game save ownership from redis cache", e);
+            log.warn("Error while getting game save ownership from redis cache", e);
             return Optional.empty();
         }
     }
@@ -121,41 +96,8 @@ public class RedisCacheServiceImpl implements CacheService {
                 stringRedisTemplate.opsForValue().set(GAME_SAVE_OWNERSHIP + gameSaveId, userEmail);
             }
         } catch (DataAccessException e) {
-            log.error("Error while setting game save ownership in redis cache", e);
+            log.warn("Error while setting game save ownership in redis cache", e);
         }
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Map<String, Long> getAllGold() {
-        Map<String, Long> goldMap = new HashMap<>();
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GOLD + "*").build();
-        try {
-            RedisKeyCommands commands = initRedisKeyCommands(redisLongTemplate);
-            iterateOverKeys(commands, scanOptions, GOLD, redisLongTemplate, goldMap::put);
-        } catch (DataAccessException e) {
-            log.error("Error while getting all gold from redis cache", e);
-        }
-        return goldMap;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Map<String, Long> getAllGoldHisto() {
-        Map<String, Long> goldHistoMap = new HashMap<>();
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GOLD_HISTO + "*").build();
-        try {
-            RedisKeyCommands commands = initRedisKeyCommands(redisLongTemplate);
-            iterateOverKeys(commands, scanOptions, GOLD_HISTO, redisLongTemplate, goldHistoMap::put);
-        } catch (DataAccessException e) {
-            log.error("Error while getting all gold from redis cache", e);
-        }
-        return goldHistoMap;
     }
 
     /**
@@ -163,15 +105,7 @@ public class RedisCacheServiceImpl implements CacheService {
      */
     @Override
     public Map<String, String> getAllGameSaveOwnership() {
-        Map<String, String> GameSaveOwnershipMap = new HashMap<>();
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GAME_SAVE_OWNERSHIP + "*").build();
-        try {
-            RedisKeyCommands commands = initRedisKeyCommands(stringRedisTemplate);
-            iterateOverKeys(commands, scanOptions, GAME_SAVE_OWNERSHIP, stringRedisTemplate, GameSaveOwnershipMap::put);
-        } catch (DataAccessException e) {
-            log.error("Error while getting all gold from redis cache", e);
-        }
-        return GameSaveOwnershipMap;
+        return getAllEntries(GAME_SAVE_OWNERSHIP, stringRedisTemplate);
     }
 
     /**
@@ -180,88 +114,108 @@ public class RedisCacheServiceImpl implements CacheService {
     @Override
     public void clearCaches() {
         log.info("Clearing all caches");
-        clearGoldCache();
-        clearGoldHistoCache();
         clearGameSaveOwnershipCache();
-        clearLocalUserCache();
+        clearCurrencyCache();
+        clearCurrencyHistoCache();
         log.info("Caches cleared");
     }
 
-    /**
-     * Clears the gold histo cache
-     */
-    private void clearGoldHistoCache() {
-        log.info("Clearing gold histo cache");
-        RedisKeyCommands commands = initRedisKeyCommands(redisLongTemplate);
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GOLD_HISTO + "*").build();
+    @Override
+    public Optional<Currency> getCurrency(String gameSaveId) {
         try {
-            iterateOverKeys(commands, scanOptions, GOLD_HISTO, redisLongTemplate, (gameSaveId, value) -> {
-                var result = redisLongTemplate.delete(GOLD_HISTO + gameSaveId);
-                log.info("Deleted key: {} with result: {}", gameSaveId, result);
-            });
-            log.info("Gold histo cache cleared");
+            Currency currency = objectRedisTemplate.opsForValue().get(CURRENCY + gameSaveId);
+            return Optional.ofNullable(currency);
         } catch (DataAccessException e) {
-            log.error("Error while clearing gold histo cache", e);
+            log.warn("Error while getting currency from redis cache", e);
+            return Optional.empty();
         }
     }
 
-
-    /**
-     * Clears the gold cache
-     */
-    private void clearGoldCache() {
-        log.info("Clearing gold cache");
-        RedisKeyCommands commands = initRedisKeyCommands(redisLongTemplate);
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GOLD + "*").build();
+    @Override
+    public void setCurrency(String gameSaveId, Currency currency) {
         try {
-            iterateOverKeys(commands, scanOptions, GOLD, redisLongTemplate, (gameSaveId, value) -> {
-                var result = redisLongTemplate.delete(GOLD + gameSaveId);
-                log.info("Deleted key: {} with result: {}", gameSaveId, result);
-            });
-            log.info("Gold cache cleared");
+            Currency toUpdateCurrency = currency;
+            Optional<Currency> optionalCurrency = getCurrency(gameSaveId);
+            if (optionalCurrency.isPresent()) {
+                toUpdateCurrency = mergeCurrencies(optionalCurrency.get(), currency);
+            }
+            if (cacheExpirationProperties.getCurrencyExpirationSeconds() > 0) {
+                objectRedisTemplate.opsForValue().set(CURRENCY + gameSaveId, toUpdateCurrency, cacheExpirationProperties.getCurrencyExpirationSeconds(), TimeUnit.SECONDS);
+            } else {
+                objectRedisTemplate.opsForValue().set(CURRENCY + gameSaveId, toUpdateCurrency);
+            }
+            objectRedisTemplate.opsForValue().set(CURRENCY_HISTO + gameSaveId, currency);
         } catch (DataAccessException e) {
-            log.error("Error while clearing gold cache", e);
+            log.warn("Error while setting currency in redis cache", e);
         }
     }
 
-    /**
-     * Clears the local user cache
-     */
-    private void clearLocalUserCache() {
-        log.info("Clearing local user cache");
-        RedisKeyCommands commands = initRedisKeyCommands(redisLocalUserTemplate);
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(LOCAL_USER + "*").build();
-        try {
-            iterateOverKeys(commands, scanOptions, LOCAL_USER, redisLocalUserTemplate, (email, value) -> {
-                var result = redisLocalUserTemplate.delete(LOCAL_USER + email);
-                log.info("Deleted key: {} with result: {}", email, result);
-            });
-            log.info("Local user cache cleared");
-        } catch (DataAccessException e) {
-            log.error("Error while clearing local user cache", e);
-        }
+    @Override
+    public Map<String, Currency> getAllCurrencies() {
+        return getAllEntries(CURRENCY, objectRedisTemplate);
     }
 
     /**
      * Clears the game save ownership cache
      */
     private void clearGameSaveOwnershipCache() {
-        log.info("Clearing game save ownership cache");
-        RedisKeyCommands commands = initRedisKeyCommands(stringRedisTemplate);
-        ScanOptions scanOptions = ScanOptions.scanOptions().match(GAME_SAVE_OWNERSHIP + "*").build();
+        clearCache(stringRedisTemplate, GAME_SAVE_OWNERSHIP);
+    }
+
+    /**
+     * Clears the currency cache
+     */
+    private void clearCurrencyCache() {
+        clearCache(objectRedisTemplate, CURRENCY);
+    }
+
+    /**
+     * Clears the currency histo cache
+     */
+    private void clearCurrencyHistoCache() {
+        clearCache(objectRedisTemplate, CURRENCY_HISTO);
+    }
+
+    private static <T> void clearCache(RedisTemplate<String, T> redisTemplate, String keyName) {
+        String entryType = keyName.substring(0, keyName.length() - 1);
+        log.info("Clearing {} cache", entryType);
+        RedisKeyCommands commands = initRedisKeyCommands(redisTemplate);
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(keyName + "*").build();
         try {
-            iterateOverKeys(commands, scanOptions, GAME_SAVE_OWNERSHIP, stringRedisTemplate, (gameSaveId, value) -> {
-                var result = stringRedisTemplate.delete(GAME_SAVE_OWNERSHIP + gameSaveId);
+            iterateOverKeys(commands, scanOptions, keyName, redisTemplate, (gameSaveId, value) -> {
+                var result = redisTemplate.delete(keyName + gameSaveId);
                 log.info("Deleted key: {} with result: {}", gameSaveId, result);
             });
-            log.info("Game save ownership cache cleared");
+            log.info("{} cache cleared", entryType);
         } catch (DataAccessException e) {
-            log.error("Error while clearing game save ownership cache", e);
+            log.warn("Error while clearing {} cache", entryType, e);
         }
     }
 
     /**
+     * Get all keyName entries
+     *
+     * @param keyName       the keyName
+     * @param redisTemplate the redis template
+     * @return a map of game save id to keyName amount
+     */
+    private static <T> Map<String, T> getAllEntries(String keyName, RedisTemplate<String, T> redisTemplate) {
+        String entryType = keyName.substring(0, keyName.length() - 1);
+        Map<String, T> currencyMap = new HashMap<>();
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(keyName + "*").build();
+        try {
+            RedisKeyCommands commands = initRedisKeyCommands(redisTemplate);
+            iterateOverKeys(commands, scanOptions, keyName, redisTemplate, currencyMap::put);
+        } catch (DataAccessException e) {
+            log.warn("Error while getting " + entryType + " from redis cache", e);
+        }
+
+        return currencyMap;
+    }
+
+    /**
      * Initialize the RedisKeyCommands
+     *
      * @param redisTemplate the redis template
      * @return the RedisKeyCommands
      */
@@ -276,12 +230,13 @@ public class RedisCacheServiceImpl implements CacheService {
 
     /**
      * Iterates over the keys of the cache
-     * @param commands the RedisKeyCommands
-     * @param scanOptions the scan options
-     * @param pattern the pattern to match
+     *
+     * @param commands      the RedisKeyCommands
+     * @param scanOptions   the scan options
+     * @param pattern       the pattern to match
      * @param redisTemplate the redis template
-     * @param consumer the consumer
-     * @param <T> the type of the value
+     * @param consumer      the consumer
+     * @param <T>           the type of the value
      */
     private static <T> void iterateOverKeys(RedisKeyCommands commands,
                                             ScanOptions scanOptions,
@@ -298,7 +253,24 @@ public class RedisCacheServiceImpl implements CacheService {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while scanning entries from gold cache", e);
+            log.warn("Error while scanning entries from gold cache", e);
         }
+    }
+
+
+    private static Currency mergeCurrencies(Currency toUpdate, Currency newCurrency) {
+        if (newCurrency.getGold() != null) {
+            toUpdate.setGold(newCurrency.getGold());
+        }
+        if (newCurrency.getDiamond() != null) {
+            toUpdate.setDiamond(newCurrency.getDiamond());
+        }
+        if (newCurrency.getEmerald() != null) {
+            toUpdate.setEmerald(newCurrency.getEmerald());
+        }
+        if (newCurrency.getAmethyst() != null) {
+            toUpdate.setAmethyst(newCurrency.getAmethyst());
+        }
+        return toUpdate;
     }
 }

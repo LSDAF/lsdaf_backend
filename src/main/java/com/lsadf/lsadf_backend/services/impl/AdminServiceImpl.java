@@ -81,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void flushAndClearCache() {
         log.info("Clearing all caches");
-        cacheFlushService.flushGold();
+        cacheFlushService.flushCurrencies();
         cacheService.clearCaches();
     }
 

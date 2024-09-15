@@ -1,10 +1,12 @@
 package com.lsadf.lsadf_backend.mappers;
 
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.GoldEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
+import com.lsadf.lsadf_backend.services.CurrencyService;
 
 public interface Mapper {
     /**
@@ -55,9 +57,17 @@ public interface Mapper {
     LocalUser mapUserEntityToLocalUser(UserEntity user);
 
     /**
-     * Maps GoldEntity to Gold
-     * @param goldEntity GoldEntity
-     * @return Gold
+     * Maps CurrencyRequest to Currency
+     *
+     * @param currencyRequest CurrencyRequest
+     * @return Currency
      */
-    Gold mapGoldEntityToGold(GoldEntity goldEntity);
+    Currency mapCurrencyRequestToCurrency(CurrencyRequest currencyRequest);
+
+    /**
+     * Maps Currency to CurrencyEntity
+     * @param currencyEntity CurrencyEntity
+     * @return CurrencyEntity
+     */
+    Currency mapCurrencyEntityToCurrency(CurrencyEntity currencyEntity);
 }
