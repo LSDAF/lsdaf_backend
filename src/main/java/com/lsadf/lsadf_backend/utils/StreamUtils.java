@@ -37,8 +37,14 @@ public class StreamUtils {
             case UPDATED_AT_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getUpdatedAt).reversed());
             case ID -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getId));
             case ID_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getId).reversed());
-            case GOLD -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getGoldEntity().getGoldAmount()));
-            case GOLD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getGoldEntity().getGoldAmount()).reversed());
+            case GOLD -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getGoldAmount()));
+            case GOLD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getGoldAmount()).reversed());
+            case DIAMOND -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getDiamondAmount()));
+            case DIAMOND_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getDiamondAmount()).reversed());
+            case EMERALD -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getEmeraldAmount()));
+            case EMERALD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getEmeraldAmount()).reversed());
+            case AMETHYST -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getAmethystAmount()));
+            case AMETHYST_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getAmethystAmount()).reversed());
             case NONE -> gameSaveStream;
         };
     }
