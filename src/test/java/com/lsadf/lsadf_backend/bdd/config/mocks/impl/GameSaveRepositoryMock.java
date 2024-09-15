@@ -1,9 +1,8 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.GoldEntity;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
-import com.lsadf.lsadf_backend.services.GoldService;
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -15,16 +14,16 @@ import java.util.stream.Stream;
  */
 public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
 
-    private final GoldRepository goldRepository;
+    private final CurrencyRepository currencyRepository;
 
-    public GameSaveRepositoryMock(GoldRepository goldRepository) {
-        this.goldRepository = goldRepository;
+    public GameSaveRepositoryMock(CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
     public void deleteById(String id) {
         super.deleteById(id);
-        goldRepository.deleteById(id);
+        currencyRepository.deleteById(id);
     }
 
     @Override
@@ -37,9 +36,9 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         GameSaveEntity toUpdate = entities.get(entity.getId());
         if (toUpdate == null) {
             entities.put(entity.getId(), entity);
-            GoldEntity goldEntity = entity.getGoldEntity();
-            if (goldEntity != null) {
-                goldRepository.save(goldEntity);
+            CurrencyEntity currencyEntity = entity.getCurrencyEntity();
+            if (currencyEntity != null) {
+                currencyRepository.save(currencyEntity);
             }
             return entity;
         }
@@ -47,10 +46,10 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         toUpdate.setHealthPoints(entity.getHealthPoints());
         toUpdate.setUpdatedAt(now);
 
-        var gold = entity.getGoldEntity();
-        var updatedGold = goldRepository.save(gold);
+        var currencyEntity = entity.getCurrencyEntity();
+        var updatedCurrencyEntity = currencyRepository.save(currencyEntity);
 
-        toUpdate.setGoldEntity(updatedGold);
+        toUpdate.setCurrencyEntity(updatedCurrencyEntity);
         entities.put(entity.getId(), toUpdate);
 
         return toUpdate;

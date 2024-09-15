@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,13 +17,31 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 public class AdminGameSaveUpdateRequest {
     @JsonProperty(value = GOLD)
     @PositiveOrZero
-    private long gold;
+    @Nullable
+    private Long gold;
+
+    @JsonProperty(value = DIAMOND)
+    @PositiveOrZero
+    @Nullable
+    private Long diamond;
+
+    @JsonProperty(value = EMERALD)
+    @PositiveOrZero
+    @Nullable
+    private Long emerald;
+
+    @JsonProperty(value = AMETHYST)
+    @PositiveOrZero
+    @Nullable
+    private Long amethyst;
 
     @JsonProperty(value = HP)
     @PositiveOrZero
-    private long healthPoints;
+    @Nullable
+    private Long healthPoints;
 
     @JsonProperty(value = ATTACK)
     @PositiveOrZero
-    private long attack;
+    @Nullable
+    private Long attack;
 }

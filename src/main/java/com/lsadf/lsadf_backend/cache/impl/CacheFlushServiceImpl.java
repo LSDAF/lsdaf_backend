@@ -3,7 +3,8 @@ package com.lsadf.lsadf_backend.cache.impl;
 import com.lsadf.lsadf_backend.cache.CacheFlushService;
 import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.services.GoldService;
+import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.services.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,32 +14,35 @@ import java.util.Map;
 public class CacheFlushServiceImpl implements CacheFlushService {
 
     private final CacheService cacheService;
-    private final GoldService goldService;
+    private final CurrencyService currencyService;
 
 
-    public CacheFlushServiceImpl(CacheService cacheService, GoldService goldService) {
+    public CacheFlushServiceImpl(CacheService cacheService, CurrencyService currencyService) {
         this.cacheService = cacheService;
-        this.goldService = goldService;
+        this.currencyService = currencyService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
-    public void flushGold() {
+    public void flushCurrencies() {
         log.info("Flushing gold cache");
-        Map<String, Long> goldCacheEntries = cacheService.getAllGold();
-        for (Map.Entry<String, Long> entry : goldCacheEntries.entrySet()) {
+        Map<String, Currency> goldCacheEntries = cacheService.getAllCurrencies();
+        for (Map.Entry<String, Currency> entry : goldCacheEntries.entrySet()) {
             String gameSaveId = entry.getKey();
-            Long gold = entry.getValue();
+            Currency currency = entry.getValue();
             try {
-                goldService.saveGold(gameSaveId, gold, false);
-
+                currencyService.saveCurrency(gameSaveId, currency, false);
             } catch (NotFoundException e) {
-                log.error("Error while flushing gold cache entry: goldEntity with id {} not found", gameSaveId, e);
+                log.error("Error while flushing currency cache entry: CurrencyEntity with id {} not found", gameSaveId, e);
             } catch (Exception e) {
-                log.error("Error while flushing gold cache entry", e);
+                log.error("Error while flushing currency cache entry", e);
             }
         }
 
-        log.info("Flushed {} gold entries in DB", goldCacheEntries.size());
+        log.info("Flushed {} currencies in DB", goldCacheEntries.size());
     }
+
 }

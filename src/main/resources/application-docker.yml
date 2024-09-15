@@ -1,2 +1,7 @@
 db:
   url: ${DB_URL_DOCKER}
+
+
+cache:
+  redis:
+    host: ${REDIS_HOST_DOCKER}

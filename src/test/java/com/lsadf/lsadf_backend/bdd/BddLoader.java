@@ -15,7 +15,7 @@ import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.GoldRepository;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -37,6 +37,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -59,8 +60,8 @@ import java.util.Stack;
         UserControllerImpl.class,
         AdminController.class,
         AdminControllerImpl.class,
-        GoldController.class,
-        GoldControllerImpl.class,
+        CurrencyController.class,
+        CurrencyControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
@@ -86,7 +87,7 @@ public class BddLoader {
 
     // Repositories
     @Autowired
-    protected GoldRepository goldRepository;
+    protected CurrencyRepository currencyRepository;
 
     @Autowired
     protected UserRepository userRepository;
@@ -105,7 +106,7 @@ public class BddLoader {
 
     // Services
     @Autowired
-    protected GoldService goldService;
+    protected CurrencyService currencyService;
 
     @Autowired
     protected CacheService cacheService;
@@ -131,9 +132,6 @@ public class BddLoader {
     protected Stack<List<GameSave>> gameSaveListStack;
 
     @Autowired
-    protected Stack<Long> longGoldStack;
-
-    @Autowired
     protected Stack<List<GameSaveEntity>> gameSaveEntityListStack;
 
     @Autowired
@@ -149,7 +147,7 @@ public class BddLoader {
     protected Stack<UserAdminDetails> userAdminDetailsStack;
 
     @Autowired
-    protected Stack<Gold> goldStack;
+    protected Stack<Currency> currencyStack;
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;

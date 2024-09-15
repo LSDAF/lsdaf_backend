@@ -23,6 +23,8 @@ FROM openjdk:17-alpine
 
 EXPOSE 8080
 
+ENV SLEEP_ENABLED=true
+
 # Copy layers from the build stage
 COPY --from=builder dependencies/ ./
 COPY --from=builder spring-boot-loader/ ./

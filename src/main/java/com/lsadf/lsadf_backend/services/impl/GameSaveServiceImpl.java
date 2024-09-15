@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.CacheService;
-import com.lsadf.lsadf_backend.entities.GoldEntity;
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -62,12 +62,12 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         var saved = gameSaveRepository.save(entity);
 
-        GoldEntity goldEntity = GoldEntity.builder()
+        CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
                 .id(saved.getId())
                 .build();
 
-        saved.setGoldEntity(goldEntity);
+        saved.setCurrencyEntity(currencyEntity);
 
 
         return gameSaveRepository.save(saved);
@@ -106,13 +106,16 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         var saved = gameSaveRepository.save(entity);
 
-        GoldEntity goldEntity = GoldEntity.builder()
+        CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
                 .id(saved.getId())
                 .goldAmount(creationRequest.getGold())
+                .diamondAmount(creationRequest.getDiamond())
+                .emeraldAmount(creationRequest.getEmerald())
+                .amethystAmount(creationRequest.getAmethyst())
                 .build();
 
-        saved.setGoldEntity(goldEntity);
+        saved.setCurrencyEntity(currencyEntity);
 
         return gameSaveRepository.save(entity);
     }
@@ -195,10 +198,25 @@ public class GameSaveServiceImpl implements GameSaveService {
             hasUpdates = true;
         }
 
-        GoldEntity goldEntity = gameSaveEntity.getGoldEntity();
+        CurrencyEntity currencyEntity = gameSaveEntity.getCurrencyEntity();
 
-        if (goldEntity.getGoldAmount() != adminUpdateRequest.getGold()) {
-            goldEntity.setGoldAmount(adminUpdateRequest.getGold());
+        if (adminUpdateRequest.getGold() != null && currencyEntity.getGoldAmount() != adminUpdateRequest.getGold()) {
+            currencyEntity.setGoldAmount(adminUpdateRequest.getGold());
+            hasUpdates = true;
+        }
+
+        if (adminUpdateRequest.getDiamond() != null && currencyEntity.getDiamondAmount() != adminUpdateRequest.getDiamond()) {
+            currencyEntity.setDiamondAmount(adminUpdateRequest.getDiamond());
+            hasUpdates = true;
+        }
+
+        if (adminUpdateRequest.getEmerald() != null && currencyEntity.getEmeraldAmount() != adminUpdateRequest.getEmerald()) {
+            currencyEntity.setEmeraldAmount(adminUpdateRequest.getEmerald());
+            hasUpdates = true;
+        }
+
+        if (adminUpdateRequest.getAmethyst() != null && currencyEntity.getAmethystAmount() != adminUpdateRequest.getAmethyst()) {
+            currencyEntity.setAmethystAmount(adminUpdateRequest.getAmethyst());
             hasUpdates = true;
         }
 

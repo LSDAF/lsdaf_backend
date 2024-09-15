@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Import;
         OAuth2Configuration.class,
         LoggingConfiguration.class,
         CacheConfiguration.class,
-        ApplicationListenerConfiguration.class
+        ApplicationListenerConfiguration.class,
+        RedisEmbeddedCacheConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

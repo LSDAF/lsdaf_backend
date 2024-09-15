@@ -1,4 +1,4 @@
-Feature: AdminController tests
+Feature: Admin Controller tests
 
   Background:
     Given the BDD engine is ready
@@ -77,10 +77,10 @@ Feature: AdminController tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   |
+      | id                                   | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 10      | 10      | 10       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | 100     | 100     | 100      |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   | 1000    | 1000    | 1000     |
 
 
     When the user logs in with the following credentials
@@ -92,10 +92,10 @@ Feature: AdminController tests
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userId                               | userEmail           | gold | healthPoints | attack |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 1000 | 1000         | 1000   |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100          | 100    |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 10   | 10           | 10     |
+      | id                                   | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100     | 100     | 100      | 100          | 100    |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 10   | 10      | 10      | 10       | 10           | 10     |
 
   Scenario: An admin user requests a user's details by non-existing id
     Given the following users
@@ -318,8 +318,8 @@ Feature: AdminController tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userId                               | gold | healthPoints | attack |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
+      | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 100     | 1000    | 10000    |
 
     Then the response status code should be 200
 
@@ -333,8 +333,8 @@ Feature: AdminController tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userId                               | gold | healthPoints | attack |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | -15  | 10           | 10     |
+      | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | -15  | 10           | 10     | 100     | 1000    | 10000    |
 
     Then the response status code should be 400
 
@@ -344,8 +344,8 @@ Feature: AdminController tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -363,8 +363,8 @@ Feature: AdminController tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -377,8 +377,8 @@ Feature: AdminController tests
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10000        | 10000  | paul.ochon@test.com |
+      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com |
 
   Scenario: An admin user requests the update of an existing game save with invalid data
     Given the following users
@@ -389,8 +389,8 @@ Feature: AdminController tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 80c4387f-3bd9-4f43-afac-ea1980f0ee64 with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack |
-      | 10000 | -100         | 10000  |
+      | gold  | diamond | emerald | amethyst | healthPoints | attack |
+      | 10000 | 10      | 10      | 10       | -100         | 10000  |
 
     Then the response status code should be 400
 
@@ -456,10 +456,10 @@ Feature: AdminController tests
       | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Paul EMPLOI | paul.emploi@test.com | toto5678 | USER       | LOCAL    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail            |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com  |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | paul.ochon@test.com  |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | paul.emploi@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100    | paul.ochon@test.com  |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -472,8 +472,8 @@ Feature: AdminController tests
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail            |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | paul.emploi@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com |
 
   Scenario: An admin user searches for game saves with invalid SearchRequest
     Given the following users
@@ -508,12 +508,12 @@ Feature: AdminController tests
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com      |
       | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | paul.ochon@test.com      |
       | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | camille.combale@test.com |
-    And the following gold entries in cache
+    And the following currency entries in cache
       | userId                               | gold |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5000 |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 6000 |
     And the following game save ownerships in cache
-      | gameSaveId                           | userId                               |
+      | gameSaveId                           | userEmail                            |
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d |
       | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e |
 
@@ -524,9 +524,9 @@ Feature: AdminController tests
     And the user requests the admin endpoint to flush and clear the cache
 
     Then the response status code should be 200
-    And the gold cache should be empty
-    And the game save ownership cache should be empty
-    And the gold histo cache should be empty
+    And the currency cache should be empty
+    And the currency_histo cache should be empty
+    And the game_save_ownership cache should be empty
 
   Scenario: An admin user requests the status of the cache
     Given the following users

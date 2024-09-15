@@ -43,10 +43,10 @@ public class GameSaveEntity extends AEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_GOLD_ID)
-    private GoldEntity goldEntity;
+    private CurrencyEntity currencyEntity;
 
-    public void setGoldEntity(GoldEntity goldEntity) {
-        this.goldEntity = goldEntity;
-        goldEntity.setGameSave(this);
+    public void setCurrencyEntity(CurrencyEntity currencyEntity) {
+        this.currencyEntity = currencyEntity;
+        currencyEntity.setGameSave(this);
     }
 }

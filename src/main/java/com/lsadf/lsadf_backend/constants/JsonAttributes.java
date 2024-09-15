@@ -17,6 +17,9 @@ public final class JsonAttributes {
         public static final String USER_ID = "user_id";
         public static final String USER_EMAIL = "user_email";
         public static final String GOLD = "gold";
+        public static final String DIAMOND = "diamond";
+        public static final String EMERALD = "emerald";
+        public static final String AMETHYST = "amethyst";
         public static final String ATTACK = "attack";
     }
 
@@ -46,9 +49,12 @@ public final class JsonAttributes {
         public static final String ROLES = "roles";
     }
 
-    public static final class Gold {
-        public static final String ID = "id";
-        public static final String AMOUNT = "amount";
+    public static final class Currencies {
+        public static final String GAME_SAVE_ID = "game_save_id";
+        public static final String GOLD = "gold";
+        public static final String DIAMOND = "diamond";
+        public static final String EMERALD = "emerald";
+        public static final String AMETHYST = "amethyst";
     }
 
     public static final class JwtAuthentication {
