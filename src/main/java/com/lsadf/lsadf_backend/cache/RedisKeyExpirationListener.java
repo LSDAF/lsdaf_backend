@@ -49,7 +49,7 @@ public class RedisKeyExpirationListener implements MessageListener {
                 throw new NotFoundException("Currency not found in cache");
             }
             currencyService.saveCurrency(gameSaveId, currency, false);
-            var result = currencyRedisTemplate.delete(CURRENCY_HISTO + gameSaveId);
+            Boolean result = currencyRedisTemplate.delete(CURRENCY_HISTO + gameSaveId);
             if (Boolean.TRUE.equals(result)) {
                 log.info("Deleted entry {}", CURRENCY_HISTO + gameSaveId);
             }

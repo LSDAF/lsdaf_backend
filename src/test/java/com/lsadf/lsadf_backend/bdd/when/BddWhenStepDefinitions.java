@@ -55,7 +55,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
 
             ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedUserInfoResponse());
-            var body = result.getBody();
+            GenericResponse<UserInfo> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -114,7 +114,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^we want to update the password of the user with email (.*) from (.*) to (.*)$")
     public void when_we_want_to_update_the_password_of_the_user_with_email_from_to(String userEmail, String oldPassword, String newPassword) {
         try {
-            var user = userService.updateUserPassword(userEmail, oldPassword, newPassword);
+            UserEntity user = userService.updateUserPassword(userEmail, oldPassword, newPassword);
             userEntityListStack.push(Collections.singletonList(user));
         } catch (Exception e) {
             exceptionStack.push(e);
@@ -244,7 +244,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
-            var body = result.getBody();
+            GenericResponse<GameSave> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -261,7 +261,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
             HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
-            var body = result.getBody();
+            GenericResponse<GameSave> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -279,7 +279,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<GameSaveUpdateRequest> request = new HttpEntity<>(new GameSaveUpdateRequest(), headers);
             ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
-            var body = result.getBody();
+            GenericResponse<Void> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -310,7 +310,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             headers.setBearerAuth(token);
             HttpEntity<GameSaveUpdateRequest> request = new HttpEntity<>(updateRequest, headers);
             ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
-            var body = result.getBody();
+            GenericResponse<Void> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -327,7 +327,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
             HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
-            var body = result.getBody();
+            GenericResponse<UserInfo> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -348,7 +348,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
-            var body = result.getBody();
+            GenericResponse<UserInfo> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -369,7 +369,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
-            var body = result.getBody();
+            GenericResponse<List<GameSave>> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -386,7 +386,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
             HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
-            var body = result.getBody();
+            GenericResponse<List<GameSave>> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 
@@ -446,7 +446,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^we want to get all the users$")
     public void when_we_want_to_get_all_the_users() {
         try {
-            var users = userService.getUsers().toList();
+            List<UserEntity> users = userService.getUsers().toList();
             userEntityListStack.push(users);
         } catch (Exception e) {
             exceptionStack.push(e);

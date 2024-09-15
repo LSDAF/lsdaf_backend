@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.*;
@@ -128,13 +129,13 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.UserInfo.ID);
         String email = row.get(BddFieldConstants.UserInfo.EMAIL);
         String name = row.get(BddFieldConstants.UserInfo.NAME);
-        var rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
+        String rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
         List<UserRole> roles = Collections.emptyList();
         if (rolesString != null) {
             roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).sorted().toList();
         }
 
-        return new UserInfo(id, name, email, roles);
+        return new UserInfo(id, name, email, roles, null, null);
     }
 
 
@@ -144,7 +145,7 @@ public class BddUtils {
      * @param testRestTemplate the TestRestTemplate
      */
     public void initTestRestTemplate(TestRestTemplate testRestTemplate) {
-        var template = testRestTemplate.getRestTemplate();
+        RestTemplate template = testRestTemplate.getRestTemplate();
         template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         template.setErrorHandler(new DefaultResponseErrorHandler() {
             @Override

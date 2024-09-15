@@ -183,7 +183,7 @@ public class RedisCacheServiceImpl implements CacheService {
         ScanOptions scanOptions = ScanOptions.scanOptions().match(keyName + "*").build();
         try {
             iterateOverKeys(commands, scanOptions, keyName, redisTemplate, (gameSaveId, value) -> {
-                var result = redisTemplate.delete(keyName + gameSaveId);
+                Boolean result = redisTemplate.delete(keyName + gameSaveId);
                 log.info("Deleted key: {} with result: {}", gameSaveId, result);
             });
             log.info("{} cache cleared", entryType);
