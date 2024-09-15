@@ -1,38 +1,47 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.models.Gold;
 import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for game save gold operations
+ * Controller for currency related operations.
  */
-@RequestMapping(value = ControllerConstants.GOLD)
-@Tag(name = ControllerConstants.Swagger.GOLD_CONTROLLER)
-@SecurityRequirement(name = BEARER_AUTHENTICATION)
-public interface GoldController {
+@RequestMapping(value = ControllerConstants.CURRENCY)
+@Tag(name = ControllerConstants.Swagger.CURRENCY_CONTROLLER)
+public interface CurrencyController {
 
     String GAME_SAVE_ID = "game_save_id";
-    String GOLD_AMOUNT = "gold_amount";
+    String GOLD = "gold";
+    String DIAMOND = "diamond";
+    String EMERALD = "emerald";
+    String AMETHYST = "amethyst";
 
-    /**
-     * Gets the gold amount for a game save
-     *
-     * @param gameSaveId the id of the game save
-     * @return the gold object
-     */
-    @GetMapping(value = ControllerConstants.Gold.GAME_SAVE_ID)
-    @Operation(summary = "Gets the gold amount for a game save")
+    @PostMapping(value = ControllerConstants.Currency.GAME_SAVE_ID)
+    @Operation(summary = "Saves one or several currency amounts for a game save")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    ResponseEntity<GenericResponse<Void>> saveCurrency(LocalUser localUser,
+                                                       String gameSaveId,
+                                                       CurrencyRequest currencyRequest);
+
+    @GetMapping(value = ControllerConstants.Currency.GAME_SAVE_ID)
+    @Operation(summary = "Gets the currency amounts for a game save")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
@@ -40,23 +49,6 @@ public interface GoldController {
             @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    ResponseEntity<GenericResponse<Gold>> getGold(LocalUser localUser, String gameSaveId);
-
-    /**
-     * Saves new amount of gold for a game save
-     *
-     * @param gameSaveId the id of the game save
-     * @param amount     the amount of gold to save
-     * @return generic response
-     */
-    @PutMapping(value = ControllerConstants.Gold.GAME_SAVE_ID)
-    @Operation(summary = "Saves new amount of gold for a game save")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    ResponseEntity<GenericResponse<Void>> saveGold(LocalUser localUser, String gameSaveId, long amount);
+    ResponseEntity<GenericResponse<Void>> getCurrency(LocalUser localUser,
+                                                      String gameSaveId);
 }
