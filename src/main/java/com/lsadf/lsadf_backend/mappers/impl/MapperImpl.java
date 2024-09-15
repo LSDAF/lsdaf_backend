@@ -113,7 +113,7 @@ public class MapperImpl implements Mapper {
                 .map(UserRole::fromRole)
                 .collect(Collectors.toList());
         UserEntity user = localUser.getUserEntity();
-        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles);
+        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles, user.getCreatedAt(), user.getUpdatedAt());
     }
 
     /**
@@ -122,7 +122,7 @@ public class MapperImpl implements Mapper {
     @Override
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
         List<UserRole> roles = userEntity.getRoles().stream().toList();
-        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles);
+        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
 
