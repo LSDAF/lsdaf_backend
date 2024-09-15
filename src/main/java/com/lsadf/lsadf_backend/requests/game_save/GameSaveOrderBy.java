@@ -11,6 +11,12 @@ public enum GameSaveOrderBy implements OrderBy {
     UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING),
     GOLD(JsonAttributes.GameSave.GOLD, SortingOrderParameter.ASCENDING),
     GOLD_DESC(JsonAttributes.GameSave.GOLD, SortingOrderParameter.DESCENDING),
+    DIAMOND(JsonAttributes.GameSave.DIAMOND, SortingOrderParameter.ASCENDING),
+    DIAMOND_DESC(JsonAttributes.GameSave.DIAMOND, SortingOrderParameter.DESCENDING),
+    EMERALD(JsonAttributes.GameSave.EMERALD, SortingOrderParameter.ASCENDING),
+    EMERALD_DESC(JsonAttributes.GameSave.EMERALD, SortingOrderParameter.DESCENDING),
+    AMETHYST(JsonAttributes.GameSave.AMETHYST, SortingOrderParameter.ASCENDING),
+    AMETHYST_DESC(JsonAttributes.GameSave.AMETHYST, SortingOrderParameter.DESCENDING),
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
     ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING),
     NONE(null, null);
