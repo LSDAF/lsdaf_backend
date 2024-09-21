@@ -1,6 +1,5 @@
-package com.lsadf.lsadf_backend.cache;
+package com.lsadf.lsadf_backend.cache.listeners;
 
-import com.lsadf.lsadf_backend.constants.RedisConstants;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.services.CurrencyService;
@@ -35,7 +34,7 @@ public class RedisKeyExpirationListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = message.toString();
-        log.info("Redis entry expired -> {}", expiredKey);
+        log.info("Redis cache entry expired -> {}", expiredKey);
         if (expiredKey.startsWith(CURRENCY)) {
             String gameSaveId = expiredKey.substring(CURRENCY.length());
             handleExpiredCurrency(gameSaveId);

@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.configurations;
+package com.lsadf.lsadf_backend.configurations.cache;
 
 import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
@@ -18,7 +18,7 @@ public class RedisEmbeddedCacheConfiguration {
 
     public RedisEmbeddedCacheConfiguration(CacheProperties cacheProperties,
             RedisProperties redisProperties) throws IOException {
-        if (cacheProperties.isEnabled() && redisProperties.isEmbedded()) {
+        if (redisProperties.isEnabled() && redisProperties.isEmbedded()) {
             this.redisServer = initRedisServer(redisProperties);
         }
     }
