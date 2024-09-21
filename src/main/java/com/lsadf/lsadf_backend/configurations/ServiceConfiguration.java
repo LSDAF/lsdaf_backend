@@ -1,21 +1,35 @@
 package com.lsadf.lsadf_backend.configurations;
 
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
-import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
+import com.lsadf.lsadf_backend.security.jwt.impl.RefreshTokenProviderImpl;
 import com.lsadf.lsadf_backend.security.jwt.impl.TokenProviderImpl;
 import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.services.impl.*;
+import io.jsonwebtoken.JwtParser;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.LOCAL_CACHE_SERVICE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_REFRESH_TOKEN_PARSER;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
+
 
 /**
  * Configuration class for the services.
@@ -32,25 +46,32 @@ public class ServiceConfiguration {
 
     @Bean
     public CurrencyService currencyService(CurrencyRepository currencyRepository,
-                                           CacheService cacheService,
+                                           Cache<Currency> currencyCache,
                                            GameSaveService gameSaveService,
-                                           CacheProperties cacheProperties,
                                            Mapper mapper) {
-        return new CurrencyServiceImpl(currencyRepository, cacheService, gameSaveService, cacheProperties, mapper);
+        return new CurrencyServiceImpl(currencyRepository, currencyCache, gameSaveService, mapper);
     }
 
     @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
-                                           CacheService cacheService,
-                                           CacheProperties cacheProperties,
-                                           Mapper mapper) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, cacheService, mapper, cacheProperties);
+                                           @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache) {
+        return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache);
     }
 
     @Bean
-    public TokenProvider tokenProvider(AuthProperties authProperties) {
-        return new TokenProviderImpl(authProperties);
+    public RefreshTokenProvider refreshTokenProvider(UserService userService,
+                                                     RefreshTokenRepository refreshTokenRepository,
+                                                     @Qualifier(JWT_REFRESH_TOKEN_PARSER) JwtParser parser,
+                                                     AuthProperties authProperties) {
+        return new RefreshTokenProviderImpl(userService, refreshTokenRepository, parser, authProperties);
+    }
+
+    @Bean
+    public TokenProvider tokenProvider(AuthProperties authProperties,
+                                       @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
+                                       @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache) {
+        return new TokenProviderImpl(authProperties, parser, invalidatedJwtTokenCache);
     }
 
     @Bean
@@ -74,9 +95,10 @@ public class ServiceConfiguration {
                                      GameSaveService gameSaveService,
                                      Mapper mapper,
                                      SearchService searchService,
-                                     CacheService cacheService,
+                                     @Qualifier(LOCAL_CACHE_SERVICE) CacheService localCacheService,
+                                     @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
                                      CacheFlushService cacheFlushService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, cacheService, cacheFlushService);
+        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService);
     }
 
 }
