@@ -4,6 +4,7 @@ Feature: Cache Service tests
     Given the BDD engine is ready
     And the expiration seconds properties set to -1
     And a clean database
+    And the time clock set to the present
 
   Scenario: Flush Cache Service
     Given the following users

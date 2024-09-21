@@ -2,8 +2,11 @@ package com.lsadf.lsadf_backend.bdd.config.mocks;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.services.ClockService;
+import com.lsadf.lsadf_backend.utils.DateUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Clock;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,9 +17,15 @@ import java.util.stream.Stream;
  */
 public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements UserRepository {
 
+    private final ClockService clockService;
+
+    public UserRepositoryMock(ClockService clockService) {
+        this.clockService = clockService;
+    }
+
     @Override
     public <S extends UserEntity> S save(S entity) {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
         }

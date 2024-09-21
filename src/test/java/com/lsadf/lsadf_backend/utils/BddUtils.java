@@ -37,6 +37,8 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -543,11 +545,14 @@ public class BddUtils {
     public static GlobalInfo mapToGlobalInfo(Map<String, String> row) {
         String nbGameSaves = row.get(BddFieldConstants.GlobalInfo.GAME_SAVE_COUNTER);
         String nbUsers = row.get(BddFieldConstants.GlobalInfo.USER_COUNTER);
+        String now = row.get(BddFieldConstants.GlobalInfo.NOW);
 
         Long nbGameSavesLong = nbGameSaves == null ? 0L : Long.parseLong(nbGameSaves);
         Long nbUsersLong = nbUsers == null ? 0L : Long.parseLong(nbUsers);
 
-        return new GlobalInfo(nbGameSavesLong, nbUsersLong);
+        Instant nowInstant = now == null ? null : Instant.parse(now);
+
+        return new GlobalInfo(nowInstant, nbGameSavesLong, nbUsersLong);
     }
 
     /**

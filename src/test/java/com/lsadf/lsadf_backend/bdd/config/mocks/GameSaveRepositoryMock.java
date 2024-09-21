@@ -4,8 +4,11 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.services.ClockService;
+import com.lsadf.lsadf_backend.utils.DateUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Clock;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +20,12 @@ import java.util.stream.Stream;
 public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> implements GameSaveRepository {
 
     private final CurrencyRepository currencyRepository;
+    private final ClockService clockService;
 
-    public GameSaveRepositoryMock(CurrencyRepository currencyRepository) {
+    public GameSaveRepositoryMock(CurrencyRepository currencyRepository,
+                                  ClockService clockService) {
         this.currencyRepository = currencyRepository;
+        this.clockService = clockService;
     }
 
     @Override
@@ -35,7 +41,7 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> impl
 
     @Override
     public <S extends GameSaveEntity> @NotNull S save(S entity) {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
         }

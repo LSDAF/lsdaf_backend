@@ -42,6 +42,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -131,6 +132,10 @@ public class BddLoader {
     protected PasswordEncoder passwordEncoder;
 
     // Services
+
+    @Autowired
+    protected ClockService clockService;
+
     @Autowired
     protected CurrencyService currencyService;
 
