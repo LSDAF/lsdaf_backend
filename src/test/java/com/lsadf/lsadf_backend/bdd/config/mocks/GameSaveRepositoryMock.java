@@ -1,8 +1,10 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
+package com.lsadf.lsadf_backend.bdd.config.mocks;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Mock implementation of the GameSaveRepository
  */
-public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
+public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> implements GameSaveRepository {
 
     private final CurrencyRepository currencyRepository;
 
@@ -21,13 +23,18 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(@NotNull String id) {
         super.deleteById(id);
         currencyRepository.deleteById(id);
     }
 
     @Override
-    public GameSaveEntity save(GameSaveEntity entity) {
+    public Stream<GameSaveEntity> findAllGameSaves() {
+        return entities.values().stream();
+    }
+
+    @Override
+    public <S extends GameSaveEntity> @NotNull S save(S entity) {
         Date now = new Date();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
@@ -52,14 +59,14 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         toUpdate.setCurrencyEntity(updatedCurrencyEntity);
         entities.put(entity.getId(), toUpdate);
 
-        return toUpdate;
+        return (S) toUpdate;
     }
 
-    public Stream<GameSaveEntity> findAllSaveGames() {
-        return entities.values().stream();
-    }
-
-    public List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userId) {
-        return entities.values().stream().filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userId)).toList();
+    @Override
+    public List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userEmail) {
+        return entities.values()
+                .stream()
+                .filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userEmail))
+                .toList();
     }
 }
