@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.CurrencyController;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
@@ -16,13 +16,14 @@ import com.lsadf.lsadf_backend.services.GameSaveService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
@@ -40,7 +41,7 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
 
     public CurrencyControllerImpl(GameSaveService gameSaveService,
                                   CurrencyService currencyService,
-                                  CacheService cacheService,
+                                  @Qualifier(REDIS_CACHE_SERVICE) CacheService cacheService,
                                   Mapper mapper) {
         this.gameSaveService = gameSaveService;
         this.currencyService = currencyService;

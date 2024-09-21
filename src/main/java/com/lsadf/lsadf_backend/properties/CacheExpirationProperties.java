@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CacheExpirationProperties {
-    private long currencyExpirationSeconds;
-    private long gameSaveOwnershipExpirationSeconds;
-    private long localUserExpirationSeconds;
+    private int currencyExpirationSeconds;
+    private int gameSaveOwnershipExpirationSeconds;
+    private int localUserExpirationSeconds;
+    private int invalidatedJwtTokenExpirationSeconds;
 }

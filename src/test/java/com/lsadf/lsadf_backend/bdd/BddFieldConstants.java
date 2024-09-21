@@ -21,6 +21,16 @@ public class BddFieldConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class RefreshToken {
+        public static final String ID = BddFieldConstants.ID;
+        public static final String EXPIRATION_DATE = "expirationDate";
+        public static final String INVALIDATION_DATE = "invalidationDate";
+        public static final String USER_EMAIL = "userEmail";
+        public static final String REFRESH_TOKEN = "refreshToken";
+        public static final String STATUS = "status";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Currency {
         public static final String GOLD = "gold";
         public static final String DIAMOND = "diamond";
@@ -142,5 +152,11 @@ public class BddFieldConstants {
     public static final class SearchRequest {
         public static final String KEY = "key";
         public static final String VALUE = "value";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class UserRefreshLoginRequest {
+        public static final String REFRESH_TOKEN = "refreshToken";
+        public static final String EMAIL = "email";
     }
 }

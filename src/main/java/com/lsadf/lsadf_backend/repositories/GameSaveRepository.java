@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  */
 @Repository
 public interface GameSaveRepository extends CrudRepository<GameSaveEntity, String> {
-    @Query(value = "SELECT * from T_GAME_SAVE", nativeQuery = true)
+    @Query(value = "SELECT * FROM T_GAME_SAVE", nativeQuery = true)
     Stream<GameSaveEntity> findAllGameSaves();
 
     List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userId);

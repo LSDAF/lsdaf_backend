@@ -11,7 +11,7 @@ public interface TokenProvider {
      *
      * @param localUser@return
      */
-    String createToken(LocalUser localUser);
+    String createJwtToken(LocalUser localUser);
 
     /**
      * Gets the id from the token.
@@ -26,4 +26,11 @@ public interface TokenProvider {
      * @return
      */
     boolean validateToken(String authToken);
+
+    /**
+     * Invalidates the token.
+     * @param token the token to invalidate
+     * @param userEmail the email of the user
+     */
+    void invalidateToken(String token, String userEmail);
 }

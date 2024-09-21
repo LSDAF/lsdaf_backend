@@ -27,6 +27,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
+import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_FACEBOOK_CLIENT_REGISTRATION;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_GOOGLE_CLIENT_REGISTRATION;
+
+
 @Configuration
 public class OAuth2Configuration {
 
@@ -74,7 +78,7 @@ public class OAuth2Configuration {
     }
 
     @Bean
-    @Qualifier("oAuth2GoogleClientRegistration")
+    @Qualifier(OAUTH2_GOOGLE_CLIENT_REGISTRATION)
     public ClientRegistration googleClientRegistration(OAuth2Properties oAuth2Properties) {
         OAuth2ClientProperties.Registration googleRegistration = oAuth2Properties.getRegistration().get(GOOGLE);
         OAuth2ClientProperties.Provider googleProvider = oAuth2Properties.getProvider().get(GOOGLE);
@@ -96,7 +100,7 @@ public class OAuth2Configuration {
     }
 
     @Bean
-    @Qualifier("oAuth2FacebookClientRegistration")
+    @Qualifier(OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
     public ClientRegistration facebookClientRegistration(OAuth2Properties oAuth2Properties) {
         OAuth2ClientProperties.Registration facebookRegistration = oAuth2Properties.getRegistration().get(FACEBOOK);
         OAuth2ClientProperties.Provider facebookProvider = oAuth2Properties.getProvider().get(FACEBOOK);
@@ -118,8 +122,8 @@ public class OAuth2Configuration {
     }
 
     @Bean
-    public ClientRegistrationRepository clientRegistrationRepository(@Qualifier("oAuth2GoogleClientRegistration") ClientRegistration googleClientRegistration,
-                                                                     @Qualifier("oAuth2FacebookClientRegistration") ClientRegistration facebookClientRegistration) {
+    public ClientRegistrationRepository clientRegistrationRepository(@Qualifier(OAUTH2_GOOGLE_CLIENT_REGISTRATION) ClientRegistration googleClientRegistration,
+                                                                     @Qualifier(OAUTH2_FACEBOOK_CLIENT_REGISTRATION) ClientRegistration facebookClientRegistration) {
         return new InMemoryClientRegistrationRepository(Arrays.asList(googleClientRegistration, facebookClientRegistration));
     }
 }

@@ -1,13 +1,15 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 
 @NoArgsConstructor
@@ -15,33 +17,34 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Data
 @Builder
 public class AdminGameSaveUpdateRequest {
+
     @JsonProperty(value = GOLD)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Amount of gold", example = "100")
     private Long gold;
 
     @JsonProperty(value = DIAMOND)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Amount of diamond", example = "100")
     private Long diamond;
 
     @JsonProperty(value = EMERALD)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Amount of emerald", example = "100")
     private Long emerald;
 
     @JsonProperty(value = AMETHYST)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Amount of amethyst", example = "100")
     private Long amethyst;
 
     @JsonProperty(value = HP)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Health points", example = "100")
     private Long healthPoints;
 
     @JsonProperty(value = ATTACK)
     @PositiveOrZero
-    @Nullable
+    @Schema(description = "Attack points", example = "100")
     private Long attack;
 }

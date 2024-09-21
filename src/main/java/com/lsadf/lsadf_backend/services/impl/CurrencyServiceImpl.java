@@ -1,11 +1,10 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
@@ -16,18 +15,16 @@ import java.util.Optional;
 public class CurrencyServiceImpl implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
-    private final CacheService cacheService;
     private final GameSaveService gameSaveService;
-
+    private final Cache<Currency> currencyCache;
     private final Mapper mapper;
 
     public CurrencyServiceImpl(CurrencyRepository currencyRepository,
-                               CacheService cacheService,
+                               Cache<Currency> currencyCache,
                                GameSaveService gameSaveService,
-                               CacheProperties cacheProperties,
                                Mapper mapper) {
         this.currencyRepository = currencyRepository;
-        this.cacheService = cacheService;
+        this.currencyCache = currencyCache;
         this.gameSaveService = gameSaveService;
 
         this.mapper = mapper;
@@ -36,8 +33,8 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     @Transactional(readOnly = true)
     public Currency getCurrency(String gameSaveId) throws NotFoundException {
-        if (cacheService.isEnabled()) {
-            Optional<Currency> optionalCachedCurrency = cacheService.getCurrency(gameSaveId);
+        if (currencyCache.isEnabled()) {
+            Optional<Currency> optionalCachedCurrency = currencyCache.get(gameSaveId);
             if (optionalCachedCurrency.isPresent()) {
                 Currency currency = optionalCachedCurrency.get();
                 if (currency.getAmethyst() == null || currency.getDiamond() == null || currency.getEmerald() == null || currency.getGold() == null) {
@@ -72,7 +69,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             throw new IllegalArgumentException("Currency cannot be null");
         }
         if (toCache) {
-            cacheService.setCurrency(gameSaveId, currency);
+            currencyCache.set(gameSaveId, currency);
         } else {
             saveCurrencyToDatabase(gameSaveId, currency);
         }

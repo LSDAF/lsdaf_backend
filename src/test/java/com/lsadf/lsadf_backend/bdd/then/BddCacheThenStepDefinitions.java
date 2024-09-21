@@ -25,10 +25,16 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         log.info("Checking {} if cache is empty...", cacheType);
         CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
         switch (cacheEntryType) {
-            case CURRENCY -> assertThat(this.cacheService.getAllCurrencies()).isEmpty();
-            case CURRENCY_HISTO -> assertThat(this.cacheService.getAllCurrenciesHisto()).isEmpty();
-            case GAME_SAVE_OWNERSHIP -> assertThat(this.cacheService.getAllGameSaveOwnership()).isEmpty();
+            case CURRENCY -> assertThat(currencyCache.getAll()).isEmpty();
+            case CURRENCY_HISTO -> assertThat(currencyCache.getAllHisto()).isEmpty();
+            case GAME_SAVE_OWNERSHIP -> assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
         }
+    }
+
+    @Then("^the redis cache should be disabled$")
+    public void then_the_redis_cache_should_be_disabled() {
+        log.info("Checking if redis cache is disabled...");
+        assertThat(redisCacheService.isEnabled()).isFalse();
     }
 
     @Then("^I should have the following (.*) entries in cache$")
@@ -38,8 +44,8 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         CacheEntryType cacheEntryType = CacheEntryType.fromString(currencyTypeString);
         switch (cacheEntryType) {
             case CURRENCY -> {
-                Map<String, Currency> results = cacheService.getAllCurrencies();
-                for (Map<String, String> entry : stringStringMap) {
+                var results = currencyCache.getAll();
+                for (var entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
                     String goldString = entry.get(BddFieldConstants.Currency.GOLD);
                     String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
@@ -55,8 +61,8 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 }
             }
             case CURRENCY_HISTO -> {
-                Map<String, Currency> results = cacheService.getAllCurrenciesHisto();
-                for (Map<String, String> entry : stringStringMap) {
+                var results = currencyCache.getAllHisto();
+                for (var entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
                     String goldString = entry.get(BddFieldConstants.Currency.GOLD);
                     String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
@@ -71,10 +77,10 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 }
             }
             case GAME_SAVE_OWNERSHIP -> {
-                Map<String, String> results = cacheService.getAllGameSaveOwnership();
-                for (Map<String, String> entry : stringStringMap) {
-                    String gameSaveId = entry.get(GAME_SAVE_ID);
-                    String email = entry.get(USER_EMAIL);
+                var results = gameSaveOwnershipCache.getAll();
+                for (var entry : stringStringMap) {
+                    var gameSaveId = entry.get(GAME_SAVE_ID);
+                    var email = entry.get(USER_EMAIL);
                     assertThat(results).containsEntry(gameSaveId, email);
                 }
             }

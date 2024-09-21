@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class RedisProperties {
+    private boolean enabled;
     private String host;
     private int port;
     private int database;
