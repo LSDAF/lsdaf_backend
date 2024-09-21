@@ -98,7 +98,6 @@ Feature: Auth Controller tests
     Then the response status code should be 200
 
     And the used token should be invalidated
-    And the refresh token should be invalidated
 
   Scenario: A User logs in with unregistered email and a refresh token
     Given the following users

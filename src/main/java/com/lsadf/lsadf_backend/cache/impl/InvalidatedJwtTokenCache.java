@@ -48,6 +48,18 @@ public class InvalidatedJwtTokenCache extends RedisCache<String> implements Cach
      * {@inheritDoc}
      */
     @Override
+    public void set(String key, String value, int expirationSeconds) {
+        if (isEnabled()) {
+            super.set(key, value, expirationSeconds);
+            return;
+        }
+        localInvalidatedJwtTokenCache.set(key, value, expirationSeconds);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Map<String, String> getAll() {
         if (isEnabled()) {
             return super.getAll();

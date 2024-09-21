@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.configurations;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.models.LocalUser;
@@ -13,6 +12,7 @@ import com.lsadf.lsadf_backend.services.UserDetailsService;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -76,7 +76,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
     public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService userDetailsService,
-                                                                         Cache<String, LocalUser> localUserCache) {
+                                                                         ExpiringMap<String, LocalUser> localUserCache) {
         return new CustomAuthenticationProviderImpl(userDetailsService, localUserCache);
     }
 

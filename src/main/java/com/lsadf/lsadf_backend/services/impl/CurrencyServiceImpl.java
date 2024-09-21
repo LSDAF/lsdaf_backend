@@ -119,7 +119,15 @@ public class CurrencyServiceImpl implements CurrencyService {
         }
     }
 
+    /**
+     * Check if the currency is all null
+     * @param currency the currency POJO
+     * @return true if all fields are null, false otherwise
+     */
     private static boolean isCurrencyNull(Currency currency) {
-        return currency.getAmethyst() == null || currency.getDiamond() == null || currency.getEmerald() == null || currency.getGold() == null;
+        return currency.getAmethyst() == null
+                && currency.getDiamond() == null
+                && currency.getEmerald() == null
+                && currency.getGold() == null;
     }
 }
