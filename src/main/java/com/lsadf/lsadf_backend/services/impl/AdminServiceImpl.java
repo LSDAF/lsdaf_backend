@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
@@ -20,7 +20,6 @@ import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.services.AdminService;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.SearchService;
@@ -43,20 +42,23 @@ public class AdminServiceImpl implements AdminService {
     private final GameSaveService gameSaveService;
     private final Mapper mapper;
     private final SearchService searchService;
-    private final CacheService cacheService;
+    private final CacheService localCacheService;
+    private final CacheService redisCacheService;
     private final CacheFlushService cacheFlushService;
 
     public AdminServiceImpl(UserService userService,
                             GameSaveService gameSaveService,
                             Mapper mapper,
                             SearchService searchService,
-                            CacheService cacheService,
+                            CacheService localCacheService,
+                            CacheService redisCacheService,
                             CacheFlushService cacheFlushService) {
         this.userService = userService;
         this.mapper = mapper;
         this.searchService = searchService;
         this.gameSaveService = gameSaveService;
-        this.cacheService = cacheService;
+        this.localCacheService = localCacheService;
+        this.redisCacheService = redisCacheService;
         this.cacheFlushService = cacheFlushService;
     }
 
@@ -82,17 +84,18 @@ public class AdminServiceImpl implements AdminService {
     public void flushAndClearCache() {
         log.info("Clearing all caches");
         cacheFlushService.flushCurrencies();
-        cacheService.clearCaches();
+        localCacheService.clearCaches();
+        redisCacheService.clearCaches();
     }
 
     @Override
     public void toggleCache() {
-        cacheService.toggleCacheEnabling();
+        redisCacheService.toggleCacheEnabling();
     }
 
     @Override
-    public boolean isCacheEnabled() {
-        return cacheService.isEnabled();
+    public boolean isRedisCacheEnabled() {
+        return redisCacheService.isEnabled();
     }
 
     /**

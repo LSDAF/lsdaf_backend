@@ -1,14 +1,12 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
@@ -30,20 +28,16 @@ import java.util.stream.Stream;
 public class GameSaveServiceImpl implements GameSaveService {
     private final UserService userService;
     private final GameSaveRepository gameSaveRepository;
-    private final CacheService cacheService;
 
-    private final Mapper mapper;
+    private final Cache<String> gameSaveOwnershipCache;
 
 
     public GameSaveServiceImpl(UserService userService,
                                GameSaveRepository gameSaveRepository,
-                               CacheService cacheService,
-                               Mapper mapper,
-                               CacheProperties cacheProperties) {
+                               Cache<String> gameSaveOwnershipCache) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
-        this.cacheService = cacheService;
-        this.mapper = mapper;
+        this.gameSaveOwnershipCache = gameSaveOwnershipCache;
     }
 
     /**
@@ -233,7 +227,7 @@ public class GameSaveServiceImpl implements GameSaveService {
     @Override
     @Transactional(readOnly = true)
     public void checkGameSaveOwnership(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
-        if (!cacheService.isEnabled()) {
+        if (!gameSaveOwnershipCache.isEnabled()) {
             GameSaveEntity gameSaveEntity = getGameSave(saveId);
 
             if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {
@@ -243,10 +237,10 @@ public class GameSaveServiceImpl implements GameSaveService {
             return;
         }
 
-        Optional<String> optionalOwnership = cacheService.getGameSaveOwnership(saveId);
+        Optional<String> optionalOwnership = gameSaveOwnershipCache.get(saveId);
         if (optionalOwnership.isEmpty()) {
             GameSaveEntity gameSaveEntity = getGameSave(saveId);
-            cacheService.setGameSaveOwnership(saveId, userEmail);
+            gameSaveOwnershipCache.set(saveId, userEmail);
             if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {
                 throw new ForbiddenException("The given user email is not the owner of the game save");
             }

@@ -1,8 +1,12 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
 
 public class NoOpFlushServiceImpl implements CacheFlushService {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void flushCurrencies() {
         // Do nothing

@@ -45,7 +45,7 @@ public interface AdminService {
      *
      * @return true if the cache is enabled, false otherwise
      */
-    boolean isCacheEnabled();
+    boolean isRedisCacheEnabled();
 
     // Users
 
