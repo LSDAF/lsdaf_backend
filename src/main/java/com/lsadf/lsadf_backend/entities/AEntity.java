@@ -21,7 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AEntity implements Serializable {
+public class AEntity implements Entity {
 
     @Serial
     private static final long serialVersionUID = 7495963088331648156L;

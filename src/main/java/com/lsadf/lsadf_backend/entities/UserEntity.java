@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.converters.SocialProviderConverter;
 import com.lsadf.lsadf_backend.converters.UserRoleConverter;
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
