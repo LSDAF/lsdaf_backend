@@ -27,36 +27,6 @@ public class DateUtils {
     }
 
     /**
-     * Convert Date to String
-     * @param date Date to convert
-     * @return Converted Date in String format
-     */
-    public static String dateToString(Date date) {
-        LocalDateTime dateTime = dateToLocalDateTime(date);
-        return dateTimeToString(dateTime);
-    }
-
-    /**
-     * Convert LocalDateTime to String
-     * @param dateTime LocalDateTime to convert
-     * @return Converted Date
-     */
-    public static String dateTimeToExportString(LocalDateTime dateTime) {
-        return dateTime.format(exportDateFormatter);
-    }
-
-    /**
-     * Convert Date to String
-     * @param localDateTime
-     * @return Converted Date
-     */
-    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
-        return Date
-                .from(localDateTime.atZone(ZoneId.systemDefault())
-                        .toInstant());
-    }
-
-    /**
      * Convert Date to LocalDateTime
      * @param dateToConvert Date to convert
      * @return Converted LocalDateTime
@@ -75,5 +45,14 @@ public class DateUtils {
     public static LocalDateTime timestampToLocalDateTime(long timestamp, boolean isSeconds) {
         Instant instant = Instant.ofEpochSecond(timestamp);
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    /**
+     * Convert String to Date
+     * @param date String to convert
+     * @return Converted Date
+     */
+    public static Date stringToDate(String date) {
+        return Date.from(LocalDateTime.parse(date, formatter).atZone(ZoneId.systemDefault()).toInstant());
     }
 }
