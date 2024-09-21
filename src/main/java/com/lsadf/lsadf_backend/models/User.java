@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -50,10 +51,10 @@ public class User {
     private final SocialProvider socialProvider;
 
     @JsonProperty(value = CREATED_AT)
-    @Schema(description = "Creation date", example = "2022-01-01T00:00:00.000Z")
+    @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
     private final Date createdAt;
 
     @JsonProperty(value = UPDATED_AT)
-    @Schema(description = "Update date", example = "2022-01-01T00:00:00.000Z")
+    @Schema(description = "Update date", example = "2022-01-01 00:00:00.000")
     private final Date updatedAt;
 }

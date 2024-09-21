@@ -12,12 +12,15 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -66,17 +69,16 @@ public class BddThenStepDefinitions extends BddLoader {
                     .orElseThrow();
 
 
-
-            var gold = gameSave.getCurrencyEntity().getGoldAmount();
-            var expectedGold = expected.getCurrencyEntity().getGoldAmount();
+            @PositiveOrZero long gold = gameSave.getCurrencyEntity().getGoldAmount();
+            @PositiveOrZero long expectedGold = expected.getCurrencyEntity().getGoldAmount();
             assertThat(gold).isEqualTo(expectedGold);
 
-            var hp = gameSave.getHealthPoints();
-            var expectedHp = expected.getHealthPoints();
+            @Positive long hp = gameSave.getHealthPoints();
+            @Positive long expectedHp = expected.getHealthPoints();
             assertThat(hp).isEqualTo(expectedHp);
 
-            var attack = gameSave.getAttack();
-            var expectedAttack = expected.getAttack();
+            @PositiveOrZero long attack = gameSave.getAttack();
+            @PositiveOrZero long expectedAttack = expected.getAttack();
             assertThat(attack).isEqualTo(expectedAttack);
         }
     }
@@ -143,14 +145,14 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         UserInfo actual = (UserInfo) responseStack.peek().getData();
         UserInfo expected = BddUtils.mapToUserInfo(row);
 
         assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("id")
+                .ignoringFields("id", "createdAt", "updatedAt")
                 .isEqualTo(expected);
     }
 
@@ -158,8 +160,8 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_i_should_have_the_following_entities(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
-        try (var actualStream = gameSaveRepository.findAllGameSaves()) {
-            var actual = actualStream.toList();
+        try (Stream<GameSaveEntity> actualStream = gameSaveRepository.findAllGameSaves()) {
+            List<GameSaveEntity> actual = actualStream.toList();
 
             for (Map<String, String> row : rows) {
                 GameSaveEntity expected = BddUtils.mapToGameSaveEntity(row, userRepository);
@@ -206,7 +208,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         Currency expected = BddUtils.mapToCurrency(row);
 
@@ -231,7 +233,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         Currency expected = BddUtils.mapToCurrency(row);
         Currency actual = (Currency) responseStack.peek().getData();
@@ -249,7 +251,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         UserAdminDetails userAdminDetails = userAdminDetailsStack.peek();
         UserAdminDetails expected = BddUtils.mapToUserAdminDetails(row);
@@ -338,7 +340,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         GlobalInfo actual = globalInfoStack.peek();
         GlobalInfo expected = BddUtils.mapToGlobalInfo(row);
@@ -367,7 +369,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         JwtAuthentication actual = (JwtAuthentication) responseStack.peek().getData();
         UserInfo actualUserInfo = actual.getUserInfo();
@@ -375,7 +377,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
         assertThat(actualUserInfo)
                 .usingRecursiveComparison()
-                .ignoringFields("id")
+                .ignoringFields("id","createdAt", "updatedAt")
                 .isEqualTo(expectedUserInfo);
     }
 
@@ -387,7 +389,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         GameSave actual = (GameSave) responseStack.peek().getData();
         GameSave expected = BddUtils.mapToGameSave(row);
@@ -406,7 +408,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         GlobalInfo actual = (GlobalInfo) responseStack.peek().getData();
         GlobalInfo expected = BddUtils.mapToGlobalInfo(row);
@@ -443,7 +445,7 @@ public class BddThenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        var row = rows.get(0);
+        Map<String, String> row = rows.get(0);
 
         UserAdminDetails actual = (UserAdminDetails) responseStack.peek().getData();
         UserAdminDetails expected = BddUtils.mapToUserAdminDetails(row);
@@ -459,7 +461,7 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_the_response_should_haven_the_following_users_in_exact_order(DataTable dataTable) throws NotFoundException {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
-        var actual = userListStack.peek();
+        List<User> actual = userListStack.peek();
 
         if (rows.size() != actual.size()) {
             throw new IllegalArgumentException("Expected number of rows does not match the actual number of users");

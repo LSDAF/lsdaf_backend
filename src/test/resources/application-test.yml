@@ -37,6 +37,8 @@ cors:
 spring:
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss.SSS
 
 auth:
   refresh-token-expiration-ms: 86400000

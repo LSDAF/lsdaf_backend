@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.models.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
@@ -53,11 +54,10 @@ public class UserAdminDetails {
     private SocialProvider socialProvider;
 
     @JsonProperty(value = CREATED_AT)
-    @Schema(description = "Creation date", example = "2022-01-01T00:00:00.000Z")
+    @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
     private Date createdAt;
 
     @JsonProperty(value = UPDATED_AT)
-    @Schema(description = "Update date", example = "2022-01-01T00:00:00.000Z")
     private Date updatedAt;
 
     @Schema(description = "Game saves of user")

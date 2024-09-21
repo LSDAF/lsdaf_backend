@@ -46,8 +46,8 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> {
         toUpdate.setHealthPoints(entity.getHealthPoints());
         toUpdate.setUpdatedAt(now);
 
-        var currencyEntity = entity.getCurrencyEntity();
-        var updatedCurrencyEntity = currencyRepository.save(currencyEntity);
+        CurrencyEntity currencyEntity = entity.getCurrencyEntity();
+        CurrencyEntity updatedCurrencyEntity = currencyRepository.save(currencyEntity);
 
         toUpdate.setCurrencyEntity(updatedCurrencyEntity);
         entities.put(entity.getId(), toUpdate);
