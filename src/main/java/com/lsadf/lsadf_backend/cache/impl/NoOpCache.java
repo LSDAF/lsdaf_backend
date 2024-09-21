@@ -18,6 +18,11 @@ public class NoOpCache<T> implements Cache<T> {
         return Optional.empty();
     }
 
+    @Override
+    public void set(String key, T value, int expirationSeconds) {
+        // Do nothing
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -20,6 +20,7 @@ import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.TokenUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Sets;
@@ -124,8 +125,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
 
             refreshTokenProvider.validateRefreshToken(userRefreshLoginRequest.getRefreshToken(), userEmail);
 
-            // Invalidate the old token and create a new one
-            refreshTokenProvider.invalidateUserRefreshToken(userEmail);
+            // Create a new refresh token
             String newToken = refreshTokenProvider.createRefreshToken(localUser);
             RefreshTokenEntity refreshEntity = refreshTokenProvider.saveRefreshToken(localUser.getUserEntity(), newToken);
 
@@ -150,20 +150,16 @@ public class AuthControllerImpl extends BaseController implements AuthController
      */
     @Override
     public ResponseEntity<GenericResponse<Void>> logout(@CurrentUser LocalUser localUser,
-                                                        @RequestHeader(name = "Authorization") String authHeader) {
+                                                        @Schema(hidden = true) @RequestHeader(name = "Authorization") String authHeader) {
         try {
             String token = extractTokenFromHeader(authHeader);
             validateUser(localUser);
             tokenProvider.invalidateToken(token, localUser.getUserEntity().getEmail());
-            refreshTokenProvider.invalidateUserRefreshToken(localUser.getUserEntity().getEmail());
 
             return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
             log.error("User is not authorized to logout", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
-        } catch (NotFoundException e) {
-            log.error("User not found", e);
-            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Could not logout user", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not logout user", null);

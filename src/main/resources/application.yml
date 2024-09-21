@@ -1,7 +1,4 @@
 server:
-  error:
-    whitelabel:
-      enabled: false
   port: 8080
 
 
@@ -123,6 +120,7 @@ cache:
     game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
     local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
     currency-expiration-seconds: ${CURRENCY_EXPIRATION_SECONDS}
+    invalidated-jwt-token-expiration-seconds: ${INVALIDATED_JWT_TOKEN_EXPIRATION_SECONDS}
 
 shutdown:
   flush-cache-at-shutdown: true

@@ -148,17 +148,6 @@ public class BddThenStepDefinitions extends BddLoader {
 
     }
 
-    @Then("^the refresh token should be invalidated$")
-    public void then_the_refresh_token_should_be_invalidated() {
-        String actual = refreshJwtTokenStack.peek();
-        Optional<RefreshTokenEntity> refreshTokenEntity = refreshTokenRepository.findByToken(actual);
-        assertThat(refreshTokenEntity).isNotEmpty();
-        assertThat(refreshTokenEntity).isNotNull();
-
-        RefreshTokenEntity refreshToken = refreshTokenEntity.get();
-        assertThat(refreshToken.getStatus()).isEqualTo(RefreshTokenEntity.Status.INACTIVE);
-    }
-
     @Then("^the used token should be invalidated$")
     public void then_the_used_token_should_be_invalidated() {
         String actual = jwtTokenStack.peek();

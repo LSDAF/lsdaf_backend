@@ -1,8 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.models.LocalUser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.experimental.UtilityClass;
 
@@ -54,5 +53,15 @@ public class TokenUtils {
      */
     public static String extractTokenFromHeader(String header) {
         return header.substring(7);
+    }
+
+    /**
+     * Parses the token.
+     * @param parser the parser
+     * @param token the token
+     * @return the parsed token
+     */
+    public static Jws<Claims> parseToken(JwtParser parser, String token) {
+        return parser.parseClaimsJws(token);
     }
 }

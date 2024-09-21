@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.ClockService;
+import com.lsadf.lsadf_backend.utils.TokenUtils;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,7 +87,12 @@ public class TokenProviderImpl implements TokenProvider {
 
     @Override
     public void invalidateToken(String token, String userEmail) {
-        invalidatedJwtTokenCache.set(token, userEmail);
+        Jws<Claims> claims = TokenUtils.parseToken(parser, token);
+        Date expiration = claims.getBody().getExpiration();
+        Date now = clockService.nowDate();
+        long expirationSeconds = (expiration.getTime() - now.getTime()) / 1000;
+        int expirationSecondsInt = (int) expirationSeconds;
+        invalidatedJwtTokenCache.set(token, userEmail, expirationSecondsInt);
         log.info("Token for user {} invalidated", userEmail);
     }
 }

@@ -56,6 +56,15 @@ public class RedisCache<T> implements Cache<T> {
         }
     }
 
+    @Override
+    public void set(String key, T value, int expirationSeconds) {
+        try {
+            redisTemplate.opsForValue().set(keyType + key, value, expirationSeconds, TimeUnit.SECONDS);
+        } catch (DataAccessException e) {
+            log.warn("Error while setting entry in redis cache", e);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

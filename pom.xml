@@ -46,6 +46,7 @@
         <start-class>com.lsadf.lsadf_backend.LsadfBackendApplication</start-class>
         <delombok.output>${project.build.directory}/delombok</delombok.output>
         <embedded-redis.version>1.4.2</embedded-redis.version>
+        <expiringmap.jodah.version>0.5.11</expiringmap.jodah.version>
     </properties>
 
     <build>
@@ -330,8 +331,9 @@
             <version>${embedded-redis.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
+            <groupId>net.jodah</groupId>
+            <artifactId>expiringmap</artifactId>
+            <version>${expiringmap.jodah.version}</version>
         </dependency>
     </dependencies>
 

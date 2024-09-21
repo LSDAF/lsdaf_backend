@@ -1,15 +1,16 @@
 package com.lsadf.lsadf_backend.cache.listeners;
 
-import com.github.benmanes.caffeine.cache.RemovalCause;
-import com.github.benmanes.caffeine.cache.RemovalListener;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.jodah.expiringmap.ExpirationListener;
 
 @Slf4j
-public class LocalRemovalListener<T> implements RemovalListener<String, T> {
+public class LocalRemovalListener<T> implements ExpirationListener<String, T> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onRemoval(@Nullable String s, @Nullable T t, RemovalCause removalCause) {
+    public void expired(String s, T t) {
         log.info("Local cache entry expired -> {}", s);
     }
 }

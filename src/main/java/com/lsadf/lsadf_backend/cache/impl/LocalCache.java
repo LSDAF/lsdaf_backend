@@ -1,27 +1,24 @@
 package com.lsadf.lsadf_backend.cache.impl;
 
-import com.github.benmanes.caffeine.cache.Policy;
 import com.lsadf.lsadf_backend.cache.Cache;
-import lombok.Data;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class LocalCache<T> implements Cache<T> {
 
-    private final com.github.benmanes.caffeine.cache.Cache<String, T> cache;
+    private final ExpiringMap<String, T> cache;
 
     private int expirationSeconds;
 
     private final boolean isEnabled = true;
 
-    public LocalCache(com.github.benmanes.caffeine.cache.Cache<String, T> cache,
+    public LocalCache(ExpiringMap<String, T> cache,
                       int expirationSeconds) {
         this.cache = cache;
         this.expirationSeconds = expirationSeconds;
@@ -40,7 +37,7 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public Optional<T> get(String key) {
-        T value = cache.getIfPresent(key);
+        T value = cache.getOrDefault(key, null);
         if (value == null) {
             return Optional.empty();
         }
@@ -53,17 +50,16 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public void set(String key, T value) {
-        var optionalVarExpiration = cache.policy().expireVariably();
-        if (optionalVarExpiration.isPresent()) {
-            Policy.VarExpiration<String, T> varExpiration = optionalVarExpiration.get();
-            var result = varExpiration.put(key, value, expirationSeconds, TimeUnit.SECONDS);
-            if (result == null) {
-                log.warn("Error while setting entry in local cache");
-            }
+        if (expirationSeconds > 0) {
+            cache.put(key, value, expirationSeconds, TimeUnit.SECONDS);
         } else {
-            log.warn("Variable expiration not allowed for this LocalCache. Adding entry with no expiration.");
             cache.put(key, value);
         }
+    }
+
+    @Override
+    public void set(String key, T value, int expirationSeconds) {
+        cache.put(key, value, expirationSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -71,7 +67,7 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public Map<String, T> getAll() {
-        return cache.asMap();
+        return cache;
     }
 
     /**
@@ -79,7 +75,7 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public void clear() {
-        cache.invalidateAll();
+        cache.clear();
     }
 
     /**
