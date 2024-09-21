@@ -127,12 +127,14 @@ public class BddUtils {
         long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
         long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
         long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
+
+        if (userId == null) {
+            userId = "";
+        }
         Optional<UserEntity> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             userOptional = userRepository.findUserEntityByEmail(userEmail);
         }
-
-        UserEntity userEntity = userOptional.orElse(null);
 
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
                 .user(userOptional.orElse(null))

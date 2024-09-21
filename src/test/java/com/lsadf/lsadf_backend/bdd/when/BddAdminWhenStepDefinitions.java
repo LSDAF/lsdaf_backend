@@ -3,6 +3,8 @@ package com.lsadf.lsadf_backend.bdd.when;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
@@ -85,7 +87,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
     }
 
     @When("^we want to create a new game save with the following AdminGameSaveCreationRequest$")
-    public void when_we_want_to_create_a_new_game_save_with_the_following_AdminGameSaveCreationRequest(DataTable dataTable) throws NotFoundException {
+    public void when_we_want_to_create_a_new_game_save_with_the_following_AdminGameSaveCreationRequest(DataTable dataTable) throws NotFoundException, AlreadyExistingGameSaveException {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
         // it should have only one line
@@ -475,7 +477,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
     }
 
     @When("^an admin creates a new user with the following AdminUserCreationRequest$")
-    public void when_an_admin_creates_a_new_user_with_the_following_AdminUserCreationRequest(DataTable dataTable) {
+    public void when_an_admin_creates_a_new_user_with_the_following_AdminUserCreationRequest(DataTable dataTable) throws AlreadyExistingUserException {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
         // it should have only one line

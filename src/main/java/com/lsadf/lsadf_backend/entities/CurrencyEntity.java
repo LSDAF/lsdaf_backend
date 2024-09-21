@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class CurrencyEntity implements Serializable {
+public class CurrencyEntity implements com.lsadf.lsadf_backend.entities.Entity {
 
     @Serial
     private static final long serialVersionUID = 7786624859103259009L;

@@ -81,7 +81,7 @@ public class GameSaveServiceImpl implements GameSaveService {
      * {@inheritDoc}
      */
     @Override
-    public GameSaveEntity createGameSave(AdminGameSaveCreationRequest creationRequest) throws NotFoundException {
+    public GameSaveEntity createGameSave(AdminGameSaveCreationRequest creationRequest) throws NotFoundException, AlreadyExistingGameSaveException {
 
         UserEntity userEntity = userService.getUserByEmail(creationRequest.getUserEmail());
 

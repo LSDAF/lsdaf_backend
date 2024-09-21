@@ -1,12 +1,10 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
@@ -144,7 +142,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public User createUser(AdminUserCreationRequest creationRequest) {
+    public User createUser(AdminUserCreationRequest creationRequest) throws AlreadyExistingUserException {
         UserCreationRequest userCreationRequest = UserCreationRequest.builder()
                 .email(creationRequest.getEmail())
                 .name(creationRequest.getName())
@@ -163,7 +161,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException {
+    public User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistingUserException {
         return mapper.mapToUser(userService.updateUser(userId, userUpdateRequest));
     }
 
@@ -211,7 +209,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest) throws NotFoundException {
+    public GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest) throws NotFoundException, AlreadyExistingGameSaveException {
         GameSaveEntity entity = gameSaveService.createGameSave(adminGameSaveCreationRequest);
         return mapper.mapToGameSave(entity);
     }
