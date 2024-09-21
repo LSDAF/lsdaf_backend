@@ -247,9 +247,8 @@ Feature: Admin Service tests
     And the following game saves
       | id                                   | userId                               | gold        | healthPoints | attack     |
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
-      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
 
-    When an admin deletes the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd
+    When an admin deletes the game save with id 9fb0c57c-2488-44c9-8b8f-6d595fa44937
 
     Then I should have no game save entries in DB
 

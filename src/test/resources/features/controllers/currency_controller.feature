@@ -145,10 +145,11 @@ Feature: Currency Controller tests
 
     Then the response status code should be 403
 
-  Scenario: A user sets the gold of a non-existing game save
+  Scenario: A user sets the currencies of a non-existing game save
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name        | email                | password |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 |
+      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | toto1234 |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   |

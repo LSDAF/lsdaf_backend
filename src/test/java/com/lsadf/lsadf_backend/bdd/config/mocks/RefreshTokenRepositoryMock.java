@@ -1,15 +1,17 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
+package com.lsadf.lsadf_backend.bdd.config.mocks;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.RepositoryMock;
 import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import jakarta.validation.constraints.Email;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEntity> implements RepositoryMock<RefreshTokenEntity> {
+public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEntity> implements RefreshTokenRepository {
 
     private final UserRepository userRepository;
 
@@ -17,26 +19,16 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
         this.userRepository = userRepository;
     }
 
-    /**
-     * Find a refresh token by user email and status
-     *
-     * @param user the user
-     * @param status    the status
-     * @return the refresh token
-     */
-    public Optional<RefreshTokenEntity> findByUserEmailAndStatus(UserEntity user, RefreshTokenEntity.Status status) {
+
+    @Override
+    public Optional<RefreshTokenEntity> findByUserAndStatus(UserEntity user, RefreshTokenEntity.Status status) {
         return entities.values()
                 .stream()
-                .filter(refreshToken -> refreshToken.getUser().equals(user) && refreshToken.getStatus().equals(status))
+                .filter(entity -> entity.getUser().equals(user) && entity.getStatus().equals(status))
                 .findFirst();
     }
 
-    /**
-     * Find a refresh token by token
-     *
-     * @param token the token
-     * @return the refresh token
-     */
+    @Override
     public Optional<RefreshTokenEntity> findByToken(String token) {
         return entities.values()
                 .stream()
@@ -58,21 +50,18 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
     }
 
     /**
-     * Save a refresh token
      *
-     * @param entity the entity to save
+     * @param entity the entity
      * @return the saved entity
+     * @param <S> the entity type
      */
     @Override
-    public RefreshTokenEntity save(RefreshTokenEntity entity) {
+    public <S extends RefreshTokenEntity> @NotNull S save(S entity) {
         Date now = new Date();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
         }
 
-        if (entity.getUser() == null) {
-
-        }
 
         RefreshTokenEntity toUpdate = entities.get(entity.getId());
         if (toUpdate == null) {
@@ -93,6 +82,6 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
 
         entities.put(entity.getId(), toUpdate);
 
-        return toUpdate;
+        return (S) toUpdate;
     }
 }

@@ -1,6 +1,8 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
+package com.lsadf.lsadf_backend.bdd.config.mocks;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.repositories.UserRepository;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Optional;
@@ -10,9 +12,10 @@ import java.util.stream.Stream;
 /**
  * Mock implementation of the UserRepository
  */
-public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
+public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements UserRepository {
+
     @Override
-    public UserEntity save(UserEntity entity) {
+    public <S extends UserEntity> S save(S entity) {
         Date now = new Date();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
@@ -30,7 +33,12 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> {
         toUpdate.setPassword(entity.getPassword());
         toUpdate.setUpdatedAt(now);
         entities.put(entity.getId(), toUpdate);
-        return toUpdate;
+        return (S) toUpdate;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return entities.values().stream().anyMatch(user -> user.getEmail().equals(email));
     }
 
     public Optional<UserEntity> findUserEntityByEmail(String email) {

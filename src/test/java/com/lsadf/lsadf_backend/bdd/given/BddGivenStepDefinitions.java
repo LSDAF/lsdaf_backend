@@ -121,10 +121,10 @@ public class BddGivenStepDefinitions extends BddLoader {
         log.info("Database repositories + caches cleaned");
 
         // Init all repository mocks
-        MockUtils.initGameSaveRepositoryMock(gameSaveRepository, currencyRepository);
-        MockUtils.initUserRepositoryMock(userRepository);
-        MockUtils.initCurrencyRepositoryMock(currencyRepository);
-        MockUtils.initRefreshTokenRepository(refreshTokenRepository, userRepository);
+        //MockUtils.initGameSaveRepositoryMock(gameSaveRepository, currencyRepository);
+        //MockUtils.initUserRepositoryMock(userRepository);
+        //MockUtils.initCurrencyRepositoryMock(currencyRepository);
+        //MockUtils.initRefreshTokenRepository(refreshTokenRepository, userRepository);
 
         // Init all other service mocks
         MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);

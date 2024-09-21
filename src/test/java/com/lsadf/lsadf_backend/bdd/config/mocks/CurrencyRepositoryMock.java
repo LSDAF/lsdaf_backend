@@ -1,13 +1,16 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
+package com.lsadf.lsadf_backend.bdd.config.mocks;
 
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Mock implementation of the GoldRepository
  */
-public class CurrencyRepositoryMock extends ARepositoryMock<CurrencyEntity> {
+public class CurrencyRepositoryMock extends ARepositoryMock<CurrencyEntity> implements CurrencyRepository {
+
     @Override
-    public CurrencyEntity save(CurrencyEntity entity) {
+    public <S extends CurrencyEntity> @NotNull S save(S entity) {
         if (entity.getId() == null) {
             throw new IllegalArgumentException("The gold id must not be empty, since it should be the id of the associated game save");
         }

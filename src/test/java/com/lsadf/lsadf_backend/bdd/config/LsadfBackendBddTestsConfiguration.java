@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.RefreshTokenProviderMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.TokenAuthenticationFilterMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.*;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
@@ -128,25 +127,25 @@ public class LsadfBackendBddTestsConfiguration {
     @Bean
     @Primary
     public UserRepository userRepository() {
-        return mock(UserRepository.class);
+        return new UserRepositoryMock();
     }
 
     @Bean
     @Primary
-    public CurrencyRepository goldRepository() {
-        return mock(CurrencyRepository.class);
+    public CurrencyRepository currencyRepository() {
+        return new CurrencyRepositoryMock();
     }
 
     @Bean
     @Primary
-    public RefreshTokenRepository refreshTokenRepository() {
-        return mock(RefreshTokenRepository.class);
+    public RefreshTokenRepository refreshTokenRepository(UserRepository userRepository) {
+        return new RefreshTokenRepositoryMock(userRepository);
     }
 
     @Bean
     @Primary
-    public GameSaveRepository gameSaveRepository() {
-        return mock(GameSaveRepository.class);
+    public GameSaveRepository gameSaveRepository(CurrencyRepository currencyRepository) {
+        return new GameSaveRepositoryMock(currencyRepository);
     }
 
     @Bean

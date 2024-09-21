@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(UserCreationRequest creationRequest) {
+    public UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException {
         if ((creationRequest.getUserId() != null && userRepository.existsById(creationRequest.getUserId()))) {
             throw new AlreadyExistingUserException("User with User id " + creationRequest.getUserId() + " already exist");
         }
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) {
+    public UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
         return createUser(null, email, password, provider, optionalUserRoles, name);
     }
 
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) {
+    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException {
+    public UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException, AlreadyExistingUserException {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException {
+    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException, AlreadyExistingUserException {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, attributes);
         if (oAuth2UserInfo.getName() == null) {
             throw new OAuth2AuthenticationProcessingException("Name not found from OAuth2 provider");
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity updateUser(UserEntity userEntity,
-                                  AdminUserUpdateRequest adminUserUpdateRequest) {
+                                  AdminUserUpdateRequest adminUserUpdateRequest) throws AlreadyExistingUserException {
         boolean hasUpdates = false;
 
         if (adminUserUpdateRequest != null) {

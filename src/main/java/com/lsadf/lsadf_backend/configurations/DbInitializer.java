@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.constants.SocialProvider;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.properties.DbInitProperties;
 import com.lsadf.lsadf_backend.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +42,14 @@ public class DbInitializer implements ApplicationListener<ContextRefreshedEvent>
 
         dbInitProperties.getUsers().forEach(user -> {
             if (!userService.existsByEmail(user.getEmail())) {
-                userService.createUser(user.getEmail(),
-                        user.getPassword(),
-                        SocialProvider.LOCAL,
-                        Optional.of(user.getRoles()), user.getName());
+                try {
+                    userService.createUser(user.getEmail(),
+                            user.getPassword(),
+                            SocialProvider.LOCAL,
+                            Optional.of(user.getRoles()), user.getName());
+                } catch (AlreadyExistingUserException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
