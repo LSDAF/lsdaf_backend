@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.lsadf.lsadf_backend.cache.CacheService;
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.models.LocalUser;
@@ -11,8 +10,11 @@ import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
 import com.lsadf.lsadf_backend.services.impl.CustomAuthenticationProviderImpl;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,6 +41,10 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Base64;
+
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_REFRESH_TOKEN_PARSER;
 import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
 
 @Configuration
@@ -73,6 +79,23 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                                                                          Cache<String, LocalUser> localUserCache) {
         return new CustomAuthenticationProviderImpl(userDetailsService, localUserCache);
     }
+
+    @Bean
+    @Qualifier(JWT_TOKEN_PARSER)
+    public JwtParser jwtParser(AuthProperties authProperties) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
+                .build();
+    }
+
+    @Bean
+    @Qualifier(JWT_REFRESH_TOKEN_PARSER)
+    public JwtParser jwtRefreshTokenParser(AuthProperties authProperties) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Base64.getEncoder().encode(authProperties.getRefreshTokenSecret().getBytes()))
+                .build();
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security,
@@ -126,7 +149,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Bean
     public TokenAuthenticationFilter TokenAuthenticationFilter(TokenProvider tokenProvider,
                                                                UserDetailsService userDetailsService,
-                                                               Cache<String, LocalUser> localUserCache) {
+                                                               com.lsadf.lsadf_backend.cache.Cache<LocalUser> localUserCache) {
         return new TokenAuthenticationFilter(tokenProvider, userDetailsService, localUserCache);
     }
 

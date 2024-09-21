@@ -69,6 +69,12 @@ public class UserEntity extends AEntity {
     @Builder.Default
     private Set<GameSaveEntity> gameSaves = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Builder.Default
+    private Set<RefreshTokenEntity> refreshTokens = new HashSet<>();
+
 
     @Column(name = EntityAttributes.User.USER_ROLES)
     @Convert(converter = UserRoleConverter.class)

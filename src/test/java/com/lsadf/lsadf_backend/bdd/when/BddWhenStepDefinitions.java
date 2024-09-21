@@ -8,6 +8,7 @@ import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -87,6 +88,26 @@ public class BddWhenStepDefinitions extends BddLoader {
     public void when_we_want_to_validate_the_user_password_with_email_and_password(String userEmail, String password) {
         try {
             booleanStack.push(userService.validateUserPassword(userEmail, password));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user logs out$")
+    public void when_the_user_logs_out() {
+        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.LOGOUT;
+
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtTokenStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
+            GenericResponse<Void> body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
         } catch (Exception e) {
             exceptionStack.push(e);
         }
@@ -198,6 +219,36 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
+    @When("^the user logs in with the following refresh token credentials$")
+    public void when_the_user_logs_in_with_the_following_refresh_token_credentials(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REFRESH_LOGIN;
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+
+        assertThat(rows.size()).isEqualTo(1);
+        Map<String, String> row = rows.get(0);
+
+        UserRefreshLoginRequest refreshLoginRequest = BddUtils.mapToUserRefreshLoginRequest(row);
+        HttpEntity<UserRefreshLoginRequest> request = BddUtils.buildHttpEntity(refreshLoginRequest);
+        try {
+            ResponseEntity<GenericResponse<JwtAuthentication>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedJwtAuthenticationResponse());
+            GenericResponse<JwtAuthentication> body = result.getBody();
+            assertThat(body).isNotNull();
+            JwtAuthentication jwtAuthentication = body.getData();
+            if (jwtAuthentication != null) {
+                jwtTokenStack.push(jwtAuthentication.getAccessToken());
+                refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
+                LocalUser localUser = userDetailsService.loadUserByEmail(refreshLoginRequest.getEmail());
+                localUserMap.put(jwtAuthentication.getAccessToken(), localUser);
+            }
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
     @When("the user logs in with the following credentials")
     public void when_the_user_logs_in_with_the_following_credentials(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
@@ -220,7 +271,8 @@ public class BddWhenStepDefinitions extends BddLoader {
             assertThat(body).isNotNull();
             JwtAuthentication jwtAuthentication = body.getData();
             if (jwtAuthentication != null) {
-                jwtStack.push(jwtAuthentication.getAccessToken());
+                jwtTokenStack.push(jwtAuthentication.getAccessToken());
+                refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
                 LocalUser localUser = userDetailsService.loadUserByEmail(userLoginRequest.getEmail());
                 localUserMap.put(jwtAuthentication.getAccessToken(), localUser);
             }
@@ -239,7 +291,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -305,7 +357,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<GameSaveUpdateRequest> request = new HttpEntity<>(updateRequest, headers);
@@ -343,7 +395,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -364,7 +416,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);

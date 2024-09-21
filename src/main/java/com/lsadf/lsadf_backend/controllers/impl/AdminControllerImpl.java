@@ -79,7 +79,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
-            boolean cacheEnabled = adminService.isCacheEnabled();
+            boolean cacheEnabled = adminService.isRedisCacheEnabled();
             return generateResponse(HttpStatus.OK, cacheEnabled);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while checking cache status: ", e);
@@ -94,11 +94,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Boolean>> toggleCacheEnabling(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(@CurrentUser LocalUser localUser) {
         try {
             validateUser(localUser);
             adminService.toggleCache();
-            Boolean cacheEnabled = adminService.isCacheEnabled();
+            Boolean cacheEnabled = adminService.isRedisCacheEnabled();
             return generateResponse(HttpStatus.OK, cacheEnabled);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while toggling cache: ", e);

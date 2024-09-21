@@ -42,7 +42,7 @@ public class GameSaveEntity extends AEntity {
     private long attack = 1L;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_GOLD_ID)
+    @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_CURRENCY_ID)
     private CurrencyEntity currencyEntity;
 
     public void setCurrencyEntity(CurrencyEntity currencyEntity) {

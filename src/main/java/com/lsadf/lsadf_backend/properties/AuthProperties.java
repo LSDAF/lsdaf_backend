@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthProperties {
     private String tokenSecret;
-    private long tokenExpirationMs;
+    private int tokenExpirationSeconds;
     private String refreshTokenSecret;
-    private long refreshTokenExpirationMs;
+    private int refreshTokenExpirationSeconds;
+    private String invalidatedTokenCleanCron;
 }

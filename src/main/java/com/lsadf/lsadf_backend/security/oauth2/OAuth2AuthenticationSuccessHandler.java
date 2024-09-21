@@ -75,7 +75,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } catch (NotFoundException e) {
             throw new RuntimeException(e);
         }
-        String token = tokenProvider.createToken(localUser);
+        String token = tokenProvider.createJwtToken(localUser);
 
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
     }

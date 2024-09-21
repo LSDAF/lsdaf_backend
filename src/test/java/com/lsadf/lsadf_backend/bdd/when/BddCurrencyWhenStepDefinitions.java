@@ -14,8 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
@@ -34,12 +32,12 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
     }
 
     @When("^a currency cache entry is expired$")
-    public void when_a__cache_entry_is_expired() {
-        int size = this.cacheService.getAllCurrenciesHisto().size();
+    public void when_a_currency_cache_entry_is_expired() {
+        int size = currencyCache.getAllHisto().size();
         log.info("Waiting for currency cache entry to expire...");
         await().atMost(1200, TimeUnit.SECONDS).until(() -> {
             try {
-                int newSize = this.cacheService.getAllCurrenciesHisto().size();
+                var newSize = currencyCache.getAllHisto().size();
                 return newSize < size;
             } catch (Exception e) {
                 return false;
@@ -61,7 +59,7 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
 
     @When("^we want to set the following currencies for the game save with id (.*) with toCache to (.*)$")
     public void when_we_want_to_set_the_gold_for_the_game_save_with_id_to_with_cache(String gameSaveId, boolean toCache, DataTable dataTable) {
-        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+        var data = dataTable.asMaps(String.class, String.class);
         assertThat(data).hasSize(1);
 
         Currency currency = BddUtils.mapToCurrency(data.get(0));
@@ -79,12 +77,12 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.CURRENCY + ControllerConstants.Currency.GAME_SAVE_ID.replace("{game_save_id}", gameSaveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<Currency>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedCurrencyResponse());
-            GenericResponse<Currency> body = result.getBody();
+            var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
         } catch (Exception e) {
@@ -94,7 +92,7 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
 
     @When("^the user requests the endpoint to set the currencies with the following CurrencyRequest for the game save with id (.*)$")
     public void when_the_user_requests_the_endpoint_to_set_the_currencies_of_the_game_save_with_id_to(String gameSaveId, DataTable dataTable) {
-        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+        var data = dataTable.asMaps(String.class, String.class);
         assertThat(data).hasSize(1);
 
         CurrencyRequest request = BddUtils.mapToCurrencyRequest(data.get(0));
@@ -102,14 +100,14 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.CURRENCY + ControllerConstants.Currency.GAME_SAVE_ID.replace("{game_save_id}", gameSaveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtStack.peek();
+            String token = jwtTokenStack.peek();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
 
 
             HttpEntity<CurrencyRequest> httpRequest = new HttpEntity<>(request, headers);
             ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, httpRequest, buildParameterizedVoidResponse());
-            GenericResponse<Void> body = result.getBody();
+            var body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 

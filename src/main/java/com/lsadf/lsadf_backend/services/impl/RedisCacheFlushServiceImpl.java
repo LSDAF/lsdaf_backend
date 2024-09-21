@@ -1,7 +1,7 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.services.CurrencyService;
@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Slf4j
-public class CacheFlushServiceImpl implements CacheFlushService {
+public class RedisCacheFlushServiceImpl implements CacheFlushService {
 
-    private final CacheService cacheService;
     private final CurrencyService currencyService;
+    private final Cache<Currency> currencyCache;
 
-
-    public CacheFlushServiceImpl(CacheService cacheService, CurrencyService currencyService) {
-        this.cacheService = cacheService;
+    public RedisCacheFlushServiceImpl(CurrencyService currencyService,
+                                      Cache<Currency> currencyCache) {
         this.currencyService = currencyService;
+        this.currencyCache = currencyCache;
     }
 
     /**
@@ -29,7 +29,7 @@ public class CacheFlushServiceImpl implements CacheFlushService {
     @Transactional
     public void flushCurrencies() {
         log.info("Flushing gold cache");
-        Map<String, Currency> goldCacheEntries = cacheService.getAllCurrencies();
+        Map<String, Currency> goldCacheEntries = currencyCache.getAll();
         for (Map.Entry<String, Currency> entry : goldCacheEntries.entrySet()) {
             String gameSaveId = entry.getKey();
             Currency currency = entry.getValue();

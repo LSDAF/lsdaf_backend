@@ -1,4 +1,7 @@
 server:
+  error:
+    whitelabel:
+      enabled: false
   port: 8080
 
 
@@ -98,15 +101,19 @@ oauth2:
       jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
 
 auth:
-  refresh-token-expiration-ms: 86_400_000
   refresh-token-secret: ${REFRESH_TOKEN_SECRET}
   token-secret: ${TOKEN_SECRET}
-  token-expiration-ms: 3_600_000
+  invalidated-token-cleaner-cron: 0 0 0 * * ?
+  refresh-token-expiration-seconds: 86_400
+  token-expiration-seconds: 3_600
 
 
 cache:
-  enabled: ${CACHE_ENABLED}
+  local:
+    invalidated-refresh-token-cache-max-size: ${INVALIDATED_REFRESH_TOKEN_CACHE_MAX_SIZE}
+    local-user-cache-max-size: ${LOCAL_USER_CACHE_MAX_SIZE}
   redis:
+    enabled: ${CACHE_ENABLED}
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}

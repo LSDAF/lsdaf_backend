@@ -98,7 +98,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Enables/Disables the cache")
-    ResponseEntity<GenericResponse<Boolean>> toggleCacheEnabling(LocalUser localUser);
+    ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(LocalUser localUser);
 
     // User
 

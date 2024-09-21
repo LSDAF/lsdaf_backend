@@ -318,8 +318,8 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 100     | 1000    | 10000    |
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | paul.ochon@test.com | 10   | 10           | 10     | 100     | 1000    | 10000    |
 
     Then the response status code should be 200
 
@@ -333,8 +333,8 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | -15  | 10           | 10     | 100     | 1000    | 10000    |
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | paul.ochon@test.com | -15  | 10           | 10     | 100     | 1000    | 10000    |
 
     Then the response status code should be 400
 
@@ -557,4 +557,4 @@ Feature: Admin Controller tests
 
     Then the response status code should be 200
 
-    And the response should have the following Boolean false
+    And the redis cache should be disabled

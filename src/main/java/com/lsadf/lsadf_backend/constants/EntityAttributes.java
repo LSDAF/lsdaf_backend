@@ -14,22 +14,31 @@ public final class EntityAttributes {
     public static final String CREATED_AT = "created_at";
     public static final String UPDATED_AT = "updated_at";
 
+    // REFRESH TOKEN
+    public static class RefreshToken {
+        public static final String REFRESH_TOKEN_ENTITY = "t_refresh_token";
+        public static final String REFRESH_TOKEN_TOKEN = "token";
+        public static final String REFRESH_TOKEN_STATUS = "status";
+        public static final String REFRESH_TOKEN_EXPIRATION_DATE = "expiration_date";
+        public static final String REFRESH_TOKEN_INVALIDATION_DATE = "invalidation_date";
+    }
+
     // GAME SAVE
     public static class GameSave {
         public static final String GAME_SAVE_ENTITY = "t_game_save";
-        public static final String GAME_SAVE_HEALTH_POINTS = "game_save_health_points";
-        public static final String GAME_SAVE_ATTACK = "game_save_attack";
-        public static final String GAME_SAVE_GOLD_ID = "game_save_gold_id";
+        public static final String GAME_SAVE_HEALTH_POINTS = "health_points";
+        public static final String GAME_SAVE_ATTACK = "attack";
+        public static final String GAME_SAVE_CURRENCY_ID = "currency_id";
     }
 
     // CURRENCIES
     public static class Currencies {
         public static final String CURRENCY_ENTITY = "t_currency";
-        public static final String CURRENCY_GOLD_AMOUNT = "currency_gold_amount";
-        public static final String CURRENCY_DIAMOND_AMOUNT = "currency_diamond_amount";
-        public static final String CURRENCY_EMERALD_AMOUNT = "currency_emerald_amount";
-        public static final String CURRENCY_AMETHYST_AMOUNT = "currency_amethyst_amount";
-        public static final String CURRENCY_USER_EMAIL = "currency_user_email";
+        public static final String CURRENCY_GOLD_AMOUNT = "gold_amount";
+        public static final String CURRENCY_DIAMOND_AMOUNT = "diamond_amount";
+        public static final String CURRENCY_EMERALD_AMOUNT = "emerald_amount";
+        public static final String CURRENCY_AMETHYST_AMOUNT = "amethyst_amount";
+        public static final String CURRENCY_USER_EMAIL = "user_email";
 
     }
 
@@ -37,10 +46,10 @@ public final class EntityAttributes {
     public static class User {
         public static final String USER_ENTITY = "t_user";
         public static final String USER_ID = "user_id";
-        public static final String USER_NAME = "user_name";
-        public static final String USER_EMAIL = "user_email";
-        public static final String USER_PASSWORD = "user_password";
-        public static final String USER_ROLES = "user_roles";
-        public static final String USER_ENABLED = "user_enabled";
+        public static final String USER_NAME = "name";
+        public static final String USER_EMAIL = "email";
+        public static final String USER_PASSWORD = "password";
+        public static final String USER_ROLES = "roles";
+        public static final String USER_ENABLED = "enabled";
     }
 }

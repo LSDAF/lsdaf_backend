@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.configurations;
 
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.properties.DbInitProperties;
 import com.lsadf.lsadf_backend.properties.ShutdownProperties;
 import com.lsadf.lsadf_backend.services.UserService;

@@ -1,20 +1,20 @@
-package com.lsadf.lsadf_backend.configurations;
+package com.lsadf.lsadf_backend.configurations.cache;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
-import com.lsadf.lsadf_backend.cache.CacheService;
-import com.lsadf.lsadf_backend.cache.RedisKeyExpirationListener;
-import com.lsadf.lsadf_backend.cache.impl.CacheFlushServiceImpl;
-import com.lsadf.lsadf_backend.cache.impl.NoOpCacheServiceImpl;
-import com.lsadf.lsadf_backend.cache.impl.NoOpFlushServiceImpl;
-import com.lsadf.lsadf_backend.cache.impl.RedisCacheServiceImpl;
+import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheService;
+import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
+import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
+import com.lsadf.lsadf_backend.services.impl.RedisCacheServiceImpl;
+import com.lsadf.lsadf_backend.cache.impl.InvalidatedJwtTokenCache;
+import com.lsadf.lsadf_backend.cache.impl.RedisCache;
+import com.lsadf.lsadf_backend.cache.impl.RedisCurrencyCache;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
-import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.services.CurrencyService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,18 +29,17 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.*;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
+import static com.lsadf.lsadf_backend.constants.RedisConstants.GAME_SAVE_OWNERSHIP;
 
 @Configuration
-public class CacheConfiguration {
-
+@ConditionalOnProperty(prefix = "cache.redis", name = "enabled", havingValue = "true")
+public class RedisCacheConfiguration {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, String> template = new StringRedisTemplate();
         template.setConnectionFactory(redisConnectionFactory);
@@ -48,7 +47,6 @@ public class CacheConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     public RedisTemplate<String, Long> redisLongTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Long> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -58,7 +56,6 @@ public class CacheConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     public RedisTemplate<String, Currency> currencyRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Currency> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -70,36 +67,38 @@ public class CacheConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public CacheService redisCacheService(CacheProperties cacheProperties,
-                                          CacheExpirationProperties cacheExpirationProperties,
-                                          RedisTemplate<String, String> stringRedisTemplate,
-                                          RedisTemplate<String, Currency> objectRedisTemplate) {
-        return new RedisCacheServiceImpl(cacheProperties,
-                cacheExpirationProperties,
-                stringRedisTemplate,
-                objectRedisTemplate);
+    @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
+    public RedisCache<String> gameSaveOwnershipCache(RedisTemplate<String, String> redisTemplate,
+                                                     CacheExpirationProperties cacheExpirationProperties,
+                                                     RedisProperties redisProperties) {
+        return new RedisCache<>(redisTemplate, GAME_SAVE_OWNERSHIP, cacheExpirationProperties.getGameSaveOwnershipExpirationSeconds(), redisProperties);
     }
 
     @Bean
-    public Cache<String, LocalUser> localUserCache(CacheExpirationProperties cacheExpirationProperties) {
-        Caffeine<Object, Object> builder = Caffeine.newBuilder()
-                .maximumSize(100);
-        if (cacheExpirationProperties.getLocalUserExpirationSeconds() > 0) {
-            builder.expireAfterWrite(cacheExpirationProperties.getLocalUserExpirationSeconds(), TimeUnit.SECONDS);
-        }
-
-        return builder.build();
+    @Qualifier(CURRENCY_CACHE)
+    public HistoCache<Currency> redisCurrencyCache(RedisTemplate<String, Currency> redisTemplate,
+                                                   CacheExpirationProperties cacheExpirationProperties,
+                                                   RedisProperties redisProperties) {
+        return new RedisCurrencyCache(redisTemplate, cacheExpirationProperties.getCurrencyExpirationSeconds(), redisProperties);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "false")
-    public CacheService noOpCacheService() {
-        return new NoOpCacheServiceImpl();
+    @Qualifier(INVALIDATED_JWT_TOKEN_CACHE)
+    public Cache<String> jwtTokenCache(RedisTemplate<String, String> redisTemplate,
+                                       @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache,
+                                       CacheExpirationProperties cacheExpirationProperties,
+                                       RedisProperties redisProperties) {
+        return new InvalidatedJwtTokenCache(redisTemplate, localInvalidatedJwtTokenCache, cacheExpirationProperties.getInvalidatedJwtTokenExpirationSeconds(), redisProperties);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
+    @Qualifier(REDIS_CACHE_SERVICE)
+    public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
+                                          HistoCache<Currency> currencyCache) {
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache);
+    }
+
+    @Bean
     public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(redisProperties.getHost());
@@ -110,7 +109,6 @@ public class CacheConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     public RedisMessageListenerContainer keyExpirationListenerContainer(RedisConnectionFactory connectionFactory,
                                                                         RedisKeyExpirationListener redisKeyExpirationListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
@@ -121,14 +119,12 @@ public class CacheConfiguration {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     MessageListenerAdapter messageListener(RedisKeyExpirationListener redisKeyExpirationListener) {
         return new MessageListenerAdapter(redisKeyExpirationListener);
     }
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
     public RedisKeyExpirationListener redisKeyExpirationListener(CurrencyService currencyService,
                                                                  RedisTemplate<String, Long> redisTemplate,
                                                                  RedisTemplate<String, Currency> currencyRedisTemplate) {
@@ -136,14 +132,8 @@ public class CacheConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-    public CacheFlushService cacheFlushService(CacheService cacheService, CurrencyService currencyService) {
-        return new CacheFlushServiceImpl(cacheService, currencyService);
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "false")
-    public CacheFlushService noOpCacheFlushService() {
-        return new NoOpFlushServiceImpl();
+    public CacheFlushService cacheFlushService(CurrencyService currencyService,
+                                               Cache<Currency> currencyCache) {
+        return new RedisCacheFlushServiceImpl(currencyService, currencyCache);
     }
 }

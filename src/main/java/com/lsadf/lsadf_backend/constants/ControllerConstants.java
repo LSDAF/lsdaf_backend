@@ -59,6 +59,8 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Auth {
         public static final String LOGIN = "/login";
+        public static final String REFRESH_LOGIN = "/refresh_login";
+        public static final String LOGOUT = "/logout";
         public static final String REGISTER = "/register";
     }
 
