@@ -11,6 +11,7 @@ import lombok.*;
 import java.util.Date;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 
 /**
