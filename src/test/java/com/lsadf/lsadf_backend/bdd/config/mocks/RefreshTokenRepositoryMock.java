@@ -4,9 +4,12 @@ import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.services.ClockService;
+import com.lsadf.lsadf_backend.utils.DateUtils;
 import jakarta.validation.constraints.Email;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Clock;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,9 +17,12 @@ import java.util.UUID;
 public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEntity> implements RefreshTokenRepository {
 
     private final UserRepository userRepository;
+    private final ClockService clockService;
 
-    public RefreshTokenRepositoryMock(UserRepository userRepository) {
+    public RefreshTokenRepositoryMock(UserRepository userRepository,
+                                      ClockService clockService) {
         this.userRepository = userRepository;
+        this.clockService = clockService;
     }
 
 
@@ -57,7 +63,7 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
      */
     @Override
     public <S extends RefreshTokenEntity> @NotNull S save(S entity) {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID().toString());
         }

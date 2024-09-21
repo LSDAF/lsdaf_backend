@@ -126,3 +126,7 @@ cache:
 
 shutdown:
   flush-cache-at-shutdown: true
+
+
+clock:
+  time-zone: "Europe/Paris"

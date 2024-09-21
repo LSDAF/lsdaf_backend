@@ -4,6 +4,7 @@ Feature: Admin Controller tests
     Given the BDD engine is ready
     And the cache is enabled
     And a clean database
+    And the time clock set to the present
 
 
   Scenario: A User tries to request one of the admin endpoints without a token
@@ -39,6 +40,8 @@ Feature: Admin Controller tests
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
       | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 8ea5a501-2429-4e89-881c-f19aa191cabb | 100  | 100          | 100    |
       | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 08a446bb-7a12-48fd-b4bf-b01d0b60b5c0 | 1000 | 1000         | 1000   |
+    And the time clock set to the following value 2020-01-01T00:00:00Z
+
 
     When the user logs in with the following credentials
       | email               | password |
@@ -49,8 +52,8 @@ Feature: Admin Controller tests
     Then the response status code should be 200
 
     And the response should have the following GlobalInfo
-      | userCounter | gameSaveCounter |
-      | 3           | 3               |
+      | userCounter | gameSaveCounter | now                  |
+      | 3           | 3               | 2020-01-01T00:00:00Z |
 
   Scenario: An admin user requests all the users
     Given the following users

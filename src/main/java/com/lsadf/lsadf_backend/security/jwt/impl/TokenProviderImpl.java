@@ -5,10 +5,12 @@ import com.lsadf.lsadf_backend.exceptions.InvalidTokenException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
+import com.lsadf.lsadf_backend.services.ClockService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Base64;
+import java.util.Date;
 
 import static com.lsadf.lsadf_backend.utils.TokenUtils.generateToken;
 
@@ -20,15 +22,18 @@ public class TokenProviderImpl implements TokenProvider {
 
     private final AuthProperties authProperties;
     private final JwtParser parser;
+    private final ClockService clockService;
 
     private final Cache<String> invalidatedJwtTokenCache;
 
     public TokenProviderImpl(AuthProperties authProperties,
                              JwtParser parser,
-                             Cache<String> invalidatedJwtTokenCache) {
+                             Cache<String> invalidatedJwtTokenCache,
+                             ClockService clockService) {
         this.authProperties = authProperties;
         this.parser = parser;
         this.invalidatedJwtTokenCache = invalidatedJwtTokenCache;
+        this.clockService = clockService;
     }
 
 
@@ -37,7 +42,8 @@ public class TokenProviderImpl implements TokenProvider {
      */
     @Override
     public String createJwtToken(LocalUser localUser) {
-        return generateToken(localUser, authProperties.getTokenSecret(), authProperties.getTokenExpirationSeconds());
+        Date now = clockService.nowDate();
+        return generateToken(localUser, authProperties.getTokenSecret(), authProperties.getTokenExpirationSeconds(), now);
     }
 
     /**

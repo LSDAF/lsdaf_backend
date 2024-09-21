@@ -27,7 +27,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         RedisEmbeddedCacheConfiguration.class,
         LocalCacheConfiguration.class,
         RedisCacheConfiguration.class,
-        NoRedisCacheConfiguration.class
+        NoRedisCacheConfiguration.class,
+        ClockConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

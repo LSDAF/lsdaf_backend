@@ -21,6 +21,12 @@ public class PropertiesConfiguration {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "clock")
+    public ClockProperties clockProperties() {
+        return new ClockProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "cache.local")
     public LocalCacheProperties localProperties() {
         return new LocalCacheProperties();

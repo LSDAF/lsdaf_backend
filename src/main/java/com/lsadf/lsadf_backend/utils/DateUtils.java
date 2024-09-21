@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -54,5 +55,14 @@ public class DateUtils {
      */
     public static Date stringToDate(String date) {
         return Date.from(LocalDateTime.parse(date, formatter).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Convert Date from clock
+     * @param clock Clock to use
+     * @return Date
+     */
+    public static Date dateFromClock(Clock clock) {
+        return Date.from(Instant.now(clock));
     }
 }

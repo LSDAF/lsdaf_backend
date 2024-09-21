@@ -13,11 +13,15 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 /**
  * Step definitions for the given steps in the BDD scenarios
@@ -52,6 +56,22 @@ public class BddGivenStepDefinitions extends BddLoader {
         BddUtils.initTestRestTemplate(testRestTemplate);
 
         log.info("BDD engine is ready. Using port: {}", this.serverPort);
+    }
+
+    @Given("^the time clock set to the present$")
+    public void given_the_time_clock_set_to_the_present() {
+        log.info("Setting time clock to the present...");
+        this.clockService.setClock(Clock.systemDefaultZone());
+        log.info("Time clock set to the present");
+    }
+
+    @Given("^the time clock set to the following value (.*)$")
+    public void given_the_time_clock_set_to_the_following_value(String time) {
+        log.info("Setting time clock to the following value: {}", time);
+        Instant instant = Instant.parse(time);
+        ZoneId zoneId = clockService.getClock().getZone();
+        clockService.setClock(Clock.fixed(instant, zoneId));
+        log.info("Time clock set to the following value: {}", time);
     }
 
     @Given("^the cache is enabled$")
