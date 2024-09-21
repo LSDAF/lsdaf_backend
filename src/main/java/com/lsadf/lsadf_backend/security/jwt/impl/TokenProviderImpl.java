@@ -1,16 +1,16 @@
 package com.lsadf.lsadf_backend.security.jwt.impl;
 
+import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.exceptions.InvalidTokenException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Base64;
-import java.util.Date;
+
+import static com.lsadf.lsadf_backend.utils.TokenUtils.generateToken;
 
 /**
  * Implementation of the token provider.
@@ -21,11 +21,14 @@ public class TokenProviderImpl implements TokenProvider {
     private final AuthProperties authProperties;
     private final JwtParser parser;
 
-    public TokenProviderImpl(AuthProperties authProperties) {
+    private final Cache<String> invalidatedJwtTokenCache;
+
+    public TokenProviderImpl(AuthProperties authProperties,
+                             JwtParser parser,
+                             Cache<String> invalidatedJwtTokenCache) {
         this.authProperties = authProperties;
-        this.parser = Jwts.parserBuilder()
-                .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
-                .build();
+        this.parser = parser;
+        this.invalidatedJwtTokenCache = invalidatedJwtTokenCache;
     }
 
 
@@ -33,21 +36,8 @@ public class TokenProviderImpl implements TokenProvider {
      * {@inheritDoc}
      */
     @Override
-    public String createToken(LocalUser localUser) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + authProperties.getTokenExpirationMs());
-
-        return Jwts.builder()
-                .setSubject(localUser.getUserEntity().getEmail())
-                .setExpiration(expiryDate)
-                .setIssuedAt(now)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512).compact();
-    }
-
-    private Key getSigningKey() {
-        byte[] keyBytes = this.authProperties.getTokenSecret().getBytes(StandardCharsets.UTF_8);
-        byte[] base64KeyBytes = Base64.getEncoder().encode(keyBytes);
-        return Keys.hmacShaKeyFor(base64KeyBytes);
+    public String createJwtToken(LocalUser localUser) {
+        return generateToken(localUser, authProperties.getTokenSecret(), authProperties.getTokenExpirationSeconds());
     }
 
     /**
@@ -70,7 +60,12 @@ public class TokenProviderImpl implements TokenProvider {
     public boolean validateToken(String authToken) {
         try {
             Jws<Claims> claims = this.parser.parseClaimsJws(authToken);
+            if (invalidatedJwtTokenCache.get(authToken).isPresent()) {
+                throw new InvalidTokenException("Token is invalidated");
+            }
             return true;
+        } catch (InvalidTokenException e) {
+            log.error("Token has already been invalidated");
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
@@ -81,5 +76,11 @@ public class TokenProviderImpl implements TokenProvider {
             log.error("JWT claims string is empty.");
         }
         return false;
+    }
+
+    @Override
+    public void invalidateToken(String token, String userEmail) {
+        invalidatedJwtTokenCache.set(token, userEmail);
+        log.info("Token for user {} invalidated", userEmail);
     }
 }
