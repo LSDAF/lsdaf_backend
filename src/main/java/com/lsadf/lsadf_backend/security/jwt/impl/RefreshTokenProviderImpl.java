@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
+import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -29,15 +30,18 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
     protected final UserService userService;
     protected final JwtParser parser;
     protected final AuthProperties authProperties;
+    protected final ClockService clockService;
 
     public RefreshTokenProviderImpl(UserService userService,
                                     RefreshTokenRepository refreshTokenRepository,
                                     JwtParser parser,
-                                    AuthProperties authProperties) {
+                                    AuthProperties authProperties,
+                                    ClockService clockService) {
         this.userService = userService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.parser = parser;
         this.authProperties = authProperties;
+        this.clockService = clockService;
     }
 
     /**
@@ -46,7 +50,7 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
     @Override
     @Transactional
     public RefreshTokenEntity saveRefreshToken(UserEntity userEntity, String token) {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         Jws<Claims> claims = parser.parseClaimsJws(token);
         Date expiration = claims.getBody().getExpiration();
         RefreshTokenEntity entity = RefreshTokenEntity.builder()
@@ -85,7 +89,8 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
      */
     @Override
     public String createRefreshToken(LocalUser localUser) {
-        return generateToken(localUser, authProperties.getRefreshTokenSecret(), authProperties.getRefreshTokenExpirationSeconds());
+        Date now = clockService.nowDate();
+        return generateToken(localUser, authProperties.getRefreshTokenSecret(), authProperties.getRefreshTokenExpirationSeconds(), now);
     }
 
     /**
@@ -108,10 +113,11 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
 
     /**
      * Invalidates a token.
+     *
      * @param entity the entity to invalidate
      */
     private void invalidateToken(RefreshTokenEntity entity) {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         entity.setStatus(RefreshTokenEntity.Status.INACTIVE);
         entity.setInvalidationDate(now);
         entity.setUpdatedAt(now);
@@ -124,7 +130,7 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
     @Override
     @Transactional(readOnly = true)
     public void validateRefreshToken(String token, String userEmail) throws NotFoundException, InvalidTokenException {
-        Date now = new Date();
+        Date now = clockService.nowDate();
         Optional<RefreshTokenEntity> tokenEntityOptional = refreshTokenRepository.findByToken(token);
         if (tokenEntityOptional.isEmpty()) {
             throw new NotFoundException("Refresh token not found");
