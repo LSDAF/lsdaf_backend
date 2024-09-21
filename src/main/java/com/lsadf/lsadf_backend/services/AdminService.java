@@ -1,8 +1,6 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
@@ -80,7 +78,7 @@ public interface AdminService {
      * @param creationRequest the user to create
      * @return the created user
      */
-    User createUser(AdminUserCreationRequest creationRequest);
+    User createUser(AdminUserCreationRequest creationRequest) throws AlreadyExistingUserException;
 
     /**
      * Updates a user
@@ -89,7 +87,7 @@ public interface AdminService {
      * @param userUpdateRequest the request to update the user data
      * @return the updated user
      */
-    User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException;
+    User updateUser(String userId, AdminUserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistingUserException;
 
     /**
      * Deletes a user
@@ -147,7 +145,7 @@ public interface AdminService {
      * @param adminGameSaveCreationRequest the game save request
      * @return the created game save
      */
-    GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest) throws NotFoundException;
+    GameSave createGameSave(AdminGameSaveCreationRequest adminGameSaveCreationRequest) throws NotFoundException, AlreadyExistingGameSaveException;
 
     /**
      * Searches users

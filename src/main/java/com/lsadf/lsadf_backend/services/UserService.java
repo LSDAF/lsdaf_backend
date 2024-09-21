@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.services;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
 import com.lsadf.lsadf_backend.models.LocalUser;
@@ -32,7 +33,7 @@ public interface UserService {
      * @param name              the name of the user
      * @return the created user
      */
-    UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name);
+    UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException;
 
     /**
      * Creates a new user
@@ -44,7 +45,7 @@ public interface UserService {
      * @param name              the name of the user
      * @return the created user
      */
-    UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name);
+    UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException;
 
 
     /**
@@ -53,7 +54,7 @@ public interface UserService {
      * @param creationRequest the user creation request
      * @return the created user
      */
-    UserEntity createUser(UserCreationRequest creationRequest);
+    UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException;
 
     /**
      * Validates given user password
@@ -111,7 +112,7 @@ public interface UserService {
      * @return the updated user
      * @throws NotFoundException if the user is not found
      */
-    UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException;
+    UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException, AlreadyExistingUserException;
 
     /**
      * Updates user password with its user email
@@ -146,5 +147,5 @@ public interface UserService {
      * @param userInfo
      * @return
      */
-    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException;
+    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException, AlreadyExistingUserException;
 }

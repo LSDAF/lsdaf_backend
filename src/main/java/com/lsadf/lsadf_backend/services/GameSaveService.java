@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
@@ -31,7 +32,7 @@ public interface GameSaveService {
      * @return the created game save
      * @throws NotFoundException the not found exception
      */
-    GameSaveEntity createGameSave(AdminGameSaveCreationRequest creationRequest) throws NotFoundException;
+    GameSaveEntity createGameSave(AdminGameSaveCreationRequest creationRequest) throws NotFoundException, AlreadyExistingGameSaveException;
 
     /**
      * Gets a game save
