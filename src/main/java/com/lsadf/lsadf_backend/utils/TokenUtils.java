@@ -15,15 +15,17 @@ import java.util.Date;
 public class TokenUtils {
     /**
      * Generates a token.
-     * @param localUser the local user
-     * @param secret the secret
+     *
+     * @param localUser         the local user
+     * @param secret            the secret
      * @param expirationSeconds the expiration seconds
+     * @param clock
      * @return the generated token
      */
     public static String generateToken(LocalUser localUser,
-                                        String secret,
-                                        int expirationSeconds) {
-        Date now = new Date();
+                                       String secret,
+                                       int expirationSeconds,
+                                       Date now) {
         long expirationMillis = expirationSeconds * 1000L;
         Date expiryDate = new Date(now.getTime() + expirationMillis);
 
