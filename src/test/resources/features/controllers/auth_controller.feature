@@ -3,6 +3,7 @@ Feature: Auth Controller tests
   Background:
     Given the BDD engine is ready
     And a clean database
+    And the time clock set to the present
 
   Scenario: A User registers its account with valid data
     When the user requests the endpoint to register a user with the following UserCreationRequest

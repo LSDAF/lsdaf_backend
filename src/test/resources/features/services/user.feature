@@ -4,6 +4,7 @@ Feature: User Service tests
   Background:
     Given the BDD engine is ready
     And a clean database
+    And the time clock set to the present
 
 
   Scenario: Create a new User

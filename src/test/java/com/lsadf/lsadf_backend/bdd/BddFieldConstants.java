@@ -125,6 +125,7 @@ public class BddFieldConstants {
     public static final class GlobalInfo {
         public static final String GAME_SAVE_COUNTER = "gameSaveCounter";
         public static final String USER_COUNTER = "userCounter";
+        public static final String NOW = "now";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

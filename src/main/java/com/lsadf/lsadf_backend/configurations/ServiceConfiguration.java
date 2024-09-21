@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Clock;
+
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.LOCAL_CACHE_SERVICE;
@@ -63,15 +65,17 @@ public class ServiceConfiguration {
     public RefreshTokenProvider refreshTokenProvider(UserService userService,
                                                      RefreshTokenRepository refreshTokenRepository,
                                                      @Qualifier(JWT_REFRESH_TOKEN_PARSER) JwtParser parser,
-                                                     AuthProperties authProperties) {
-        return new RefreshTokenProviderImpl(userService, refreshTokenRepository, parser, authProperties);
+                                                     AuthProperties authProperties,
+                                                     ClockService clockService) {
+        return new RefreshTokenProviderImpl(userService, refreshTokenRepository, parser, authProperties, clockService);
     }
 
     @Bean
     public TokenProvider tokenProvider(AuthProperties authProperties,
                                        @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
-                                       @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache) {
-        return new TokenProviderImpl(authProperties, parser, invalidatedJwtTokenCache);
+                                       @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache,
+                                       ClockService clockService) {
+        return new TokenProviderImpl(authProperties, parser, invalidatedJwtTokenCache, clockService);
     }
 
     @Bean
@@ -97,8 +101,14 @@ public class ServiceConfiguration {
                                      SearchService searchService,
                                      @Qualifier(LOCAL_CACHE_SERVICE) CacheService localCacheService,
                                      @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
-                                     CacheFlushService cacheFlushService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService);
+                                     CacheFlushService cacheFlushService,
+                                     ClockService clockService) {
+        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService, clockService);
+    }
+
+    @Bean
+    public ClockService clockService(Clock clock) {
+        return new ClockServiceImpl(clock);
     }
 
 }

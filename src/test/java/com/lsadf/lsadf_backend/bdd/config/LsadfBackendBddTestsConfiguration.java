@@ -17,6 +17,7 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
+import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import io.jsonwebtoken.JwtParser;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,8 +128,8 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public UserRepository userRepository() {
-        return new UserRepositoryMock();
+    public UserRepository userRepository(ClockService clockService) {
+        return new UserRepositoryMock(clockService);
     }
 
     @Bean
@@ -138,14 +140,16 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public RefreshTokenRepository refreshTokenRepository(UserRepository userRepository) {
-        return new RefreshTokenRepositoryMock(userRepository);
+    public RefreshTokenRepository refreshTokenRepository(UserRepository userRepository,
+                                                         ClockService clockService) {
+        return new RefreshTokenRepositoryMock(userRepository, clockService);
     }
 
     @Bean
     @Primary
-    public GameSaveRepository gameSaveRepository(CurrencyRepository currencyRepository) {
-        return new GameSaveRepositoryMock(currencyRepository);
+    public GameSaveRepository gameSaveRepository(ClockService clockService,
+                                                 CurrencyRepository currencyRepository) {
+        return new GameSaveRepositoryMock(currencyRepository, clockService);
     }
 
     @Bean
@@ -194,7 +198,9 @@ public class LsadfBackendBddTestsConfiguration {
     public RefreshTokenProvider refreshTokenProvider(UserService userService,
                                                      RefreshTokenRepository refreshTokenRepository,
                                                      @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
-                                                     AuthProperties authProperties) {
-        return new RefreshTokenProviderMock(userService, refreshTokenRepository, parser, authProperties);
+                                                     AuthProperties authProperties,
+                                                     ClockService clockService) {
+        return new RefreshTokenProviderMock(userService, refreshTokenRepository, parser, authProperties, clockService);
     }
+
 }

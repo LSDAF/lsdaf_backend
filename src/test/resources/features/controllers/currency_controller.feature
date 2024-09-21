@@ -4,6 +4,7 @@ Feature: Currency Controller tests
     Given the BDD engine is ready
     And the cache is enabled
     And a clean database
+    And the time clock set to the present
 
   Scenario: A user gets the currencies of one of his game saves with cache
     Given the following users

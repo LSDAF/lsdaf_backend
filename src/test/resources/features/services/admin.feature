@@ -4,6 +4,7 @@ Feature: Admin Service tests
     Given the BDD engine is ready
     And a clean database
     And the cache is enabled
+    And the time clock set to the present
 
   Scenario: Admin: Get all users
     Given the following users
@@ -148,12 +149,12 @@ Feature: Admin Service tests
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 124          | 1072       |
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
       | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 12           | 1223378989 |
-
+    And the time clock set to the following value 2024-01-01T00:00:00Z
     When an admin gets the global info
 
     Then I should return the following GlobalInfo
-      | userCounter | gameSaveCounter |
-      | 2           | 3               |
+      | userCounter | gameSaveCounter | now                  |
+      | 2           | 3               | 2024-01-01T00:00:00Z |
 
   Scenario: Admin: Get all game saves
     Given the following users
@@ -245,8 +246,8 @@ Feature: Admin Service tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
     And the following game saves
-      | id                                   | userId                               | gold        | healthPoints | attack     |
-      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |
+      | id                                   | userId                               | gold | healthPoints | attack |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272 | 12999        | 666    |
 
     When an admin deletes the game save with id 9fb0c57c-2488-44c9-8b8f-6d595fa44937
 

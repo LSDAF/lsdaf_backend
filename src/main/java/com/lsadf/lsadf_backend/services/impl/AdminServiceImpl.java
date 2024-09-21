@@ -1,8 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.exceptions.*;
-import com.lsadf.lsadf_backend.services.CacheFlushService;
-import com.lsadf.lsadf_backend.services.CacheService;
+import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
@@ -18,14 +17,11 @@ import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.services.AdminService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.SearchService;
-import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,6 +39,7 @@ public class AdminServiceImpl implements AdminService {
     private final CacheService localCacheService;
     private final CacheService redisCacheService;
     private final CacheFlushService cacheFlushService;
+    private final ClockService clockService;
 
     public AdminServiceImpl(UserService userService,
                             GameSaveService gameSaveService,
@@ -50,7 +47,8 @@ public class AdminServiceImpl implements AdminService {
                             SearchService searchService,
                             CacheService localCacheService,
                             CacheService redisCacheService,
-                            CacheFlushService cacheFlushService) {
+                            CacheFlushService cacheFlushService,
+                            ClockService clockService) {
         this.userService = userService;
         this.mapper = mapper;
         this.searchService = searchService;
@@ -58,6 +56,7 @@ public class AdminServiceImpl implements AdminService {
         this.localCacheService = localCacheService;
         this.redisCacheService = redisCacheService;
         this.cacheFlushService = cacheFlushService;
+        this.clockService = clockService;
     }
 
     /**
@@ -68,9 +67,11 @@ public class AdminServiceImpl implements AdminService {
     public GlobalInfo getGlobalInfo() {
         Long userCount = userService.getUsers().count();
         Long gameSaveCount = gameSaveService.getGameSaves().count();
+        Instant now = clockService.nowInstant();
 
         return GlobalInfo.builder()
                 .userCounter(userCount)
+                .now(now)
                 .gameSaveCounter(gameSaveCount)
                 .build();
     }
