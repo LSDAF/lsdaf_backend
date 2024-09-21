@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.bdd.given;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
@@ -28,6 +29,7 @@ public class BddGivenStepDefinitions extends BddLoader {
     public void given_the_bdd_engine_is_ready() {
         this.currencyStack.clear();
         this.gameSaveListStack.clear();
+        this.gameSaveEntityListStack.clear();
         this.exceptionStack.clear();
         this.gameSaveEntityListStack.clear();
         this.userListStack.clear();
@@ -37,11 +39,15 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.localUserMap.clear();
         this.userAdminDetailsStack.clear();
         this.responseStack.clear();
-        this.jwtStack.clear();
+        this.jwtTokenStack.clear();
+        this.refreshJwtTokenStack.clear();
         this.booleanStack.clear();
         this.localUserMap.clear();
 
-        this.localUserCache.invalidateAll();
+        this.localUserCache.clear();
+        this.currencyCache.clear();
+        this.gameSaveOwnershipCache.clear();
+        this.invalidatedJwtTokenCache.clear();
 
         BddUtils.initTestRestTemplate(testRestTemplate);
 
@@ -51,11 +57,11 @@ public class BddGivenStepDefinitions extends BddLoader {
     @Given("^the cache is enabled$")
     public void given_the_cache_is_enabled() {
         log.info("Checking cache status...");
-        boolean cacheEnabled = cacheService.isEnabled();
+        boolean cacheEnabled = redisCacheService.isEnabled();
         if (!cacheEnabled) {
             log.info("Cache is disabled. Enabling cache...");
-            cacheService.toggleCacheEnabling();
-            assertThat(cacheService.isEnabled()).isTrue();
+            redisCacheService.toggleCacheEnabling();
+            assertThat(redisCacheService.isEnabled()).isTrue();
             log.info("Cache enabled");
         } else {
             log.info("Cache is already enabled");
@@ -65,35 +71,52 @@ public class BddGivenStepDefinitions extends BddLoader {
     @Given("^the cache is disabled$")
     public void given_the_cache_is_disabled() {
         log.info("Checking cache status...");
-        boolean cacheEnabled = cacheService.isEnabled();
+        boolean cacheEnabled = redisCacheService.isEnabled();
         if (cacheEnabled) {
             log.info("Cache is enabled. Disabling cache...");
-            cacheService.toggleCacheEnabling();
-            assertThat(cacheService.isEnabled()).isFalse();
+            redisCacheService.toggleCacheEnabling();
+            assertThat(redisCacheService.isEnabled()).isFalse();
             log.info("Cache disabled");
         } else {
             log.info("Cache is already disabled");
         }
     }
 
+    @Given("^the following refresh tokens$")
+    public void given_the_following_refresh_tokens(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        log.info("Creating refresh tokens...");
+
+        rows.forEach(row -> {
+            RefreshTokenEntity tokenToSave = BddUtils.mapToRefreshTokenEntity(row, userRepository);
+            RefreshTokenEntity token = refreshTokenRepository.save(tokenToSave);
+            log.info("Created token: {}", token);
+        });
+
+        log.info("Refresh tokens created");
+    }
+
     @Given("^a clean database$")
     public void given_i_have_a_clean_database() throws NotFoundException {
         log.info("Cleaning database repositories...");
 
+        this.refreshTokenRepository.deleteAll();
         this.gameSaveRepository.deleteAll();
         this.currencyRepository.deleteAll();
         this.userRepository.deleteAll();
 
+        assertThat(refreshTokenRepository.count()).isEqualTo(0);
         assertThat(gameSaveRepository.count()).isEqualTo(0);
         assertThat(userRepository.count()).isEqualTo(0);
         assertThat(currencyRepository.count()).isEqualTo(0);
 
         // Clear caches
-        cacheService.clearCaches();
+        redisCacheService.clearCaches();
+        localCacheService.clearCaches();
 
-        assertThat(cacheService.getAllCurrencies()).isEmpty();
-        assertThat(cacheService.getAllCurrenciesHisto()).isEmpty();
-        assertThat(cacheService.getAllGameSaveOwnership()).isEmpty();
+        assertThat(currencyCache.getAll()).isEmpty();
+        assertThat(currencyCache.getAllHisto()).isEmpty();
+        assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
 
         log.info("Database repositories + caches cleaned");
 
@@ -101,6 +124,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         MockUtils.initGameSaveRepositoryMock(gameSaveRepository, currencyRepository);
         MockUtils.initUserRepositoryMock(userRepository);
         MockUtils.initCurrencyRepositoryMock(currencyRepository);
+        MockUtils.initRefreshTokenRepository(refreshTokenRepository, userRepository);
 
         // Init all other service mocks
         MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);
@@ -145,7 +169,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         rows.forEach(row -> {
             String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
             Currency currency = BddUtils.mapToCurrency(row);
-            cacheService.setCurrency(gameSaveId, currency);
+            currencyCache.set(gameSaveId, currency);
         });
 
         log.info("currency entries in cache created");
@@ -160,7 +184,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         rows.forEach(row -> {
             String gameSaveId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.GAME_SAVE_ID);
             String userId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.USER_EMAIL);
-            cacheService.setGameSaveOwnership(gameSaveId, userId);
+            gameSaveOwnershipCache.set(gameSaveId, userId);
             log.info("Game save ownership created: gameSaveId={}, userId={}", gameSaveId, userId);
         });
 
@@ -170,8 +194,9 @@ public class BddGivenStepDefinitions extends BddLoader {
     @Given("^the expiration seconds properties set to (.*)$")
     public void given_the_expiration_seconds_properties_set_to(int expirationSeconds) {
         log.info("Setting expiration seconds properties to {}", expirationSeconds);
-        this.cacheExpirationProperties.setCurrencyExpirationSeconds(expirationSeconds);
-        this.cacheExpirationProperties.setGameSaveOwnershipExpirationSeconds(expirationSeconds);
+        currencyCache.setExpiration(expirationSeconds);
+        gameSaveOwnershipCache.setExpiration(expirationSeconds);
+        invalidatedJwtTokenCache.setExpiration(expirationSeconds);
     }
 
 }

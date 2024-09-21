@@ -1,13 +1,11 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.CurrencyRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserDetailsServiceMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.impl.UserRepositoryMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.*;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -125,5 +123,32 @@ public class MockUtils {
             currencyRepositoryMock.deleteById(invocation.getArgument(0));
             return null;
         }).when(currencyRepository).deleteById(Mockito.anyString());
+    }
+
+    /**
+     * Initialize the RefreshTokenRepository mock
+     * @param refreshTokenRepository the RefreshTokenRepository mock
+     */
+    public static void initRefreshTokenRepository(RefreshTokenRepository refreshTokenRepository,
+                                                  UserRepository userRepository) {
+        Mockito.reset(refreshTokenRepository);
+        RefreshTokenRepositoryMock refreshTokenRepositoryMock = new RefreshTokenRepositoryMock(userRepository);
+        when(refreshTokenRepository.findAll()).thenReturn(refreshTokenRepositoryMock.findAll());
+        when(refreshTokenRepository.count()).thenReturn(refreshTokenRepositoryMock.count());
+        when(refreshTokenRepository.existsById(any())).thenAnswer(invocation -> refreshTokenRepositoryMock.existsById(invocation.getArgument(0)));
+        when(refreshTokenRepository.findById(Mockito.any())).thenAnswer(invocation -> refreshTokenRepositoryMock.findById(invocation.getArgument(0)));
+        when(refreshTokenRepository.save(Mockito.any())).thenAnswer(invocation -> refreshTokenRepositoryMock.save(invocation.getArgument(0)));
+        when(refreshTokenRepository.saveAll(Mockito.anyList())).thenAnswer(invocation -> refreshTokenRepositoryMock.saveAll(invocation.getArgument(0)));
+        doAnswer(invocation -> {
+            refreshTokenRepositoryMock.clear();
+            return null;
+        }).when(refreshTokenRepository).deleteAll();
+        doAnswer(invocation -> {
+            refreshTokenRepositoryMock.deleteById(invocation.getArgument(0));
+            return null;
+        }).when(refreshTokenRepository).deleteById(Mockito.anyString());
+        when(refreshTokenRepository.findByUserAndStatus(Mockito.any(), Mockito.any())).thenAnswer(invocation -> refreshTokenRepositoryMock.findByUserEmailAndStatus(invocation.getArgument(0), invocation.getArgument(1)));
+        when(refreshTokenRepository.findByToken(Mockito.anyString())).thenAnswer(invocation -> refreshTokenRepositoryMock.findByToken(invocation.getArgument(0)));
+        when(refreshTokenRepository.findAllByStatus(Mockito.any())).thenAnswer(invocation -> refreshTokenRepositoryMock.findAllByStatus(invocation.getArgument(0)));
     }
 }

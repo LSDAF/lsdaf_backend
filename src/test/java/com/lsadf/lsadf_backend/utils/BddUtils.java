@@ -4,6 +4,7 @@ import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.GameSave;
@@ -23,6 +24,7 @@ import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
+import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import lombok.experimental.UtilityClass;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -63,6 +65,42 @@ public class BddUtils {
         long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
 
         return new CurrencyRequest(goldLong, diamondLong, emeraldLong, amethystLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a RefreshTokenEntity
+     * @param row row from BDD table
+     * @param userRepository UserRepository
+     * @return RefreshTokenEntity
+     */
+    public static RefreshTokenEntity mapToRefreshTokenEntity(Map<String, String> row, UserRepository userRepository) {
+        String token = row.get(BddFieldConstants.RefreshToken.REFRESH_TOKEN);
+        String expirationDate = row.get(BddFieldConstants.RefreshToken.EXPIRATION_DATE);
+        String invalidationDate = row.get(BddFieldConstants.RefreshToken.INVALIDATION_DATE);
+        String status = row.get(BddFieldConstants.RefreshToken.STATUS);
+        String userEmail = row.get(BddFieldConstants.RefreshToken.USER_EMAIL);
+
+        Date expirationDateDate = null;
+        Date invalidationDateDate = null;
+
+        if (expirationDate != null) {
+            expirationDateDate = DateUtils.stringToDate(expirationDate);
+        }
+        if (invalidationDate != null) {
+            invalidationDateDate = DateUtils.stringToDate(invalidationDate);
+        }
+        RefreshTokenEntity.Status statusEnum = RefreshTokenEntity.Status.valueOf(status);
+
+        Optional<UserEntity> userEntityOptional = userRepository.findUserEntityByEmail(userEmail);
+        UserEntity userEntity = userEntityOptional.orElse(null);
+
+        return RefreshTokenEntity.builder()
+                .token(token)
+                .expirationDate(expirationDateDate)
+                .invalidationDate(invalidationDateDate)
+                .status(statusEnum)
+                .user(userEntity)
+                .build();
     }
 
     /**
@@ -508,6 +546,17 @@ public class BddUtils {
         Long nbUsersLong = nbUsers == null ? 0L : Long.parseLong(nbUsers);
 
         return new GlobalInfo(nbGameSavesLong, nbUsersLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a UserRefreshLoginRequest
+     * @param row row from BDD table
+     * @return UserRefreshLoginRequest
+     */
+    public static UserRefreshLoginRequest mapToUserRefreshLoginRequest(Map<String, String> row) {
+        String refreshToken = row.get(BddFieldConstants.UserRefreshLoginRequest.REFRESH_TOKEN);
+        String email = row.get(BddFieldConstants.UserRefreshLoginRequest.EMAIL);
+        return new UserRefreshLoginRequest(email, refreshToken);
     }
 
     /**

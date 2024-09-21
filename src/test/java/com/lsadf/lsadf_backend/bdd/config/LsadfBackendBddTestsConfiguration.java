@@ -1,41 +1,45 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
-import com.github.benmanes.caffeine.cache.Cache;
+import com.lsadf.lsadf_backend.bdd.config.mocks.impl.RefreshTokenProviderMock;
 import com.lsadf.lsadf_backend.bdd.config.mocks.impl.TokenAuthenticationFilterMock;
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
-import com.lsadf.lsadf_backend.properties.RedisProperties;
+import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import com.lsadf.lsadf_backend.services.UserService;
+import io.jsonwebtoken.JwtParser;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
+import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_FACEBOOK_CLIENT_REGISTRATION;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_GOOGLE_CLIENT_REGISTRATION;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -65,8 +69,19 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
-    @Qualifier("jwtStack")
+    @Qualifier(JWT_STACK)
     public Stack<String> jwtStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    public Stack<RefreshTokenEntity> refreshTokenEntityStack() {
+        return new Stack<>();
+    }
+
+    @Bean
+    @Qualifier(REFRESH_JWT_TOKEN_STACK)
+    public Stack<String> refreshJwtTokenStack() {
         return new Stack<>();
     }
 
@@ -124,6 +139,12 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
+    public RefreshTokenRepository refreshTokenRepository() {
+        return mock(RefreshTokenRepository.class);
+    }
+
+    @Bean
+    @Primary
     public GameSaveRepository gameSaveRepository() {
         return mock(GameSaveRepository.class);
     }
@@ -141,14 +162,14 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
-    @Qualifier("oAuth2GoogleClientRegistration")
+    @Qualifier(OAUTH2_GOOGLE_CLIENT_REGISTRATION)
     @Primary
     public ClientRegistration googleClientRegistration() {
         return mock(ClientRegistration.class);
     }
 
     @Bean
-    @Qualifier("oAuth2FacebookClientRegistration")
+    @Qualifier(OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
     @Primary
     public ClientRegistration facebookClientRegistration() {
         return mock(ClientRegistration.class);
@@ -165,18 +186,16 @@ public class LsadfBackendBddTestsConfiguration {
     public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider tokenProvider,
                                                                UserDetailsService userDetailsService,
                                                                Map<String, LocalUser> localUserMap,
-                                                               Cache<String, LocalUser> localUserCache) {
+                                                               Cache<LocalUser> localUserCache) {
         return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap, localUserCache);
     }
 
-//    @Bean
-//    @Primary
-//    @ConditionalOnProperty(prefix = "cache", name = "enabled", havingValue = "true")
-//    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
-//        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-//        configuration.setHostName(redisProperties.getHost());
-//        configuration.setPort(redisProperties.getPort());
-//
-//        return new LettuceConnectionFactory(configuration);
-//    }
+    @Bean
+    @Primary
+    public RefreshTokenProvider refreshTokenProvider(UserService userService,
+                                                     RefreshTokenRepository refreshTokenRepository,
+                                                     @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
+                                                     AuthProperties authProperties) {
+        return new RefreshTokenProviderMock(userService, refreshTokenRepository, parser, authProperties);
+    }
 }

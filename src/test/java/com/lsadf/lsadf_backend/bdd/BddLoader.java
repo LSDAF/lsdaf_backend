@@ -1,9 +1,12 @@
 package com.lsadf.lsadf_backend.bdd;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
-import com.lsadf.lsadf_backend.cache.CacheFlushService;
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
+import com.lsadf.lsadf_backend.services.CacheFlushService;
+import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
 import com.lsadf.lsadf_backend.controllers.impl.*;
@@ -16,6 +19,7 @@ import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -37,11 +41,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
+import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE;
 
 /**
  * BDD Loader class for the Cucumber tests
@@ -81,9 +89,21 @@ import java.util.Stack;
 @ActiveProfiles("test")
 public class BddLoader {
 
-    // LocalUser Cache
+    // Caches
     @Autowired
-    protected Cache<String, LocalUser> localUserCache;
+    protected Cache<LocalUser> localUserCache;
+
+    @Autowired
+    @Qualifier(INVALIDATED_JWT_TOKEN_CACHE)
+    protected Cache<String> invalidatedJwtTokenCache;
+
+    @Autowired
+    @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
+    protected Cache<String> gameSaveOwnershipCache;
+
+    @Autowired
+    protected HistoCache<Currency> currencyCache;
+
 
     // Repositories
     @Autowired
@@ -91,6 +111,9 @@ public class BddLoader {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     protected GameSaveRepository gameSaveRepository;
@@ -102,6 +125,9 @@ public class BddLoader {
     protected TokenProvider tokenProvider;
 
     @Autowired
+    protected RefreshTokenProvider refreshTokenProvider;
+
+    @Autowired
     protected PasswordEncoder passwordEncoder;
 
     // Services
@@ -109,7 +135,10 @@ public class BddLoader {
     protected CurrencyService currencyService;
 
     @Autowired
-    protected CacheService cacheService;
+    protected CacheService redisCacheService;
+
+    @Autowired
+    protected CacheService localCacheService;
 
     @Autowired
     protected CacheFlushService cacheFlushService;
@@ -127,6 +156,9 @@ public class BddLoader {
     protected AdminService adminService;
 
     // BDD Specific Stacks & Maps
+
+    @Autowired
+    protected Stack<RefreshTokenEntity> refreshTokenEntityStack;
 
     @Autowired
     protected Stack<List<GameSave>> gameSaveListStack;
@@ -165,8 +197,12 @@ public class BddLoader {
     protected Stack<Boolean> booleanStack;
 
     @Autowired
-    @Qualifier("jwtStack")
-    protected Stack<String> jwtStack;
+    @Qualifier(JWT_STACK)
+    protected Stack<String> jwtTokenStack;
+
+    @Autowired
+    @Qualifier(REFRESH_JWT_TOKEN_STACK)
+    protected Stack<String> refreshJwtTokenStack;
 
     // Properties
     @Autowired

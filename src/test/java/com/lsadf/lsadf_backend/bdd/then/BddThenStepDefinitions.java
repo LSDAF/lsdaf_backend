@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
+import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
@@ -19,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.RefreshToken.REFRESH_TOKEN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
@@ -135,6 +138,73 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_the_response_status_code_should_be(int statusCode) {
         int actual = responseStack.peek().getStatus();
         assertThat(actual).isEqualTo(statusCode);
+    }
+
+    @Then("^I should have an unexpired and (.*) refresh token in DB for the user with email (.*)$")
+    public void then_i_should_have_an_unexpired_and_status_refresh_token_in_db(String status, String userEmail) {
+        UserEntity user = userRepository.findUserEntityByEmail(userEmail).orElseThrow();
+        Optional<RefreshTokenEntity> actual = refreshTokenRepository.findByUserAndStatus(user, RefreshTokenEntity.Status.valueOf(status));
+        assertThat(actual).isNotEmpty();
+
+    }
+
+    @Then("^the refresh token should be invalidated$")
+    public void then_the_refresh_token_should_be_invalidated() {
+        String actual = refreshJwtTokenStack.peek();
+        Optional<RefreshTokenEntity> refreshTokenEntity = refreshTokenRepository.findByToken(actual);
+        assertThat(refreshTokenEntity).isNotEmpty();
+        assertThat(refreshTokenEntity).isNotNull();
+
+        RefreshTokenEntity refreshToken = refreshTokenEntity.get();
+        assertThat(refreshToken.getStatus()).isEqualTo(RefreshTokenEntity.Status.INACTIVE);
+    }
+
+    @Then("^the used token should be invalidated$")
+    public void then_the_used_token_should_be_invalidated() {
+        String actual = jwtTokenStack.peek();
+
+        Optional<String> result = invalidatedJwtTokenCache.get(actual);
+        assertThat(result).isNotEmpty();
+    }
+
+    @Then("^I should have the following refresh tokens in DB$")
+    public void then_i_should_have_the_following_refresh_tokens_in_db(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        Iterable<RefreshTokenEntity> actualList = refreshTokenRepository.findAll();
+
+        for (var elt : actualList) {
+            Map<String, String> row = rows.stream()
+                    .filter(r -> r.get(REFRESH_TOKEN).equals(elt.getToken()))
+                    .findFirst()
+                    .orElseThrow();
+
+            RefreshTokenEntity expected = BddUtils.mapToRefreshTokenEntity(row, userRepository);
+
+            assertThat(elt)
+                    .usingRecursiveComparison()
+                    .ignoringFields("id", "createdAt", "updatedAt")
+                    .isEqualTo(expected);
+        }
+    }
+
+    @Then("^I should return the following refresh token$")
+    public void then_i_should_return_the_following_refresh_token(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        RefreshTokenEntity actual = refreshTokenEntityStack.peek();
+        RefreshTokenEntity expected = BddUtils.mapToRefreshTokenEntity(row, userRepository);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "createdAt", "updatedAt","user","expirationDate")
+                .isEqualTo(expected);
     }
 
     @Then("^the response should have the following UserInfo$")
@@ -355,10 +425,16 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(exceptionStack.isEmpty()).isTrue();
     }
 
-    @Then("^the token from the response should be valid$")
-    public void then_the_token_from_the_response_should_be_valid() {
+    @Then("^the token from the response should not be null$")
+    public void then_the_token_from_the_response_should_not_be_null() {
         JwtAuthentication jwtAuthentication = (JwtAuthentication) responseStack.peek().getData();
         assertThat(jwtAuthentication.getAccessToken()).isNotNull();
+    }
+
+    @Then("^the refresh token from the response should not be null$")
+    public void then_the_refresh_token_from_the_response_should_not_be_null() {
+        JwtAuthentication jwtAuthentication = (JwtAuthentication) responseStack.peek().getData();
+        assertThat(jwtAuthentication.getRefreshToken()).isNotNull();
     }
 
     @Then("^the JwtAuthentication should contain the following UserInfo$")

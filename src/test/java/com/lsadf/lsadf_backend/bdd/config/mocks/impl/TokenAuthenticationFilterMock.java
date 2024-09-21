@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.impl;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.lsadf.lsadf_backend.cache.CacheService;
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
@@ -27,7 +26,7 @@ public class TokenAuthenticationFilterMock extends TokenAuthenticationFilter {
     public TokenAuthenticationFilterMock(TokenProvider tokenProvider,
                                          UserDetailsService userDetailsService,
                                          Map<String, LocalUser> localUserMap,
-                                         Cache<String, LocalUser> localUserCache) {
+                                         Cache<LocalUser> localUserCache) {
         super(tokenProvider, userDetailsService, localUserCache);
         this.localUserMap = localUserMap;
     }
