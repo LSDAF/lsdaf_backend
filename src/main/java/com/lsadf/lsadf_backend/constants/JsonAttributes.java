@@ -21,10 +21,10 @@ public final class JsonAttributes {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
-        public static final String HP = "health_points";
-        public static final String USER_ID = "user_id";
-        public static final String USER_EMAIL = "user_email";
-        public static final String ATTACK = "attack";
+        public static final String NICKNAME = "nickname";
+        public static final String CURRENCIES = "currencies";
+        public static final String CHARACTERISTICS = "characteristics";
+        public static final String STAGES = "stages";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -64,11 +64,26 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Currency {
+    public static final class Characteristics {
+        public static final String ATTACK = "attack";
+        public static final String CRITICAL_CHANCE = "critical_chance";
+        public static final String CRITICAL_DAMAGE = "critical_damage";
+        public static final String HEALTH_POINTS = "health_points";
+        public static final String RESISTANCE = "resistance";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Currencies {
         public static final String GOLD = "gold";
         public static final String DIAMOND = "diamond";
         public static final String EMERALD = "emerald";
         public static final String AMETHYST = "amethyst";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Stages {
+        public static final String MAX_STAGE = "max_stage";
+        public static final String CURRENT_STAGE = "current_stage";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

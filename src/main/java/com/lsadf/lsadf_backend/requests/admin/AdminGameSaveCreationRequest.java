@@ -9,10 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
-
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currencies.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 
 /**

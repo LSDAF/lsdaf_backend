@@ -7,17 +7,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.lsadf.lsadf_backend.constants.JsonAttributes;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
 
+/**
+ * Currency DTO
+ */
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "Currency", description = "Currency object")
+@Schema(name = "Currencies", description = "Currencies object")
 @Data
 @Builder
-@JsonPropertyOrder({GOLD, DIAMOND, EMERALD, AMETHYST})
+@JsonPropertyOrder({
+        JsonAttributes.Currencies.GOLD,
+        JsonAttributes.Currencies.DIAMOND,
+        JsonAttributes.Currencies.EMERALD,
+        JsonAttributes.Currencies.AMETHYST
+})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Currency {
+public class Currencies {
     @Schema(description = "The amount of gold", example = "100")
     private Long gold;
     @Schema(description = "The amount of diamond", example = "100")

@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.models;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
@@ -10,9 +9,6 @@ import lombok.*;
 
 import java.util.Date;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 
 /**
  * Game Save DTO
@@ -22,53 +18,41 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ID, USER_ID, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
+@JsonPropertyOrder({
+        JsonAttributes.ID,
+        JsonAttributes.GameSave.NICKNAME,
+        JsonAttributes.GameSave.CURRENCIES,
+        JsonAttributes.GameSave.CHARACTERISTICS,
+        JsonAttributes.GameSave.STAGES,
+        JsonAttributes.CREATED_AT,
+        JsonAttributes.UPDATED_AT,
+})
 public class GameSave {
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;
 
-    @JsonProperty(value = USER_ID)
-    private String userId;
+    @JsonProperty(value = JsonAttributes.GameSave.NICKNAME)
+    @Schema(description = "Game nickname", example = "xXxGamerxXx")
+    private String nickname;
 
-    @JsonProperty(value = USER_EMAIL)
-    private String userEmail;
+    @JsonProperty(value = JsonAttributes.GameSave.CURRENCIES)
+    @Schema(description = "Game currencies")
+    private Currencies currencies;
 
-    @JsonProperty(value = GOLD)
-    @Schema(description = "Gold amount", example = "260000")
-    @Builder.Default
-    private long gold = 0L;
+    @JsonProperty(value = JsonAttributes.GameSave.CHARACTERISTICS)
+    @Schema(description = "Game characteristics")
+    private Characteristics characteristics;
 
-    @JsonProperty(value = DIAMOND)
-    @Schema(description = "Diamond amount", example = "260")
-    @Builder.Default
-    private long diamond = 0L;
+    @JsonProperty(value = JsonAttributes.GameSave.STAGES)
+    @Schema(description = "Game stages")
+    private Stages stages;
 
-    @JsonProperty(value = EMERALD)
-    @Schema(description = "Emerald amount", example = "260")
-    @Builder.Default
-    private long emerald = 0L;
-
-    @JsonProperty(value = AMETHYST)
-    @Schema(description = "Amethyst amount", example = "260")
-    @Builder.Default
-    private long amethyst = 0L;
-
-    @JsonProperty(value = HP)
-    @Schema(description = "Health points", example = "50")
-    @Builder.Default
-    private long healthPoints = 10;
-
-    @JsonProperty(value = ATTACK)
-    @Schema(description = "Attack points", example = "260")
-    @Builder.Default
-    private long attack = 1;
-
-    @JsonProperty(value = CREATED_AT)
+    @JsonProperty(value = JsonAttributes.CREATED_AT)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
     private Date createdAt;
 
-    @JsonProperty(value = UPDATED_AT)
+    @JsonProperty(value = JsonAttributes.UPDATED_AT)
     @Schema(description = "Update date", example = "2022-01-01 00:00:00.000")
     private Date updatedAt;
 }
