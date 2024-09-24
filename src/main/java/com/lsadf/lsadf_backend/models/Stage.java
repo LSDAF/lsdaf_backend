@@ -20,16 +20,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @JsonPropertyOrder({
-        JsonAttributes.Stages.MAX_STAGE,
-        JsonAttributes.Stages.CURRENT_STAGE,
+        JsonAttributes.Stage.MAX_STAGE,
+        JsonAttributes.Stage.CURRENT_STAGE,
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Stages {
-    @JsonProperty(value = JsonAttributes.Stages.MAX_STAGE)
+public class Stage {
+    @JsonProperty(value = JsonAttributes.Stage.MAX_STAGE)
     @Schema(description = "The max stage", example = "10")
     private int max_stage;
 
-    @JsonProperty(value = JsonAttributes.Stages.CURRENT_STAGE)
+    @JsonProperty(value = JsonAttributes.Stage.CURRENT_STAGE)
     @Schema(description = "The current stage", example = "10")
     private int current_stage;
 }

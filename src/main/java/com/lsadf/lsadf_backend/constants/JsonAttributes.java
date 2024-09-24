@@ -64,7 +64,7 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Characteristics {
+    public static final class Characteristic {
         public static final String ATTACK = "attack";
         public static final String CRITICAL_CHANCE = "critical_chance";
         public static final String CRITICAL_DAMAGE = "critical_damage";
@@ -73,7 +73,7 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Currencies {
+    public static final class Currency {
         public static final String GOLD = "gold";
         public static final String DIAMOND = "diamond";
         public static final String EMERALD = "emerald";
@@ -81,7 +81,7 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Stages {
+    public static final class Stage {
         public static final String MAX_STAGE = "max_stage";
         public static final String CURRENT_STAGE = "current_stage";
     }

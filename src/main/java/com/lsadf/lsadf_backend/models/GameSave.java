@@ -38,15 +38,15 @@ public class GameSave {
 
     @JsonProperty(value = JsonAttributes.GameSave.CURRENCIES)
     @Schema(description = "Game currencies")
-    private Currencies currencies;
+    private Currency currency;
 
     @JsonProperty(value = JsonAttributes.GameSave.CHARACTERISTICS)
     @Schema(description = "Game characteristics")
-    private Characteristics characteristics;
+    private Characteristic characteristic;
 
     @JsonProperty(value = JsonAttributes.GameSave.STAGES)
     @Schema(description = "Game stages")
-    private Stages stages;
+    private Stage stage;
 
     @JsonProperty(value = JsonAttributes.CREATED_AT)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")

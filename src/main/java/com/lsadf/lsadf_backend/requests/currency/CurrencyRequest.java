@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currencies.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currencies.AMETHYST;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.AMETHYST;
 
 @Data
 @NoArgsConstructor

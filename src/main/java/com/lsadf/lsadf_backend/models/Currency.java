@@ -19,13 +19,13 @@ import com.lsadf.lsadf_backend.constants.JsonAttributes;
 @Data
 @Builder
 @JsonPropertyOrder({
-        JsonAttributes.Currencies.GOLD,
-        JsonAttributes.Currencies.DIAMOND,
-        JsonAttributes.Currencies.EMERALD,
-        JsonAttributes.Currencies.AMETHYST
+        JsonAttributes.Currency.GOLD,
+        JsonAttributes.Currency.DIAMOND,
+        JsonAttributes.Currency.EMERALD,
+        JsonAttributes.Currency.AMETHYST
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Currencies {
+public class Currency {
     @Schema(description = "The amount of gold", example = "100")
     private Long gold;
     @Schema(description = "The amount of diamond", example = "100")

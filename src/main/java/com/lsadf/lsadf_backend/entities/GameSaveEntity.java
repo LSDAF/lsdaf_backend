@@ -20,7 +20,6 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class GameSaveEntity extends AEntity {
-
     @Serial
     private static final long serialVersionUID = 7786624859103259009L;
 

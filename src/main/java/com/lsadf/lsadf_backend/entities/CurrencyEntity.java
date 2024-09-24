@@ -7,7 +7,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 @Data
 @Entity(name = EntityAttributes.Currencies.CURRENCY_ENTITY)

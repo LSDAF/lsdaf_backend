@@ -20,31 +20,31 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @JsonPropertyOrder({
-        JsonAttributes.Characteristics.ATTACK,
-        JsonAttributes.Characteristics.CRITICAL_CHANCE,
-        JsonAttributes.Characteristics.CRITICAL_DAMAGE,
-        JsonAttributes.Characteristics.HEALTH_POINTS,
-        JsonAttributes.Characteristics.RESISTANCE,
+        JsonAttributes.Characteristic.ATTACK,
+        JsonAttributes.Characteristic.CRITICAL_CHANCE,
+        JsonAttributes.Characteristic.CRITICAL_DAMAGE,
+        JsonAttributes.Characteristic.HEALTH_POINTS,
+        JsonAttributes.Characteristic.RESISTANCE,
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Characteristics {
-    @JsonProperty(value = JsonAttributes.Characteristics.ATTACK)
+public class Characteristic {
+    @JsonProperty(value = JsonAttributes.Characteristic.ATTACK)
     @Schema(description = "The attack level of the character", example = "10")
     private int attack_level;
 
-    @JsonProperty(value = JsonAttributes.Characteristics.CRITICAL_CHANCE)
+    @JsonProperty(value = JsonAttributes.Characteristic.CRITICAL_CHANCE)
     @Schema(description = "The critical chance level of the character", example = "10")
     private int critical_chance_level;
 
-    @JsonProperty(value = JsonAttributes.Characteristics.CRITICAL_DAMAGE)
+    @JsonProperty(value = JsonAttributes.Characteristic.CRITICAL_DAMAGE)
     @Schema(description = "The critical damage level of the character", example = "10")
     private int critical_damage_level;
 
-    @JsonProperty(value = JsonAttributes.Characteristics.HEALTH_POINTS)
+    @JsonProperty(value = JsonAttributes.Characteristic.HEALTH_POINTS)
     @Schema(description = "The health points level of the character", example = "10")
     private int health_points_level;
 
-    @JsonProperty(value = JsonAttributes.Characteristics.RESISTANCE)
+    @JsonProperty(value = JsonAttributes.Characteristic.RESISTANCE)
     @Schema(description = "The resistance level of the character", example = "10")
     private int resistance_level;
 }

@@ -34,7 +34,7 @@
         <assertj.version>3.24.2</assertj.version>
         <cucumber.version>7.14.0</cucumber.version>
         <copy-rename-maven-plugin.version>1.0</copy-rename-maven-plugin.version>
-        <lombok-plugin.version>1.18.20.0</lombok-plugin.version>
+        <lombok-plugin.version>1.18.30</lombok-plugin.version>
         <maven-javadoc.version>3.7.0</maven-javadoc.version>
         <postgresql.version>42.7.3</postgresql.version>
         <swagger.version>2.5.0</swagger.version>

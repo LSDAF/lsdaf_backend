@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.USER_ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 

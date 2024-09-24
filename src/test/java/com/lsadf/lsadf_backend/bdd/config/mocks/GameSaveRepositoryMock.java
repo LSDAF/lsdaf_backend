@@ -5,10 +5,8 @@ import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
-import com.lsadf.lsadf_backend.utils.DateUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Clock;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
