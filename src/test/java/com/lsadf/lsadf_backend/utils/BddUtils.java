@@ -116,6 +116,7 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
         String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
         String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
@@ -140,6 +141,7 @@ public class BddUtils {
 
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
                 .user(userOptional.orElse(null))
+                .nickname(nickname)
                 .attack(attackLong)
                 .healthPoints(healthPointsLong)
                 .build();

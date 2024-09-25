@@ -23,6 +23,5 @@ public class GameSaveUpdateRequest {
     private long attack;
 
     @JsonProperty(value = NICKNAME)
-    @NotEmpty
     private String nickname;
 }
