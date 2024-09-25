@@ -276,6 +276,7 @@ public class BddUtils {
         String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
         String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
         String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long gold = goldString != null ? Long.parseLong(goldString) : null;
         Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
@@ -289,6 +290,7 @@ public class BddUtils {
                 .attack(attack)
                 .userId(userId)
                 .userEmail(userEmail)
+                .nickname(nickname)
                 .id(id)
                 .healthPoints(healthPoints)
                 .gold(gold)
