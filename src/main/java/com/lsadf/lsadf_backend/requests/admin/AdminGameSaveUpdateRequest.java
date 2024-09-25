@@ -17,6 +17,9 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Data
 @Builder
 public class AdminGameSaveUpdateRequest {
+    @JsonProperty(value = NICKNAME)
+    @Schema(description = "Nickname of the user", example = "test")
+    private String nickname;
 
     @JsonProperty(value = GOLD)
     @PositiveOrZero

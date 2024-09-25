@@ -334,8 +334,8 @@ Feature: Admin Service tests
       | 666     | 666     | 666      | 666  | 666          | 666    | paul.ochon@test.com | f98b0292-1ed9-4f3b-b7aa-72846916beb9 |
 
     Then I should return the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | f98b0292-1ed9-4f3b-b7aa-72846916beb9 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 666  | 666     | 666     | 666      | 666          | 666    | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | f98b0292-1ed9-4f3b-b7aa-72846916beb9 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 666  | 666     | 666     | 666      | 666          | 666    | paul.ochon@test.com | Player   |
 
   Scenario: Admin: Create a new save game with invalid AdminGameSaveCreationRequest
     Given the following users
