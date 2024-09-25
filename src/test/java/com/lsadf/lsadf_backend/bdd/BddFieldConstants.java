@@ -49,6 +49,7 @@ public class BddFieldConstants {
         public static final String ID = BddFieldConstants.ID;
         public static final String USER_ID = "userId";
         public static final String USER_EMAIL = "userEmail";
+        public static final String NICKNAME = "nickname";
         public static final String GOLD = "gold";
         public static final String DIAMOND = "diamond";
         public static final String EMERALD = "emerald";

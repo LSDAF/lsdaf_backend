@@ -42,6 +42,11 @@ public class GameSaveEntity extends AEntity {
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
     private long attack = 1L;
 
+    @Builder.Default
+    @PositiveOrZero
+    @Column(name = EntityAttributes.GameSave.GAME_SAVE_NICKNAME)
+    private String nickname = "Player";
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_CURRENCY_ID)
     private CurrencyEntity currencyEntity;

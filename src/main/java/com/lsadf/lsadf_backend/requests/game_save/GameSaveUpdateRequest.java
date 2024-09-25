@@ -19,4 +19,7 @@ public class GameSaveUpdateRequest {
     @JsonProperty(value = ATTACK)
     @PositiveOrZero
     private long attack;
+
+    @JsonProperty(value = NICKNAME)
+    private String nickname;
 }

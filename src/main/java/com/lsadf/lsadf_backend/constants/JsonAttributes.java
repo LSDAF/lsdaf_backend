@@ -25,6 +25,7 @@ public final class JsonAttributes {
         public static final String USER_ID = "user_id";
         public static final String USER_EMAIL = "user_email";
         public static final String ATTACK = "attack";
+        public static final String NICKNAME = "nickname";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

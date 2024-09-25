@@ -359,12 +359,13 @@ public class BddUtils {
     public static GameSaveUpdateRequest mapToGameSaveUpdateUserRequest(Map<String, String> row) {
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
         Long attackLong = attack == null ? null : Long.parseLong(attack);
 
 
-        return new GameSaveUpdateRequest(healthPointsLong, attackLong);
+        return new GameSaveUpdateRequest(healthPointsLong, attackLong, nickname);
     }
 
     /**
