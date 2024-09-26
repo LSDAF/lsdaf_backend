@@ -335,6 +335,7 @@ public class BddUtils {
         String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long goldLong = gold == null ? null : Long.parseLong(gold);
         Long diamondLong = diamond == null ? null : Long.parseLong(diamond);
@@ -351,6 +352,7 @@ public class BddUtils {
                 .amethyst(amethystLong)
                 .healthPoints(healthPointsLong)
                 .attack(attackLong)
+                .nickname(nickname)
                 .build();
     }
 

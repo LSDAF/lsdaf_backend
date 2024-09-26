@@ -228,17 +228,17 @@ Feature: Admin Service tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
     And the following game saves
-      | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     |
-      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 10      | 10      | 10       | 12999        | 666        |
-      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 100     | 100     | 100      | 12           | 1223378989 |
+      | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     | nickname |
+      | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 10      | 10      | 10       | 12999        | 666        | player1  |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 29289027267 | 100     | 100     | 100      | 12           | 1223378989 | player2  |
 
     When an admin updates the game save with id 7be1f95f-fd42-4f0e-863c-093a6b4eeeca with the following GameSaveUpdateAdminRequest
-      | gold | diamond | emerald | amethyst | healthPoints | attack |
-      | 500  | 100     | 100     | 100      | 11289        | 5000   |
+      | gold | diamond | emerald | amethyst | healthPoints | attack | nickname |
+      | 500  | 100     | 100     | 100      | 11289        | 5000   | player3  |
 
     Then I should return the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            |
-      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 500  | 100     | 100     | 100      | 11289        | 5000   | paul.itesse@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 7be1f95f-fd42-4f0e-863c-093a6b4eeeca | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 500  | 100     | 100     | 100      | 11289        | 5000   | paul.itesse@test.com | player3  |
 
   Scenario: Admin: Delete a save game with an existing id
     Given the following users

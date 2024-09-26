@@ -183,6 +183,11 @@ public class GameSaveServiceImpl implements GameSaveService {
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, AdminGameSaveUpdateRequest adminUpdateRequest) {
         boolean hasUpdates = false;
 
+        if (!Objects.equals(gameSaveEntity.getNickname(), adminUpdateRequest.getNickname())) {
+            gameSaveEntity.setNickname(adminUpdateRequest.getNickname());
+            hasUpdates = true;
+        }
+
         if (gameSaveEntity.getAttack() != adminUpdateRequest.getAttack()) {
             gameSaveEntity.setAttack(adminUpdateRequest.getAttack());
             hasUpdates = true;

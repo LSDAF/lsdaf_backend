@@ -366,22 +366,22 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack |
-      | 10000 | 10000        | 10000  |
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | player3  |
 
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com |
+      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | player3  |
 
   Scenario: An admin user requests the update of an existing game save with invalid data
     Given the following users
