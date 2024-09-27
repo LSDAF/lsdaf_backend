@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,7 +123,7 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
-        Set<UserRole> roles = userEntity.getRoles().stream().collect(Collectors.toSet());
+        Set<UserRole> roles = new HashSet<>(userEntity.getRoles());
         return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), userEntity.isVerified(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
