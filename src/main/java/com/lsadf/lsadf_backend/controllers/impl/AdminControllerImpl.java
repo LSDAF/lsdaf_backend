@@ -2,10 +2,7 @@ package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.User;
@@ -316,6 +313,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         } catch (NotFoundException e) {
             log.error("Game Save with id {} not found", gameSaveId);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        } catch (AlreadyTakenNicknameException e) {
+            log.error("AlreadyTakenNicknameException exception while saving game: ", e);
+            return generateResponse(HttpStatus.BAD_REQUEST, "The given nickname is already taken.", null);
         } catch (Exception e) {
             log.error("Error while updating game save: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);

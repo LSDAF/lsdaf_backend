@@ -132,3 +132,24 @@ Feature: GameSave Controller tests
       | 11289        | 5000   | player2  |
 
     Then the response status code should be 200
+
+  Scenario: A user updates an owned GameSave with valid data but the nickname is already taken
+    Given the following users
+      | id                                   | name       | email                | password |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 |
+
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 1000 | 100          | 10     | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to update a GameSave with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+      | healthPoints | attack | nickname |
+      | 11289        | 5000   | player1  |
+
+    Then the response status code should be 400

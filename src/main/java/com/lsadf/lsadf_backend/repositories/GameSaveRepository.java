@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -15,6 +16,8 @@ import java.util.stream.Stream;
 public interface GameSaveRepository extends CrudRepository<GameSaveEntity, String> {
     @Query(value = "SELECT * FROM T_GAME_SAVE", nativeQuery = true)
     Stream<GameSaveEntity> findAllGameSaves();
+
+    Optional<GameSaveEntity> findGameSaveEntityByNickname(String nickname);
 
     List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userId);
 }

@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.services.impl;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
@@ -119,9 +120,14 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException {
+    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+
+        if (gameSaveRepository.findGameSaveEntityByNickname(updateRequest.getNickname()).isPresent()) {
+            throw new AlreadyTakenNicknameException("Game save with nickname " + updateRequest.getNickname() + " already exists");
+        }
+
         return updateGameSaveEntity(currentGameSave, updateRequest);
     }
 
@@ -130,9 +136,14 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException {
+    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+
+        if (gameSaveRepository.findGameSaveEntityByNickname(updateRequest.getNickname()).isPresent()) {
+            throw new AlreadyTakenNicknameException("Game save with nickname " + updateRequest.getNickname() + " already exists");
+        }
+
         return updateGameSaveEntity(currentGameSave, updateRequest);
     }
 
