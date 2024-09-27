@@ -24,9 +24,9 @@ Feature: Refresh Token Provider tests
       | id                                   | name       | email               | password | roles      |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
     And the following refresh tokens
-      | refreshToken | status | userEmail            | expirationDate          |
+      | refreshToken | status | userEmail           | expirationDate          |
       | XXX          | ACTIVE | paul.ochon@test.com | 2070-12-12 00:00:00.000 |
-    When we want to invalidate the token of the user with email paul.itesse@test.com
+    When we want to invalidate the token XXX of the user with email paul.itesse@test.com
 
     Then I should throw a NotFoundException
 
@@ -38,9 +38,9 @@ Feature: Refresh Token Provider tests
     And the following refresh tokens
       | refreshToken | status | userEmail           | expirationDate          |
       | XXX          | ACTIVE | paul.ochon@test.com | 2070-12-12 00:00:00.000 |
-    When we want to invalidate the token of the user with email paul.ochon@test.com
+    When we want to invalidate the token XXX of the user with email paul.ochon@test.com
 
-    Then I should have an unexpired and INACTIVE refresh token in DB for the user with email paul.ochon@test.com
+    Then I should have an unexpired and INVALIDATED refresh token in DB for the user with email paul.ochon@test.com
 
   Scenario: Delete expired tokens
     Given the following users
@@ -53,15 +53,15 @@ Feature: Refresh Token Provider tests
       | 454c8f96-2f9c-4362-8a73-3017131a55a4 | Paul ISSE   | paul.isse@test.com   | toto1234 | USER  |
 
     And the following refresh tokens
-      | refreshToken | status   | userEmail            | expirationDate          |
-      | XXX          | ACTIVE   | paul.ochon@test.com  | 2070-12-12 00:00:00.000 |
-      | YYY          | INACTIVE | paul.itesse@test.com | 2022-12-12 00:00:00.000 |
-      | ZZZ          | ACTIVE   | paul.emploi@test.com | 2070-12-12 00:00:00.000 |
-      | AAA          | INACTIVE | paul.aire@test.com   | 2015-12-12 00:00:00.000 |
-      | BBB          | ACTIVE   | paul.itique@test.com | 2070-12-12 00:00:00.000 |
-      | CCC          | ACTIVE   | paul.isse@test.com   | 2070-12-12 00:00:00.000 |
+      | refreshToken | status  | userEmail            | expirationDate          |
+      | XXX          | ACTIVE  | paul.ochon@test.com  | 2070-12-12 00:00:00.000 |
+      | YYY          | EXPIRED | paul.itesse@test.com | 2022-12-12 00:00:00.000 |
+      | ZZZ          | ACTIVE  | paul.emploi@test.com | 2070-12-12 00:00:00.000 |
+      | AAA          | EXPIRED | paul.aire@test.com   | 2015-12-12 00:00:00.000 |
+      | BBB          | ACTIVE  | paul.itique@test.com | 2070-12-12 00:00:00.000 |
+      | CCC          | ACTIVE  | paul.isse@test.com   | 2070-12-12 00:00:00.000 |
 
-    When we want to delete the expired tokens
+    When we want to delete the expired refresh tokens
 
     Then I should have the following refresh tokens in DB
       | refreshToken | status | userEmail            | expirationDate          |
