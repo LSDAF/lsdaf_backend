@@ -5,12 +5,13 @@ import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.converters.SocialProviderConverter;
 import com.lsadf.lsadf_backend.converters.UserRoleConverter;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serial;
 import java.util.HashSet;
@@ -61,6 +62,9 @@ public class UserEntity extends AEntity {
     @Size(min = 8)
     private String password;
 
+    @Column(name = EntityAttributes.User.USER_VERIFIED)
+    private boolean verified;
+
     @Convert(converter = SocialProviderConverter.class)
     private SocialProvider provider;
 
@@ -76,6 +80,11 @@ public class UserEntity extends AEntity {
     @Builder.Default
     private Set<RefreshTokenEntity> refreshTokens = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Builder.Default
+    private Set<UserVerificationTokenEntity> validationTokens = new HashSet<>();
 
     @Column(name = EntityAttributes.User.USER_ROLES)
     @Convert(converter = UserRoleConverter.class)
