@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserVerificationTokenRepository extends CrudRepository<UserVerificationTokenEntity, String> {
-    Optional<UserVerificationTokenEntity> findUserValidationTokenEntityByValidationToken(String token);
+    Optional<UserVerificationTokenEntity> findUserValidationTokenEntityByToken(String token);
     Iterable<UserVerificationTokenEntity> findAllByUserEmail(String email);
 }
