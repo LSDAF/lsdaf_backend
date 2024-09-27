@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
+import com.lsadf.lsadf_backend.anotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;

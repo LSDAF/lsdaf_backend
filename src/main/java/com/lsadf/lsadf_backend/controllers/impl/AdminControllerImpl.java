@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
+import com.lsadf.lsadf_backend.anotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
 import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.models.GameSave;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;

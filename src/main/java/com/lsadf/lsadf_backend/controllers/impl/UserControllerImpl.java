@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.anotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
@@ -11,7 +10,6 @@ import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
-import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
