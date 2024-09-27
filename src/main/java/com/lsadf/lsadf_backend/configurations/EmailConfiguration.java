@@ -24,7 +24,7 @@ public class EmailConfiguration {
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", emailProperties.isAuth());
-        props.put("mail.smtp.starttls.enable", emailProperties.isStarttlsEnable());
+        props.put("mail.smtp.starttls.enable", emailProperties.isStarttlsEnabled());
         props.put("mail.smtp.starttls.required", emailProperties.isStarttlsRequired());
         props.put("mail.debug", emailProperties.isDebug());
         props.put("mail.smtp.connectiontimeout", emailProperties.getConnectionTimeout());

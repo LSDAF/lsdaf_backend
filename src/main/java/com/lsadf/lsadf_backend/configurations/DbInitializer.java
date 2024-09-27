@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class DbInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
-    private AtomicBoolean isAlreadySetup = new AtomicBoolean(false);
+    private final AtomicBoolean isAlreadySetup = new AtomicBoolean(false);
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -46,7 +46,8 @@ public class DbInitializer implements ApplicationListener<ContextRefreshedEvent>
                     userService.createUser(user.getEmail(),
                             user.getPassword(),
                             SocialProvider.LOCAL,
-                            Optional.of(user.getRoles()), user.getName());
+                            user.getRoles(),
+                            user.getName());
                 } catch (AlreadyExistingUserException e) {
                     throw new RuntimeException(e);
                 }

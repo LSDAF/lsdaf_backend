@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
@@ -55,7 +56,7 @@ public class OAuth2Configuration {
     }
 
     @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
+    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(TokenProvider<JwtTokenEntity> tokenProvider,
                                                                                  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
                                                                                  OAuth2Properties oAuth2Properties,
                                                                                  UserDetailsService userDetailsService) {

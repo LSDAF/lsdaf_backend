@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.*;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
@@ -147,7 +148,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public TokenAuthenticationFilter TokenAuthenticationFilter(TokenProvider tokenProvider,
+    public TokenAuthenticationFilter TokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
                                                                UserDetailsService userDetailsService,
                                                                com.lsadf.lsadf_backend.cache.Cache<LocalUser> localUserCache) {
         return new TokenAuthenticationFilter(tokenProvider, userDetailsService, localUserCache);
