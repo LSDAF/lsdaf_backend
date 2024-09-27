@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jdk.jfr.Enabled;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +38,10 @@ public class AdminUserCreationRequest implements Serializable {
     @Schema(description = "Enabled status of user to create", example = "true")
     @JsonProperty(value = ENABLED)
     private boolean enabled;
+
+    @Schema(description = "Verified email status of user to create", example = "true")
+    @JsonProperty(value = VERIFIED)
+    private boolean verified;
 
     @Email
     @NotBlank
