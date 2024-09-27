@@ -1,11 +1,13 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.annotations.CurrentUser;
+import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.controllers.AuthController;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
@@ -15,10 +17,11 @@ import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
+import com.lsadf.lsadf_backend.services.EmailService;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.services.UserVerificationService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +35,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,23 +56,29 @@ public class AuthControllerImpl extends BaseController implements AuthController
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final TokenProvider tokenProvider;
+    private final TokenProvider<JwtTokenEntity> tokenProvider;
     private final UserDetailsService userDetailsService;
-    private final RefreshTokenProvider refreshTokenProvider;
+    private final UserVerificationService userVerificationService;
+    private final TokenProvider<RefreshTokenEntity> refreshTokenProvider;
     private final Mapper mapper;
+    private final EmailService emailService;
 
     public AuthControllerImpl(AuthenticationManager authenticationManager,
                               UserService userService,
-                              TokenProvider tokenProvider,
+                              TokenProvider<JwtTokenEntity> tokenProvider,
                               UserDetailsService userDetailsService,
-                              RefreshTokenProvider refreshTokenProvider,
-                              Mapper mapper) {
+                              TokenProvider<RefreshTokenEntity> refreshTokenProvider,
+                              Mapper mapper,
+                              UserVerificationService userVerificationService,
+                              EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.refreshTokenProvider = refreshTokenProvider;
+        this.userVerificationService = userVerificationService;
         this.userService = userService;
         this.mapper = mapper;
         this.userDetailsService = userDetailsService;
+        this.emailService = emailService;
     }
 
     /**
@@ -93,11 +103,10 @@ public class AuthControllerImpl extends BaseController implements AuthController
             if (!isValidPassword) {
                 throw new WrongPasswordException("Invalid password");
             }
-            String jwt = tokenProvider.createJwtToken(localUser);
-            String refreshToken = refreshTokenProvider.createRefreshToken(localUser);
-            RefreshTokenEntity refreshEntity = refreshTokenProvider.saveRefreshToken(localUser.getUserEntity(), refreshToken);
+            JwtTokenEntity jwt = tokenProvider.createToken(localUser);
+            RefreshTokenEntity refreshToken = refreshTokenProvider.createToken(localUser);
 
-            return generateResponse(HttpStatus.OK, new JwtAuthentication(jwt, refreshEntity.getToken(), mapper.mapLocalUserToUserInfo(localUser)));
+            return generateResponse(HttpStatus.OK, new JwtAuthentication(jwt.getToken(), refreshToken.getToken(), mapper.mapLocalUserToUserInfo(localUser)));
         } catch (NotFoundException e) {
             log.error("User with email {} not found", userLoginRequest.getEmail(), e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -122,15 +131,14 @@ public class AuthControllerImpl extends BaseController implements AuthController
 
             LocalUser localUser = userDetailsService.loadUserByEmail(userEmail);
 
-            refreshTokenProvider.validateRefreshToken(userRefreshLoginRequest.getRefreshToken(), userEmail);
+            refreshTokenProvider.validateToken(userRefreshLoginRequest.getRefreshToken(), userEmail);
 
             // Create a new refresh token
-            String newToken = refreshTokenProvider.createRefreshToken(localUser);
-            RefreshTokenEntity refreshEntity = refreshTokenProvider.saveRefreshToken(localUser.getUserEntity(), newToken);
+            RefreshTokenEntity newRefreshToken = refreshTokenProvider.createToken(localUser);
 
-            String jwt = tokenProvider.createJwtToken(localUser);
+            JwtTokenEntity jwt = tokenProvider.createToken(localUser);
 
-            return generateResponse(HttpStatus.OK, new JwtAuthentication(jwt, refreshEntity.getToken(), mapper.mapLocalUserToUserInfo(localUser)));
+            return generateResponse(HttpStatus.OK, new JwtAuthentication(jwt.getToken(), newRefreshToken.getToken(), mapper.mapLocalUserToUserInfo(localUser)));
         } catch (NotFoundException e) {
             log.error("User with email {} not found", userRefreshLoginRequest.getEmail(), e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
@@ -172,14 +180,42 @@ public class AuthControllerImpl extends BaseController implements AuthController
     @Transactional
     public ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userCreationRequest) {
         try {
-            Optional<Set<UserRole>> roles = Optional.of(Sets.newHashSet(UserRole.getDefaultRole()));
+            Set<UserRole> roles = Sets.newHashSet(UserRole.getDefaultRole());
             UserEntity userEntity = userService.createUser(null, userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles, userCreationRequest.getName());
+            UserVerificationTokenEntity userVerificationTokenEntity = userVerificationService.createUserValidationToken(userEntity);
+            emailService.sendUserValidationEmail(userEntity.getEmail(), userVerificationTokenEntity.getToken());
             UserInfo userInfo = mapper.mapUserEntityToUserInfo(userEntity);
 
             return generateResponse(HttpStatus.OK, userInfo);
         } catch (AlreadyExistingUserException e) {
             log.error("User with email {} already exists", userCreationRequest.getEmail(), e);
             return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Could not create user", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not create user: " + e.getMessage(), null);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<UserInfo>> validateUserAccount(@PathVariable(value = TOKEN) String token) {
+        try {
+            UserEntity validatedUser = userVerificationService.validateUserVerificationToken(token);
+            UserInfo userInfo = mapper.mapUserEntityToUserInfo(validatedUser);
+
+            return generateResponse(HttpStatus.OK, userInfo);
+        } catch (InvalidTokenException e) {
+            log.error("InvalidTokenException: "+ e.getMessage(), e);
+            return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        } catch (NotFoundException e) {
+            log.error("NotFoundException: ", e);
+            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        } catch (Exception e) {
+            log.info("Could not validate user account", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not validate user account: " + e.getMessage(), null);
         }
     }
 }
