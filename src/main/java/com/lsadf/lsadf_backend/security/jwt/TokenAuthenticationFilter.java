@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.security.jwt;
 
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.impl.LocalCache;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.utils.TokenUtils;
@@ -18,15 +18,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    protected final TokenProvider tokenProvider;
+    protected final TokenProvider<JwtTokenEntity> tokenProvider;
     protected final UserDetailsService userDetailsService;
     protected final Cache<LocalUser> localUserCache;
 
-    public TokenAuthenticationFilter(TokenProvider tokenProvider,
+    public TokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
                                      UserDetailsService userDetailsService,
                                      Cache<LocalUser> localUserCache) {
         this.tokenProvider = tokenProvider;
@@ -39,8 +40,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                String userId = tokenProvider.getUserIdFromToken(jwt);
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt, null)) {
+                String userId = tokenProvider.getUserEmailFromToken(jwt);
                 LocalUser localUser = localUserCache.get(userId).orElseGet(() -> {
                     UserDetails user = userDetailsService.loadUserByUsername(userId);
                     LocalUser dbLocalUser = (LocalUser) user;

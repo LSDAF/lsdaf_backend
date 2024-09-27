@@ -1,16 +1,18 @@
 package com.lsadf.lsadf_backend.security.jwt.impl;
 
 
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.InvalidTokenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
-import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
+import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.utils.TokenUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
@@ -19,12 +21,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static com.lsadf.lsadf_backend.models.TokenStatus.*;
 import static com.lsadf.lsadf_backend.utils.TokenUtils.generateToken;
 
 @Slf4j
-public class RefreshTokenProviderImpl implements RefreshTokenProvider {
+public class RefreshTokenProviderImpl implements TokenProvider<RefreshTokenEntity> {
 
     protected final RefreshTokenRepository refreshTokenRepository;
     protected final UserService userService;
@@ -44,40 +49,48 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
         this.clockService = clockService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @Transactional
-    public RefreshTokenEntity saveRefreshToken(UserEntity userEntity, String token) {
+    public RefreshTokenEntity createToken(LocalUser localUser) {
+        UserEntity userEntity = localUser.getUserEntity();
         Date now = clockService.nowDate();
-        Jws<Claims> claims = parser.parseClaimsJws(token);
+        String token = generateToken(localUser, authProperties.getTokenSecret(), authProperties.getTokenExpirationSeconds(), now);
+        Jws<Claims> claims = TokenUtils.parseToken(parser, token);
         Date expiration = claims.getBody().getExpiration();
-        RefreshTokenEntity entity = RefreshTokenEntity.builder()
-                .token(token)
-                .expirationDate(expiration)
-                .status(RefreshTokenEntity.Status.ACTIVE)
-                .user(userEntity)
-                .build();
-
-        entity.setCreatedAt(now);
-        entity.setUpdatedAt(now);
+        RefreshTokenEntity entity = new RefreshTokenEntity();
+        entity.setUser(userEntity);
+        entity.setToken(token);
+        entity.setExpirationDate(expiration);
+        entity.setStatus(ACTIVE);
 
         return refreshTokenRepository.save(entity);
     }
 
+    @Override
+    public String getUserEmailFromToken(String token) {
+        return "";
+    }
+
+    @Override
+    public List<JwtTokenEntity> getInvalidatedTokens() {
+        return List.of();
+    }
+
+
     /**
      * {@inheritDoc}
      */
-    @Override
     @Transactional
-    public void invalidateUserRefreshToken(String userEmail) throws NotFoundException {
+    @Override
+    public void invalidateToken(String token, String userEmail) throws NotFoundException, InvalidTokenException {
 
         UserEntity user = userService.getUserByEmail(userEmail);
 
-        Optional<RefreshTokenEntity> tokenEntityOptional = refreshTokenRepository.findByUserAndStatus(user, RefreshTokenEntity.Status.ACTIVE);
+        Optional<RefreshTokenEntity> tokenEntityOptional = refreshTokenRepository.findByToken(token);
         if (tokenEntityOptional.isEmpty()) {
             return;
+        }
+        if (!tokenEntityOptional.get().getUser().equals(user)) {
+            throw new InvalidTokenException("The token does not belong to the user");
         }
 
         RefreshTokenEntity tokenEntity = tokenEntityOptional.get();
@@ -88,23 +101,14 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
      * {@inheritDoc}
      */
     @Override
-    public String createRefreshToken(LocalUser localUser) {
-        Date now = clockService.nowDate();
-        return generateToken(localUser, authProperties.getRefreshTokenSecret(), authProperties.getRefreshTokenExpirationSeconds(), now);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     @Transactional
     public void deleteExpiredTokens() {
         int count = 0;
 
-        Iterable<RefreshTokenEntity> tokensIterable = refreshTokenRepository.findAllByStatus(RefreshTokenEntity.Status.INACTIVE);
+        Date now = clockService.nowDate();
 
-        for (RefreshTokenEntity token : tokensIterable) {
-            refreshTokenRepository.deleteById(token.getId());
+        try (Stream<RefreshTokenEntity> tokenStream = refreshTokenRepository.findAllByExpirationDateBefore(now)) {
+            tokenStream.forEach(token -> refreshTokenRepository.deleteById(token.getId()));
             count++;
         }
 
@@ -118,7 +122,7 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
      */
     private void invalidateToken(RefreshTokenEntity entity) {
         Date now = clockService.nowDate();
-        entity.setStatus(RefreshTokenEntity.Status.INACTIVE);
+        entity.setStatus(INVALIDATED);
         entity.setInvalidationDate(now);
         entity.setUpdatedAt(now);
         refreshTokenRepository.save(entity);
@@ -129,11 +133,15 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
      */
     @Override
     @Transactional(readOnly = true)
-    public void validateRefreshToken(String token, String userEmail) throws NotFoundException, InvalidTokenException {
+    public boolean validateToken(String token, String userEmail) throws NotFoundException, InvalidTokenException {
         Date now = clockService.nowDate();
         Optional<RefreshTokenEntity> tokenEntityOptional = refreshTokenRepository.findByToken(token);
         if (tokenEntityOptional.isEmpty()) {
             throw new NotFoundException("Refresh token not found");
+        }
+
+        if (userEmail == null) {
+            throw new IllegalArgumentException("User email is required");
         }
 
         RefreshTokenEntity tokenEntity = tokenEntityOptional.get();
@@ -150,6 +158,8 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
         if (isInvalidated(tokenEntity)) {
             throw new InvalidTokenException("Refresh token invalidated");
         }
+
+        return true;
     }
 
     @Scheduled(cron = "${auth.invalidated-token-cleaner-cron}")
@@ -160,7 +170,7 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
     }
 
     private static boolean isInvalidated(RefreshTokenEntity tokenEntity) {
-        return tokenEntity.getStatus() == RefreshTokenEntity.Status.INACTIVE;
+        return tokenEntity.getStatus() == INVALIDATED;
     }
 
     private static boolean isExpired(RefreshTokenEntity tokenEntity, Date date) {

@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.security.oauth2;
 
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
@@ -26,7 +27,7 @@ import static com.lsadf.lsadf_backend.security.oauth2.HttpCookieOAuth2Authorizat
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final TokenProvider tokenProvider;
+    private final TokenProvider<JwtTokenEntity> tokenProvider;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2Properties oAuth2Properties;
     private final UserDetailsService userDetailsService;
@@ -75,9 +76,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } catch (NotFoundException e) {
             throw new RuntimeException(e);
         }
-        String token = tokenProvider.createJwtToken(localUser);
+        JwtTokenEntity token = tokenProvider.createToken(localUser);
 
-        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
+        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token.getToken()).build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
