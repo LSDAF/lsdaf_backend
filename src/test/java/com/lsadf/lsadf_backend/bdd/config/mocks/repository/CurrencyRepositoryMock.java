@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;

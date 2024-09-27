@@ -1,8 +1,9 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
@@ -13,6 +14,7 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +146,7 @@ public class BddThenStepDefinitions extends BddLoader {
     @Then("^I should have an unexpired and (.*) refresh token in DB for the user with email (.*)$")
     public void then_i_should_have_an_unexpired_and_status_refresh_token_in_db(String status, String userEmail) {
         UserEntity user = userRepository.findUserEntityByEmail(userEmail).orElseThrow();
-        Optional<RefreshTokenEntity> actual = refreshTokenRepository.findByUserAndStatus(user, RefreshTokenEntity.Status.valueOf(status));
+        Optional<RefreshTokenEntity> actual = refreshTokenRepository.findByUserAndStatus(user, TokenStatus.valueOf(status));
         assertThat(actual).isNotEmpty();
 
     }
@@ -545,6 +547,24 @@ public class BddThenStepDefinitions extends BddLoader {
                     .ignoringFields("id", "createdAt", "updatedAt", "password")
                     .isEqualTo(expectedUser);
         }
+    }
+
+    @Then("^a new validation token should have been created for the user with email (.*)$")
+    public void then_a_new_validation_token_should_be_created_for_the_user_with_email(String email) {
+        List<UserVerificationTokenEntity> results = new ArrayList<>();
+        Iterable<UserVerificationTokenEntity> tokens = userVerificationTokenRepository.findAllByUserEmail(email);
+        tokens.forEach(results::add);
+
+        assertThat(results.size()).isNotEqualTo(0);
+    }
+
+    @Then("^an email should have been sent to (.*)$")
+    public void then_en_email_should_have_been_sent_to(String email) throws MessagingException {
+        var mime = mimeMessageStack.peek();
+        assertThat(mime).isNotNull();
+
+        String actual = mime.getAllRecipients()[0].toString();
+        assertThat(actual).isEqualTo(email);
     }
 
     @Then("^the response should have the following Users$")

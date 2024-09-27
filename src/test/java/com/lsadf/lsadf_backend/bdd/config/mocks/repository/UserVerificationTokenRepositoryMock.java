@@ -44,7 +44,7 @@ public class UserVerificationTokenRepositoryMock extends ARepositoryMock<UserVer
     }
 
     @Override
-    public Optional<UserVerificationTokenEntity> findUserValidationTokenEntityByValidationToken(String token) {
+    public Optional<UserVerificationTokenEntity> findUserValidationTokenEntityByToken(String token) {
         return entities.values()
                 .stream()
                 .filter(entity -> entity.getToken().equals(token))

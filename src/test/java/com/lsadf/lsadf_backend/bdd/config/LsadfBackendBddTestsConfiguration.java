@@ -1,40 +1,42 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
 import com.lsadf.lsadf_backend.bdd.config.mocks.*;
+import com.lsadf.lsadf_backend.bdd.config.mocks.repository.*;
+import com.lsadf.lsadf_backend.bdd.config.mocks.security.RefreshTokenProviderMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.security.TokenAuthenticationFilterMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.security.JwtTokenProviderMock;
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.constants.BeanConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.AuthProperties;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import io.jsonwebtoken.JwtParser;
+import jakarta.mail.internet.MimeMessage;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
-import java.time.Clock;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
 import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
@@ -48,6 +50,11 @@ import static org.mockito.Mockito.mock;
  */
 @TestConfiguration
 public class LsadfBackendBddTestsConfiguration {
+
+    @Bean
+    public Stack<MimeMessage> mimeMessageStack() {
+        return new Stack<>();
+    }
 
     @Bean
     public Stack<Currency> currencyStack() {
@@ -97,7 +104,7 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
-    public Map<String, LocalUser> localUserMap() {
+    public Map<String, Pair<Date, LocalUser>> localUserMap() {
         return new HashMap<>();
     }
 
@@ -134,6 +141,12 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
+    public JwtTokenRepository jwtTokenRepository(ClockService clockService, UserRepository userRepository) {
+        return new JwtTokenRepositoryMock(clockService, userRepository);
+    }
+
+    @Bean
+    @Primary
     public CurrencyRepository currencyRepository() {
         return new CurrencyRepositoryMock();
     }
@@ -150,6 +163,12 @@ public class LsadfBackendBddTestsConfiguration {
     public GameSaveRepository gameSaveRepository(ClockService clockService,
                                                  CurrencyRepository currencyRepository) {
         return new GameSaveRepositoryMock(currencyRepository, clockService);
+    }
+
+    @Bean
+    @Primary
+    public UserVerificationTokenRepository userValidationTokenRepository(ClockService clockService) {
+        return new UserVerificationTokenRepositoryMock(clockService);
     }
 
     @Bean
@@ -186,21 +205,38 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider tokenProvider,
+    public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
                                                                UserDetailsService userDetailsService,
-                                                               Map<String, LocalUser> localUserMap,
+                                                               Map<String, Pair<Date, LocalUser>> localUserMap,
                                                                Cache<LocalUser> localUserCache) {
         return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap, localUserCache);
     }
 
     @Bean
     @Primary
-    public RefreshTokenProvider refreshTokenProvider(UserService userService,
-                                                     RefreshTokenRepository refreshTokenRepository,
-                                                     @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
-                                                     AuthProperties authProperties,
-                                                     ClockService clockService) {
+    public TokenProvider<RefreshTokenEntity> refreshTokenProvider(UserService userService,
+                                                                  RefreshTokenRepository refreshTokenRepository,
+                                                                  @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
+                                                                  AuthProperties authProperties,
+                                                                  ClockService clockService) {
         return new RefreshTokenProviderMock(userService, refreshTokenRepository, parser, authProperties, clockService);
+    }
+
+    @Bean
+    @Primary
+    public JavaMailSender javaMailSenderMock(Stack<MimeMessage> mimeMessageStack) {
+        return new JavaMailSenderMock(mimeMessageStack);
+    }
+
+    @Bean
+    @Primary
+    public TokenProvider<JwtTokenEntity> tokenProviderMock(AuthProperties authProperties,
+                                                           @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
+                                                           @Qualifier(BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache,
+                                                           ClockService clockService,
+                                                           Map<String, Pair<Date, LocalUser>> localUserMap,
+                                                           JwtTokenRepository jwtTokenRepository) {
+        return new JwtTokenProviderMock(authProperties, parser, invalidatedJwtTokenCache, clockService, localUserMap, jwtTokenRepository);
     }
 
 }

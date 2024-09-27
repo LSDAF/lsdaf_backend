@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.security;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;

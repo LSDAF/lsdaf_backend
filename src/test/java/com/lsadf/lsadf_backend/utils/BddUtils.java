@@ -3,15 +3,12 @@ package com.lsadf.lsadf_backend.utils;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.*;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.UserInfo;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
@@ -90,18 +87,19 @@ public class BddUtils {
         if (invalidationDate != null) {
             invalidationDateDate = DateUtils.stringToDate(invalidationDate);
         }
-        RefreshTokenEntity.Status statusEnum = RefreshTokenEntity.Status.valueOf(status);
+        TokenStatus statusEnum = TokenStatus.valueOf(status);
 
         Optional<UserEntity> userEntityOptional = userRepository.findUserEntityByEmail(userEmail);
         UserEntity userEntity = userEntityOptional.orElse(null);
 
-        return RefreshTokenEntity.builder()
-                .token(token)
-                .expirationDate(expirationDateDate)
-                .invalidationDate(invalidationDateDate)
-                .status(statusEnum)
-                .user(userEntity)
-                .build();
+        RefreshTokenEntity entity = new RefreshTokenEntity();
+        entity.setToken(token);
+        entity.setExpirationDate(expirationDateDate);
+        entity.setInvalidationDate(invalidationDateDate);
+        entity.setStatus(statusEnum);
+        entity.setUser(userEntity);
+
+        return entity;
     }
 
     /**
@@ -173,12 +171,15 @@ public class BddUtils {
         String email = row.get(BddFieldConstants.UserInfo.EMAIL);
         String name = row.get(BddFieldConstants.UserInfo.NAME);
         String rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
-        List<UserRole> roles = Collections.emptyList();
+        String verifiedString = row.get(BddFieldConstants.UserInfo.VERIFIED);
+        Set<UserRole> roles = Collections.emptySet();
         if (rolesString != null) {
-            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).sorted().toList();
+            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
         }
 
-        return new UserInfo(id, name, email, roles, null, null);
+        boolean verified = Boolean.parseBoolean(verifiedString);
+
+        return new UserInfo(id, name, email, verified, roles, null, null);
     }
 
 
@@ -508,6 +509,7 @@ public class BddUtils {
         String userId = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ID);
         String password = row.get(BddFieldConstants.AdminUserCreationRequest.PASSWORD);
         String provider = row.get(BddFieldConstants.AdminUserCreationRequest.SOCIAL_PROVIDER);
+        String verified = row.get(BddFieldConstants.AdminUserCreationRequest.VERIFIED);
         String providerUserId = row.get(BddFieldConstants.AdminUserCreationRequest.PROVIDER_USER_ID);
         String userRoles = row.get(BddFieldConstants.AdminUserCreationRequest.ROLES);
 
@@ -519,8 +521,9 @@ public class BddUtils {
         SocialProvider socialProvider = SocialProvider.fromString(provider);
 
         boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+        boolean verifiedBoolean = verified == null || Boolean.parseBoolean(verified);
 
-        return new AdminUserCreationRequest(name, userId, enabledBoolean, email, password, socialProvider, roles, providerUserId);
+        return new AdminUserCreationRequest(name, userId, enabledBoolean, verifiedBoolean, email, password, socialProvider, roles, providerUserId);
 
     }
 
@@ -599,5 +602,35 @@ public class BddUtils {
                 .enabled(enabledBoolean)
                 .userRoles(roleSet.stream().toList())
                 .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a UserVerificationTokenEntity
+     * @param row row from BDD table
+     * @return UserVerificationTokenEntity
+     */
+    public static UserVerificationTokenEntity mapToUserVerificationTokenEntity(Map<String, String> row,
+                                                                               UserRepository userRepository) {
+        String token = row.get(BddFieldConstants.UserVerificationToken.TOKEN);
+        String userEmail = row.get(BddFieldConstants.UserVerificationToken.USER_EMAIL);
+        String status = row.get(BddFieldConstants.UserVerificationToken.STATUS);
+        String expirationDate = row.get(BddFieldConstants.UserVerificationToken.EXPIRATION_DATE);
+        Date expirationDateDate = null;
+
+        UserEntity user = userRepository.findUserEntityByEmail(userEmail).orElse(null);
+
+        if (expirationDate != null) {
+            expirationDateDate = DateUtils.stringToDate(expirationDate);
+        }
+
+        TokenStatus tokenStatus = TokenStatus.valueOf(status);
+
+        UserVerificationTokenEntity entity = new UserVerificationTokenEntity();
+        entity.setToken(token);
+        entity.setUser(user);
+        entity.setExpirationDate(expirationDateDate);
+        entity.setStatus(tokenStatus);
+
+        return entity;
     }
 }

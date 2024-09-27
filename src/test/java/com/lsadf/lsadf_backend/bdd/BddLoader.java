@@ -3,8 +3,9 @@ package com.lsadf.lsadf_backend.bdd;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
-import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
@@ -17,16 +18,14 @@ import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.*;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.Clock;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -111,6 +110,9 @@ public class BddLoader {
     protected CurrencyRepository currencyRepository;
 
     @Autowired
+    protected UserVerificationTokenRepository userVerificationTokenRepository;
+
+    @Autowired
     protected UserRepository userRepository;
 
     @Autowired
@@ -123,10 +125,10 @@ public class BddLoader {
     protected Mapper mapper;
 
     @Autowired
-    protected TokenProvider tokenProvider;
+    protected TokenProvider<JwtTokenEntity> tokenProvider;
 
     @Autowired
-    protected RefreshTokenProvider refreshTokenProvider;
+    protected TokenProvider<RefreshTokenEntity> refreshTokenProvider;
 
     @Autowired
     protected PasswordEncoder passwordEncoder;
@@ -149,6 +151,12 @@ public class BddLoader {
     protected CacheFlushService cacheFlushService;
 
     @Autowired
+    protected EmailService emailService;
+
+    @Autowired
+    protected UserVerificationService userVerificationService;
+
+    @Autowired
     protected GameSaveService gameSaveService;
 
     @Autowired
@@ -161,6 +169,9 @@ public class BddLoader {
     protected AdminService adminService;
 
     // BDD Specific Stacks & Maps
+
+    @Autowired
+    protected Map<String, Pair<Date, LocalUser>> localUserMap;
 
     @Autowired
     protected Stack<RefreshTokenEntity> refreshTokenEntityStack;
@@ -184,13 +195,13 @@ public class BddLoader {
     protected Stack<UserAdminDetails> userAdminDetailsStack;
 
     @Autowired
+    protected Stack<MimeMessage> mimeMessageStack;
+
+    @Autowired
     protected Stack<Currency> currencyStack;
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;
-
-    @Autowired
-    protected Map<String, LocalUser> localUserMap;
 
     @Autowired
     protected Stack<Exception> exceptionStack;

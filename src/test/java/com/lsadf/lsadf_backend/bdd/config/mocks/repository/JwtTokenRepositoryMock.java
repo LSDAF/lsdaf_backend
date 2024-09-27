@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.services.ClockService;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class JwtTokenRepositoryMock extends ARepositoryMock<JwtTokenEntity> implements JwtTokenRepository {
 
@@ -62,18 +63,16 @@ public class JwtTokenRepositoryMock extends ARepositoryMock<JwtTokenEntity> impl
     }
 
     @Override
-    public Iterable<JwtTokenEntity> findAllByStatusAndExpirationDateAfter(TokenStatus status, Date date) {
+    public Stream<JwtTokenEntity> findAllByStatusAndExpirationDateAfter(TokenStatus status, Date date) {
         return entities.values()
                 .stream()
-                .filter(entity -> entity.getStatus().equals(status) && entity.getExpirationDate().after(date))
-                .toList();
+                .filter(entity -> entity.getStatus().equals(status) && entity.getExpirationDate().after(date));
     }
 
     @Override
-    public Iterable<JwtTokenEntity> findAllByExpirationDateBefore(Date date) {
+    public Stream<JwtTokenEntity> findAllByExpirationDateBefore(Date date) {
         return entities.values()
                 .stream()
-                .filter(entity -> entity.getExpirationDate().before(date))
-                .toList();
+                .filter(entity -> entity.getExpirationDate().before(date));
     }
 }

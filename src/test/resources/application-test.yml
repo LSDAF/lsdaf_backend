@@ -40,6 +40,9 @@ server:
       enabled: false
 
 spring:
+  output:
+    ansi:
+      enabled: always
   main:
     allow-bean-definition-overriding: true
   jackson:
@@ -67,3 +70,17 @@ cache:
 
 shutdown:
   flush-cache-at-shutdown: false
+
+user-email-verification:
+  expiration-seconds: 3_600
+
+mail:
+  host: smtp.test_mail.com
+  port: 6666
+  username: test@test.com
+  password: totototo
+  auth: true
+  connection-timeout: 5000
+  timeout: 5000
+  write-timeout: 5000
+  debug: true

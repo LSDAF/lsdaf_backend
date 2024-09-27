@@ -3,8 +3,9 @@ package com.lsadf.lsadf_backend.bdd.given;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 /**
  * Step definitions for the given steps in the BDD scenarios
@@ -42,16 +42,14 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.userInfoListStack.clear();
         this.localUserMap.clear();
         this.userAdminDetailsStack.clear();
+        this.mimeMessageStack.clear();
         this.responseStack.clear();
         this.jwtTokenStack.clear();
         this.refreshJwtTokenStack.clear();
         this.booleanStack.clear();
-        this.localUserMap.clear();
 
-        this.localUserCache.clear();
-        this.currencyCache.clear();
-        this.gameSaveOwnershipCache.clear();
-        this.invalidatedJwtTokenCache.clear();
+        // Mock of JWT local security map
+        this.localUserMap.clear();
 
         BddUtils.initTestRestTemplate(testRestTemplate);
 
@@ -124,11 +122,14 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.gameSaveRepository.deleteAll();
         this.currencyRepository.deleteAll();
         this.userRepository.deleteAll();
+        this.userVerificationTokenRepository.deleteAll();
 
         assertThat(refreshTokenRepository.count()).isEqualTo(0);
         assertThat(gameSaveRepository.count()).isEqualTo(0);
         assertThat(userRepository.count()).isEqualTo(0);
         assertThat(currencyRepository.count()).isEqualTo(0);
+        assertThat(userVerificationTokenRepository.count()).isEqualTo(0);
+
 
         // Clear caches
         redisCacheService.clearCaches();
@@ -137,19 +138,30 @@ public class BddGivenStepDefinitions extends BddLoader {
         assertThat(currencyCache.getAll()).isEmpty();
         assertThat(currencyCache.getAllHisto()).isEmpty();
         assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
+        assertThat(invalidatedJwtTokenCache.getAll()).isEmpty();
+        assertThat(localUserCache.getAll()).isEmpty();
+
 
         log.info("Database repositories + caches cleaned");
-
-        // Init all repository mocks
-        //MockUtils.initGameSaveRepositoryMock(gameSaveRepository, currencyRepository);
-        //MockUtils.initUserRepositoryMock(userRepository);
-        //MockUtils.initCurrencyRepositoryMock(currencyRepository);
-        //MockUtils.initRefreshTokenRepository(refreshTokenRepository, userRepository);
 
         // Init all other service mocks
         MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);
 
         log.info("Mocks initialized");
+    }
+
+    @Given("^the following user verification tokens$")
+    public void given_i_have_the_following_user_verification_tokens(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        log.info("Creating user verification tokens...");
+
+        rows.forEach(row -> {
+            UserVerificationTokenEntity token = BddUtils.mapToUserVerificationTokenEntity(row, userRepository);
+            UserVerificationTokenEntity newEntity = userVerificationTokenRepository.save(token);
+            log.info("User verification token created: {}", newEntity);
+        });
+
+        log.info("User verification tokens created");
     }
 
     @Given("^the following users$")
