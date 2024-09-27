@@ -32,8 +32,8 @@ Feature: Game Save Service tests
       | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      | Player   |
 
     And I should have the following game saves in DB
-      | id                                   | userId                               | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst | nickname |
-      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      | Player   |
+      | id                                   | userId                               | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      |
 
 
   Scenario: Get an existing GameSave

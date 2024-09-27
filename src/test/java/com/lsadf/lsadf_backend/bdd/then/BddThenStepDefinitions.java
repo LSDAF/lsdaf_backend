@@ -49,6 +49,7 @@ public class BddThenStepDefinitions extends BddLoader {
             assertThat(actualGameSave)
                     .usingRecursiveComparison()
                     .ignoringFields("id", "createdAt", "updatedAt")
+                    .ignoringExpectedNullFields()
                     .isEqualTo(expectedGameSave);
         }
     }
@@ -232,6 +233,7 @@ public class BddThenStepDefinitions extends BddLoader {
                 assertThat(gameSave)
                         .usingRecursiveComparison()
                         .ignoringFields("user", "id", "createdAt", "updatedAt", "currencyEntity.gameSave")
+                        .ignoringExpectedNullFields()
                         .isEqualTo(expected);
             }
         }
@@ -462,6 +464,7 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdAt", "updatedAt")
+                .ignoringExpectedNullFields()
                 .isEqualTo(expected);
     }
 

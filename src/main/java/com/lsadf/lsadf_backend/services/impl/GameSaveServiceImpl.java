@@ -65,7 +65,10 @@ public class GameSaveServiceImpl implements GameSaveService {
         saved.setCurrencyEntity(currencyEntity);
 
 
-        return gameSaveRepository.save(saved);
+        GameSaveEntity savedEntity = gameSaveRepository.save(saved);
+        savedEntity.setNickname(entity.getId());
+
+        return savedEntity;
     }
 
     /**
@@ -99,7 +102,8 @@ public class GameSaveServiceImpl implements GameSaveService {
             entity.setId(creationRequest.getId());
         }
 
-        GameSaveEntity saved = gameSaveRepository.save(entity);
+        var saved = gameSaveRepository.save(entity);
+        saved.setNickname(entity.getId());
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
