@@ -15,9 +15,8 @@ public class InvalidatedJwtTokenCache extends RedisCache<String> implements Cach
 
     public InvalidatedJwtTokenCache(RedisTemplate<String, String> redisTemplate,
                                     Cache<String> localInvalidatedJwtTokenCache,
-                                    int expirationSeconds,
                                     RedisProperties redisProperties) {
-        super(redisTemplate, INVALIDATED_JWT_TOKEN, expirationSeconds, redisProperties);
+        super(redisTemplate, INVALIDATED_JWT_TOKEN, -1, redisProperties);
         this.localInvalidatedJwtTokenCache = localInvalidatedJwtTokenCache;
     }
 
