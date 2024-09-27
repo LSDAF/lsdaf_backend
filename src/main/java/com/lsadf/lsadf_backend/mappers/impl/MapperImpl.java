@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
@@ -109,12 +109,12 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public UserInfo mapLocalUserToUserInfo(LocalUser localUser) {
-        List<UserRole> roles = localUser.getAuthorities().stream()
+        Set<UserRole> roles = localUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(UserRole::fromRole)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         UserEntity user = localUser.getUserEntity();
-        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles, user.getCreatedAt(), user.getUpdatedAt());
+        return new UserInfo(user.getId(), user.getName(), user.getEmail(), user.isVerified(), roles, user.getCreatedAt(), user.getUpdatedAt());
     }
 
     /**
@@ -122,8 +122,8 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
-        List<UserRole> roles = userEntity.getRoles().stream().toList();
-        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+        Set<UserRole> roles = userEntity.getRoles().stream().collect(Collectors.toSet());
+        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), userEntity.isVerified(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
 
