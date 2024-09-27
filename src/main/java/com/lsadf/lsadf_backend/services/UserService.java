@@ -33,7 +33,15 @@ public interface UserService {
      * @param name              the name of the user
      * @return the created user
      */
-    UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException;
+    UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> optionalUserRoles, String name) throws AlreadyExistingUserException;
+
+    /**
+     * Validates a user
+     *
+     * @param userEmail the email of the user
+     * @return the validated user
+     */
+    UserEntity verifyUser(String userEmail) throws NotFoundException;
 
     /**
      * Creates a new user
@@ -45,7 +53,7 @@ public interface UserService {
      * @param name              the name of the user
      * @return the created user
      */
-    UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException;
+    UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException;
 
 
     /**
@@ -99,8 +107,8 @@ public interface UserService {
     /**
      * Updates user by id
      *
-     * @param id
-     * @param name
+     * @param id the id of the user
+     * @param userUpdateRequest the update request
      * @return
      */
     UserEntity updateUser(String id, UserUpdateRequest userUpdateRequest) throws NotFoundException;

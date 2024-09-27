@@ -66,8 +66,8 @@ public class UserVerificationServiceImpl implements UserVerificationService {
      * {@inheritDoc}
      */
     @Override
-    public UserEntity validateUser(String token) throws NotFoundException, InvalidTokenException {
-        Optional<UserVerificationTokenEntity> userValidationTokenEntityOptional = userVerificationTokenRepository.findUserValidationTokenEntityByValidationToken(token);
+    public UserEntity validateUserVerificationToken(String token) throws NotFoundException, InvalidTokenException {
+        Optional<UserVerificationTokenEntity> userValidationTokenEntityOptional = userVerificationTokenRepository.findUserValidationTokenEntityByToken(token);
         if (userValidationTokenEntityOptional.isEmpty()) {
             throw new NotFoundException("Token not found");
         }
@@ -85,7 +85,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
         UserEntity user = userVerificationTokenEntity.getUser();
 
-        UserEntity validatedUser = userService.validateUser(user.getEmail());
+        UserEntity validatedUser = userService.verifyUser(user.getEmail());
 
         userVerificationTokenEntity.setStatus(TokenStatus.INVALIDATED);
         userVerificationTokenEntity.setUser(validatedUser);

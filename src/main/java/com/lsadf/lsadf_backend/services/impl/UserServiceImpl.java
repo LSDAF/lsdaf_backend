@@ -60,7 +60,8 @@ public class UserServiceImpl implements UserService {
                 creationRequest.getEmail(),
                 creationRequest.getPassword(),
                 creationRequest.getSocialProvider(),
-                Optional.of(Sets.newHashSet(UserRole.getDefaultRole())), creationRequest.getName());
+                Sets.newHashSet(UserRole.getDefaultRole()),
+                creationRequest.getName());
     }
 
     /**
@@ -78,8 +79,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
-        return createUser(null, email, password, provider, optionalUserRoles, name);
+    public UserEntity verifyUser(String userEmail) throws NotFoundException {
+        UserEntity userEntity = getUserByEmail(userEmail);
+        userEntity.setEnabled(true);
+        userEntity.setVerified(true);
+        return userRepository.save(userEntity);
     }
 
     /**
@@ -87,12 +91,23 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
+    public UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException {
+        return createUser(null, email, password, provider, userRoles, name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
+        if (userRoles == null) {
+            userRoles = Sets.newHashSet(UserRole.getDefaultRole());
+        }
 
-        Set<UserRole> userRoles = optionalUserRoles.orElse(Sets.newHashSet(UserRole.getDefaultRole()));
         String encodedPassword = passwordEncoder.encode(password);
         UserEntity userEntity = UserEntity
                 .builder()
@@ -222,8 +237,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException, AlreadyExistingUserException {
-        UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+        UserEntity userEntity = getUserById(id);
 
         return updateUser(userEntity, adminUserUpdateRequest);
     }
@@ -272,7 +286,8 @@ public class UserServiceImpl implements UserService {
                 .password(CHANGEIT).build();
     }
 
-    private UserEntity updateUser(UserEntity userEntity,
+    @Transactional
+    public UserEntity updateUser(UserEntity userEntity,
                                   AdminUserUpdateRequest adminUserUpdateRequest) throws AlreadyExistingUserException {
         boolean hasUpdates = false;
 
@@ -283,7 +298,7 @@ public class UserServiceImpl implements UserService {
             }
 
             if (adminUserUpdateRequest.getEmail() != null && !adminUserUpdateRequest.getEmail().equals(userEntity.getEmail())) {
-                if (userRepository.existsByEmail(adminUserUpdateRequest.getEmail())) {
+                if (existsByEmail(adminUserUpdateRequest.getEmail())) {
                     throw new AlreadyExistingUserException("User with email " + adminUserUpdateRequest.getEmail() + " already exists");
                 }
                 userEntity.setEmail(adminUserUpdateRequest.getEmail());

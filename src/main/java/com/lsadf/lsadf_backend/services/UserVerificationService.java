@@ -22,5 +22,5 @@ public interface UserVerificationService {
      * @param token the token provided in the validation email
      * @return the validated user
      */
-    UserEntity validateUser(String token) throws NotFoundException, InvalidTokenException;
+    UserEntity validateUserVerificationToken(String token) throws NotFoundException, InvalidTokenException;
 }
