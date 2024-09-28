@@ -10,12 +10,8 @@ import org.springframework.core.annotation.Order;
 
 @Configuration
 public class LoggingConfiguration {
-
-
-
     @Bean
     public RequestLoggerInterceptor requestLoggerInterceptor(HttpLogProperties httpLogProperties) {
         return new RequestLoggerInterceptor(httpLogProperties);
     }
-
 }
