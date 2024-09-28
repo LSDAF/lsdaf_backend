@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.io.Serial;
 
@@ -42,6 +43,9 @@ public class GameSaveEntity extends AEntity {
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
     private long attack = 1L;
 
+    @Column(name = EntityAttributes.GameSave.GAME_SAVE_NICKNAME, unique = true)
+    private String nickname;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_CURRENCY_ID)
     private CurrencyEntity currencyEntity;
@@ -50,4 +54,6 @@ public class GameSaveEntity extends AEntity {
         this.currencyEntity = currencyEntity;
         currencyEntity.setGameSave(this);
     }
+
+
 }

@@ -1,10 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
@@ -53,7 +50,7 @@ public interface GameSaveService {
      * @throws ForbiddenException the forbidden exception
      * @throws NotFoundException  the not found exception
      */
-    GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException;
+    GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
 
     /**
      * Updates a game save from admin side
@@ -64,7 +61,7 @@ public interface GameSaveService {
      * @throws ForbiddenException the forbidden exception
      * @throws NotFoundException  the not found exception
      */
-    GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException;
+    GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
 
 
     /**

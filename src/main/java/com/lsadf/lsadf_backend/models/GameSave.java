@@ -22,7 +22,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ID, USER_ID, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
+@JsonPropertyOrder({ID, USER_ID, USER_EMAIL, NICKNAME, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
 public class GameSave {
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
@@ -33,6 +33,9 @@ public class GameSave {
 
     @JsonProperty(value = USER_EMAIL)
     private String userEmail;
+
+    @JsonProperty(value = NICKNAME)
+    private String nickname;
 
     @JsonProperty(value = GOLD)
     @Schema(description = "Gold amount", example = "260000")

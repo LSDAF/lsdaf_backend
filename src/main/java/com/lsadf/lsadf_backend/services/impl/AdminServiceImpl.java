@@ -126,7 +126,7 @@ public class AdminServiceImpl implements AdminService {
      * {@inheritDoc}
      */
     @Override
-    public GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException {
+    public GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException, AlreadyTakenNicknameException {
         return mapper.mapToGameSave(gameSaveService.updateGameSave(saveId, updateRequest));
     }
 

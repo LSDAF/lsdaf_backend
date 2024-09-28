@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
+import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.controllers.AuthController;
@@ -19,7 +19,6 @@ import com.lsadf.lsadf_backend.security.jwt.RefreshTokenProvider;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
-import com.lsadf.lsadf_backend.utils.TokenUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

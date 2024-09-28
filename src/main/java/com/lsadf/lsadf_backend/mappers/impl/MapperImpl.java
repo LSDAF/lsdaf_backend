@@ -41,6 +41,7 @@ public class MapperImpl implements Mapper {
                 .id(gameSaveEntity.getId())
                 .userEmail(gameSaveEntity.getUser().getEmail())
                 .userId(gameSaveEntity.getUser().getId())
+                .nickname(gameSaveEntity.getNickname())
                 .gold(gameSaveEntity.getCurrencyEntity().getGoldAmount())
                 .diamond(gameSaveEntity.getCurrencyEntity().getDiamondAmount())
                 .emerald(gameSaveEntity.getCurrencyEntity().getEmeraldAmount())

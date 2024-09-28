@@ -130,7 +130,7 @@ public interface AdminService {
      * @param updateRequest the update request
      * @return the updated game save
      */
-    GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException;
+    GameSave updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, UnauthorizedException, NotFoundException, AlreadyTakenNicknameException;
 
     /**
      * Deletes a game save

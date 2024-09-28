@@ -116,6 +116,7 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
         String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
         String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
@@ -140,6 +141,7 @@ public class BddUtils {
 
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
                 .user(userOptional.orElse(null))
+                .nickname(nickname)
                 .attack(attackLong)
                 .healthPoints(healthPointsLong)
                 .build();
@@ -276,6 +278,7 @@ public class BddUtils {
         String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
         String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
         String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long gold = goldString != null ? Long.parseLong(goldString) : null;
         Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
@@ -289,6 +292,7 @@ public class BddUtils {
                 .attack(attack)
                 .userId(userId)
                 .userEmail(userEmail)
+                .nickname(nickname)
                 .id(id)
                 .healthPoints(healthPoints)
                 .gold(gold)
@@ -331,6 +335,7 @@ public class BddUtils {
         String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long goldLong = gold == null ? null : Long.parseLong(gold);
         Long diamondLong = diamond == null ? null : Long.parseLong(diamond);
@@ -347,6 +352,7 @@ public class BddUtils {
                 .amethyst(amethystLong)
                 .healthPoints(healthPointsLong)
                 .attack(attackLong)
+                .nickname(nickname)
                 .build();
     }
 
@@ -359,12 +365,13 @@ public class BddUtils {
     public static GameSaveUpdateRequest mapToGameSaveUpdateUserRequest(Map<String, String> row) {
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
         Long attackLong = attack == null ? null : Long.parseLong(attack);
 
 
-        return new GameSaveUpdateRequest(healthPointsLong, attackLong);
+        return new GameSaveUpdateRequest(healthPointsLong, attackLong, nickname);
     }
 
     /**

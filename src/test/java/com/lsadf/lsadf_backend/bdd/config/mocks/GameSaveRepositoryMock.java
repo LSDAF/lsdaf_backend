@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Clock;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -74,5 +75,18 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> impl
                 .stream()
                 .filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userEmail))
                 .toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param nickname the nickname
+     * @return the game save entity by nickname or empty
+     */
+    @Override
+    public Optional<GameSaveEntity> findGameSaveEntityByNickname(String nickname) {
+        return entities.values()
+                .stream()
+                .filter(gameSaveEntity -> gameSaveEntity.getNickname().equals(nickname))
+                .findAny();
     }
 }

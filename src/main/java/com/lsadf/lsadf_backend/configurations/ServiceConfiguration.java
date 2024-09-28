@@ -110,5 +110,4 @@ public class ServiceConfiguration {
     public ClockService clockService(Clock clock) {
         return new ClockServiceImpl(clock);
     }
-
 }

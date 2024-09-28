@@ -1,8 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
+import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
@@ -12,7 +13,6 @@ import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.utils.ResponseUtils;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -95,6 +95,9 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
         } catch (ForbiddenException e) {
             log.error("Forbidden exception while saving game: ", e);
             return generateResponse(HttpStatus.FORBIDDEN, "The given userEmail is not the owner of the game save.", null);
+        } catch (AlreadyTakenNicknameException e) {
+            log.error("AlreadyTakenNicknameException exception while saving game: ", e);
+            return generateResponse(HttpStatus.BAD_REQUEST, "The given nickname is already taken.", null);
         } catch (Exception e) {
             log.error("Exception {} while saving game: ", e.getClass(), e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while saving game.", e.getMessage());

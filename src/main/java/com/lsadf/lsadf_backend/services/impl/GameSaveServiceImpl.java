@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.services.impl;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
@@ -55,6 +56,7 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .build();
 
         GameSaveEntity saved = gameSaveRepository.save(entity);
+        saved.setNickname(saved.getId());
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
@@ -64,7 +66,9 @@ public class GameSaveServiceImpl implements GameSaveService {
         saved.setCurrencyEntity(currencyEntity);
 
 
-        return gameSaveRepository.save(saved);
+        GameSaveEntity savedEntity = gameSaveRepository.save(saved);
+
+        return savedEntity;
     }
 
     /**
@@ -98,7 +102,8 @@ public class GameSaveServiceImpl implements GameSaveService {
             entity.setId(creationRequest.getId());
         }
 
-        GameSaveEntity saved = gameSaveRepository.save(entity);
+        var saved = gameSaveRepository.save(entity);
+        saved.setNickname(entity.getId());
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
@@ -111,7 +116,7 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         saved.setCurrencyEntity(currencyEntity);
 
-        return gameSaveRepository.save(entity);
+        return gameSaveRepository.save(saved);
     }
 
     /**
@@ -119,9 +124,14 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException {
+    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+
+        if (gameSaveRepository.findGameSaveEntityByNickname(updateRequest.getNickname()).isPresent()) {
+            throw new AlreadyTakenNicknameException("Game save with nickname " + updateRequest.getNickname() + " already exists");
+        }
+
         return updateGameSaveEntity(currentGameSave, updateRequest);
     }
 
@@ -130,9 +140,14 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException {
+    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+
+        if (gameSaveRepository.findGameSaveEntityByNickname(updateRequest.getNickname()).isPresent()) {
+            throw new AlreadyTakenNicknameException("Game save with nickname " + updateRequest.getNickname() + " already exists");
+        }
+
         return updateGameSaveEntity(currentGameSave, updateRequest);
     }
 
@@ -164,6 +179,11 @@ public class GameSaveServiceImpl implements GameSaveService {
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, GameSaveUpdateRequest updateRequest) {
         boolean hasUpdates = false;
 
+        if (!Objects.equals(gameSaveEntity.getNickname(), updateRequest.getNickname())) {
+            gameSaveEntity.setNickname(updateRequest.getNickname());
+            hasUpdates = true;
+        }
+
         if (gameSaveEntity.getAttack() != updateRequest.getAttack()) {
             gameSaveEntity.setAttack(updateRequest.getAttack());
             hasUpdates = true;
@@ -182,6 +202,11 @@ public class GameSaveServiceImpl implements GameSaveService {
 
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, AdminGameSaveUpdateRequest adminUpdateRequest) {
         boolean hasUpdates = false;
+
+        if (!Objects.equals(gameSaveEntity.getNickname(), adminUpdateRequest.getNickname())) {
+            gameSaveEntity.setNickname(adminUpdateRequest.getNickname());
+            hasUpdates = true;
+        }
 
         if (gameSaveEntity.getAttack() != adminUpdateRequest.getAttack()) {
             gameSaveEntity.setAttack(adminUpdateRequest.getAttack());

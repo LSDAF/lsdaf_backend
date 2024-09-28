@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;

@@ -321,8 +321,8 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | paul.ochon@test.com | 10   | 10           | 10     | 100     | 1000    | 10000    |
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst | nickname                             |
+      | paul.ochon@test.com | 10   | 10           | 10     | 100     | 1000    | 10000    | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d |
 
     Then the response status code should be 200
 
@@ -366,22 +366,150 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack |
-      | 10000 | 10000        | 10000  |
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | player3  |
 
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com |
+      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | player3  |
+
+  Scenario: An admin user requests the update of an existing game save with a custom nickname
+    Given the following users
+      | id                                   | name       | email               | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | Play3r-0n3  |
+
+    Then the response status code should be 200
+
+    And the response should have the following GameSave
+      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | Play3r-0n3  |
+
+  Scenario: An admin user requests the update of an existing game save with an existing nickname
+    Given the following users
+      | id                                   | name       | email                | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | player2  |
+
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too long
+    Given the following users
+      | id                                   | name       | email                | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | 012345678901234567  |
+
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too short
+    Given the following users
+      | id                                   | name       | email                | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | 01       |
+
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains spaces
+    Given the following users
+      | id                                   | name       | email                | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password  |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname    |
+      | 10000 | 10000        | 10000  | 01234 56789 |
+
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains invalid characters
+    Given the following users
+      | id                                   | name       | email                | password | roles      |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
+      | gold  | healthPoints | attack | nickname |
+      | 10000 | 10000        | 10000  | \@azeeza |
+
+    Then the response status code should be 400
 
   Scenario: An admin user requests the update of an existing game save with invalid data
     Given the following users

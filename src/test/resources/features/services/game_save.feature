@@ -28,8 +28,8 @@ Feature: Game Save Service tests
       | paul.itesse@test.com | 500  | 11289        | 5000   | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | 600     | 700     | 800      |
 
     Then I should return the following game save entities
-      | id                                   | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      |
+      | id                                   | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst | nickname |
+      | 3e97cebd-3ab0-43d7-8fb4-961f19a4ce61 | paul.itesse@test.com | 500  | 11289        | 5000   | 600     | 700     | 800      | Player   |
 
     And I should have the following game saves in DB
       | id                                   | userId                               | userEmail            | gold | healthPoints | attack | diamond | emerald | amethyst |
@@ -70,14 +70,14 @@ Feature: Game Save Service tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
     And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
+      | id                                   | userId                               | gold    | healthPoints | attack | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   | player1  |
     When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
-      | healthPoints | attack |
-      | 200          | 3000   |
+      | healthPoints | attack | nickname |
+      | 200          | 3000   | player2  |
     Then I should return the following game save entities
-      | id                                   | userId                               | gold    | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 200          | 3000   |
+      | id                                   | userId                               | gold    | healthPoints | attack | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 200          | 3000   | player2  |
 
 
   Scenario: Update a non-existing GameSave

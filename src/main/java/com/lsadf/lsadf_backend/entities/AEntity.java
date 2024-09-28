@@ -5,10 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AEntity implements Entity {
+public abstract class AEntity implements Entity {
 
     @Serial
     private static final long serialVersionUID = 7495963088331648156L;

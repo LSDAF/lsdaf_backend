@@ -1,6 +1,8 @@
 package com.lsadf.lsadf_backend.requests.game_save;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lsadf.lsadf_backend.annotations.Nickname;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +21,9 @@ public class GameSaveUpdateRequest {
     @JsonProperty(value = ATTACK)
     @PositiveOrZero
     private long attack;
+
+    @JsonProperty(value = NICKNAME)
+    @Nickname
+    @Schema(description = "Nickname of the user", example = "test")
+    private String nickname;
 }
