@@ -43,7 +43,6 @@ public class GameSaveEntity extends AEntity {
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
     private long attack = 1L;
 
-    @Builder.Default
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_NICKNAME, unique = true)
     private String nickname;
 
@@ -55,4 +54,6 @@ public class GameSaveEntity extends AEntity {
         this.currencyEntity = currencyEntity;
         currencyEntity.setGameSave(this);
     }
+
+
 }

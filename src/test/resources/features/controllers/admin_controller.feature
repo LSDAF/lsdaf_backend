@@ -482,11 +482,11 @@ Feature: Admin Controller tests
 
     When the user logs in with the following credentials
       | email               | password  |
-      | paul.ochon@test.com | toto 1234 |
+      | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | player2  |
+      | gold  | healthPoints | attack | nickname    |
+      | 10000 | 10000        | 10000  | 01234 56789 |
 
     Then the response status code should be 400
 

@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.anotations;
+package com.lsadf.lsadf_backend.annotations;
 
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

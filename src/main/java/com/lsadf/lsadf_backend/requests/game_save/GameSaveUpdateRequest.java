@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.requests.game_save;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lsadf.lsadf_backend.anotations.Nickname;
+import com.lsadf.lsadf_backend.annotations.Nickname;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
