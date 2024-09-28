@@ -108,8 +108,9 @@ public class ServiceConfiguration {
                                      @Qualifier(LOCAL_CACHE_SERVICE) CacheService localCacheService,
                                      @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
                                      CacheFlushService cacheFlushService,
-                                     ClockService clockService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService, clockService);
+                                     ClockService clockService,
+                                     EmailService emailService) {
+        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService, clockService, emailService);
     }
 
     @Bean

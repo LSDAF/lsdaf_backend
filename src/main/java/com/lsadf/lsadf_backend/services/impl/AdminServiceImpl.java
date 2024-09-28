@@ -40,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
     private final CacheService redisCacheService;
     private final CacheFlushService cacheFlushService;
     private final ClockService clockService;
+    private final EmailService emailService;
 
     public AdminServiceImpl(UserService userService,
                             GameSaveService gameSaveService,
@@ -48,7 +49,8 @@ public class AdminServiceImpl implements AdminService {
                             CacheService localCacheService,
                             CacheService redisCacheService,
                             CacheFlushService cacheFlushService,
-                            ClockService clockService) {
+                            ClockService clockService,
+                            EmailService emailService) {
         this.userService = userService;
         this.mapper = mapper;
         this.searchService = searchService;
@@ -57,6 +59,7 @@ public class AdminServiceImpl implements AdminService {
         this.redisCacheService = redisCacheService;
         this.cacheFlushService = cacheFlushService;
         this.clockService = clockService;
+        this.emailService = emailService;
     }
 
     /**
