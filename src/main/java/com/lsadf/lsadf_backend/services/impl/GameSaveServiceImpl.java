@@ -56,6 +56,7 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .build();
 
         GameSaveEntity saved = gameSaveRepository.save(entity);
+        saved.setNickname(saved.getId());
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(userEntity.getEmail())
@@ -66,7 +67,6 @@ public class GameSaveServiceImpl implements GameSaveService {
 
 
         GameSaveEntity savedEntity = gameSaveRepository.save(saved);
-        savedEntity.setNickname(entity.getId());
 
         return savedEntity;
     }
@@ -116,7 +116,7 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         saved.setCurrencyEntity(currencyEntity);
 
-        return gameSaveRepository.save(entity);
+        return gameSaveRepository.save(saved);
     }
 
     /**
@@ -178,6 +178,11 @@ public class GameSaveServiceImpl implements GameSaveService {
 
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, GameSaveUpdateRequest updateRequest) {
         boolean hasUpdates = false;
+
+        if (!Objects.equals(gameSaveEntity.getNickname(), updateRequest.getNickname())) {
+            gameSaveEntity.setNickname(updateRequest.getNickname());
+            hasUpdates = true;
+        }
 
         if (gameSaveEntity.getAttack() != updateRequest.getAttack()) {
             gameSaveEntity.setAttack(updateRequest.getAttack());
