@@ -9,4 +9,4 @@ if [ "$SLEEP_ENABLED" == "true" ]
     echo "Running application..."
 fi
 
-java -Dspring.profiles.active=docker org.springframework.boot.loader.launch.JarLauncher
+java -Dspring.profiles.active=docker -Dlogback.configurationFile=logback-docker.xml org.springframework.boot.loader.launch.JarLauncher

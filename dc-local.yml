@@ -86,6 +86,8 @@ services:
       - SLEEP_ENABLED=true
     networks:
       - backend
+    volumes:
+      - ./docker-data/lsadf_backend_data/:/app/logs
     depends_on:
       - postgres
 
