@@ -88,7 +88,6 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         UserEntity validatedUser = userService.verifyUser(user.getEmail());
 
         userVerificationTokenEntity.setStatus(TokenStatus.INVALIDATED);
-        userVerificationTokenEntity.setUser(validatedUser);
 
         userVerificationTokenRepository.save(userVerificationTokenEntity);
 

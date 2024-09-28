@@ -4,6 +4,9 @@ server:
   https: false
 
 spring:
+  mail:
+    host: ${mail.host}
+    port: ${mail.port}
   datasource:
     hikari:
       maximum-pool-size: 20
@@ -140,16 +143,17 @@ shutdown:
   flush-cache-at-shutdown: true
 
 mail:
-  host: ${MAIL_HOST}
-  port: ${MAIL_PORT}
-  username: ${MAIL_USERNAME}
-  password: ${MAIL_PASSWORD}
+  host: ${EMAIL_HOST}
+  port: ${EMAIL_PORT}
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
   auth: true
   start-tls-enabled: true
   connection-timeout: 5000
   timeout: 5000
   write-timeout: 5000
   debug: true
+  starttls-required: true
 
 
 clock:

@@ -10,7 +10,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -47,7 +46,8 @@ public class DbInitializer implements ApplicationListener<ContextRefreshedEvent>
                             user.getPassword(),
                             SocialProvider.LOCAL,
                             user.getRoles(),
-                            user.getName());
+                            user.getName(),
+                            true);
                 } catch (AlreadyExistingUserException e) {
                     throw new RuntimeException(e);
                 }

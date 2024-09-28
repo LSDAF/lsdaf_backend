@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = AlreadyExistingUserException.class)
     public UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException {
         if ((creationRequest.getUserId() != null && userRepository.existsById(creationRequest.getUserId()))) {
             throw new AlreadyExistingUserException("User with User id " + creationRequest.getUserId() + " already exist");
@@ -61,13 +60,14 @@ public class UserServiceImpl implements UserService {
                 creationRequest.getPassword(),
                 creationRequest.getSocialProvider(),
                 Sets.newHashSet(UserRole.getDefaultRole()),
-                creationRequest.getName());
+                creationRequest.getName(),
+                false);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public boolean validateUserPassword(String email, String password) throws NotFoundException {
         UserEntity userEntity = getUserByEmail(email);
@@ -91,8 +91,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException {
-        return createUser(null, email, password, provider, userRoles, name);
+    public UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException {
+        return createUser(null, email, password, provider, userRoles, name, verified);
     }
 
     /**
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException {
+    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
                 .roles(userRoles)
                 .email(email)
                 .enabled(true)
+                .verified(verified)
                 .name(name)
                 .provider(provider)
                 .password(encodedPassword)

@@ -14,8 +14,8 @@ public class EmailProperties {
     private String username;
     private String password;
     private boolean auth;
-    private boolean starttlsEnabled;
-    private boolean starttlsRequired;
+    private boolean startTlsEnabled;
+    private boolean startTlsRequired;
     private int connectionTimeout;
     private int timeout;
     private int writeTimeout;

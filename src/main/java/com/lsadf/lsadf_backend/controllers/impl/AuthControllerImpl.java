@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 import java.util.Set;
 
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
@@ -181,7 +180,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
     public ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userCreationRequest) {
         try {
             Set<UserRole> roles = Sets.newHashSet(UserRole.getDefaultRole());
-            UserEntity userEntity = userService.createUser(null, userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles, userCreationRequest.getName());
+            UserEntity userEntity = userService.createUser(null, userCreationRequest.getEmail(), userCreationRequest.getPassword(), userCreationRequest.getSocialProvider(), roles, userCreationRequest.getName(), false);
             UserVerificationTokenEntity userVerificationTokenEntity = userVerificationService.createUserValidationToken(userEntity);
             emailService.sendUserValidationEmail(userEntity.getEmail(), userVerificationTokenEntity.getToken());
             UserInfo userInfo = mapper.mapUserEntityToUserInfo(userEntity);

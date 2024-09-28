@@ -63,7 +63,7 @@ public class UserEntity extends AEntity {
     private String password;
 
     @Column(name = EntityAttributes.User.USER_VERIFIED)
-    private boolean verified;
+    private Boolean verified;
 
     @Convert(converter = SocialProviderConverter.class)
     private SocialProvider provider;

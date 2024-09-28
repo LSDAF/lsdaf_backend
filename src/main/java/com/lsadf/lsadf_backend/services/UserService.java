@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -31,9 +30,10 @@ public interface UserService {
      * @param provider          the social provider if any, else local
      * @param optionalUserRoles the roles of the user if any to use
      * @param name              the name of the user
+     * @param verified
      * @return the created user
      */
-    UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> optionalUserRoles, String name) throws AlreadyExistingUserException;
+    UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> optionalUserRoles, String name, boolean verified) throws AlreadyExistingUserException;
 
     /**
      * Validates a user
@@ -46,14 +46,15 @@ public interface UserService {
     /**
      * Creates a new user
      *
-     * @param email             the email of the user
-     * @param password          the password of the user
-     * @param provider          the social provider if any, else local
-     * @param optionalUserRoles the roles of the user if any to use
-     * @param name              the name of the user
+     * @param userRoles the roles of the user if any to use
+     * @param email     the email of the user
+     * @param password  the password of the user
+     * @param provider  the social provider if any, else local
+     * @param name      the name of the user
+     * @param verified  the verification status of the user
      * @return the created user
      */
-    UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name) throws AlreadyExistingUserException;
+    UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException;
 
 
     /**
@@ -107,7 +108,7 @@ public interface UserService {
     /**
      * Updates user by id
      *
-     * @param id the id of the user
+     * @param id                the id of the user
      * @param userUpdateRequest the update request
      * @return
      */
@@ -115,7 +116,8 @@ public interface UserService {
 
     /**
      * Updates user by id
-     * @param id the id of the user
+     *
+     * @param id                     the id of the user
      * @param adminUserUpdateRequest the request to update the user data
      * @return the updated user
      * @throws NotFoundException if the user is not found

@@ -14,23 +14,32 @@ import java.util.Properties;
 @Configuration
 public class EmailConfiguration {
 
-    @Bean
-    public JavaMailSender javaMailSender(EmailProperties emailProperties) {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(emailProperties.getHost());
-        mailSender.setPort(emailProperties.getPort());
-        mailSender.setUsername(emailProperties.getUsername());
-        mailSender.setPassword(emailProperties.getPassword());
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.smtp.auth", emailProperties.isAuth());
-        props.put("mail.smtp.starttls.enable", emailProperties.isStarttlsEnabled());
-        props.put("mail.smtp.starttls.required", emailProperties.isStarttlsRequired());
-        props.put("mail.debug", emailProperties.isDebug());
-        props.put("mail.smtp.connectiontimeout", emailProperties.getConnectionTimeout());
-        props.put("mail.smtp.timeout", emailProperties.getTimeout());
-        props.put("mail.smtp.writetimeout", emailProperties.getWriteTimeout());
-
-        return mailSender;
-    }
+    private static final String SMTP = "smtp";
+//
+//    @Bean
+//    public JavaMailSender javaMailSender(EmailProperties emailProperties) {
+//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//        mailSender.setHost(emailProperties.getHost());
+//        mailSender.setProtocol(SMTP);
+//        mailSender.setPort(emailProperties.getPort());
+//        mailSender.setUsername(emailProperties.getUsername());
+//        mailSender.setPassword(emailProperties.getPassword());
+//
+////        mailSender.setHost("smtp.office365.com");
+////        mailSender.setPort(587);
+////        mailSender.setUsername("lsadf_games@outlook.com");
+////        mailSender.setPassword("mujdpiczxcrechkd");
+//
+//        Properties props = mailSender.getJavaMailProperties();
+//
+//        props.put("mail.transport.protocol", "smtp");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.starttls.enable", "true");
+//        props.put("mail.smtp.starttls.required", "true");
+//        props.put("mail.debug", "true"); // Enable debug logging (optional)
+//        props.put("mail.smtp.connectiontimeout", 5000); // Timeout settings
+//        props.put("mail.smtp.timeout", 5000);
+//        props.put("mail.smtp.writetimeout", 5000);
+//        return mailSender;
+//    }
 }
