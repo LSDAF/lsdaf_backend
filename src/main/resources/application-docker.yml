@@ -1,6 +1,8 @@
 db:
   url: ${DB_URL_DOCKER}
 
+logging:
+  config: file:logback-docker.xml
 
 cache:
   redis:
