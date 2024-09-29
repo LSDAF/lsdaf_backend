@@ -1,8 +1,23 @@
 server:
   port: 8080
-
+  host-name: localhost
+  https: false
 
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30_000
+      max-lifetime: 1_800_000
+      connection-timeout: 30_000
+      validation-timeout: 5_000
+      connection-test-query: SELECT 1
+      auto-commit: true
+      leak-detection-threshold: 2000
+  output:
+    ansi:
+      enabled: always
   application:
     name: LSADF Backend
   banner:
@@ -120,11 +135,26 @@ cache:
     game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
     local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
     currency-expiration-seconds: ${CURRENCY_EXPIRATION_SECONDS}
-    invalidated-jwt-token-expiration-seconds: -1
 
 shutdown:
   flush-cache-at-shutdown: true
 
+mail:
+  host: ${MAIL_HOST}
+  port: ${MAIL_PORT}
+  username: ${MAIL_USERNAME}
+  password: ${MAIL_PASSWORD}
+  auth: true
+  start-tls-enabled: true
+  connection-timeout: 5000
+  timeout: 5000
+  write-timeout: 5000
+  debug: true
+
 
 clock:
   time-zone: "Europe/Paris"
+
+
+user-email-verification:
+  expiration-seconds: 86_400
