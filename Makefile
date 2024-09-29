@@ -39,6 +39,12 @@ prune:
 	@docker system prune -a -f
 	@docker image prune -f
 
+purgedb:
+	@rm -rf docker-data/postgres/*
+
+purgelogs:
+	@rm -rf docker-data/lsadf_backend_data/*
+
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
@@ -50,6 +56,8 @@ help:
 	@echo "> monitorup           |-----------------------------------------|  Runs db docker images + monitoring tools"
 	@echo "> monitordown         |-----------------------------------------|  Kills db + monitoring tools docker images"
 	@echo "> prune               |-----------------------------------------|  Cleans all docker local storages"
+	@echo "> purgedb             |-----------------------------------------|  Cleans all data from docker-data folder for db"
+	@echo "> purgelogs           |-----------------------------------------|  Cleans all logs from docker-data folder for lsadf_backend_data"
 	@echo "> logs                |-----------------------------------------|  Reads all logs from docker images"
 	@echo ""
 	@echo "[Java Project]"
