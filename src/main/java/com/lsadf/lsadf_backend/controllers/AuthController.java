@@ -91,8 +91,9 @@ public interface AuthController {
     ResponseEntity<GenericResponse<UserInfo>> register(UserCreationRequest userLoginRequest);
 
     /**
-     *
-     * @return
+     * Validates a user account thanks to the token sent by email
+     * @param token the token to validate the account
+     * @return the user information
      */
     @GetMapping(value = ControllerConstants.Auth.VALIDATE_TOKEN)
     @Operation(summary = "Validates a user account thanks to the token sent by email")

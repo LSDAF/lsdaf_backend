@@ -41,7 +41,7 @@ public class UserDetailsServiceMock implements UserDetailsService {
     private static LocalUser createLocalUser(UserEntity user) {
         return new LocalUser(user.getEmail(),
                 user.getPassword(),
-                user.isEnabled(),
+                user.getEnabled(),
                 true,
                 true,
                 true,

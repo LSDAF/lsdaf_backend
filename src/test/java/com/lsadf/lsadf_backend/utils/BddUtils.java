@@ -48,6 +48,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a CurrencyRequest
+     *
      * @param row row from BDD table
      * @return CurrencyRequest
      */
@@ -67,7 +68,8 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a RefreshTokenEntity
-     * @param row row from BDD table
+     *
+     * @param row            row from BDD table
      * @param userRepository UserRepository
      * @return RefreshTokenEntity
      */
@@ -381,10 +383,12 @@ public class BddUtils {
         String password = row.get(BddFieldConstants.User.PASSWORD);
         String provider = row.get(BddFieldConstants.User.PROVIDER);
         String enabled = row.get(BddFieldConstants.User.ENABLED);
+        String verified = row.get(BddFieldConstants.User.VERIFIED);
         String roles = row.get(BddFieldConstants.User.ROLES);
 
 
-        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
         SocialProvider socialProvider = SocialProvider.fromString(provider);
         Set<UserRole> roleSet = roles == null
                 ? Set.of(UserRole.USER)
@@ -396,6 +400,7 @@ public class BddUtils {
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .name(name)
+                .verified(verifiedBoolean)
                 .enabled(enabledBoolean)
                 .password(password)
                 .provider(socialProvider)
@@ -485,15 +490,17 @@ public class BddUtils {
         String password = row.get(BddFieldConstants.AdminUserUpdateRequest.PASSWORD);
         String email = row.get(BddFieldConstants.AdminUserUpdateRequest.EMAIL);
         String enabled = row.get(BddFieldConstants.AdminUserUpdateRequest.ENABLED);
+        String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.VERIFIED);
         String userRoles = row.get(BddFieldConstants.AdminUserUpdateRequest.USER_ROLES);
 
         Set<UserRole> roles = null;
         if (userRoles != null) {
             roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
         }
-        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
 
-        return new AdminUserUpdateRequest(name, password, email, enabledBoolean, roles);
+        return new AdminUserUpdateRequest(name, password, verifiedBoolean, email, enabledBoolean, roles);
     }
 
     /**
@@ -520,8 +527,8 @@ public class BddUtils {
         }
         SocialProvider socialProvider = SocialProvider.fromString(provider);
 
-        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
-        boolean verifiedBoolean = verified == null || Boolean.parseBoolean(verified);
+        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
 
         return new AdminUserCreationRequest(name, userId, enabledBoolean, verifiedBoolean, email, password, socialProvider, roles, providerUserId);
 
@@ -560,6 +567,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a UserRefreshLoginRequest
+     *
      * @param row row from BDD table
      * @return UserRefreshLoginRequest
      */
@@ -582,9 +590,11 @@ public class BddUtils {
         String password = row.get(BddFieldConstants.UserAdminDetails.PASSWORD);
         String provider = row.get(BddFieldConstants.UserAdminDetails.SOCIAL_PROVIDER);
         String enabled = row.get(BddFieldConstants.UserAdminDetails.ENABLED);
+        String verified = row.get(BddFieldConstants.UserAdminDetails.VERIFIED);
         String roles = row.get(BddFieldConstants.UserAdminDetails.ROLES);
 
-        boolean enabledBoolean = enabled == null || Boolean.parseBoolean(enabled);
+        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
         SocialProvider socialProvider = SocialProvider.fromString(provider);
         Set<UserRole> roleSet = roles == null
                 ? Set.of(UserRole.USER)
@@ -597,6 +607,7 @@ public class BddUtils {
                 .id(id)
                 .email(email)
                 .name(name)
+                .verified(verifiedBoolean)
                 .password(password)
                 .socialProvider(socialProvider)
                 .enabled(enabledBoolean)
@@ -606,6 +617,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a UserVerificationTokenEntity
+     *
      * @param row row from BDD table
      * @return UserVerificationTokenEntity
      */

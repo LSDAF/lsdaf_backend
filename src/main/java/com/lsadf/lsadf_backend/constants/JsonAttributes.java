@@ -52,6 +52,7 @@ public final class JsonAttributes {
         public static final String EMAIL = "email";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String PROVIDER = "provider";
         public static final String USER_ROLES = "user_roles";
         public static final String GAME_SAVES = "game_saves";

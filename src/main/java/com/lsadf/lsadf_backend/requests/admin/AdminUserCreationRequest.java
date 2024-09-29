@@ -37,11 +37,11 @@ public class AdminUserCreationRequest implements Serializable {
 
     @Schema(description = "Enabled status of user to create", example = "true")
     @JsonProperty(value = ENABLED)
-    private boolean enabled;
+    private Boolean enabled;
 
     @Schema(description = "Verified email status of user to create", example = "true")
     @JsonProperty(value = VERIFIED)
-    private boolean verified;
+    private Boolean verified;
 
     @Email
     @NotBlank

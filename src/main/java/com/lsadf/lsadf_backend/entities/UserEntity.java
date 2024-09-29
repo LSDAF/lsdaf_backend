@@ -56,7 +56,7 @@ public class UserEntity extends AEntity {
     private String email;
 
     @Column(name = EntityAttributes.User.USER_ENABLED)
-    private boolean enabled;
+    private Boolean enabled;
 
     @Column(name = EntityAttributes.User.USER_PASSWORD)
     @Size(min = 8)

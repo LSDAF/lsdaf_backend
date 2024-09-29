@@ -73,13 +73,14 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         }
 
         UserVerificationTokenEntity userVerificationTokenEntity = userValidationTokenEntityOptional.get();
-
+        Date now = clockService.nowDate();
         TokenStatus tokenStatus = userVerificationTokenEntity.getStatus();
 
         if (tokenStatus.equals(TokenStatus.INVALIDATED)) {
             throw new InvalidTokenException("Token already used");
         }
-        if (tokenStatus.equals(TokenStatus.EXPIRED)) {
+        if (tokenStatus.equals(TokenStatus.EXPIRED)
+                || userVerificationTokenEntity.getExpirationDate().before(now)) {
             throw new InvalidTokenException("Token expired");
         }
 

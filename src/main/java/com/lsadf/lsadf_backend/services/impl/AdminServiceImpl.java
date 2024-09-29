@@ -156,7 +156,8 @@ public class AdminServiceImpl implements AdminService {
                 .userId(creationRequest.getUserId())
                 .build();
         UserEntity user = userService.createUser(userCreationRequest);
-        user.setEnabled(creationRequest.isEnabled());
+        user.setEnabled(creationRequest.getEnabled());
+        user.setVerified(creationRequest.getVerified());
 
         return mapper.mapToUser(user);
     }

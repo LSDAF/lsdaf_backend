@@ -95,7 +95,8 @@ public class MapperImpl implements Mapper {
                 .password(userEntity.getPassword())
                 .name(userEntity.getName())
                 .socialProvider(provider)
-                .enabled(userEntity.isEnabled())
+                .enabled(userEntity.getEnabled())
+                .verified(userEntity.getVerified())
                 .userRoles(new ArrayList<>(userEntity.getRoles()))
                 .gameSaves(userEntity.getGameSaves().stream()
                         .map(this::mapToGameSave)
@@ -135,7 +136,7 @@ public class MapperImpl implements Mapper {
     public LocalUser mapUserEntityToLocalUser(UserEntity user) {
         return new LocalUser(user.getEmail(),
                 user.getPassword(),
-                user.isEnabled(),
+                user.getEnabled(),
                 true,
                 true,
                 true,

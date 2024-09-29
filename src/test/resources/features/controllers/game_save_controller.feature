@@ -7,8 +7,8 @@ Feature: GameSave Controller tests
 
   Scenario: A non-logged in user tries to generate a game save
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When the user requests the endpoint to generate a game save with no token
 
@@ -16,8 +16,8 @@ Feature: GameSave Controller tests
 
   Scenario: A User creates a new GameSave
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -32,8 +32,8 @@ Feature: GameSave Controller tests
 
   Scenario: A non-logged in user tries to update a GameSave
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     |
@@ -44,8 +44,8 @@ Feature: GameSave Controller tests
 
   Scenario: A user tries to update a GameSave with invalid id
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     |
@@ -62,9 +62,9 @@ Feature: GameSave Controller tests
 
   Scenario: A user tries to update a non-owned GameSave
     Given the following users
-      | id                                   | name          | email                  | password        |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234        |
-      | 91d07c02-1119-4791-bc38-8fca9c7e447c | Jean DUJARDIN | jean.dujardin@test.com | jeandujardin666 |
+      | id                                   | name          | email                  | password        | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234        | true    | true     |
+      | 91d07c02-1119-4791-bc38-8fca9c7e447c | Jean DUJARDIN | jean.dujardin@test.com | jeandujardin666 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 91d07c02-1119-4791-bc38-8fca9c7e447c | 1000 | 100          | 10     |
@@ -78,6 +78,60 @@ Feature: GameSave Controller tests
       | Play3r-0n3 |
 
     Then the response status code should be 403
+
+  Scenario: A user tries to update an owned GameSave with invalid data -> invalid healthPoints
+    Given the following users
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to update a GameSave with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+      | healthPoints | attack |
+      | -11289       | 5000   |
+
+    Then the response status code should be 400
+
+  Scenario: A user tries to update an owned GameSave with invalid data -> invalid attack
+    Given the following users
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to update a GameSave with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+      | healthPoints | attack |
+      | 11289        | -5000  |
+
+    Then the response status code should be 400
+
+  Scenario: A user updates an owned GameSave with valid data
+    Given the following users
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 100          | 10     | player1  |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to update a GameSave with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
+      | healthPoints | attack | nickname |
+      | 11289        | 5000   | player2  |
+
+    Then the response status code should be 200
 
   Scenario: A user updates an owned GameSave with valid custom nickname
     Given the following users

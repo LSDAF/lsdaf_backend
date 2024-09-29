@@ -43,7 +43,11 @@ public class UserAdminDetails {
 
     @JsonProperty(value = ENABLED)
     @Schema(description = "User account is enabled", example = "true")
-    private boolean enabled;
+    private Boolean enabled;
+
+    @JsonProperty(value = VERIFIED)
+    @Schema(description = "User email is verified", example = "true")
+    private Boolean verified;
 
     @JsonProperty(value = USER_ROLES)
     @Schema(description = "User roles", example = "[\"USER\"]")

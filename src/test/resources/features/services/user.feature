@@ -1,4 +1,3 @@
-
 Feature: User Service tests
 
   Background:
@@ -13,8 +12,8 @@ Feature: User Service tests
       | paul.ochon@test.com | Paul OCHON | paulOchon |
 
     Then I should return the following user entities
-      | name       | email               | enabled | password  | provider | roles |
-      | Paul OCHON | paul.ochon@test.com | true    | paulOchon | LOCAL    | USER  |
+      | name       | email               | enabled | password  | provider | roles | verified |
+      | Paul OCHON | paul.ochon@test.com | true    | paulOchon | LOCAL    | USER  | false    |
 
 
   Scenario: Check existence of an existing User

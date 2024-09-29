@@ -67,6 +67,7 @@ public class BddFieldConstants {
         public static final String EMAIL = "email";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String PROVIDER = "provider";
         public static final String ROLES = "roles";
         public static final String CREATED_AT = BddFieldConstants.CREATED_AT;
@@ -117,6 +118,7 @@ public class BddFieldConstants {
         public static final String NAME = "name";
         public static final String SOCIAL_PROVIDER = "socialProvider";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String ROLES = "roles";
         public static final String GAME_SAVES = "gameSaves";
         public static final String UPDATED_AT = BddFieldConstants.UPDATED_AT;
@@ -136,6 +138,7 @@ public class BddFieldConstants {
         public static final String PASSWORD = "password";
         public static final String EMAIL = "email";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String USER_ROLES = "userRoles";
     }
 

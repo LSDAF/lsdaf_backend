@@ -35,6 +35,10 @@ public class AdminUserUpdateRequest implements Serializable {
     @JsonProperty(value = PASSWORD)
     private String password;
 
+    @Schema(description = "Verified status of user to update", example = "true")
+    @JsonProperty(value = VERIFIED)
+    private Boolean verified;
+
     @Email
     @NotBlank
     @Schema(description = "Email of user to update", example = "toto@toto.fr")

@@ -318,8 +318,13 @@ public class UserServiceImpl implements UserService {
                 hasUpdates = true;
             }
 
-            if (adminUserUpdateRequest.getEnabled() != null && !adminUserUpdateRequest.getEnabled().equals(userEntity.isEnabled())) {
+            if (adminUserUpdateRequest.getEnabled() != null && !adminUserUpdateRequest.getEnabled().equals(userEntity.getEnabled())) {
                 userEntity.setEnabled(adminUserUpdateRequest.getEnabled());
+                hasUpdates = true;
+            }
+
+            if (adminUserUpdateRequest.getVerified() != null && !adminUserUpdateRequest.getVerified().equals(userEntity.getVerified())) {
+                userEntity.setVerified(adminUserUpdateRequest.getVerified());
                 hasUpdates = true;
             }
         }

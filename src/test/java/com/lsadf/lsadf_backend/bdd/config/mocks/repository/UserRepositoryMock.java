@@ -36,6 +36,9 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements U
         }
         toUpdate.setName(entity.getName());
         toUpdate.setEmail(entity.getEmail());
+        toUpdate.setEnabled(entity.getEnabled());
+        toUpdate.setRoles(entity.getRoles());
+        toUpdate.setVerified(entity.getVerified());
         toUpdate.setPassword(entity.getPassword());
         toUpdate.setUpdatedAt(now);
         entities.put(entity.getId(), toUpdate);

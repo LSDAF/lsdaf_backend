@@ -92,7 +92,6 @@ public class AuthControllerImpl extends BaseController implements AuthController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public ResponseEntity<GenericResponse<JwtAuthentication>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) throws NotFoundException {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
@@ -122,7 +121,6 @@ public class AuthControllerImpl extends BaseController implements AuthController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public ResponseEntity<GenericResponse<JwtAuthentication>> loginFromRefreshToken(@Valid @RequestBody UserRefreshLoginRequest userRefreshLoginRequest) throws NotFoundException {
         try {
 
@@ -176,7 +174,6 @@ public class AuthControllerImpl extends BaseController implements AuthController
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public ResponseEntity<GenericResponse<UserInfo>> register(@Valid @RequestBody UserCreationRequest userCreationRequest) {
         try {
             Set<UserRole> roles = Sets.newHashSet(UserRole.getDefaultRole());
