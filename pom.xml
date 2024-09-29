@@ -47,6 +47,7 @@
         <delombok.output>${project.build.directory}/delombok</delombok.output>
         <embedded-redis.version>1.4.2</embedded-redis.version>
         <expiringmap.jodah.version>0.5.11</expiringmap.jodah.version>
+        <jansi.version>2.4.1</jansi.version>
     </properties>
 
     <build>
@@ -334,6 +335,11 @@
             <groupId>net.jodah</groupId>
             <artifactId>expiringmap</artifactId>
             <version>${expiringmap.jodah.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>${jansi.version}</version>
         </dependency>
     </dependencies>
 

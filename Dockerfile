@@ -12,6 +12,7 @@ RUN mv target/*.jar target/lsadf_backend.jar
 FROM openjdk:17-alpine as builder
 
 COPY --from=compiler target/lsadf_backend.jar lsadf_backend.jar
+COPY --from=compiler target/classes/logback-docker.xml logback-docker.xml
 
 RUN ls -lrt
 
@@ -23,7 +24,7 @@ FROM openjdk:17-alpine
 
 EXPOSE 8080
 
-ENV SLEEP_ENABLED=true
+#ENV SLEEP_ENABLED=true
 
 # Copy layers from the build stage
 COPY --from=builder dependencies/ ./
@@ -31,6 +32,9 @@ COPY --from=builder spring-boot-loader/ ./
 COPY --from=builder snapshot-dependencies/ ./
 COPY --from=builder application/ ./
 COPY --from=builder ./startup.sh ./
+COPY --from=builder ./logback-docker.xml ./
+
+RUN mkdir logs
 
 RUN chmod +x startup.sh
 
