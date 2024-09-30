@@ -23,14 +23,20 @@ monitordown:
 build:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
 
+builddev:
+	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
+
 build-no-cache:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
 
 up:
 	COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
+updev:
+	COMPOSE_PROFILES=db,backend_dev,monitoring docker-compose --env-file env/env.properties -f dc-local.yml up -d
+
 down:
-	COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml down
+	COMPOSE_PROFILES=db,backend,monitoring,backend_dev docker-compose --env-file env/env.properties -f dc-local.yml down
 
 logs:
 	COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml logs -f

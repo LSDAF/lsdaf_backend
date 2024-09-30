@@ -6,6 +6,7 @@ services:
     profiles:
       - db
       - backend
+      - backend_dev
     container_name: postgres
     env_file: env/env.properties
     environment:
@@ -88,6 +89,26 @@ services:
       - backend
     volumes:
       - ./docker-data/lsadf_backend_data/:/app/logs
+    depends_on:
+      - postgres
+
+  lsadf_backend_dev:
+    platform: linux/amd64
+    env_file: env/env.properties
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: lsadf_backend_dev
+    profiles:
+      - backend_dev
+    ports:
+      - "8080:8080"
+    environment:
+      - SLEEP_ENABLED=true
+    networks:
+      - backend
+    volumes:
+      - ./docker-data/lsadf_backend_dev_data/:/app/logs
     depends_on:
       - postgres
 
