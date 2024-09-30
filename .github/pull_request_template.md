@@ -1,12 +1,3 @@
----
-name: Pull request
-about: Pull request template
-title: ''
-labels: ''
-assignees: ''
-
----
-
 ## Ticket
 
 <!-- Link to the Jira ticket -->
