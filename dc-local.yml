@@ -18,7 +18,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./docker-data/postgres:/var/lib/postgresql/data
+      - ./docker/data/postgres:/var/lib/postgresql/data
 
   redis:
     image: redis:7.4.0-alpine
@@ -33,7 +33,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./docker-data/redis_data:/data
+      - ./docker/data/redis_data:/data
 
   pgadmin:
     image: dpage/pgadmin4:8.11
@@ -47,7 +47,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_LISTEN_PORT: 80
     volumes:
-      - ./docker-data/pgadmin_data:/var/lib/pgadmin
+      - ./docker/data/pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgres
     ports:
@@ -68,7 +68,7 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./docker-data/redisinsight_data:/data
+      - ./docker/data/redisinsight_data:/data
     depends_on:
       - redis
 
@@ -77,7 +77,7 @@ services:
     env_file: env/env.properties
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     container_name: lsadf_backend
     profiles:
       - backend
@@ -88,7 +88,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./docker-data/lsadf_backend_data/:/app/logs
+      - ./docker/data/lsadf_backend_data/:/app/logs
     depends_on:
       - postgres
 
@@ -97,7 +97,7 @@ services:
     env_file: env/env.properties
     build:
       context: .
-      dockerfile: Dockerfile-dev
+      dockerfile: docker/Dockerfile-dev
     container_name: lsadf_backend_dev
     profiles:
       - backend_dev
@@ -108,7 +108,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./docker-data/lsadf_backend_dev_data/:/app/logs
+      - ./docker/data/lsadf_backend_dev_data/:/app/logs
     depends_on:
       - postgres
 
