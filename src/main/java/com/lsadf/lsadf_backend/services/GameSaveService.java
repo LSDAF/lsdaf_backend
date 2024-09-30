@@ -4,7 +4,7 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -44,13 +44,13 @@ public interface GameSaveService {
     /**
      * Updates a game save
      *
-     * @param saveId        the save id
-     * @param updateRequest the update request
+     * @param saveId                        the save id
+     * @param gameSaveUpdateNicknameRequest the nickname update request
      * @return the updated game save
      * @throws ForbiddenException the forbidden exception
      * @throws NotFoundException  the not found exception
      */
-    GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
+    GameSaveEntity updateNickname(String saveId, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
 
     /**
      * Updates a game save from admin side
@@ -61,7 +61,7 @@ public interface GameSaveService {
      * @throws ForbiddenException the forbidden exception
      * @throws NotFoundException  the not found exception
      */
-    GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
+    GameSaveEntity updateNickname(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
 
 
     /**

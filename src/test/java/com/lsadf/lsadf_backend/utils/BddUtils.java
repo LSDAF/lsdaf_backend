@@ -21,7 +21,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
@@ -37,7 +37,6 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -362,16 +361,10 @@ public class BddUtils {
      * @param row row from BDD table
      * @return GameSaveUpdateRequest
      */
-    public static GameSaveUpdateRequest mapToGameSaveUpdateUserRequest(Map<String, String> row) {
-        String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
-        String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+    public static GameSaveUpdateNicknameRequest mapToGameSaveUpdateUserRequest(Map<String, String> row) {
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
-        Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
-        Long attackLong = attack == null ? null : Long.parseLong(attack);
-
-
-        return new GameSaveUpdateRequest(healthPointsLong, attackLong, nickname);
+        return new GameSaveUpdateNicknameRequest(nickname);
     }
 
     /**

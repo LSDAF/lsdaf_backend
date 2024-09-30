@@ -53,7 +53,7 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
         public static final String GENERATE = "/generate";
-        public static final String GAME_SAVE_ID = "/{game_save_id}";
+        public static final String UPDATE_NICKNAME = "/{game_save_id}/nickname";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

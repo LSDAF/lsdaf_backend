@@ -13,15 +13,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameSaveUpdateRequest {
-    @JsonProperty(value = HP)
-    @PositiveOrZero
-    private long healthPoints;
-
-    @JsonProperty(value = ATTACK)
-    @PositiveOrZero
-    private long attack;
-
+public class GameSaveUpdateNicknameRequest {
     @JsonProperty(value = NICKNAME)
     @Nickname
     @Schema(description = "Nickname of the user", example = "test")
