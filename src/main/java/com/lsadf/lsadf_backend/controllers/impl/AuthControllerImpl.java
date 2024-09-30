@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.configurations.CurrentUser;
+import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.controllers.AuthController;
@@ -30,15 +30,13 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -101,6 +99,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
             if (!isValidPassword) {
                 throw new WrongPasswordException("Invalid password");
             }
+            checkUserEnabling(localUser);
             JwtTokenEntity jwt = tokenProvider.createToken(localUser);
             RefreshTokenEntity refreshToken = refreshTokenProvider.createToken(localUser);
 
@@ -113,7 +112,10 @@ public class AuthControllerImpl extends BaseController implements AuthController
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (AuthenticationException e) {
             log.error("Authentication failed", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Authentication failed", null);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Authentication failed: " + e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Could not login user", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not login user!", null);
         }
     }
 
@@ -127,7 +129,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
             String userEmail = userRefreshLoginRequest.getEmail();
 
             LocalUser localUser = userDetailsService.loadUserByEmail(userEmail);
-
+            checkUserEnabling(localUser);
             refreshTokenProvider.validateToken(userRefreshLoginRequest.getRefreshToken(), userEmail);
 
             // Create a new refresh token
@@ -197,7 +199,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<UserInfo>> validateUserAccount(@PathVariable(value = TOKEN) String token) {
+    public ResponseEntity<GenericResponse<UserInfo>> validateUserAccount(@RequestParam(value = TOKEN) String token) {
         try {
             UserEntity validatedUser = userVerificationService.validateUserVerificationToken(token);
             UserInfo userInfo = mapper.mapUserEntityToUserInfo(validatedUser);
@@ -212,6 +214,19 @@ public class AuthControllerImpl extends BaseController implements AuthController
         } catch (Exception e) {
             log.info("Could not validate user account", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not validate user account: " + e.getMessage(), null);
+        }
+    }
+
+    /**
+     * Check if user is enabled
+     * @param user user to check
+     */
+    private static void checkUserEnabling(LocalUser user) {
+        if (!user.getEmailVerified()) {
+            throw new DisabledException("Email is not verified");
+        }
+        if (!user.isEnabled()) {
+            throw new DisabledException("User is disabled");
         }
     }
 }

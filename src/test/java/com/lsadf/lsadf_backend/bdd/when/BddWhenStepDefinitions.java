@@ -43,7 +43,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^the user requests the endpoint to validate the account with the following verification token (.*)$")
     public void when_the_user_requests_the_endpoint_to_validate_its_account_with_the_following_verification_token(String token) {
         try {
-            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.VALIDATE_TOKEN.replace("{token}", token);
+            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.VALIDATE_TOKEN + "?token=" + token;
             String url = BddUtils.buildUrl(this.serverPort, fullPath);
             HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());

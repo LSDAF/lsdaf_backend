@@ -167,6 +167,27 @@ Feature: Auth Controller tests
 
     Then the response status code should be 401
 
+  Scenario: A user logs in without verifying its account
+    Given the following users
+      | id                                   | name       | email               | password | roles | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER  | false   | false    |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    Then the response status code should be 401
+
+  Scenario: A disabled user tries to log in
+    Given the following users
+      | id                                   | name       | email               | password | roles | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER  | false   | true     |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    Then the response status code should be 401
 
   Scenario: A User wants to validate its account using an invalid verification token
     Given the following users

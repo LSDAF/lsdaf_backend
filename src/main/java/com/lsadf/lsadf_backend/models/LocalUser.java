@@ -82,4 +82,11 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
         }
         return authorities;
     }
+
+    @Override
+    public Boolean getEmailVerified() {
+        return userEntity.getVerified();
+    }
+
+
 }

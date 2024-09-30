@@ -62,7 +62,7 @@ public final class ControllerConstants {
         public static final String REFRESH_LOGIN = "/refresh_login";
         public static final String LOGOUT = "/logout";
         public static final String REGISTER = "/register";
-        public static final String VALIDATE_TOKEN = "/validate/{token}";
+        public static final String VALIDATE_TOKEN = "/validate";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
