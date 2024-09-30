@@ -4,7 +4,7 @@ import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,14 +39,14 @@ public interface GameSaveController {
     ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(LocalUser localUser);
 
     /**
-     * Updates a game in function of its id
+     * Updates a game nickname in function of its id
      *
      * @param gameSaveId the id of the game save
-     * @param request    the game save to update
+     * @param gameSaveUpdateNicknameRequest the nickname update request
      * @return
      */
-    @PostMapping(value = ControllerConstants.GameSave.GAME_SAVE_ID)
-    @Operation(summary = "Updates a game in function of its id")
+    @PostMapping(value = ControllerConstants.GameSave.UPDATE_NICKNAME)
+    @Operation(summary = "Updates the nickname of a game save")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
             @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
@@ -54,5 +54,5 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<Void>> saveGame(LocalUser localUser, String gameSaveId, GameSaveUpdateRequest request);
+    ResponseEntity<GenericResponse<Void>> updateNickname(LocalUser localUser, String gameSaveId, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest);
 }

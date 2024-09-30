@@ -72,12 +72,13 @@ Feature: Game Save Service tests
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack | nickname |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   | player1  |
-    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateRequest
-      | healthPoints | attack | nickname |
-      | 200          | 3000   | player2  |
+
+    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following GameSaveUpdateNicknameRequest
+      | nickname |
+      | player2  |
     Then I should return the following game save entities
       | id                                   | userId                               | gold    | healthPoints | attack | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 200          | 3000   | player2  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   | player2  |
 
 
   Scenario: Update a non-existing GameSave
@@ -88,9 +89,9 @@ Feature: Game Save Service tests
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
-    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0be with the following GameSaveUpdateRequest
-      | id                                   | userId                               | gold      | healthPoints | attack |
-      | 21524a69-dd46-475e-a152-9032477df41d | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 420420420 | 69420        | 69000  |
+    When we want to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0be with the following GameSaveUpdateNicknameRequest
+      | nickname |
+      | player2  |
     Then I should throw a NotFoundException
 
   Scenario: Get all game saves

@@ -10,7 +10,7 @@ import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import jakarta.validation.Valid;
@@ -77,13 +77,13 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> saveGame(@CurrentUser LocalUser localUser,
-                                                          @PathVariable(value = GAME_SAVE_ID) String id,
-                                                          @Valid @RequestBody GameSaveUpdateRequest updateRequest) {
+    public ResponseEntity<GenericResponse<Void>> updateNickname(@CurrentUser LocalUser localUser,
+                                                                @PathVariable(value = GAME_SAVE_ID) String id,
+                                                                @Valid @RequestBody GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
         try {
             validateUser(localUser);
             gameSaveService.checkGameSaveOwnership(id, localUser.getUsername());
-            gameSaveService.updateGameSave(id, updateRequest);
+            gameSaveService.updateNickname(id, gameSaveUpdateNicknameRequest);
             log.info("Successfully saved game with id {} for user with email {}", id, localUser.getUsername());
             return generateResponse(HttpStatus.OK);
         } catch (NotFoundException e) {

@@ -11,7 +11,7 @@ import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -124,15 +124,15 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, GameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
+    public GameSaveEntity updateNickname(String saveId, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
 
-        if (gameSaveRepository.findGameSaveEntityByNickname(updateRequest.getNickname()).isPresent()) {
-            throw new AlreadyTakenNicknameException("Game save with nickname " + updateRequest.getNickname() + " already exists");
+        if (gameSaveRepository.findGameSaveEntityByNickname(gameSaveUpdateNicknameRequest.getNickname()).isPresent()) {
+            throw new AlreadyTakenNicknameException("Game save with nickname " + gameSaveUpdateNicknameRequest.getNickname() + " already exists");
         }
 
-        return updateGameSaveEntity(currentGameSave, updateRequest);
+        return updateGameSaveEntityNickname(currentGameSave, gameSaveUpdateNicknameRequest);
     }
 
     /**
@@ -140,7 +140,7 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional
-    public GameSaveEntity updateGameSave(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
+    public GameSaveEntity updateNickname(String saveId, AdminGameSaveUpdateRequest updateRequest) throws NotFoundException, AlreadyTakenNicknameException {
         GameSaveEntity currentGameSave = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
 
@@ -176,20 +176,11 @@ public class GameSaveServiceImpl implements GameSaveService {
         return gameSaveRepository.findAllGameSaves();
     }
 
-    private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, GameSaveUpdateRequest updateRequest) {
+    private GameSaveEntity updateGameSaveEntityNickname(GameSaveEntity gameSaveEntity, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
         boolean hasUpdates = false;
 
-        if (!Objects.equals(gameSaveEntity.getNickname(), updateRequest.getNickname())) {
-            gameSaveEntity.setNickname(updateRequest.getNickname());
-            hasUpdates = true;
-        }
-
-        if (gameSaveEntity.getAttack() != updateRequest.getAttack()) {
-            gameSaveEntity.setAttack(updateRequest.getAttack());
-            hasUpdates = true;
-        }
-        if (gameSaveEntity.getHealthPoints() != updateRequest.getHealthPoints()) {
-            gameSaveEntity.setHealthPoints(updateRequest.getHealthPoints());
+        if (!Objects.equals(gameSaveEntity.getNickname(), gameSaveUpdateNicknameRequest.getNickname())) {
+            gameSaveEntity.setNickname(gameSaveUpdateNicknameRequest.getNickname());
             hasUpdates = true;
         }
 
