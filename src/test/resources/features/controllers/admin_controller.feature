@@ -385,8 +385,8 @@ Feature: Admin Controller tests
 
   Scenario: An admin user requests the update of an existing game save with a custom nickname
     Given the following users
-      | id                                   | name       | email               | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email               | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
@@ -397,20 +397,20 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | Play3r-0n3  |
+      | gold  | healthPoints | attack | nickname   |
+      | 10000 | 10000        | 10000  | Play3r-0n3 |
 
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | Play3r-0n3  |
+      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname   |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | Play3r-0n3 |
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname
     Given the following users
-      | id                                   | name       | email                | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email                | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
@@ -429,9 +429,9 @@ Feature: Admin Controller tests
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too long
     Given the following users
-      | id                                   | name       | email                | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email                | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
@@ -443,16 +443,16 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | 012345678901234567  |
+      | gold  | healthPoints | attack | nickname           |
+      | 10000 | 10000        | 10000  | 012345678901234567 |
 
     Then the response status code should be 400
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too short
     Given the following users
-      | id                                   | name       | email                | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email                | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
@@ -471,9 +471,9 @@ Feature: Admin Controller tests
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains spaces
     Given the following users
-      | id                                   | name       | email                | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email                | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
@@ -481,7 +481,7 @@ Feature: Admin Controller tests
       | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
 
     When the user logs in with the following credentials
-      | email               | password  |
+      | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
@@ -492,9 +492,9 @@ Feature: Admin Controller tests
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains invalid characters
     Given the following users
-      | id                                   | name       | email                | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email                | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |

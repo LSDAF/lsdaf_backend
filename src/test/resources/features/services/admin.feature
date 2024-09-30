@@ -94,8 +94,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Update a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin updates a user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d with the following AdminUserUpdateRequest
       | name        |
@@ -105,8 +105,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a user
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following id a5c17332-cd02-40b8-ac45-322baef4b70a
 
@@ -114,8 +114,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a non-existing user
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
@@ -123,8 +123,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a user by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following email paul.ochon@test.com
 
@@ -132,8 +132,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a non-existing user by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following email paul.itesse@test.com
 
@@ -141,9 +141,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get GlobalInfo
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 124          | 1072       |
@@ -158,9 +158,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get all game saves
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 10      | 10      | 10       | 124          | 1072       |
@@ -177,9 +177,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get a save game by id
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 10      | 10      | 10       | 124          | 1072       |
@@ -194,9 +194,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get a non-existing save game by id
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | healthPoints | attack     |
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |

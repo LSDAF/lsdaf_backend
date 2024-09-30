@@ -20,8 +20,8 @@ Feature: Auth Controller tests
 
   Scenario: A User registers its account with already used email
     Given the following users
-      | id                                   | name       | email               |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com |
+      | id                                   | name       | email               | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | true     |
     When the user requests the endpoint to register a user with the following UserCreationRequest
       | email               | name      | password |
       | paul.ochon@test.com | Toto Toto | totototo |
@@ -68,8 +68,8 @@ Feature: Auth Controller tests
 
   Scenario: A User logs in with unregistered email
     Given the following users
-      | id                                   | name       | email               | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     When the user logs in with the following credentials
       | email                | password |
@@ -104,8 +104,8 @@ Feature: Auth Controller tests
 
   Scenario: A User logs in with unregistered email and a refresh token
     Given the following users
-      | id                                   | name       | email               | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email               | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     When the user logs in with the following refresh token credentials
       | email                | refreshToken |
@@ -115,8 +115,8 @@ Feature: Auth Controller tests
 
   Scenario: A user logs in with a valid refresh token
     Given the following users
-      | id                                   | name       | email               | password | roles      |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN |
+      | id                                   | name       | email               | password | roles      | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true    | true     |
     And the following refresh tokens
       | refreshToken | status | userEmail           | expirationDate          | invalidationDate |
       | XXX          | ACTIVE | paul.ochon@test.com | 2070-01-01 00:00:00.000 |                  |
