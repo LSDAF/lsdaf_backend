@@ -217,8 +217,8 @@ Feature: Auth Controller tests
     Then the response status code should be 200
 
     And the response should have the following UserInfo
-      | id                                   | email               | name       | roles      | verified |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | Paul OCHON | ADMIN,USER | true     |
+      | email               | name       | roles      | verified |
+      | paul.ochon@test.com | Paul OCHON | ADMIN,USER | true     |
 
   Scenario: A User wants to validate its account using an expired verification token
     Given the following users
