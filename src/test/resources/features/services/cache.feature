@@ -26,7 +26,7 @@ Feature: Cache Service tests
 
 
   Scenario: Key Expiration
-    Given the expiration seconds properties set to 10
+    Given the expiration seconds properties set to 5
     And the following users
       | id                                   | name       | email               |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com |
@@ -36,6 +36,7 @@ Feature: Cache Service tests
     And the following currency entries in cache
       | gameSaveId                           | gold   |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 600000 |
+
     When a currency cache entry is expired
 
     Then the currency cache should be empty
