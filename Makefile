@@ -46,11 +46,11 @@ prune:
 	@docker image prune -f
 
 purgedb:
-	@rm -rf docker-data/postgres/*
+	@rm -rf docker/data/postgres/*
 	@echo "Postgres data purged"
 
 purgelogs:
-	@rm -rf docker-data/lsadf_backend_data/*
+	@rm -rf docker/data/lsadf_backend_data/*
 	@echo "Backend logs purged"
 
 help:
