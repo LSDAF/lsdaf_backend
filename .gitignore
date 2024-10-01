@@ -33,5 +33,6 @@ build/
 .vscode/
 
 docker/data/**
+docker-data/**
 
 **/env.properties
