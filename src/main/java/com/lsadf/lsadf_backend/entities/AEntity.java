@@ -1,17 +1,14 @@
 package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.util.Date;
+import java.util.UUID;
 
 @MappedSuperclass
 @AllArgsConstructor
@@ -22,12 +19,8 @@ public abstract class AEntity implements Entity {
     @Serial
     private static final long serialVersionUID = 7495963088331648156L;
 
-    protected static final String UUID_HIBERNATE_GENERATOR = "uuid-hibernate-generator";
-
     @Id
-    @GeneratedValue(generator = UUID_HIBERNATE_GENERATOR)
     @Column(name = EntityAttributes.ID)
-    @GenericGenerator(name = UUID_HIBERNATE_GENERATOR, type = org.hibernate.id.uuid.UuidGenerator.class)
     @EqualsAndHashCode.Include
     protected String id;
 
@@ -38,4 +31,11 @@ public abstract class AEntity implements Entity {
     @Column(name = EntityAttributes.UPDATED_AT)
     @UpdateTimestamp
     protected Date updatedAt;
+
+    @PrePersist
+    public void generateUUID() {
+        if (id == null || id.isEmpty()) {
+            id = UUID.randomUUID().toString();
+        }
+    }
 }
