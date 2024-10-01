@@ -197,7 +197,6 @@ public class BddUtils {
      * @return UserInfo
      */
     public static UserInfo mapToUserInfo(Map<String, String> row) {
-        String id = row.get(BddFieldConstants.UserInfo.ID);
         String email = row.get(BddFieldConstants.UserInfo.EMAIL);
         String name = row.get(BddFieldConstants.UserInfo.NAME);
         String rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
@@ -209,7 +208,7 @@ public class BddUtils {
 
         boolean verified = Boolean.parseBoolean(verifiedString);
 
-        return new UserInfo(id, name, email, verified, roles, null, null);
+        return new UserInfo(name, email, verified, roles, null, null);
     }
 
 
