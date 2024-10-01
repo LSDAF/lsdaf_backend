@@ -23,7 +23,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({ID, USER_ID, USER_EMAIL, NICKNAME, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
-public class GameSave implements Model  {
+public class GameSave implements Model {
 
     @Serial
     private static final long serialVersionUID = -2686370647354845265L;
