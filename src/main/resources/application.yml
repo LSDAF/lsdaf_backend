@@ -56,6 +56,7 @@ db:
     users:
       - email: ${ADMIN_USER_EMAIL}
         password: ${ADMIN_USER_PASSWORD}
+        name: ${ADMIN_USER_NAME}
         roles:
           - ADMIN
           - USER
