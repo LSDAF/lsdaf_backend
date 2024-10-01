@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.Set;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;

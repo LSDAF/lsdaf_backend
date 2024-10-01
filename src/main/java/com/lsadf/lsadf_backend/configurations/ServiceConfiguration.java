@@ -1,6 +1,8 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.properties.EmailProperties;
 import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.properties.UserVerificationProperties;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Clock;
@@ -44,17 +47,15 @@ public class ServiceConfiguration {
 
     @Bean
     public UserService userService(final UserRepository userRepository,
-                                   final PasswordEncoder passwordEncoder,
-                                   final Mapper mapper) {
-        return new UserServiceImpl(userRepository, passwordEncoder, mapper);
+                                   final PasswordEncoder passwordEncoder) {
+        return new UserServiceImpl(userRepository, passwordEncoder);
     }
 
     @Bean
     public CurrencyService currencyService(CurrencyRepository currencyRepository,
                                            Cache<Currency> currencyCache,
-                                           GameSaveService gameSaveService,
                                            Mapper mapper) {
-        return new CurrencyServiceImpl(currencyRepository, currencyCache, gameSaveService, mapper);
+        return new CurrencyServiceImpl(currencyRepository, currencyCache, mapper);
     }
 
     @Bean
@@ -64,29 +65,27 @@ public class ServiceConfiguration {
         return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache);
     }
 
-    @Bean
-    @Qualifier(REFRESH_TOKEN_PROVIDER)
-    public TokenProvider refreshTokenProvider(UserService userService,
-                                                     RefreshTokenRepository refreshTokenRepository,
-                                                     @Qualifier(JWT_REFRESH_TOKEN_PARSER) JwtParser parser,
-                                                     AuthProperties authProperties,
-                                                     ClockService clockService) {
+    @Bean(name = REFRESH_TOKEN_PROVIDER)
+    public TokenProvider<RefreshTokenEntity> refreshTokenProvider(UserService userService,
+                                                                  RefreshTokenRepository refreshTokenRepository,
+                                                                  @Qualifier(JWT_REFRESH_TOKEN_PARSER) JwtParser parser,
+                                                                  AuthProperties authProperties,
+                                                                  ClockService clockService) {
         return new RefreshTokenProviderImpl(userService, refreshTokenRepository, parser, authProperties, clockService);
     }
 
-    @Bean
-    @Qualifier(JWT_TOKEN_PROVIDER)
-    public TokenProvider tokenProvider(AuthProperties authProperties,
-                                       @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
-                                       @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache,
-                                       ClockService clockService,
-                                       JwtTokenRepository jwtTokenRepository) {
+    @Bean(name = JWT_TOKEN_PROVIDER)
+    public TokenProvider<JwtTokenEntity> tokenProvider(AuthProperties authProperties,
+                                                       @Qualifier(JWT_TOKEN_PARSER) JwtParser parser,
+                                                       @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache,
+                                                       ClockService clockService,
+                                                       JwtTokenRepository jwtTokenRepository) {
         return new JwtTokenProviderImpl(authProperties, parser, invalidatedJwtTokenCache, clockService, jwtTokenRepository);
     }
 
     @Bean
     public UserDetailsService userDetailsService(UserService userService) {
-        return new UserDetailsServiceImpl(userService);
+        return new LsadfUserDetailsServiceImpl(userService);
     }
 
     @Bean

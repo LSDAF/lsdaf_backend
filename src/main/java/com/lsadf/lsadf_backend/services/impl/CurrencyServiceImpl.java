@@ -6,7 +6,6 @@ import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +14,14 @@ import java.util.Optional;
 public class CurrencyServiceImpl implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
-    private final GameSaveService gameSaveService;
     private final Cache<Currency> currencyCache;
     private final Mapper mapper;
 
     public CurrencyServiceImpl(CurrencyRepository currencyRepository,
                                Cache<Currency> currencyCache,
-                               GameSaveService gameSaveService,
                                Mapper mapper) {
         this.currencyRepository = currencyRepository;
         this.currencyCache = currencyCache;
-        this.gameSaveService = gameSaveService;
 
         this.mapper = mapper;
     }

@@ -20,7 +20,7 @@ import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
 @Slf4j
 public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCache<Currency> {
 
-    protected final String histoKeyType = CURRENCY_HISTO;
+    private static final String HISTO_KEY_TYPE = CURRENCY_HISTO;
 
     public RedisCurrencyCache(RedisTemplate<String, Currency> redisTemplate,
                               int expirationSeconds,
@@ -34,14 +34,6 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
     @Override
     public Logger getLogger() {
         return log;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Currency> get(String key) {
-        return super.get(key);
     }
 
     /**
@@ -66,14 +58,6 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Map<String, Currency> getAll() {
-        return super.getAll();
-    }
-
     private static Currency mergeCurrencies(Currency toUpdate, Currency newCurrency) {
         if (newCurrency.getGold() != null) {
             toUpdate.setGold(newCurrency.getGold());
@@ -95,7 +79,7 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
      */
     @Override
     public Map<String, Currency> getAllHisto() {
-        return getAllEntries(redisTemplate, histoKeyType);
+        return getAllEntries(redisTemplate, HISTO_KEY_TYPE);
     }
 
     /**
@@ -104,7 +88,7 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
     @Override
     public void clear() {
         super.clear();
-        clearCache(redisTemplate, histoKeyType);
+        clearCache(redisTemplate, HISTO_KEY_TYPE);
     }
 
     /**

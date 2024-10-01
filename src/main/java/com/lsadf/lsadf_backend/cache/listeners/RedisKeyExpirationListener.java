@@ -15,14 +15,11 @@ import static com.lsadf.lsadf_backend.constants.RedisConstants.*;
 public class RedisKeyExpirationListener implements MessageListener {
 
     private final CurrencyService currencyService;
-    private final RedisTemplate<String, Long> longRedisTemplate;
     private final RedisTemplate<String, Currency> currencyRedisTemplate;
 
     public RedisKeyExpirationListener(CurrencyService currencyService,
-                                      RedisTemplate<String, Long> longRedisTemplate,
                                       RedisTemplate<String, Currency> currencyRedisTemplate) {
         this.currencyService = currencyService;
-        this.longRedisTemplate = longRedisTemplate;
         this.currencyRedisTemplate = currencyRedisTemplate;
     }
 
@@ -54,7 +51,7 @@ public class RedisKeyExpirationListener implements MessageListener {
             }
         } catch (DataAccessException | NotFoundException e) {
             log.error("Error while handling expired currency", e);
-            throw new RuntimeException(e);
+            throw e;
         }
         log.info("Currency of game save {} has been saved to DB", gameSaveId);
     }

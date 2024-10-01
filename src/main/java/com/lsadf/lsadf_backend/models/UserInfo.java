@@ -6,8 +6,8 @@ import com.lsadf.lsadf_backend.constants.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serial;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.CREATED_AT;
@@ -17,7 +17,10 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.UserInfo.*;
 @Data
 @AllArgsConstructor
 @JsonPropertyOrder({ID, NAME, EMAIL, VERIFIED, ROLES, CREATED_AT, UPDATED_AT})
-public class UserInfo {
+public class UserInfo implements Model  {
+
+    @Serial
+    private static final long serialVersionUID = -3162522781668155748L;
 
     @JsonProperty(value = ID)
     private String id;

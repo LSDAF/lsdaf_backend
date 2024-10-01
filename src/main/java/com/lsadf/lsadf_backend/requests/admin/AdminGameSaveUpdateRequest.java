@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.annotations.Nickname;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

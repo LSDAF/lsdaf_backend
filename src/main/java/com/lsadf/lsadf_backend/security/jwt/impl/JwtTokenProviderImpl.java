@@ -81,7 +81,7 @@ public class JwtTokenProviderImpl implements TokenProvider<JwtTokenEntity> {
     @Override
     public boolean validateToken(String authToken, String userEmail) {
         try {
-            Jws<Claims> claims = TokenUtils.parseToken(parser, authToken);
+            TokenUtils.parseToken(parser, authToken);
             if (invalidatedJwtTokenCache.get(authToken).isPresent()) {
                 throw new InvalidTokenException("Token has already been invalidated");
             }

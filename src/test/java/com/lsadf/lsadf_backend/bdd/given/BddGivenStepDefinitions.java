@@ -124,11 +124,11 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.userRepository.deleteAll();
         this.userVerificationTokenRepository.deleteAll();
 
-        assertThat(refreshTokenRepository.count()).isEqualTo(0);
-        assertThat(gameSaveRepository.count()).isEqualTo(0);
-        assertThat(userRepository.count()).isEqualTo(0);
-        assertThat(currencyRepository.count()).isEqualTo(0);
-        assertThat(userVerificationTokenRepository.count()).isEqualTo(0);
+        assertThat(refreshTokenRepository.count()).isZero();
+        assertThat(gameSaveRepository.count()).isZero();
+        assertThat(userRepository.count()).isZero();
+        assertThat(currencyRepository.count()).isZero();
+        assertThat(userVerificationTokenRepository.count()).isZero();
 
 
         // Clear caches
@@ -145,7 +145,7 @@ public class BddGivenStepDefinitions extends BddLoader {
         log.info("Database repositories + caches cleaned");
 
         // Init all other service mocks
-        MockUtils.initUserDetailsServiceMock(userDetailsService, userService, mapper);
+        MockUtils.initUserDetailsServiceMock(lsadfUserDetailsService, userService);
 
         log.info("Mocks initialized");
     }

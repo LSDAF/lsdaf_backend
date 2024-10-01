@@ -100,7 +100,7 @@ public class MapperImpl implements Mapper {
                 .userRoles(new ArrayList<>(userEntity.getRoles()))
                 .gameSaves(userEntity.getGameSaves().stream()
                         .map(this::mapToGameSave)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .updatedAt(userEntity.getUpdatedAt())
                 .createdAt(userEntity.getCreatedAt())
                 .build();

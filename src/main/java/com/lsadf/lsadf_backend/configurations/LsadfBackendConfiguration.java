@@ -31,8 +31,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         RedisCacheConfiguration.class,
         NoRedisCacheConfiguration.class,
         ClockConfiguration.class,
-        VelocityConfiguration.class,
-        EmailConfiguration.class
+        VelocityConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

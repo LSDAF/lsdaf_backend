@@ -8,10 +8,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for the UserRole class to test static methods
  */
-public class UserRoleTests {
+class UserRoleTests {
 
     @Test
-    public void should_return_good_role() {
+    void should_return_good_role() {
         // Given the following string role
 
         String role = "ROLE_USER";
@@ -27,7 +27,7 @@ public class UserRoleTests {
     }
 
     @Test
-    public void should_return_null_for_wrong_role() {
+    void should_return_null_for_wrong_role() {
         // Given the following string role
 
         String role = "ROLE_SYS_MODO";
@@ -42,7 +42,7 @@ public class UserRoleTests {
     }
 
     @Test
-    public void should_return_good_name() {
+    void should_return_good_name() {
         // Given the following name
 
         String name = "USER";
@@ -57,7 +57,7 @@ public class UserRoleTests {
     }
 
     @Test
-    public void should_return_null_for_wrong_name() {
+    void should_return_null_for_wrong_name() {
         // Given the following name
 
         String name = "ROLE_USER";

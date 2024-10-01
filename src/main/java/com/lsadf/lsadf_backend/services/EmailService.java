@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.services;
 
-import jakarta.mail.MessagingException;
 
 public interface EmailService {
     /**

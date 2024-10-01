@@ -5,8 +5,8 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class NicknameValidator implements ConstraintValidator<Nickname, String> {
-    int MIN_LENGTH = 3;
-    int MAX_LENGTH = 16;
+    private static final int MIN_LENGTH = 3;
+    private static final int MAX_LENGTH = 16;
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

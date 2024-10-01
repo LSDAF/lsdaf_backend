@@ -1,8 +1,6 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.security;
 
 import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.TokenStatus;
 import com.lsadf.lsadf_backend.properties.AuthProperties;

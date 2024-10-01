@@ -4,7 +4,6 @@ import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.TokenStatus;
 import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,12 +14,9 @@ import java.util.stream.Stream;
 
 public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEntity> implements RefreshTokenRepository {
 
-    private final UserRepository userRepository;
     private final ClockService clockService;
 
-    public RefreshTokenRepositoryMock(UserRepository userRepository,
-                                      ClockService clockService) {
-        this.userRepository = userRepository;
+    public RefreshTokenRepositoryMock(ClockService clockService) {
         this.clockService = clockService;
     }
 

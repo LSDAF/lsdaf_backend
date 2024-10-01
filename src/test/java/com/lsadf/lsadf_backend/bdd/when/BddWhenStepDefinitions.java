@@ -17,12 +17,11 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.*;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Step definitions for the when steps in the BDD scenarios
@@ -242,7 +241,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REFRESH_LOGIN;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
 
-        assertThat(rows.size()).isEqualTo(1);
+        assertThat(rows).hasSize(1);
         Map<String, String> row = rows.get(0);
 
         UserRefreshLoginRequest refreshLoginRequest = BddUtils.mapToUserRefreshLoginRequest(row);
@@ -255,7 +254,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             if (jwtAuthentication != null) {
                 jwtTokenStack.push(jwtAuthentication.getAccessToken());
                 refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = userDetailsService.loadUserByEmail(refreshLoginRequest.getEmail());
+                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(refreshLoginRequest.getEmail());
                 ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
                 localUserMap.put(jwtAuthentication.getAccessToken(), pair);
             }
@@ -291,7 +290,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             if (jwtAuthentication != null) {
                 jwtTokenStack.push(jwtAuthentication.getAccessToken());
                 refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = userDetailsService.loadUserByEmail(userLoginRequest.getEmail());
+                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(userLoginRequest.getEmail());
                 ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
                 localUserMap.put(jwtAuthentication.getAccessToken(), pair);
             }

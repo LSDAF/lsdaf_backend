@@ -66,9 +66,7 @@ public class GameSaveServiceImpl implements GameSaveService {
         saved.setCurrencyEntity(currencyEntity);
 
 
-        GameSaveEntity savedEntity = gameSaveRepository.save(saved);
-
-        return savedEntity;
+        return gameSaveRepository.save(saved);
     }
 
     /**

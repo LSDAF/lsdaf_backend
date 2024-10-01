@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.io.Serial;
 

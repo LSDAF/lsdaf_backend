@@ -7,7 +7,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.*;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,8 +20,6 @@ import org.springframework.context.annotation.Import;
 public class SwaggerConfiguration {
     public static final String BEARER_AUTHENTICATION = "Bearer Authentication";
     public static final String OAUTH2_AUTHENTICATION = "OAuth2 Authentication";
-
-    private static final String KEYCLOAK = "keycloak";
 
     private static final String BEARER = "bearer";
     private static final String JWT = "JWT";

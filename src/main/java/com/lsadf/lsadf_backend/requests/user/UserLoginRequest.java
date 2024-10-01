@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.EMAIL;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.PASSWORD;

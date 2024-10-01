@@ -4,15 +4,13 @@ import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
@@ -59,8 +57,8 @@ public class OAuth2Configuration {
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(TokenProvider<JwtTokenEntity> tokenProvider,
                                                                                  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
                                                                                  OAuth2Properties oAuth2Properties,
-                                                                                 UserDetailsService userDetailsService) {
-        return new OAuth2AuthenticationSuccessHandler(tokenProvider, httpCookieOAuth2AuthorizationRequestRepository, oAuth2Properties, userDetailsService);
+                                                                                 UserDetailsService lsadfUserDetailsService) {
+        return new OAuth2AuthenticationSuccessHandler(tokenProvider, httpCookieOAuth2AuthorizationRequestRepository, oAuth2Properties, lsadfUserDetailsService);
     }
 
     @Bean
@@ -78,8 +76,7 @@ public class OAuth2Configuration {
         return tokenResponseClient;
     }
 
-    @Bean
-    @Qualifier(OAUTH2_GOOGLE_CLIENT_REGISTRATION)
+    @Bean(name = OAUTH2_GOOGLE_CLIENT_REGISTRATION)
     public ClientRegistration googleClientRegistration(OAuth2Properties oAuth2Properties) {
         OAuth2ClientProperties.Registration googleRegistration = oAuth2Properties.getRegistration().get(GOOGLE);
         OAuth2ClientProperties.Provider googleProvider = oAuth2Properties.getProvider().get(GOOGLE);
@@ -100,8 +97,7 @@ public class OAuth2Configuration {
                 .build();
     }
 
-    @Bean
-    @Qualifier(OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
+    @Bean(name = OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
     public ClientRegistration facebookClientRegistration(OAuth2Properties oAuth2Properties) {
         OAuth2ClientProperties.Registration facebookRegistration = oAuth2Properties.getRegistration().get(FACEBOOK);
         OAuth2ClientProperties.Provider facebookProvider = oAuth2Properties.getProvider().get(FACEBOOK);

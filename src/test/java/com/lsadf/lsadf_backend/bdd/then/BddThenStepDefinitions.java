@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.RefreshToken.REFRESH_TOKEN;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Step definitions for the then steps in the BDD scenarios
@@ -102,7 +102,7 @@ public class BddThenStepDefinitions extends BddLoader {
             expected.add(expectedEntity);
         }
 
-        assertThat(actual.size()).isEqualTo(expected.size());
+        assertThat(actual).hasSameSizeAs(expected);
 
         for (int i = 0; i < actual.size(); i++) {
             GameSave actualGameSave = actual.get(i);
@@ -116,7 +116,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should have no user entries in DB$")
     public void then_i_should_have_no_user_entries_in_db() {
-        assertThat(userRepository.count()).isEqualTo(0);
+        assertThat(userRepository.count()).isZero();
     }
 
     @Then("^I should return true$")
@@ -243,12 +243,12 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should have no game save entries in DB$")
     public void then_i_should_have_no_game_save_entries_in_db() {
-        assertThat(gameSaveRepository.count()).isEqualTo(0);
+        assertThat(gameSaveRepository.count()).isZero();
     }
 
     @Then("^I should have no gold entries in DB$")
     public void then_i_should_have_no_gold_entries_in_db() {
-        assertThat(currencyRepository.count()).isEqualTo(0);
+        assertThat(currencyRepository.count()).isZero();
     }
 
     @Then("^I should throw a NotFoundException$")
@@ -383,7 +383,7 @@ public class BddThenStepDefinitions extends BddLoader {
             expected.add(expectedUser);
         }
 
-        assertThat(actual.size()).isEqualTo(expected.size());
+        assertThat(actual).hasSameSizeAs(expected);
 
         for (int i = 0; i < actual.size(); i++) {
             User actualUser = actual.get(i);
@@ -415,7 +415,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should throw no Exception$")
     public void then_i_should_throw_no_exception() {
-        assertThat(exceptionStack.isEmpty()).isTrue();
+        assertThat(exceptionStack).isEmpty();
     }
 
     @Then("^the token from the response should not be null$")
@@ -555,7 +555,7 @@ public class BddThenStepDefinitions extends BddLoader {
         Iterable<UserVerificationTokenEntity> tokens = userVerificationTokenRepository.findAllByUserEmail(email);
         tokens.forEach(results::add);
 
-        assertThat(results.size()).isNotEqualTo(0);
+        assertThat(results.size()).isNotZero();
     }
 
     @Then("^an email should have been sent to (.*)$")

@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
  * Implementation of AdminController
@@ -164,13 +163,13 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             UserAdminDetails user = adminService.getUserByEmail(userEmail);
             return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while getting user by id: ", e);
+            log.error("Unauthorized exception while getting user by email: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (NotFoundException e) {
-            log.error("Error while getting user by id: ", e);
+            log.error("Error while getting user by email: ", e);
             return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
         } catch (Exception e) {
-            log.error("Error while getting user by id: ", e);
+            log.error("Error while getting user by email: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }
@@ -357,7 +356,6 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             List<User> gameSaves = adminService.searchUsers(searchRequest, orderBy);
-            int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, gameSaves);
         } catch (UnauthorizedException e) {
@@ -384,7 +382,6 @@ public class AdminControllerImpl extends BaseController implements AdminControll
         try {
             validateUser(localUser);
             List<GameSave> gameSaves = adminService.searchGameSaves(searchRequest, orderBy);
-            int count = gameSaves.size();
 
             return generateResponse(HttpStatus.OK, gameSaves);
         } catch (UnauthorizedException e) {

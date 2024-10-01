@@ -3,7 +3,6 @@ package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.models.TokenStatus;
 import com.lsadf.lsadf_backend.repositories.JwtTokenRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
 
 import java.util.Date;
@@ -14,12 +13,10 @@ import java.util.stream.Stream;
 public class JwtTokenRepositoryMock extends ARepositoryMock<JwtTokenEntity> implements JwtTokenRepository {
 
     private final ClockService clockService;
-    private final UserRepository userRepository;
 
 
-    public JwtTokenRepositoryMock(ClockService clockService, UserRepository userRepository) {
+    public JwtTokenRepositoryMock(ClockService clockService) {
         this.clockService = clockService;
-        this.userRepository = userRepository;
     }
 
     @Override

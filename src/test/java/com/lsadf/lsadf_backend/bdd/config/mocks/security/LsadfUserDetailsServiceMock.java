@@ -2,11 +2,10 @@ package com.lsadf.lsadf_backend.bdd.config.mocks.security;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
@@ -14,14 +13,11 @@ import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthori
 /**
  * Mock implementation of the UserDetailsService
  */
-public class UserDetailsServiceMock implements UserDetailsService {
+public class LsadfUserDetailsServiceMock implements UserDetailsService {
     private final UserService userService;
-    private final Mapper mapper;
 
-    public UserDetailsServiceMock(UserService userService,
-                                  Mapper mapper) {
+    public LsadfUserDetailsServiceMock(UserService userService) {
         this.userService = userService;
-        this.mapper = mapper;
     }
 
 

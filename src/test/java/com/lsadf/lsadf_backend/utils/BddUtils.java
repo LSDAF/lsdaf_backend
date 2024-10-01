@@ -523,7 +523,7 @@ public class BddUtils {
         List<UserRole> roles = null;
 
         if (userRoles != null) {
-            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toList());
+            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).toList();
         }
         SocialProvider socialProvider = SocialProvider.fromString(provider);
 

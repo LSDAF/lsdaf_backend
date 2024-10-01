@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serial;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +24,11 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 @Data
 @AllArgsConstructor
 @JsonPropertyOrder({ID, NAME, EMAIL, PROVIDER, CREATED_AT, UPDATED_AT})
-public class User {
+public class User implements Model  {
+
+    @Serial
+    private static final long serialVersionUID = 144315795668992686L;
+
     @JsonProperty(value = ID)
     @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private final String id;

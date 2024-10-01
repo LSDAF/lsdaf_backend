@@ -8,11 +8,6 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
-    public Map<String, Object> getAttributes() {
-        return super.getAttributes();
-    }
-
-    @Override
     public String getId() {
         return (String) attributes.get("sub");
     }

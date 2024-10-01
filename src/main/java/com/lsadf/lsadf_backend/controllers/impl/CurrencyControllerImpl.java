@@ -61,7 +61,6 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
             String userEmail = localUser.getUsername();
             gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
 
-            boolean hasUpdates = false;
             Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
             currencyService.saveCurrency(gameSaveId, currency, cacheService.isEnabled());
 

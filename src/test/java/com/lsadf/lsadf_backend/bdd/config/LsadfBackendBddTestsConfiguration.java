@@ -21,7 +21,6 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.ClockService;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import io.jsonwebtoken.JwtParser;
 import jakarta.mail.internet.MimeMessage;
@@ -31,6 +30,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -76,8 +76,7 @@ public class LsadfBackendBddTestsConfiguration {
         return new Stack<>();
     }
 
-    @Bean
-    @Qualifier(JWT_STACK)
+    @Bean(name = JWT_STACK)
     public Stack<String> jwtStack() {
         return new Stack<>();
     }
@@ -87,8 +86,7 @@ public class LsadfBackendBddTestsConfiguration {
         return new Stack<>();
     }
 
-    @Bean
-    @Qualifier(REFRESH_JWT_TOKEN_STACK)
+    @Bean(name = REFRESH_JWT_TOKEN_STACK)
     public Stack<String> refreshJwtTokenStack() {
         return new Stack<>();
     }
@@ -141,8 +139,8 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public JwtTokenRepository jwtTokenRepository(ClockService clockService, UserRepository userRepository) {
-        return new JwtTokenRepositoryMock(clockService, userRepository);
+    public JwtTokenRepository jwtTokenRepository(ClockService clockService) {
+        return new JwtTokenRepositoryMock(clockService);
     }
 
     @Bean
@@ -153,9 +151,8 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
-    public RefreshTokenRepository refreshTokenRepository(UserRepository userRepository,
-                                                         ClockService clockService) {
-        return new RefreshTokenRepositoryMock(userRepository, clockService);
+    public RefreshTokenRepository refreshTokenRepository(ClockService clockService) {
+        return new RefreshTokenRepositoryMock(clockService);
     }
 
     @Bean
@@ -183,15 +180,13 @@ public class LsadfBackendBddTestsConfiguration {
         return mock(ClientRegistrationRepository.class);
     }
 
-    @Bean
-    @Qualifier(OAUTH2_GOOGLE_CLIENT_REGISTRATION)
+    @Bean(name = OAUTH2_GOOGLE_CLIENT_REGISTRATION)
     @Primary
     public ClientRegistration googleClientRegistration() {
         return mock(ClientRegistration.class);
     }
 
-    @Bean
-    @Qualifier(OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
+    @Bean(name = OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
     @Primary
     public ClientRegistration facebookClientRegistration() {
         return mock(ClientRegistration.class);
@@ -206,10 +201,10 @@ public class LsadfBackendBddTestsConfiguration {
     @Bean
     @Primary
     public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
-                                                               UserDetailsService userDetailsService,
+                                                               UserDetailsService lsadfUserDetailsService,
                                                                Map<String, Pair<Date, LocalUser>> localUserMap,
                                                                Cache<LocalUser> localUserCache) {
-        return new TokenAuthenticationFilterMock(tokenProvider, userDetailsService, localUserMap, localUserCache);
+        return new TokenAuthenticationFilterMock(tokenProvider, lsadfUserDetailsService, localUserMap, localUserCache);
     }
 
     @Bean

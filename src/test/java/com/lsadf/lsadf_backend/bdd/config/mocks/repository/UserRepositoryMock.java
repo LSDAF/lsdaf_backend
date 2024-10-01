@@ -51,15 +51,13 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements U
     }
 
     public Optional<UserEntity> findUserEntityByEmail(String email) {
-        Optional<UserEntity> userEntityOptional = entities.values()
+        return entities.values()
                 .stream()
                 .filter(user -> {
                     String userEmail = user.getEmail();
                     return email.equals(userEmail);
                 })
                 .findFirst();
-
-        return userEntityOptional;
     }
 
     public void deleteUserEntityByEmail(String email) {

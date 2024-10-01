@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Step definitions for the when steps in the BDD scenarios
@@ -350,7 +350,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
 
         List<AdminUserCreationRequest> requests = rows.stream().map(BddUtils::mapToAdminUserCreationRequest).toList();
 
-        assertThat(requests.size()).isEqualTo(1);
+        assertThat(requests).hasSize(1);
 
         AdminUserCreationRequest adminRequest = requests.get(0);
 
@@ -457,7 +457,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
 
         List<AdminGameSaveCreationRequest> requests = rows.stream().map(BddUtils::mapToAdminGameSaveCreationRequest).toList();
 
-        assertThat(requests.size()).isEqualTo(1);
+        assertThat(requests).hasSize(1);
 
         AdminGameSaveCreationRequest adminRequest = requests.get(0);
 
@@ -485,7 +485,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             throw new IllegalArgumentException("Expected only one row in the DataTable");
         }
 
-        assertThat(rows.size()).isEqualTo(1);
+        assertThat(rows).hasSize(1);
 
         Map<String, String> row = rows.get(0);
 
@@ -597,7 +597,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
     public void when_the_user_requests_the_admin_endpoint_to_update_the_game_save_with_id(String saveId, DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
-        assertThat(rows.size()).isEqualTo(1);
+        assertThat(rows).hasSize(1);
 
         Map<String, String> row = rows.get(0);
 

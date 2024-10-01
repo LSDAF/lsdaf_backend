@@ -37,19 +37,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Mapper mapper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Mapper mapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = AlreadyExistingUserException.class)
     public UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException {
         if ((creationRequest.getUserId() != null && userRepository.existsById(creationRequest.getUserId()))) {
             throw new AlreadyExistingUserException("User with User id " + creationRequest.getUserId() + " already exist");
@@ -99,7 +96,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
@@ -131,7 +127,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public UserEntity getUserByEmail(String email) throws NotFoundException {
         return userRepository.findUserEntityByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
@@ -141,7 +136,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         log.info("Checking if user exists by email: {}", email);
         return userRepository.existsByEmail(email);
@@ -151,7 +145,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public UserEntity getUserById(String id) throws NotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
@@ -287,7 +280,6 @@ public class UserServiceImpl implements UserService {
                 .password(CHANGEIT).build();
     }
 
-    @Transactional
     public UserEntity updateUser(UserEntity userEntity,
                                   AdminUserUpdateRequest adminUserUpdateRequest) throws AlreadyExistingUserException {
         boolean hasUpdates = false;
@@ -306,12 +298,11 @@ public class UserServiceImpl implements UserService {
                 hasUpdates = true;
             }
 
-            if (adminUserUpdateRequest.getPassword() != null) {
-                if (!passwordEncoder.matches(adminUserUpdateRequest.getPassword(), userEntity.getPassword())) {
+            if (adminUserUpdateRequest.getPassword() != null && !passwordEncoder.matches(adminUserUpdateRequest.getPassword(), userEntity.getPassword())) {
                     userEntity.setPassword(passwordEncoder.encode(adminUserUpdateRequest.getPassword()));
                     hasUpdates = true;
                 }
-            }
+
 
             if (adminUserUpdateRequest.getUserRoles() != null && !adminUserUpdateRequest.getUserRoles().equals(userEntity.getRoles())) {
                 userEntity.setRoles(new HashSet<>(adminUserUpdateRequest.getUserRoles()));

@@ -43,7 +43,7 @@ public class DateUtils {
      * @param isSeconds true if timestamp is in seconds, false if in milliseconds
      * @return Converted LocalDateTime
      */
-    public static LocalDateTime timestampToLocalDateTime(long timestamp, boolean isSeconds) {
+    public static LocalDateTime timestampToLocalDateTime(long timestamp) {
         Instant instant = Instant.ofEpochSecond(timestamp);
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }

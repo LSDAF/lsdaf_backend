@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.configurations.cache;
 
-import com.lsadf.lsadf_backend.properties.CacheProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -16,8 +15,7 @@ public class RedisEmbeddedCacheConfiguration {
 
     private RedisServer redisServer;
 
-    public RedisEmbeddedCacheConfiguration(CacheProperties cacheProperties,
-            RedisProperties redisProperties) throws IOException {
+    public RedisEmbeddedCacheConfiguration(RedisProperties redisProperties) throws IOException {
         if (redisProperties.isEnabled() && redisProperties.isEmbedded()) {
             this.redisServer = initRedisServer(redisProperties);
         }

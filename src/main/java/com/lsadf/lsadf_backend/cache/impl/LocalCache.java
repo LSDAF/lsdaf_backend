@@ -17,7 +17,7 @@ public class LocalCache<T> implements Cache<T> {
 
     private Integer expirationSeconds;
 
-    private final boolean isEnabled = true;
+    private static final boolean ENABLED = true;
 
     public LocalCache(ExpiringMap<String, T> cache,
                      @Nullable Integer expirationSeconds) {
@@ -92,7 +92,7 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return ENABLED;
     }
 
     @Override

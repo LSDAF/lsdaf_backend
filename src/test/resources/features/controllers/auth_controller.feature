@@ -111,7 +111,7 @@ Feature: Auth Controller tests
       | email                | refreshToken |
       | paul.itesse@test.com | XXX          |
 
-    Then the response status code should be 404
+    Then the response status code should be 401
 
   Scenario: A user logs in with a valid refresh token
     Given the following users

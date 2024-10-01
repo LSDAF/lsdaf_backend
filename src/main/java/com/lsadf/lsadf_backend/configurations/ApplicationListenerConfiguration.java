@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.LOCAL_INVALIDATED_JWT_TOKEN_CACHE;
@@ -26,9 +25,8 @@ public class ApplicationListenerConfiguration {
 
     @Bean
     public DbInitializer dbInitializer(DbInitProperties dbInitProperties,
-                                       PasswordEncoder passwordEncoder,
                                        UserService userService) {
-        return new DbInitializer(userService, passwordEncoder, dbInitProperties);
+        return new DbInitializer(userService, dbInitProperties);
     }
 
     @Bean

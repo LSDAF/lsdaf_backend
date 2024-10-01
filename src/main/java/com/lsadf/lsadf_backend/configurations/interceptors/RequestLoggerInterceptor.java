@@ -33,10 +33,10 @@ public class RequestLoggerInterceptor implements HandlerInterceptor {
             String username = null;
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Object principal = authentication.getPrincipal();
-            if (principal instanceof LocalUser) {
-                username = ((LocalUser) principal).getUsername();
-            } else if (principal instanceof String && !principal.equals(ANONYMOUS_USER)) {
-                username = (String) principal;
+            if (principal instanceof LocalUser localUserPrincipal) {
+                username = localUserPrincipal.getUsername();
+            } else if (principal instanceof String principalString && !principal.equals(ANONYMOUS_USER)) {
+                username = principalString;
             }
             String now = "date:" + DateUtils.dateTimeToString(LocalDateTime.now());
             log.info("[{}][{}][{}]{} Received incoming HTTP request",

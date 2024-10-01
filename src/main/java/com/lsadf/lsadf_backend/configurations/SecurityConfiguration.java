@@ -9,13 +9,11 @@ import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.security.oauth2.*;
 import com.lsadf.lsadf_backend.services.impl.CustomAuthenticationProviderImpl;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,12 +21,12 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -58,13 +56,18 @@ import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class SecurityConfiguration implements WebMvcConfigurer {
 
-    @Autowired
     private RequestLoggerInterceptor requestLoggerInterceptor;
 
-    @Autowired
     private HttpLogProperties httpLogProperties;
 
-    public static final String[] WHITELIST_URLS = {
+    @Autowired
+    public SecurityConfiguration(RequestLoggerInterceptor requestLoggerInterceptor,
+                                 HttpLogProperties httpLogProperties) {
+        this.requestLoggerInterceptor = requestLoggerInterceptor;
+        this.httpLogProperties = httpLogProperties;
+    }
+
+    protected static final String[] WHITELIST_URLS = {
             "/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -79,21 +82,19 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public static final String ADMIN_URLS = ADMIN + "/**";
 
     @Bean
-    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService userDetailsService,
+    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService lsadfUserDetailsService,
                                                                          ExpiringMap<String, LocalUser> localUserCache) {
-        return new CustomAuthenticationProviderImpl(userDetailsService, localUserCache);
+        return new CustomAuthenticationProviderImpl(lsadfUserDetailsService, localUserCache);
     }
 
-    @Bean
-    @Qualifier(JWT_TOKEN_PARSER)
+    @Bean(name = JWT_TOKEN_PARSER)
     public JwtParser jwtParser(AuthProperties authProperties) {
         return Jwts.parserBuilder()
                 .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
                 .build();
     }
 
-    @Bean
-    @Qualifier(JWT_REFRESH_TOKEN_PARSER)
+    @Bean(name = JWT_REFRESH_TOKEN_PARSER)
     public JwtParser jwtRefreshTokenParser(AuthProperties authProperties) {
         return Jwts.parserBuilder()
                 .setSigningKey(Base64.getEncoder().encode(authProperties.getRefreshTokenSecret().getBytes()))
@@ -113,37 +114,23 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                                            TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         security
                 .addFilter(corsFilter)
-                .sessionManagement((configurer) -> {
-                    configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .exceptionHandling((configurer) -> {
-                    configurer.authenticationEntryPoint(restAuthenticationEntryPoint);
-                })
-                .authorizeHttpRequests((configurer) -> {
-                    configurer
-                            .requestMatchers(WHITELIST_URLS).permitAll()
-                            .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
-                            .anyRequest().authenticated();
-                })
-                .oauth2Login((configurer) -> {
-                    configurer
-                            .authorizationEndpoint((authorization) -> {
-                                authorization
-                                        .baseUri("/oauth2/authorize");
-                            })
-                            .userInfoEndpoint((userInfo) -> {
-                                userInfo
-                                        .oidcUserService(customOidcUserService)
-                                        .userService(customOAuth2UserService);
-                            })
-                            .successHandler(oAuth2AuthenticationSuccessHandler)
-                            .tokenEndpoint((token) -> {
-                                token.accessTokenResponseClient(oAuth2AccessTokenResponseClient);
-                            })
-                            .failureHandler(oAuth2AuthenticationFailureHandler);
-                });
+                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .authorizeHttpRequests(configurer -> configurer
+                        .requestMatchers(WHITELIST_URLS).permitAll()
+                        .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
+                        .anyRequest().authenticated())
+                .oauth2Login(configurer -> configurer
+                        .authorizationEndpoint(authorization -> authorization
+                                .baseUri("/oauth2/authorize"))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(customOidcUserService)
+                                .userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .tokenEndpoint(token -> token.accessTokenResponseClient(oAuth2AccessTokenResponseClient))
+                        .failureHandler(oAuth2AuthenticationFailureHandler));
 
         security.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -151,10 +138,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public TokenAuthenticationFilter TokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
-                                                               UserDetailsService userDetailsService,
+    public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
+                                                               UserDetailsService lsadfUserDetailsService,
                                                                com.lsadf.lsadf_backend.cache.Cache<LocalUser> localUserCache) {
-        return new TokenAuthenticationFilter(tokenProvider, userDetailsService, localUserCache);
+        return new TokenAuthenticationFilter(tokenProvider, lsadfUserDetailsService, localUserCache);
     }
 
 
@@ -188,8 +175,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         return new CorsFilter(source);
     }
 
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    public AuthenticationManager authenticationManagerBean(CustomAuthenticationProviderImpl authenticationProvider) throws Exception {
+    @Bean
+    public AuthenticationManager authenticationManagerBean(CustomAuthenticationProviderImpl authenticationProvider) {
         return new ProviderManager(authenticationProvider);
     }
 

@@ -38,6 +38,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -163,7 +164,7 @@ public class BddLoader {
     protected UserService userService;
 
     @Autowired
-    protected UserDetailsService userDetailsService;
+    protected UserDetailsService lsadfUserDetailsService;
 
     @Autowired
     protected AdminService adminService;

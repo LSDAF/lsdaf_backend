@@ -1,15 +1,13 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.security.UserDetailsServiceMock;
+import com.lsadf.lsadf_backend.bdd.config.mocks.security.LsadfUserDetailsServiceMock;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.services.UserService;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -21,17 +19,15 @@ public class MockUtils {
     /**
      * Initialize the UserDetailsService mock
      *
-     * @param userDetailsService the UserDetailsService mock
+     * @param lsadfUserDetailsService the UserDetailsService mock
      */
-    public static void initUserDetailsServiceMock(UserDetailsService userDetailsService,
-                                                  UserService userService,
-                                                  Mapper mapper) throws NotFoundException {
-        Mockito.reset(userDetailsService);
+    public static void initUserDetailsServiceMock(UserDetailsService lsadfUserDetailsService,
+                                                  UserService userService) throws NotFoundException {
+        Mockito.reset(lsadfUserDetailsService);
 
-        UserDetailsServiceMock userDetailsServiceMock = new UserDetailsServiceMock(userService, mapper);
+        LsadfUserDetailsServiceMock userDetailsServiceMock = new LsadfUserDetailsServiceMock(userService);
 
-        when(userDetailsService.loadUserByUsername(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByUsername(invocation.getArgument(0)));
-        when(userDetailsService.loadUserByEmail(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByEmail(invocation.getArgument(0)));
+        when(lsadfUserDetailsService.loadUserByUsername(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByUsername(invocation.getArgument(0)));
     }
 
 }

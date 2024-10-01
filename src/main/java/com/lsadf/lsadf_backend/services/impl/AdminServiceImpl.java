@@ -113,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 
         return stream
                 .map(mapper::mapToUser)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -199,7 +199,7 @@ public class AdminServiceImpl implements AdminService {
 
         return stream
                 .map(mapper::mapToGameSave)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -229,7 +229,7 @@ public class AdminServiceImpl implements AdminService {
         userStream = StreamUtils.sortUsers(userStream, orderBy);
         return userStream
                 .map(mapper::mapToUser)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -242,7 +242,7 @@ public class AdminServiceImpl implements AdminService {
         gameSaveStream = StreamUtils.sortGameSaves(gameSaveStream, orderBy);
         return gameSaveStream
                 .map(mapper::mapToGameSave)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
