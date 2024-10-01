@@ -162,13 +162,6 @@ public class RefreshTokenProviderImpl implements TokenProvider<RefreshTokenEntit
         return true;
     }
 
-    @Scheduled(cron = "${auth.invalidated-token-cleaner-cron}")
-    @Transactional
-    public void cleanInvalidatedTokens() {
-        log.info("Cleaning expired & invalidated tokens");
-        deleteExpiredTokens();
-    }
-
     private static boolean isInvalidated(RefreshTokenEntity tokenEntity) {
         return tokenEntity.getStatus() == INVALIDATED;
     }
