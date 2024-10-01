@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.requests.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lsadf.lsadf_backend.requests.Request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.EMAIL;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRefreshLoginRequest implements Serializable {
+public class UserRefreshLoginRequest implements Request {
 
     @Serial
     private static final long serialVersionUID = -1758378448778560290L;

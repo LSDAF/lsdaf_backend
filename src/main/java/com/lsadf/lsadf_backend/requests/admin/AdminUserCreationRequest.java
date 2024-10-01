@@ -4,6 +4,7 @@ package com.lsadf.lsadf_backend.requests.admin;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminUserCreationRequest implements Serializable {
+public class AdminUserCreationRequest implements Request {
 
     @Serial
     private static final long serialVersionUID = 9104893581644308116L;

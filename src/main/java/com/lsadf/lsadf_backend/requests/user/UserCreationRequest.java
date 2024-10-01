@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserCreationRequest implements Serializable {
+public class UserCreationRequest implements Request {
 
     @Serial
     private static final long serialVersionUID = 7976141604912528826L;
