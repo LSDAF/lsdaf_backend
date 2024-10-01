@@ -17,7 +17,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.UserInfo.*;
 @Data
 @AllArgsConstructor
 @JsonPropertyOrder({NAME, EMAIL, VERIFIED, ROLES, CREATED_AT, UPDATED_AT})
-public class UserInfo implements Model  {
+public class UserInfo implements Model {
 
     @Serial
     private static final long serialVersionUID = -3162522781668155748L;
