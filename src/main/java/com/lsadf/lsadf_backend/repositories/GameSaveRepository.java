@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 @Repository
 public interface GameSaveRepository extends CrudRepository<GameSaveEntity, String> {
-    @Query(value = "SELECT * FROM T_GAME_SAVE", nativeQuery = true)
+    @Query("select gs from t_game_save gs")
     Stream<GameSaveEntity> findAllGameSaves();
 
     Optional<GameSaveEntity> findGameSaveEntityByNickname(String nickname);

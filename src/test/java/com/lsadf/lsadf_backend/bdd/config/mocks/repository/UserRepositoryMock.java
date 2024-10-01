@@ -1,12 +1,9 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
-import com.lsadf.lsadf_backend.utils.DateUtils;
-import org.jetbrains.annotations.NotNull;
 
-import java.time.Clock;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +36,9 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements U
         }
         toUpdate.setName(entity.getName());
         toUpdate.setEmail(entity.getEmail());
+        toUpdate.setEnabled(entity.getEnabled());
+        toUpdate.setRoles(entity.getRoles());
+        toUpdate.setVerified(entity.getVerified());
         toUpdate.setPassword(entity.getPassword());
         toUpdate.setUpdatedAt(now);
         entities.put(entity.getId(), toUpdate);
@@ -51,15 +51,13 @@ public class UserRepositoryMock extends ARepositoryMock<UserEntity> implements U
     }
 
     public Optional<UserEntity> findUserEntityByEmail(String email) {
-        Optional<UserEntity> userEntityOptional = entities.values()
+        return entities.values()
                 .stream()
                 .filter(user -> {
                     String userEmail = user.getEmail();
                     return email.equals(userEmail);
                 })
                 .findFirst();
-
-        return userEntityOptional;
     }
 
     public void deleteUserEntityByEmail(String email) {

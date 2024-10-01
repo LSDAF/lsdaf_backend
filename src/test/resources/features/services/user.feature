@@ -1,4 +1,3 @@
-
 Feature: User Service tests
 
   Background:
@@ -13,14 +12,14 @@ Feature: User Service tests
       | paul.ochon@test.com | Paul OCHON | paulOchon |
 
     Then I should return the following user entities
-      | name       | email               | enabled | password  | provider | roles |
-      | Paul OCHON | paul.ochon@test.com | true    | paulOchon | LOCAL    | USER  |
+      | name       | email               | enabled | password  | provider | roles | verified |
+      | Paul OCHON | paul.ochon@test.com | true    | paulOchon | LOCAL    | USER  | false    |
 
 
   Scenario: Check existence of an existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to check the existence of the user with email paul.ochon@test.com
 
@@ -28,8 +27,8 @@ Feature: User Service tests
 
   Scenario: Check existence of a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to check the existence of the user with email paul.itesse@test.com
 
@@ -37,47 +36,47 @@ Feature: User Service tests
 
   Scenario: Get Users
     Given the following users
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
 
     When we want to get all the users
 
     Then I should return the following user entities
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
 
   Scenario: Get an existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to get the user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
     Then I should return the following user entities
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
   Scenario: Get an existing User by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to get the user with email paul.ochon@test.com
 
     Then I should return the following user entities
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
   Scenario: Get a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to get the user with id 3218335e-a03f-4fbc-9875-497fc19ea4ca
 
@@ -85,8 +84,8 @@ Feature: User Service tests
 
   Scenario: Get a non-existing User by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to get the user with email paul.itesse@test.com
 
@@ -94,13 +93,13 @@ Feature: User Service tests
 
   Scenario: Update an existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
   Scenario: Update a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to update the user with id 4132952c-1d52-44c3-973d-f8f214e3d4df with the following UserUpdateRequest
       | name          |
@@ -109,8 +108,8 @@ Feature: User Service tests
 
   Scenario: Delete an existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to delete the user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
@@ -118,8 +117,8 @@ Feature: User Service tests
 
   Scenario: Delete an existing User by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to delete the user with email paul.ochon@test.com
 
@@ -127,8 +126,8 @@ Feature: User Service tests
 
   Scenario: Delete a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to delete the user with id fba76d12-9bb8-4af9-afb3-ec0f066fcdca
 
@@ -136,8 +135,8 @@ Feature: User Service tests
 
   Scenario: Delete a non-existing User by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to delete the user with email paul.itesse@test.com
 
@@ -145,8 +144,8 @@ Feature: User Service tests
 
   Scenario: Update a User password with invalid new password
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to update the password of the user with email paul.ochon@test.com from toto1234 to toto
 
@@ -154,8 +153,8 @@ Feature: User Service tests
 
   Scenario: Update a User password with invalid old password
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to update the password of the user with email paul.ochon@test.com from toto5678 to 1234toto
 
@@ -163,8 +162,8 @@ Feature: User Service tests
 
   Scenario: Update a User password with invalid id
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to update the user with id cb15f4b3-0b96-4e03-8de0-19cd98d71c56 with the following UserUpdateRequest
       | name         |
@@ -174,8 +173,8 @@ Feature: User Service tests
 
   Scenario: Validate User password with invalid email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to validate the user password with email paul.itesse@test.com and password toto1234
 
@@ -183,8 +182,8 @@ Feature: User Service tests
 
   Scenario: Validate User password with invalid password
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to validate the user password with email paul.ochon@test.com and password toto5678
 
@@ -192,8 +191,8 @@ Feature: User Service tests
 
   Scenario: Validate User password with valid email and password
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When we want to validate the user password with email paul.ochon@test.com and password toto1234
 

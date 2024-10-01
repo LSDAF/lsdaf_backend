@@ -2,7 +2,6 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 public class LocalCacheServiceImpl implements CacheService {
 
     private final Cache<LocalUser> localUserCache;
-    private final Cache<String> jwtTokenCache;
+    private final Cache<String> invalidatedJwtTokenCache;
 
     public LocalCacheServiceImpl(Cache<LocalUser> localUserCache,
-                                 Cache<String> jwtTokenCache) {
+                                 Cache<String> invalidatedJwtTokenCache) {
         this.localUserCache = localUserCache;
-        this.jwtTokenCache = jwtTokenCache;
+        this.invalidatedJwtTokenCache = invalidatedJwtTokenCache;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class LocalCacheServiceImpl implements CacheService {
     public void clearCaches() {
         log.info("Cleaning local caches");
         localUserCache.clear();
-        jwtTokenCache.clear();
+        invalidatedJwtTokenCache.clear();
         log.info("Local caches cleaned");
     }
 }

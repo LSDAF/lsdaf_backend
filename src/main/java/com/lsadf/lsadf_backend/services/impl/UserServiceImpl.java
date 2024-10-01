@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -38,19 +37,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Mapper mapper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Mapper mapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException {
         if ((creationRequest.getUserId() != null && userRepository.existsById(creationRequest.getUserId()))) {
             throw new AlreadyExistingUserException("User with User id " + creationRequest.getUserId() + " already exist");
@@ -60,13 +56,15 @@ public class UserServiceImpl implements UserService {
                 creationRequest.getEmail(),
                 creationRequest.getPassword(),
                 creationRequest.getSocialProvider(),
-                Optional.of(Sets.newHashSet(UserRole.getDefaultRole())), creationRequest.getName());
+                Sets.newHashSet(UserRole.getDefaultRole()),
+                creationRequest.getName(),
+                false);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public boolean validateUserPassword(String email, String password) throws NotFoundException {
         UserEntity userEntity = getUserByEmail(email);
@@ -78,8 +76,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
-        return createUser(null, email, password, provider, optionalUserRoles, name);
+    public UserEntity verifyUser(String userEmail) throws NotFoundException {
+        UserEntity userEntity = getUserByEmail(userEmail);
+        userEntity.setEnabled(true);
+        userEntity.setVerified(true);
+        return userRepository.save(userEntity);
     }
 
     /**
@@ -87,18 +88,29 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Optional<Set<UserRole>> optionalUserRoles, String name) throws AlreadyExistingUserException {
+    public UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException {
+        return createUser(null, email, password, provider, userRoles, name, verified);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistingUserException("User with email " + email + " already exists");
         }
+        if (userRoles == null) {
+            userRoles = Sets.newHashSet(UserRole.getDefaultRole());
+        }
 
-        Set<UserRole> userRoles = optionalUserRoles.orElse(Sets.newHashSet(UserRole.getDefaultRole()));
         String encodedPassword = passwordEncoder.encode(password);
         UserEntity userEntity = UserEntity
                 .builder()
                 .roles(userRoles)
                 .email(email)
                 .enabled(true)
+                .verified(verified)
                 .name(name)
                 .provider(provider)
                 .password(encodedPassword)
@@ -115,7 +127,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public UserEntity getUserByEmail(String email) throws NotFoundException {
         return userRepository.findUserEntityByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
@@ -125,7 +136,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         log.info("Checking if user exists by email: {}", email);
         return userRepository.existsByEmail(email);
@@ -135,7 +145,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public UserEntity getUserById(String id) throws NotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
@@ -222,8 +231,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException, AlreadyExistingUserException {
-        UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+        UserEntity userEntity = getUserById(id);
 
         return updateUser(userEntity, adminUserUpdateRequest);
     }
@@ -272,7 +280,7 @@ public class UserServiceImpl implements UserService {
                 .password(CHANGEIT).build();
     }
 
-    private UserEntity updateUser(UserEntity userEntity,
+    public UserEntity updateUser(UserEntity userEntity,
                                   AdminUserUpdateRequest adminUserUpdateRequest) throws AlreadyExistingUserException {
         boolean hasUpdates = false;
 
@@ -283,27 +291,31 @@ public class UserServiceImpl implements UserService {
             }
 
             if (adminUserUpdateRequest.getEmail() != null && !adminUserUpdateRequest.getEmail().equals(userEntity.getEmail())) {
-                if (userRepository.existsByEmail(adminUserUpdateRequest.getEmail())) {
+                if (existsByEmail(adminUserUpdateRequest.getEmail())) {
                     throw new AlreadyExistingUserException("User with email " + adminUserUpdateRequest.getEmail() + " already exists");
                 }
                 userEntity.setEmail(adminUserUpdateRequest.getEmail());
                 hasUpdates = true;
             }
 
-            if (adminUserUpdateRequest.getPassword() != null) {
-                if (!passwordEncoder.matches(adminUserUpdateRequest.getPassword(), userEntity.getPassword())) {
+            if (adminUserUpdateRequest.getPassword() != null && !passwordEncoder.matches(adminUserUpdateRequest.getPassword(), userEntity.getPassword())) {
                     userEntity.setPassword(passwordEncoder.encode(adminUserUpdateRequest.getPassword()));
                     hasUpdates = true;
                 }
-            }
+
 
             if (adminUserUpdateRequest.getUserRoles() != null && !adminUserUpdateRequest.getUserRoles().equals(userEntity.getRoles())) {
                 userEntity.setRoles(new HashSet<>(adminUserUpdateRequest.getUserRoles()));
                 hasUpdates = true;
             }
 
-            if (adminUserUpdateRequest.getEnabled() != null && !adminUserUpdateRequest.getEnabled().equals(userEntity.isEnabled())) {
+            if (adminUserUpdateRequest.getEnabled() != null && !adminUserUpdateRequest.getEnabled().equals(userEntity.getEnabled())) {
                 userEntity.setEnabled(adminUserUpdateRequest.getEnabled());
+                hasUpdates = true;
+            }
+
+            if (adminUserUpdateRequest.getVerified() != null && !adminUserUpdateRequest.getVerified().equals(userEntity.getVerified())) {
+                userEntity.setVerified(adminUserUpdateRequest.getVerified());
                 hasUpdates = true;
             }
         }

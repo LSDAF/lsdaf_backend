@@ -7,11 +7,16 @@ import lombok.experimental.UtilityClass;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 
 @UtilityClass
 public class TokenUtils {
+
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Base64.Encoder base64UrlEncoder = Base64.getUrlEncoder().withoutPadding();
+    private static final Base64.Encoder base64Encoder = Base64.getEncoder();
     /**
      * Generates a token.
      *
@@ -36,13 +41,26 @@ public class TokenUtils {
     }
 
     /**
+     * Generates a token.
+     * @param size the size of the token
+     * @return the generated token
+     */
+    public static String generateToken(int size) {
+        byte[] randomBytes = new byte[size];
+        secureRandom.nextBytes(randomBytes);
+        String token = base64UrlEncoder.encodeToString(randomBytes);
+
+        return token.replaceAll("\\W", "");
+    }
+
+    /**
      * Gets the signing key.
      * @param secret the secret
      * @return the signing key
      */
     private static Key getSigningKey(String secret) {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        byte[] base64KeyBytes = Base64.getEncoder().encode(keyBytes);
+        byte[] base64KeyBytes = base64Encoder.encode(keyBytes);
         return Keys.hmacShaKeyFor(base64KeyBytes);
     }
 

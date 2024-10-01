@@ -1,33 +1,28 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.models.TokenStatus;
 import com.lsadf.lsadf_backend.repositories.RefreshTokenRepository;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
-import com.lsadf.lsadf_backend.utils.DateUtils;
-import jakarta.validation.constraints.Email;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Clock;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEntity> implements RefreshTokenRepository {
 
-    private final UserRepository userRepository;
     private final ClockService clockService;
 
-    public RefreshTokenRepositoryMock(UserRepository userRepository,
-                                      ClockService clockService) {
-        this.userRepository = userRepository;
+    public RefreshTokenRepositoryMock(ClockService clockService) {
         this.clockService = clockService;
     }
 
 
     @Override
-    public Optional<RefreshTokenEntity> findByUserAndStatus(UserEntity user, RefreshTokenEntity.Status status) {
+    public Optional<RefreshTokenEntity> findByUserAndStatus(UserEntity user, TokenStatus status) {
         return entities.values()
                 .stream()
                 .filter(entity -> entity.getUser().equals(user) && entity.getStatus().equals(status))
@@ -48,7 +43,7 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
      * @param status the status
      * @return the list of refresh tokens
      */
-    public Iterable<RefreshTokenEntity> findAllByStatus(RefreshTokenEntity.Status status) {
+    public Iterable<RefreshTokenEntity> findAllByStatus(TokenStatus status) {
         return entities.values()
                 .stream()
                 .filter(entity -> entity.getStatus().equals(status))
@@ -56,10 +51,22 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
     }
 
     /**
+     * Find all refresh tokens by expiration date
      *
+     * @param date the date
+     * @return the list of refresh tokens
+     */
+    @Override
+    public Stream<RefreshTokenEntity> findAllByExpirationDateBefore(Date date) {
+        return entities.values()
+                .stream()
+                .filter(entity -> entity.getExpirationDate().before(date));
+    }
+
+    /**
      * @param entity the entity
+     * @param <S>    the entity type
      * @return the saved entity
-     * @param <S> the entity type
      */
     @Override
     public <S extends RefreshTokenEntity> @NotNull S save(S entity) {
@@ -71,6 +78,8 @@ public class RefreshTokenRepositoryMock extends ARepositoryMock<RefreshTokenEnti
 
         RefreshTokenEntity toUpdate = entities.get(entity.getId());
         if (toUpdate == null) {
+            entity.setCreatedAt(now);
+            entity.setUpdatedAt(now);
             entities.put(entity.getId(), entity);
             return entity;
         }

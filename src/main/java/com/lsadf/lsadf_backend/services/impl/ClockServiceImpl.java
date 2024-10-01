@@ -2,7 +2,6 @@ package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.utils.DateUtils;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.time.Clock;
 import java.time.Instant;

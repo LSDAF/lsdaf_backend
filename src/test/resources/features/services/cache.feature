@@ -8,8 +8,8 @@ Feature: Cache Service tests
 
   Scenario: Flush Cache Service
     Given the following users
-      | id                                   | name       | email               |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com |
+      | id                                   | name       | email               | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |

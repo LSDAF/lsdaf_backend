@@ -3,7 +3,6 @@ package com.lsadf.lsadf_backend.requests.user;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
 import com.lsadf.lsadf_backend.requests.common.OrderBy;
-import io.swagger.v3.core.util.Json;
 
 public enum UserOrderBy implements OrderBy {
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),

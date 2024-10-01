@@ -39,7 +39,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     }
 
     public static LocalUser create(UserEntity user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
-            LocalUser localUser = new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, buildSimpleGrantedAuthorities(user.getRoles()),
+            LocalUser localUser = new LocalUser(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, buildSimpleGrantedAuthorities(user.getRoles()),
                 user, idToken, userInfo);
         localUser.setAttributes(attributes);
         return localUser;
@@ -82,4 +82,11 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
         }
         return authorities;
     }
+
+    @Override
+    public Boolean getEmailVerified() {
+        return userEntity.getVerified();
+    }
+
+
 }

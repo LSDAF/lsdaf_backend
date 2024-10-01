@@ -35,6 +35,7 @@ public final class JsonAttributes {
         public static final String USER_ID = "user_id";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String PROVIDER = "provider";
         public static final String USER_ROLES = "user_roles";
         public static final String PROVIDER_USER_ID = "provider_user_id";
@@ -51,6 +52,7 @@ public final class JsonAttributes {
         public static final String EMAIL = "email";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
+        public static final String VERIFIED = "verified";
         public static final String PROVIDER = "provider";
         public static final String USER_ROLES = "user_roles";
         public static final String GAME_SAVES = "game_saves";
@@ -62,6 +64,7 @@ public final class JsonAttributes {
         public static final String NAME = "name";
         public static final String EMAIL = "email";
         public static final String ROLES = "roles";
+        public static final String VERIFIED = "validated";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

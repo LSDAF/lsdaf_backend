@@ -7,15 +7,15 @@ Feature: User Controller tests
 
   Scenario: A non-logged in user tries to get UserInfo
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     When the user requests the endpoint to get his UserInfo with no token
 
     Then the response status code should be 401
   Scenario: A user gets its UserInfo
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
@@ -25,16 +25,16 @@ Feature: User Controller tests
     Then the response status code should be 200
   Scenario: A non-logged in user tries to get his GameSaves
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When the user requests the endpoint to get his GameSaves with no token
 
     Then the response status code should be 401
   Scenario: A user gets its GameSaves
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |

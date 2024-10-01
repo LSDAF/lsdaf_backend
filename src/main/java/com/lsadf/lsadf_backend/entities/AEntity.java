@@ -11,7 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
@@ -24,12 +23,11 @@ public abstract class AEntity implements Entity {
     private static final long serialVersionUID = 7495963088331648156L;
 
     protected static final String UUID_HIBERNATE_GENERATOR = "uuid-hibernate-generator";
-    protected static final String UUID_GENERATOR_STRATEGY = "org.hibernate.id.UUIDGenerator";
 
     @Id
     @GeneratedValue(generator = UUID_HIBERNATE_GENERATOR)
     @Column(name = EntityAttributes.ID)
-    @GenericGenerator(name = UUID_HIBERNATE_GENERATOR, strategy = UUID_GENERATOR_STRATEGY)
+    @GenericGenerator(name = UUID_HIBERNATE_GENERATOR, type = org.hibernate.id.uuid.UuidGenerator.class)
     @EqualsAndHashCode.Include
     protected String id;
 

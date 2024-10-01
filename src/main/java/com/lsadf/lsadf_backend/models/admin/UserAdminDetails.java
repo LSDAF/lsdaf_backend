@@ -1,18 +1,16 @@
 package com.lsadf.lsadf_backend.models.admin;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serial;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +22,11 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.UserAdminDetails.
 @AllArgsConstructor
 @Builder
 @JsonPropertyOrder({ID, NAME, EMAIL, PASSWORD, ENABLED, PROVIDER, CREATED_AT, UPDATED_AT})
-public class UserAdminDetails {
+public class UserAdminDetails implements Model {
+
+    @Serial
+    private static final long serialVersionUID = 9114910775783811788L;
+
     @JsonProperty(value = ID)
     @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;
@@ -43,7 +45,11 @@ public class UserAdminDetails {
 
     @JsonProperty(value = ENABLED)
     @Schema(description = "User account is enabled", example = "true")
-    private boolean enabled;
+    private Boolean enabled;
+
+    @JsonProperty(value = VERIFIED)
+    @Schema(description = "User email is verified", example = "true")
+    private Boolean verified;
 
     @JsonProperty(value = USER_ROLES)
     @Schema(description = "User roles", example = "[\"USER\"]")

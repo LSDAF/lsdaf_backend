@@ -46,11 +46,9 @@ public class LocalCacheConfiguration {
         return new LocalCache<>(localUserExpiringMap, cacheExpirationProperties.getLocalUserExpirationSeconds());
     }
 
-    @Bean
-    @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE)
-    public Cache<String> localJwtTokenCache(CacheExpirationProperties cacheExpirationProperties,
-                                            ExpiringMap<String, String> localJwtTokenExpiringMap) {
-        return new LocalCache<>(localJwtTokenExpiringMap, cacheExpirationProperties.getInvalidatedJwtTokenExpirationSeconds());
+    @Bean(name = LOCAL_INVALIDATED_JWT_TOKEN_CACHE)
+    public Cache<String> localJwtTokenCache(ExpiringMap<String, String> localJwtTokenExpiringMap) {
+        return new LocalCache<>(localJwtTokenExpiringMap, null);
     }
 
 
@@ -64,10 +62,9 @@ public class LocalCacheConfiguration {
         return new LocalRemovalListener<>();
     }
 
-    @Bean
-    @Qualifier(LOCAL_CACHE_SERVICE)
+    @Bean(name = LOCAL_CACHE_SERVICE)
     public CacheService localCacheService(Cache<LocalUser> localUserCache,
-                                          Cache<String> localJwtTokenCache) {
-        return new LocalCacheServiceImpl(localUserCache, localJwtTokenCache);
+                                          @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache) {
+        return new LocalCacheServiceImpl(localUserCache, localInvalidatedJwtTokenCache);
     }
 }

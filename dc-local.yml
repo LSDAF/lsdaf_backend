@@ -72,6 +72,17 @@ services:
     depends_on:
       - redis
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    profiles:
+      - db
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - backend
+
   lsadf_backend:
     platform: linux/amd64
     env_file: env/env.properties

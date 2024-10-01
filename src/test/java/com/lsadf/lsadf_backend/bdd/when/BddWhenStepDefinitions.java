@@ -15,12 +15,13 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.*;
 
 import java.util.*;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Step definitions for the when steps in the BDD scenarios
@@ -33,6 +34,21 @@ public class BddWhenStepDefinitions extends BddLoader {
         try {
             GameSaveEntity gameSaveEntity = gameSaveService.getGameSave(gameSaveId);
             gameSaveEntityListStack.push(Collections.singletonList(gameSaveEntity));
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the endpoint to validate the account with the following verification token (.*)$")
+    public void when_the_user_requests_the_endpoint_to_validate_its_account_with_the_following_verification_token(String token) {
+        try {
+            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.VALIDATE_TOKEN + "?token=" + token;
+            String url = BddUtils.buildUrl(this.serverPort, fullPath);
+            HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
+            ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
+            GenericResponse<UserInfo> body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
         } catch (Exception e) {
             exceptionStack.push(e);
         }
@@ -225,7 +241,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REFRESH_LOGIN;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
 
-        assertThat(rows.size()).isEqualTo(1);
+        assertThat(rows).hasSize(1);
         Map<String, String> row = rows.get(0);
 
         UserRefreshLoginRequest refreshLoginRequest = BddUtils.mapToUserRefreshLoginRequest(row);
@@ -238,8 +254,9 @@ public class BddWhenStepDefinitions extends BddLoader {
             if (jwtAuthentication != null) {
                 jwtTokenStack.push(jwtAuthentication.getAccessToken());
                 refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = userDetailsService.loadUserByEmail(refreshLoginRequest.getEmail());
-                localUserMap.put(jwtAuthentication.getAccessToken(), localUser);
+                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(refreshLoginRequest.getEmail());
+                ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
+                localUserMap.put(jwtAuthentication.getAccessToken(), pair);
             }
             responseStack.push(body);
             log.info("Response: {}", result);
@@ -273,8 +290,9 @@ public class BddWhenStepDefinitions extends BddLoader {
             if (jwtAuthentication != null) {
                 jwtTokenStack.push(jwtAuthentication.getAccessToken());
                 refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = userDetailsService.loadUserByEmail(userLoginRequest.getEmail());
-                localUserMap.put(jwtAuthentication.getAccessToken(), localUser);
+                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(userLoginRequest.getEmail());
+                ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
+                localUserMap.put(jwtAuthentication.getAccessToken(), pair);
             }
             responseStack.push(body);
             log.info("Response: {}", result);

@@ -66,9 +66,7 @@ public class GameSaveServiceImpl implements GameSaveService {
         saved.setCurrencyEntity(currencyEntity);
 
 
-        GameSaveEntity savedEntity = gameSaveRepository.save(saved);
-
-        return savedEntity;
+        return gameSaveRepository.save(saved);
     }
 
     /**
@@ -244,7 +242,8 @@ public class GameSaveServiceImpl implements GameSaveService {
     @Transactional(readOnly = true)
     public void checkGameSaveOwnership(String saveId, String userEmail) throws ForbiddenException, NotFoundException {
         if (!gameSaveOwnershipCache.isEnabled()) {
-            GameSaveEntity gameSaveEntity = getGameSave(saveId);
+            GameSaveEntity gameSaveEntity = this.gameSaveRepository.findById(saveId)
+                    .orElseThrow(NotFoundException::new);
 
             if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {
                 throw new ForbiddenException("The given user email is not the owner of the game save");
@@ -255,7 +254,8 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         Optional<String> optionalOwnership = gameSaveOwnershipCache.get(saveId);
         if (optionalOwnership.isEmpty()) {
-            GameSaveEntity gameSaveEntity = getGameSave(saveId);
+            GameSaveEntity gameSaveEntity = this.gameSaveRepository.findById(saveId)
+                    .orElseThrow(NotFoundException::new);
             gameSaveOwnershipCache.set(saveId, userEmail);
             if (!Objects.equals(gameSaveEntity.getUser().getEmail(), userEmail)) {
                 throw new ForbiddenException("The given user email is not the owner of the game save");

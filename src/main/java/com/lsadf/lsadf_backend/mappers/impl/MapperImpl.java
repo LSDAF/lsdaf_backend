@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthorities;
@@ -94,11 +95,12 @@ public class MapperImpl implements Mapper {
                 .password(userEntity.getPassword())
                 .name(userEntity.getName())
                 .socialProvider(provider)
-                .enabled(userEntity.isEnabled())
+                .enabled(userEntity.getEnabled())
+                .verified(userEntity.getVerified())
                 .userRoles(new ArrayList<>(userEntity.getRoles()))
                 .gameSaves(userEntity.getGameSaves().stream()
                         .map(this::mapToGameSave)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .updatedAt(userEntity.getUpdatedAt())
                 .createdAt(userEntity.getCreatedAt())
                 .build();
@@ -109,12 +111,12 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public UserInfo mapLocalUserToUserInfo(LocalUser localUser) {
-        List<UserRole> roles = localUser.getAuthorities().stream()
+        Set<UserRole> roles = localUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(UserRole::fromRole)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         UserEntity user = localUser.getUserEntity();
-        return new UserInfo(user.getId(), user.getName(), user.getEmail(), roles, user.getCreatedAt(), user.getUpdatedAt());
+        return new UserInfo(user.getId(), user.getName(), user.getEmail(), user.getVerified(), roles, user.getCreatedAt(), user.getUpdatedAt());
     }
 
     /**
@@ -122,8 +124,8 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
-        List<UserRole> roles = userEntity.getRoles().stream().toList();
-        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+        Set<UserRole> roles = new HashSet<>(userEntity.getRoles());
+        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), userEntity.getVerified(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
 
@@ -134,7 +136,7 @@ public class MapperImpl implements Mapper {
     public LocalUser mapUserEntityToLocalUser(UserEntity user) {
         return new LocalUser(user.getEmail(),
                 user.getPassword(),
-                user.isEnabled(),
+                user.getEnabled(),
                 true,
                 true,
                 true,

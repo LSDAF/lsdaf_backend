@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.cache.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
@@ -14,12 +15,12 @@ public class LocalCache<T> implements Cache<T> {
 
     private final ExpiringMap<String, T> cache;
 
-    private int expirationSeconds;
+    private Integer expirationSeconds;
 
-    private final boolean isEnabled = true;
+    private static final boolean ENABLED = true;
 
     public LocalCache(ExpiringMap<String, T> cache,
-                      int expirationSeconds) {
+                     @Nullable Integer expirationSeconds) {
         this.cache = cache;
         this.expirationSeconds = expirationSeconds;
     }
@@ -91,7 +92,7 @@ public class LocalCache<T> implements Cache<T> {
      */
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return ENABLED;
     }
 
     @Override

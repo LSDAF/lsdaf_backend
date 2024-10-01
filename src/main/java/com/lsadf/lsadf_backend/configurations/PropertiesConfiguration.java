@@ -5,6 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for properties
+ */
 @Configuration
 public class PropertiesConfiguration {
 
@@ -15,9 +18,27 @@ public class PropertiesConfiguration {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "user-email-verification")
+    public UserVerificationProperties userValidationProperties() {
+        return new UserVerificationProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "cache")
     public CacheProperties cacheProperties() {
         return new CacheProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "server")
+    public ServerProperties serverProperties() {
+        return new ServerProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "mail")
+    public EmailProperties mailProperties() {
+        return new EmailProperties();
     }
 
     @Bean

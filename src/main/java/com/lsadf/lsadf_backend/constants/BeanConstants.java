@@ -14,6 +14,12 @@ public class BeanConstants {
     }
 
     @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+    public static final class TokenProvider {
+        public static final String JWT_TOKEN_PROVIDER = "jwtTokenProvider";
+        public static final String REFRESH_TOKEN_PROVIDER = "refreshTokenProvider";
+    }
+
+    @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
     public static final class Cache {
         public static final String CURRENCY_CACHE = "currencyCache";
         public static final String LOCAL_INVALIDATED_JWT_TOKEN_CACHE = "localInvalidatedJwtTokenCache";

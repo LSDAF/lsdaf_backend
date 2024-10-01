@@ -7,9 +7,9 @@ Feature: Game Save Service tests
 
   Scenario: Create a new GameSave from userEmail
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     When we want to create a new game save for the user with email paul.ochon@test.com
 
@@ -19,9 +19,9 @@ Feature: Game Save Service tests
 
   Scenario: Create a new GameSave from AdminGameSaveCreationRequest
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     When we want to create a new game save with the following AdminGameSaveCreationRequest
       | userEmail            | gold | healthPoints | attack | id                                   | diamond | emerald | amethyst |
@@ -38,9 +38,9 @@ Feature: Game Save Service tests
 
   Scenario: Get an existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
@@ -53,9 +53,9 @@ Feature: Game Save Service tests
 
   Scenario: Get a non-existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
@@ -66,9 +66,9 @@ Feature: Game Save Service tests
 
   Scenario: Update an existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack | nickname |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   | player1  |
@@ -83,9 +83,9 @@ Feature: Game Save Service tests
 
   Scenario: Update a non-existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
@@ -96,9 +96,9 @@ Feature: Game Save Service tests
 
   Scenario: Get all game saves
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 124          | 1072   |
@@ -112,9 +112,9 @@ Feature: Game Save Service tests
 
   Scenario: Delete an existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
@@ -126,9 +126,9 @@ Feature: Game Save Service tests
 
   Scenario: Delete a non-existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
@@ -139,9 +139,9 @@ Feature: Game Save Service tests
 
   Scenario: Check GameSave Ownership for owner
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 806c8d75-6d20-4980-973b-6c5185d41eb0 | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 806c8d75-6d20-4980-973b-6c5185d41eb0 | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
@@ -152,9 +152,9 @@ Feature: Game Save Service tests
 
   Scenario: Check GameSave Ownership for non-owner
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
@@ -164,9 +164,9 @@ Feature: Game Save Service tests
 
   Scenario: Check GameSave Ownership for non-existing GameSave
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
@@ -176,8 +176,8 @@ Feature: Game Save Service tests
 
   Scenario: Get all game saves for a user
     Given the following users
-      | id                                   | name       | email               |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com |
+      | id                                   | name       | email               | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | true     |
 
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |

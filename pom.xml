@@ -48,6 +48,7 @@
         <embedded-redis.version>1.4.2</embedded-redis.version>
         <expiringmap.jodah.version>0.5.11</expiringmap.jodah.version>
         <jansi.version>2.4.1</jansi.version>
+        <velocity-engine.version>2.3</velocity-engine.version>
     </properties>
 
     <build>
@@ -181,7 +182,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -195,6 +196,12 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${swagger.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>${velocity-engine.version}</version>
         </dependency>
 
         <dependency>

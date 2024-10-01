@@ -8,51 +8,51 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get all users
     Given the following users
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
     When an admin gets all the users ordered by NONE
     Then I should return the following users
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
 
   Scenario: Admin: Get a user by id
     Given the following users
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
 
     When an admin gets the user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
     Then I should return the following UserAdminDetails
-      | id                                   | name       | email               | password | enabled | userRoles | socialProvider | providerUserId |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | USER      | LOCAL          |                |
+      | id                                   | name       | email               | password | enabled | userRoles | socialProvider | providerUserId | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | USER      | LOCAL          |                | true     |
 
   Scenario: Admin: Get user by email
     Given the following users
-      | id                                   | name          | email                  | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto |
-      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto |
+      | id                                   | name          | email                  | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON    | paul.ochon@test.com    | toto1234 | true    | true     |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | Jean DUJARDIN | jean.dujardin@test.com | 1234toto | true    | true     |
+      | 71b56656-2116-4085-b4e2-f86ce068282a | Paul ITESSE   | paul.itesse@test.com   | toto5678 | true    | true     |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE    | paul.hisse@test.com    | 5678toto | true    | true     |
 
     When an admin gets the user with email paul.hisse@test.com
 
     Then I should return the following UserAdminDetails
-      | id                                   | name       | email               | password | enabled | userRoles | socialProvider | providerUserId |
-      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE | paul.hisse@test.com | 5678toto | true    | USER      | LOCAL          |                |
+      | id                                   | name       | email               | password | enabled | userRoles | socialProvider | providerUserId | verified |
+      | 7bbcab56-588e-4e70-bc3a-a582e5a0ede1 | Paul HISSE | paul.hisse@test.com | 5678toto | true    | USER      | LOCAL          |                | true     |
 
   Scenario: Admin: Get non-existing user by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin gets the user with email paul.hitique@test.com
 
@@ -60,8 +60,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get non-existing user by id
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin gets the user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
@@ -69,7 +69,7 @@ Feature: Admin Service tests
 
   Scenario: Admin: Create a new User
     Given the following users
-      | id | name | email | password |
+      | id | name | email | password | enabled | verified |
 
     When an admin creates a new user with the following AdminUserCreationRequest
       | name       | email               | password | socialProvider | providerUserId | userRoles  |
@@ -81,21 +81,21 @@ Feature: Admin Service tests
 
   Scenario: Admin: Update a user
     Given the following users
-      | id                                   | name       | email               | password | enabled | roles |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | USER  |
+      | id                                   | name       | email               | password | enabled | roles | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | USER  | true     |
 
     When an admin updates a user with id a5c17332-cd02-40b8-ac45-322baef4b70a with the following AdminUserUpdateRequest
       | name        | enabled |
       | Paul Emploi | false   |
 
     Then I should return the following users
-      | id                                   | name        | email               | password | enabled | userRoles | socialProvider | providerUserId |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul Emploi | paul.ochon@test.com | toto1234 | false   | USER      | LOCAL          |                |
+      | id                                   | name        | email               | password | enabled | userRoles | socialProvider | providerUserId | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul Emploi | paul.ochon@test.com | toto1234 | false   | USER      | LOCAL          |                | true     |
 
   Scenario: Admin: Update a non-existing User
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin updates a user with id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d with the following AdminUserUpdateRequest
       | name        |
@@ -105,8 +105,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a user
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following id a5c17332-cd02-40b8-ac45-322baef4b70a
 
@@ -114,8 +114,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a non-existing user
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following id 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d
 
@@ -123,8 +123,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a user by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following email paul.ochon@test.com
 
@@ -132,8 +132,8 @@ Feature: Admin Service tests
 
   Scenario: Admin: Delete a non-existing user by email
     Given the following users
-      | id                                   | name       | email               | password |
-      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | a5c17332-cd02-40b8-ac45-322baef4b70a | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
 
     When an admin deletes a user with the following email paul.itesse@test.com
 
@@ -141,9 +141,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get GlobalInfo
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 124          | 1072       |
@@ -158,9 +158,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get all game saves
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 10      | 10      | 10       | 124          | 1072       |
@@ -177,9 +177,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get a save game by id
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | diamond | emerald | amethyst | healthPoints | attack     |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280     | 10      | 10      | 10       | 124          | 1072       |
@@ -194,9 +194,9 @@ Feature: Admin Service tests
 
   Scenario: Admin: Get a non-existing save game by id
     Given the following users
-      | id                                   | name        | email                |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com |
+      | id                                   | name        | email                | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | true    | true     |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul ITESSE | paul.itesse@test.com | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold        | healthPoints | attack     |
       | 9fb0c57c-2488-44c9-8b8f-6d595fa44937 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 3272        | 12999        | 666        |

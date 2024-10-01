@@ -40,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
     private final CacheService redisCacheService;
     private final CacheFlushService cacheFlushService;
     private final ClockService clockService;
+    private final EmailService emailService;
 
     public AdminServiceImpl(UserService userService,
                             GameSaveService gameSaveService,
@@ -48,7 +49,8 @@ public class AdminServiceImpl implements AdminService {
                             CacheService localCacheService,
                             CacheService redisCacheService,
                             CacheFlushService cacheFlushService,
-                            ClockService clockService) {
+                            ClockService clockService,
+                            EmailService emailService) {
         this.userService = userService;
         this.mapper = mapper;
         this.searchService = searchService;
@@ -57,6 +59,7 @@ public class AdminServiceImpl implements AdminService {
         this.redisCacheService = redisCacheService;
         this.cacheFlushService = cacheFlushService;
         this.clockService = clockService;
+        this.emailService = emailService;
     }
 
     /**
@@ -110,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 
         return stream
                 .map(mapper::mapToUser)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -153,7 +156,8 @@ public class AdminServiceImpl implements AdminService {
                 .userId(creationRequest.getUserId())
                 .build();
         UserEntity user = userService.createUser(userCreationRequest);
-        user.setEnabled(creationRequest.isEnabled());
+        user.setEnabled(creationRequest.getEnabled());
+        user.setVerified(creationRequest.getVerified());
 
         return mapper.mapToUser(user);
     }
@@ -195,7 +199,7 @@ public class AdminServiceImpl implements AdminService {
 
         return stream
                 .map(mapper::mapToGameSave)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -225,7 +229,7 @@ public class AdminServiceImpl implements AdminService {
         userStream = StreamUtils.sortUsers(userStream, orderBy);
         return userStream
                 .map(mapper::mapToUser)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -238,7 +242,7 @@ public class AdminServiceImpl implements AdminService {
         gameSaveStream = StreamUtils.sortGameSaves(gameSaveStream, orderBy);
         return gameSaveStream
                 .map(mapper::mapToGameSave)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

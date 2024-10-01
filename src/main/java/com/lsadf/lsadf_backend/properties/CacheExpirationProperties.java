@@ -11,5 +11,4 @@ public class CacheExpirationProperties {
     private int currencyExpirationSeconds;
     private int gameSaveOwnershipExpirationSeconds;
     private int localUserExpirationSeconds;
-    private int invalidatedJwtTokenExpirationSeconds;
 }

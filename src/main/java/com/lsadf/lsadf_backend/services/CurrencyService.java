@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 
@@ -23,11 +22,4 @@ public interface CurrencyService {
      */
     void saveCurrency(String gameSaveId, Currency currency, boolean toCache) throws NotFoundException;
 
-    /**
-     * Get the gold entity by the id of its game save
-     * @param gameSaveId the id of the game save
-     * @return the gold entity
-     * @throws NotFoundException
-     */
-    CurrencyEntity getCurrencyEntity(String gameSaveId) throws NotFoundException;
 }

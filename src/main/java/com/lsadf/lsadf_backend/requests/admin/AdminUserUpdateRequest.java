@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.constants.UserRole;
+import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.Set;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
@@ -21,7 +21,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 @AllArgsConstructor
 @Data
 @Builder
-public class AdminUserUpdateRequest implements Serializable {
+public class AdminUserUpdateRequest implements Request {
     @Serial
     private static final long serialVersionUID = -4515896456126778133L;
 
@@ -34,6 +34,10 @@ public class AdminUserUpdateRequest implements Serializable {
     @Schema(description = "Password of user to update", example = "k127F978")
     @JsonProperty(value = PASSWORD)
     private String password;
+
+    @Schema(description = "Verified status of user to update", example = "true")
+    @JsonProperty(value = VERIFIED)
+    private Boolean verified;
 
     @Email
     @NotBlank

@@ -28,9 +28,9 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
     @Override
     @Transactional
     public void flushCurrencies() {
-        log.info("Flushing gold cache");
-        Map<String, Currency> goldCacheEntries = currencyCache.getAll();
-        for (Map.Entry<String, Currency> entry : goldCacheEntries.entrySet()) {
+        log.info("Flushing currency cache");
+        Map<String, Currency> currencyEntries = currencyCache.getAll();
+        for (Map.Entry<String, Currency> entry : currencyEntries.entrySet()) {
             String gameSaveId = entry.getKey();
             Currency currency = entry.getValue();
             try {
@@ -42,7 +42,7 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
             }
         }
 
-        log.info("Flushed {} currencies in DB", goldCacheEntries.size());
+        log.info("Flushed {} currencies in DB", currencyEntries.size());
     }
 
 }

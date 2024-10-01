@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.requests.currency;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.AMETHYST
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({GOLD, DIAMOND, EMERALD, AMETHYST})
-public class CurrencyRequest {
+public class CurrencyRequest implements Request {
     @Schema(description = "The amount of gold", example = "100")
     @JsonProperty(value = GOLD)
     private Long gold;

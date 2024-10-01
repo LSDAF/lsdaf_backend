@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "[REFRESH TOKEN WHEN STEP DEFINITIONS]")
 public class BddRefreshTokenProviderWhenStepDefinitions extends BddLoader {
 
-    @When("^we want to invalidate the token of the user with email (.*)$")
-    public void when_we_want_to_invalidate_the_token_of_the_user_with_email(String email) {
+    @When("^we want to invalidate the token (.*) of the user with email (.*)$")
+    public void when_we_want_to_invalidate_the_token_of_the_user_with_email(String token, String email) {
         try {
             log.info("Invalidating token for user with email {}", email);
-            refreshTokenProvider.invalidateUserRefreshToken(email);
+            refreshTokenProvider.invalidateToken(token, email);
         } catch (Exception e) {
             log.error("Error while invalidating token", e);
             exceptionStack.push(e);
@@ -28,7 +28,7 @@ public class BddRefreshTokenProviderWhenStepDefinitions extends BddLoader {
         try {
             log.info("Saving refresh token {} for user with email {}", refreshToken, email);
             UserEntity userEntity = userRepository.findUserEntityByEmail(email).orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
-            var token = refreshTokenProvider.saveRefreshToken(userEntity, refreshToken);
+            var token = refreshTokenProvider.createToken(mapper.mapUserEntityToLocalUser(userEntity));
             refreshTokenEntityStack.push(token);
         } catch (Exception e) {
             log.error("Error while saving refresh token", e);
@@ -36,8 +36,8 @@ public class BddRefreshTokenProviderWhenStepDefinitions extends BddLoader {
         }
     }
 
-    @When("^we want to delete the expired tokens$")
-    public void when_we_want_to_delete_the_expired_tokens() {
+    @When("^we want to delete the expired refresh tokens$")
+    public void when_we_want_to_delete_the_expired_refresh_tokens() {
         try {
             log.info("Deleting expired tokens");
             refreshTokenProvider.deleteExpiredTokens();

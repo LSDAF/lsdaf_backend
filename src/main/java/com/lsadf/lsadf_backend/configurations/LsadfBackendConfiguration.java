@@ -7,12 +7,14 @@ import com.lsadf.lsadf_backend.configurations.cache.RedisEmbeddedCacheConfigurat
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Global Configuration class for the LSADF backend. It imports all other configurations to be used in the application.
  */
 @Configuration
 @EnableScheduling
+@EnableTransactionManagement
 @Import({
         DataSourceConfiguration.class,
         PropertiesConfiguration.class,
@@ -28,7 +30,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         LocalCacheConfiguration.class,
         RedisCacheConfiguration.class,
         NoRedisCacheConfiguration.class,
-        ClockConfiguration.class
+        ClockConfiguration.class,
+        VelocityConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

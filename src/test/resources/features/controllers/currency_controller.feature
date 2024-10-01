@@ -8,8 +8,8 @@ Feature: Currency Controller tests
 
   Scenario: A user gets the currencies of one of his game saves with cache
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 500          | 1072   |
@@ -31,8 +31,8 @@ Feature: Currency Controller tests
 
   Scenario: A user gets the currencies of one of his game saves without cache
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 500          | 1072   | 200     | 300     | 400      |
@@ -51,8 +51,8 @@ Feature: Currency Controller tests
 
   Scenario: A user gets the gold of a game save that does not exist
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
@@ -67,9 +67,9 @@ Feature: Currency Controller tests
 
   Scenario: A user gets the gold of a non-owned game save
     Given the following users
-      | id                                   | name        | email                | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 |
+      | id                                   | name        | email                | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     |
+      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   |
@@ -84,8 +84,8 @@ Feature: Currency Controller tests
 
   Scenario: A user sets the currencies of one of his game saves with cache
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | diamond | emerald | amethyst | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   |
@@ -109,8 +109,8 @@ Feature: Currency Controller tests
 
   Scenario: A user sets the currencies of one of his game saves without cache
     Given the following users
-      | id                                   | name       | email               | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 |
+      | id                                   | name       | email               | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   |
@@ -129,9 +129,9 @@ Feature: Currency Controller tests
 
   Scenario: A user sets the currencies of a non-owned game save
     Given the following users
-      | id                                   | name        | email                | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 |
+      | id                                   | name        | email                | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     |
+      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   |
@@ -148,9 +148,9 @@ Feature: Currency Controller tests
 
   Scenario: A user sets the currencies of a non-existing game save
     Given the following users
-      | id                                   | name        | email                | password |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | toto1234 |
+      | id                                   | name        | email                | password | enabled | verified |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     |
+      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | toto1234 | true    | true     |
     And the following game saves
       | id                                   | userId                               | gold    | healthPoints | attack |
       | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   |

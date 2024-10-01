@@ -30,20 +30,17 @@ public class NoRedisCacheConfiguration {
         return new NoOpFlushServiceImpl();
     }
 
-    @Bean
-    @Qualifier(CURRENCY_CACHE)
+    @Bean(name = CURRENCY_CACHE)
     public HistoCache<Currency> currencyCache() {
         return new NoOpHistoCache<>();
     }
 
-    @Bean
-    @Qualifier(INVALIDATED_JWT_TOKEN_CACHE)
+    @Bean(name = INVALIDATED_JWT_TOKEN_CACHE)
     public Cache<String> invalidatedJwtTokenCache(@Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache) {
         return localInvalidatedJwtTokenCache;
     }
 
-    @Bean
-    @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
+    @Bean(name = GAME_SAVE_OWNERSHIP_CACHE)
     public Cache<String> gameSaveOwnershipCache() {
         return new NoOpCache<>();
     }

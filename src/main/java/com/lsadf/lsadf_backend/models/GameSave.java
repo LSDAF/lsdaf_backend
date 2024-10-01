@@ -1,13 +1,13 @@
 package com.lsadf.lsadf_backend.models;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lsadf.lsadf_backend.constants.JsonAttributes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.util.Date;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
@@ -23,7 +23,11 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({ID, USER_ID, USER_EMAIL, NICKNAME, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
-public class GameSave {
+public class GameSave implements Model  {
+
+    @Serial
+    private static final long serialVersionUID = -2686370647354845265L;
+
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;

@@ -1,8 +1,9 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.entities.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
@@ -13,6 +14,7 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.RefreshToken.REFRESH_TOKEN;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Step definitions for the then steps in the BDD scenarios
@@ -100,7 +102,7 @@ public class BddThenStepDefinitions extends BddLoader {
             expected.add(expectedEntity);
         }
 
-        assertThat(actual.size()).isEqualTo(expected.size());
+        assertThat(actual).hasSameSizeAs(expected);
 
         for (int i = 0; i < actual.size(); i++) {
             GameSave actualGameSave = actual.get(i);
@@ -114,7 +116,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should have no user entries in DB$")
     public void then_i_should_have_no_user_entries_in_db() {
-        assertThat(userRepository.count()).isEqualTo(0);
+        assertThat(userRepository.count()).isZero();
     }
 
     @Then("^I should return true$")
@@ -144,7 +146,7 @@ public class BddThenStepDefinitions extends BddLoader {
     @Then("^I should have an unexpired and (.*) refresh token in DB for the user with email (.*)$")
     public void then_i_should_have_an_unexpired_and_status_refresh_token_in_db(String status, String userEmail) {
         UserEntity user = userRepository.findUserEntityByEmail(userEmail).orElseThrow();
-        Optional<RefreshTokenEntity> actual = refreshTokenRepository.findByUserAndStatus(user, RefreshTokenEntity.Status.valueOf(status));
+        Optional<RefreshTokenEntity> actual = refreshTokenRepository.findByUserAndStatus(user, TokenStatus.valueOf(status));
         assertThat(actual).isNotEmpty();
 
     }
@@ -241,12 +243,12 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should have no game save entries in DB$")
     public void then_i_should_have_no_game_save_entries_in_db() {
-        assertThat(gameSaveRepository.count()).isEqualTo(0);
+        assertThat(gameSaveRepository.count()).isZero();
     }
 
     @Then("^I should have no gold entries in DB$")
     public void then_i_should_have_no_gold_entries_in_db() {
-        assertThat(currencyRepository.count()).isEqualTo(0);
+        assertThat(currencyRepository.count()).isZero();
     }
 
     @Then("^I should throw a NotFoundException$")
@@ -381,7 +383,7 @@ public class BddThenStepDefinitions extends BddLoader {
             expected.add(expectedUser);
         }
 
-        assertThat(actual.size()).isEqualTo(expected.size());
+        assertThat(actual).hasSameSizeAs(expected);
 
         for (int i = 0; i < actual.size(); i++) {
             User actualUser = actual.get(i);
@@ -413,7 +415,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
     @Then("^I should throw no Exception$")
     public void then_i_should_throw_no_exception() {
-        assertThat(exceptionStack.isEmpty()).isTrue();
+        assertThat(exceptionStack).isEmpty();
     }
 
     @Then("^the token from the response should not be null$")
@@ -545,6 +547,24 @@ public class BddThenStepDefinitions extends BddLoader {
                     .ignoringFields("id", "createdAt", "updatedAt", "password")
                     .isEqualTo(expectedUser);
         }
+    }
+
+    @Then("^a new validation token should have been created for the user with email (.*)$")
+    public void then_a_new_validation_token_should_be_created_for_the_user_with_email(String email) {
+        List<UserVerificationTokenEntity> results = new ArrayList<>();
+        Iterable<UserVerificationTokenEntity> tokens = userVerificationTokenRepository.findAllByUserEmail(email);
+        tokens.forEach(results::add);
+
+        assertThat(results.size()).isNotZero();
+    }
+
+    @Then("^an email should have been sent to (.*)$")
+    public void then_en_email_should_have_been_sent_to(String email) throws MessagingException {
+        var mime = mimeMessageStack.peek();
+        assertThat(mime).isNotNull();
+
+        String actual = mime.getAllRecipients()[0].toString();
+        assertThat(actual).isEqualTo(email);
     }
 
     @Then("^the response should have the following Users$")

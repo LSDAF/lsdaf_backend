@@ -1,10 +1,10 @@
 package com.lsadf.lsadf_backend.security.oauth2;
 
+import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
-import com.lsadf.lsadf_backend.services.UserDetailsService;
 import com.lsadf.lsadf_backend.utils.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,17 +27,17 @@ import static com.lsadf.lsadf_backend.security.oauth2.HttpCookieOAuth2Authorizat
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final TokenProvider tokenProvider;
+    private final TokenProvider<JwtTokenEntity> tokenProvider;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2Properties oAuth2Properties;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService lsadfUserDetailsService;
 
     public OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
                                               HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
                                               OAuth2Properties oAuth2Properties,
-                                              UserDetailsService userDetailsService) {
+                                              UserDetailsService lsadfUserDetailsService) {
         this.tokenProvider = tokenProvider;
-        this.userDetailsService = userDetailsService;
+        this.lsadfUserDetailsService = lsadfUserDetailsService;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.oAuth2Properties = oAuth2Properties;
     }
@@ -71,13 +72,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String email = (String) authentication.getPrincipal();
         LocalUser localUser;
         try {
-            localUser = userDetailsService.loadUserByEmail(email);
+            localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(email);
         } catch (NotFoundException e) {
             throw new RuntimeException(e);
         }
-        String token = tokenProvider.createJwtToken(localUser);
+        JwtTokenEntity token = tokenProvider.createToken(localUser);
 
-        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
+        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token.getToken()).build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
@@ -92,10 +93,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // Only validate host and port. Let the clients use different paths if they want
             // to
             URI authorizedURI = URI.create(authorizedRedirectUri);
-            if (authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                return true;
-            }
-            return false;
+            return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort();
         });
     }
 }

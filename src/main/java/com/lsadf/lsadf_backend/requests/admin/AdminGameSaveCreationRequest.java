@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
@@ -22,7 +23,11 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdminGameSaveCreationRequest {
+public class AdminGameSaveCreationRequest implements Request {
+
+    @Serial
+    private static final long serialVersionUID = 2925109471468959138L;
+
     @Nullable
     @JsonProperty(value = ID)
     @Schema(description = "Id of the game save", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")

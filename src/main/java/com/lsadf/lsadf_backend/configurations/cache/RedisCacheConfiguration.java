@@ -66,36 +66,32 @@ public class RedisCacheConfiguration {
         return template;
     }
 
-    @Bean
-    @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
+    @Bean(name = GAME_SAVE_OWNERSHIP_CACHE)
     public RedisCache<String> gameSaveOwnershipCache(RedisTemplate<String, String> redisTemplate,
                                                      CacheExpirationProperties cacheExpirationProperties,
                                                      RedisProperties redisProperties) {
         return new RedisCache<>(redisTemplate, GAME_SAVE_OWNERSHIP, cacheExpirationProperties.getGameSaveOwnershipExpirationSeconds(), redisProperties);
     }
 
-    @Bean
-    @Qualifier(CURRENCY_CACHE)
+    @Bean(name = CURRENCY_CACHE)
     public HistoCache<Currency> redisCurrencyCache(RedisTemplate<String, Currency> redisTemplate,
                                                    CacheExpirationProperties cacheExpirationProperties,
                                                    RedisProperties redisProperties) {
         return new RedisCurrencyCache(redisTemplate, cacheExpirationProperties.getCurrencyExpirationSeconds(), redisProperties);
     }
 
-    @Bean
-    @Qualifier(INVALIDATED_JWT_TOKEN_CACHE)
+    @Bean(name = INVALIDATED_JWT_TOKEN_CACHE)
     public Cache<String> jwtTokenCache(RedisTemplate<String, String> redisTemplate,
                                        @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache,
-                                       CacheExpirationProperties cacheExpirationProperties,
                                        RedisProperties redisProperties) {
-        return new InvalidatedJwtTokenCache(redisTemplate, localInvalidatedJwtTokenCache, cacheExpirationProperties.getInvalidatedJwtTokenExpirationSeconds(), redisProperties);
+        return new InvalidatedJwtTokenCache(redisTemplate, localInvalidatedJwtTokenCache, redisProperties);
     }
 
-    @Bean
-    @Qualifier(REDIS_CACHE_SERVICE)
+    @Bean(name = REDIS_CACHE_SERVICE)
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
-                                          HistoCache<Currency> currencyCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache);
+                                          HistoCache<Currency> currencyCache,
+                                          @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache) {
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, invalidatedJwtTokenCache);
     }
 
     @Bean
@@ -126,9 +122,8 @@ public class RedisCacheConfiguration {
 
     @Bean
     public RedisKeyExpirationListener redisKeyExpirationListener(CurrencyService currencyService,
-                                                                 RedisTemplate<String, Long> redisTemplate,
                                                                  RedisTemplate<String, Currency> currencyRedisTemplate) {
-        return new RedisKeyExpirationListener(currencyService, redisTemplate, currencyRedisTemplate);
+        return new RedisKeyExpirationListener(currencyService, currencyRedisTemplate);
     }
 
     @Bean

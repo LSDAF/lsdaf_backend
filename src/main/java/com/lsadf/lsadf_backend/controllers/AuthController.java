@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = ControllerConstants.AUTH)
 @Tag(name = ControllerConstants.Swagger.AUTH_CONTROLLER)
 public interface AuthController {
+    String TOKEN = "token";
 
     /**
      * Logs in a user
@@ -87,4 +89,19 @@ public interface AuthController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     ResponseEntity<GenericResponse<UserInfo>> register(UserCreationRequest userLoginRequest);
+
+    /**
+     * Validates a user account thanks to the token sent by email
+     * @param token the token to validate the account
+     * @return the user information
+     */
+    @GetMapping(value = ControllerConstants.Auth.VALIDATE_TOKEN)
+    @Operation(summary = "Validates a user account thanks to the token sent by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
+            @ApiResponse(responseCode = "400", description = ResponseMessages.BAD_REQUEST),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    ResponseEntity<GenericResponse<UserInfo>> validateUserAccount(String token);
 }
