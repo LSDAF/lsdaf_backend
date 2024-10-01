@@ -1,0 +1,9 @@
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY target/*.jar app.jar
+COPY ./docker/startup-dev.sh startup.sh
+COPY src/main/resources/logback-docker.xml logback-docker.xml
+
+ENTRYPOINT ["./startup.sh"]
