@@ -53,7 +53,7 @@ public class RefreshTokenProviderImpl implements TokenProvider<RefreshTokenEntit
     public RefreshTokenEntity createToken(LocalUser localUser) {
         UserEntity userEntity = localUser.getUserEntity();
         Date now = clockService.nowDate();
-        String token = generateToken(localUser, authProperties.getTokenSecret(), authProperties.getTokenExpirationSeconds(), now);
+        String token = generateToken(localUser, authProperties.getRefreshTokenSecret(), authProperties.getRefreshTokenExpirationSeconds(), now);
         Jws<Claims> claims = TokenUtils.parseToken(parser, token);
         Date expiration = claims.getBody().getExpiration();
         RefreshTokenEntity entity = new RefreshTokenEntity();
