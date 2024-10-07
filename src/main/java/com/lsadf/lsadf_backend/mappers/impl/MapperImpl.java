@@ -116,7 +116,7 @@ public class MapperImpl implements Mapper {
                 .map(UserRole::fromRole)
                 .collect(Collectors.toSet());
         UserEntity user = localUser.getUserEntity();
-        return new UserInfo(user.getId(), user.getName(), user.getEmail(), user.getVerified(), roles, user.getCreatedAt(), user.getUpdatedAt());
+        return new UserInfo(user.getName(), user.getEmail(), user.getVerified(), roles, user.getCreatedAt(), user.getUpdatedAt());
     }
 
     /**
@@ -125,7 +125,7 @@ public class MapperImpl implements Mapper {
     @Override
     public UserInfo mapUserEntityToUserInfo(UserEntity userEntity) {
         Set<UserRole> roles = new HashSet<>(userEntity.getRoles());
-        return new UserInfo(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), userEntity.getVerified(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+        return new UserInfo(userEntity.getName(), userEntity.getEmail(), userEntity.getVerified(), roles, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
 

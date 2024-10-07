@@ -60,7 +60,6 @@ public final class JsonAttributes {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UserInfo {
-        public static final String ID = "id";
         public static final String NAME = "name";
         public static final String EMAIL = "email";
         public static final String ROLES = "roles";

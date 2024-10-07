@@ -12,10 +12,11 @@ Feature: User Controller tests
     When the user requests the endpoint to get his UserInfo with no token
 
     Then the response status code should be 401
+
   Scenario: A user gets its UserInfo
     Given the following users
-      | id                                   | name       | email               | password | enabled | verified |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     |
+      | id                                   | name       | email               | password | enabled | verified | roles |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
@@ -23,6 +24,11 @@ Feature: User Controller tests
     And the user requests the endpoint to get his UserInfo
 
     Then the response status code should be 200
+
+    And the response should have the following UserInfo
+      | email               | name       | roles | verified |
+      | paul.ochon@test.com | Paul OCHON | USER  | true     |
+
   Scenario: A non-logged in user tries to get his GameSaves
     Given the following users
       | id                                   | name       | email               | password | enabled | verified |
@@ -31,6 +37,7 @@ Feature: User Controller tests
     When the user requests the endpoint to get his GameSaves with no token
 
     Then the response status code should be 401
+
   Scenario: A user gets its GameSaves
     Given the following users
       | id                                   | name       | email               | password | enabled | verified |
