@@ -24,7 +24,7 @@ import static org.awaitility.Awaitility.await;
 /**
  * Step definitions for the when steps in the BDD scenarios
  */
-@Slf4j(topic = "[GOLD WHEN STEP DEFINITIONS]")
+@Slf4j(topic = "[CURRENCY WHEN STEP DEFINITIONS]")
 public class BddCurrencyWhenStepDefinitions extends BddLoader {
     @When("^the cache is flushed$")
     public void when_the_cache_is_flushed() {
@@ -57,7 +57,7 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
     }
 
     @When("^we want to get the currencies for the game save with id (.*)$")
-    public void when_we_want_to_get_the_gold_for_the_game_save_with_id(String gameSaveId) {
+    public void when_we_want_to_get_the_currencies_for_the_game_save_with_id(String gameSaveId) {
         try {
             log.info("Getting currencies for game save with id: {}", gameSaveId);
             Currency currency = this.currencyService.getCurrency(gameSaveId);

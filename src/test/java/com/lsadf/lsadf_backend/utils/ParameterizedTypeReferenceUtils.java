@@ -52,6 +52,15 @@ public class ParameterizedTypeReferenceUtils {
     }
 
     /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of Stage
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<Stage>> buildParameterizedStageResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
      * Builds a ParameterizedTypeReference for a GenericResponse of Void
      * @return ParameterizedTypeReference
      */

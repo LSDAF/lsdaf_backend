@@ -19,6 +19,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
@@ -64,6 +65,21 @@ public class BddUtils {
         long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
 
         return new CurrencyRequest(goldLong, diamondLong, emeraldLong, amethystLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a StageRequest
+     * @param row row from BDD table
+     * @return StageRequest
+     */
+    public static StageRequest mapToStageRequest(Map<String, String> row) {
+        String currentStage = row.get(BddFieldConstants.Stage.CURRENT_STAGE);
+        String maxStage = row.get(BddFieldConstants.Stage.MAX_STAGE);
+
+        long currentStageLong = Long.parseLong(currentStage);
+        long maxStageLong = Long.parseLong(maxStage);
+
+        return new StageRequest(currentStageLong, maxStageLong);
     }
 
     /**

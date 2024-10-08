@@ -62,6 +62,11 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Stack<Stage> stageStack() {
+        return new Stack<>();
+    }
+
+    @Bean
     public Stack<List<GameSave>> gameSaveStack() {
         return new Stack<>();
     }
