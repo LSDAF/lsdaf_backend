@@ -71,6 +71,8 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_
         AdminControllerImpl.class,
         CurrencyController.class,
         CurrencyControllerImpl.class,
+        StageController.class,
+        StageControllerImpl.class
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
@@ -145,6 +147,9 @@ public class BddLoader {
     protected CurrencyService currencyService;
 
     @Autowired
+    protected StageService stageService;
+
+    @Autowired
     protected CacheService redisCacheService;
 
     @Autowired
@@ -202,6 +207,9 @@ public class BddLoader {
 
     @Autowired
     protected Stack<Currency> currencyStack;
+
+    @Autowired
+    protected Stack<Stage> stageStack;
 
     @Autowired
     protected Stack<List<UserInfo>> userInfoListStack;

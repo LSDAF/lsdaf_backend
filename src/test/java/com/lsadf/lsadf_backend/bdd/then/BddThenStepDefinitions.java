@@ -288,6 +288,24 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(exception).isInstanceOf(ForbiddenException.class);
     }
 
+    @Then("^the response should have the following Stage$")
+    public void then_the_response_should_have_the_following_stage(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        Stage expected = BddUtils.mapToStage(row);
+        Stage actual = (Stage) responseStack.peek().getData();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
     @Then("^the response should have the following Currency$")
     public void then_the_response_should_have_the_following_currency(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
