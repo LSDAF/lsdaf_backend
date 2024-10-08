@@ -105,6 +105,8 @@ public class BddLoader {
     @Autowired
     protected HistoCache<Currency> currencyCache;
 
+    @Autowired
+    protected HistoCache<Stage> stageCache;
 
     // Repositories
     @Autowired

@@ -87,6 +87,11 @@ public class LocalCache<T> implements Cache<T> {
         // Do nothing
     }
 
+    @Override
+    public void unset(String key) {
+        cache.remove(key);
+    }
+
     /**
      * {@inheritDoc}
      */

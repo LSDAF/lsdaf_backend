@@ -11,4 +11,12 @@ public class NoOpFlushServiceImpl implements CacheFlushService {
     public void flushCurrencies() {
         // Do nothing
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void flushStages() {
+        // Do nothing
+    }
 }

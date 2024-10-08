@@ -200,7 +200,8 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^we want to get all game saves for the user with email (.*)$")
     public void when_we_want_to_get_all_game_saves_for_the_user_with_email(String email) {
         try {
-            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUserEmail(email);
+            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUserEmail(email)
+                    .toList();
             gameSaveEntityListStack.push(gameSaves);
         } catch (Exception e) {
             exceptionStack.push(e);
@@ -440,6 +441,7 @@ public class BddWhenStepDefinitions extends BddLoader {
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
             GenericResponse<List<GameSave>> body = result.getBody();
+            gameSaveListStack.push(body.getData());
             responseStack.push(body);
             log.info("Response: {}", result);
 

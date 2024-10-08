@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.entities;
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@SuperBuilder
 public abstract class AEntity implements Entity {
 
     @Serial

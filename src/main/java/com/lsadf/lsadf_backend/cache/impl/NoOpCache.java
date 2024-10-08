@@ -51,6 +51,14 @@ public class NoOpCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
+    public void unset(String key) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Logger getLogger() {
         return log;
     }

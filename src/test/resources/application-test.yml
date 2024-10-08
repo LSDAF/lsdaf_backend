@@ -59,7 +59,7 @@ auth:
 cache:
   redis:
     host: localhost
-    port: 12345
+    port: 6379
     password: JIOZHAUIHIAVAZHUSVFAZUSV
     database: 0
     enabled: true

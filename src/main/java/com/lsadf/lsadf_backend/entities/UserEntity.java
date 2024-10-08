@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.util.HashSet;
@@ -23,7 +24,7 @@ import java.util.Set;
 @Data
 @Entity(name = EntityAttributes.User.USER_ENTITY)
 @Table(name = EntityAttributes.User.USER_ENTITY)
-@Builder
+@SuperBuilder
 @ToString(callSuper = true)
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

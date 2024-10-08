@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
@@ -37,10 +38,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Cache<LocalUser> localUserCache;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           Cache<LocalUser> localUserCache) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.localUserCache = localUserCache;
     }
 
     /**
@@ -174,6 +179,10 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(id);
+
+        if (localUserCache.isEnabled()) {
+            localUserCache.unset(id);
+        }
     }
 
     /**

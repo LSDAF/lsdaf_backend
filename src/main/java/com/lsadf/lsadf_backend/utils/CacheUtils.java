@@ -27,16 +27,16 @@ public class CacheUtils {
      */
     public static <T> Map<String, T> getAllEntries(RedisTemplate<String, T> redisTemplate, String keyName) {
         String entryType = keyName.substring(0, keyName.length() - 1);
-        Map<String, T> currencyMap = new HashMap<>();
+        Map<String, T> map = new HashMap<>();
         ScanOptions scanOptions = ScanOptions.scanOptions().match(keyName + "*").build();
         try {
             RedisKeyCommands commands = initRedisKeyCommands(redisTemplate);
-            iterateOverKeys(commands, scanOptions, keyName, redisTemplate, currencyMap::put);
+            iterateOverKeys(commands, scanOptions, keyName, redisTemplate, map::put);
         } catch (DataAccessException e) {
             log.warn("Error while getting " + entryType + " from redis cache", e);
         }
 
-        return currencyMap;
+        return map;
     }
 
     /**

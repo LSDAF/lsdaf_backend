@@ -22,6 +22,7 @@ public class BeanConstants {
     @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
     public static final class Cache {
         public static final String CURRENCY_CACHE = "currencyCache";
+        public static final String STAGE_CACHE = "stageCache";
         public static final String LOCAL_INVALIDATED_JWT_TOKEN_CACHE = "localInvalidatedJwtTokenCache";
         public static final String INVALIDATED_JWT_TOKEN_CACHE = "invalidatedJwtTokenCache";
         public static final String GAME_SAVE_OWNERSHIP_CACHE = "gameSaveOwnershipCache";
