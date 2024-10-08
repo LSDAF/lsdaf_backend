@@ -3,23 +3,29 @@ package com.lsadf.lsadf_backend.controllers.impl;
 import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
 import com.lsadf.lsadf_backend.exceptions.*;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.AdminService;
+import com.lsadf.lsadf_backend.services.CacheService;
+import com.lsadf.lsadf_backend.services.CurrencyService;
+import com.lsadf.lsadf_backend.services.StageService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.LOCAL_CACHE_SERVICE;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
@@ -38,9 +46,22 @@ import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 @RestController
 public class AdminControllerImpl extends BaseController implements AdminController {
     private final AdminService adminService;
+    private final StageService stageService;
+    private final CurrencyService currencyService;
+    private final Mapper mapper;
+    private final CacheService redisCacheService;
 
-    public AdminControllerImpl(AdminService adminService) {
+    @Autowired
+    public AdminControllerImpl(AdminService adminService,
+                               CurrencyService currencyService,
+                               StageService stageService,
+                               Mapper mapper,
+                               @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService) {
         this.adminService = adminService;
+        this.currencyService = currencyService;
+        this.stageService = stageService;
+        this.mapper = mapper;
+        this.redisCacheService = redisCacheService;
     }
 
     @Override
@@ -436,6 +457,56 @@ public class AdminControllerImpl extends BaseController implements AdminControll
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
         } catch (Exception e) {
             log.error("Error while clearing cache: ", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(@CurrentUser LocalUser localUser,
+                                                                            @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
+                                                                            @Valid @RequestBody CurrencyRequest currencyRequest) {
+        try {
+            validateUser(localUser);
+            Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
+            currencyService.saveCurrency(gameSaveId, currency, redisCacheService.isEnabled());
+
+            return generateResponse(HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while updating currency: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (NotFoundException e) {
+            log.error("Game Save with id {} not found", gameSaveId);
+            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Error while updating currency: ", e);
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveStages(@CurrentUser LocalUser localUser,
+                                                                          @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
+                                                                          @Valid @RequestBody StageRequest stageRequest) {
+        try {
+            validateUser(localUser);
+            Stage stage = mapper.mapStageRequestToStage(stageRequest);
+            stageService.saveStage(gameSaveId, stage, redisCacheService.isEnabled());
+
+            return generateResponse(HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception while updating stages: ", e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+        } catch (NotFoundException e) {
+            log.error("Game Save with id {} not found", gameSaveId);
+            return generateResponse(HttpStatus.NOT_FOUND, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("Error while updating stages: ", e);
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }

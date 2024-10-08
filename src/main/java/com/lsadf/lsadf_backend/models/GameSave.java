@@ -11,7 +11,6 @@ import java.io.Serial;
 import java.util.Date;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 
 /**
@@ -22,7 +21,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ID, USER_ID, USER_EMAIL, NICKNAME, GOLD, DIAMOND, EMERALD, AMETHYST, HP, ATTACK, CREATED_AT, UPDATED_AT})
+@JsonPropertyOrder({ID, USER_ID, USER_EMAIL, CURRENCY, STAGE, NICKNAME, HP, ATTACK, CREATED_AT, UPDATED_AT})
 public class GameSave implements Model {
 
     @Serial
@@ -41,35 +40,21 @@ public class GameSave implements Model {
     @JsonProperty(value = NICKNAME)
     private String nickname;
 
-    @JsonProperty(value = GOLD)
-    @Schema(description = "Gold amount", example = "260000")
-    @Builder.Default
-    private long gold = 0L;
+    @JsonProperty(value = CURRENCY)
+    private Currency currency;
 
-    @JsonProperty(value = DIAMOND)
-    @Schema(description = "Diamond amount", example = "260")
-    @Builder.Default
-    private long diamond = 0L;
-
-    @JsonProperty(value = EMERALD)
-    @Schema(description = "Emerald amount", example = "260")
-    @Builder.Default
-    private long emerald = 0L;
-
-    @JsonProperty(value = AMETHYST)
-    @Schema(description = "Amethyst amount", example = "260")
-    @Builder.Default
-    private long amethyst = 0L;
+    @JsonProperty(value = STAGE)
+    private Stage stage;
 
     @JsonProperty(value = HP)
     @Schema(description = "Health points", example = "50")
     @Builder.Default
-    private long healthPoints = 10;
+    private Long healthPoints = 10L;
 
     @JsonProperty(value = ATTACK)
     @Schema(description = "Attack points", example = "260")
     @Builder.Default
-    private long attack = 1;
+    private Long attack = 1L;
 
     @JsonProperty(value = CREATED_AT)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")

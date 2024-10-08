@@ -4,6 +4,7 @@ import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +36,9 @@ public class BddCacheThenStepDefinitions extends BddLoader {
     public void then_the_redis_cache_should_be_disabled() {
         log.info("Checking if redis cache is disabled...");
         assertThat(redisCacheService.isEnabled()).isFalse();
+        assertThat(stageCache.isEnabled()).isFalse();
+        assertThat(currencyCache.isEnabled()).isFalse();
+        assertThat(gameSaveOwnershipCache.isEnabled()).isFalse();
     }
 
     @Then("^I should have the following (.*) entries in cache$")
@@ -47,16 +51,7 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 var results = currencyCache.getAll();
                 for (var entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
-                    String goldString = entry.get(BddFieldConstants.Currency.GOLD);
-                    String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
-                    String emeraldString = entry.get(BddFieldConstants.Currency.EMERALD);
-                    String amethystString = entry.get(BddFieldConstants.Currency.AMETHYST);
-                    long gold = goldString == null ? 0 : Long.parseLong(goldString);
-                    long diamond = diamondString == null ? 0 : Long.parseLong(diamondString);
-                    long emerald = emeraldString == null ? 0 : Long.parseLong(emeraldString);
-                    long amethyst = amethystString == null ? 0 : Long.parseLong(amethystString);
-
-                    Currency currency = new Currency(gold, diamond, emerald, amethyst);
+                    Currency currency = BddUtils.mapToCurrency(entry);
                     assertThat(results).containsEntry(gameSaveId, currency);
                 }
             }
@@ -64,15 +59,7 @@ public class BddCacheThenStepDefinitions extends BddLoader {
                 var results = currencyCache.getAllHisto();
                 for (var entry : stringStringMap) {
                     String gameSaveId = entry.get(GAME_SAVE_ID);
-                    String goldString = entry.get(BddFieldConstants.Currency.GOLD);
-                    String diamondString = entry.get(BddFieldConstants.Currency.DIAMOND);
-                    String emeraldString = entry.get(BddFieldConstants.Currency.EMERALD);
-                    String amethystString = entry.get(BddFieldConstants.Currency.AMETHYST);
-                    long gold = goldString == null ? 0 : Long.parseLong(goldString);
-                    long diamond = diamondString == null ? 0 : Long.parseLong(diamondString);
-                    long emerald = emeraldString == null ? 0 : Long.parseLong(emeraldString);
-                    long amethyst = amethystString == null ? 0 : Long.parseLong(amethystString);
-                    Currency currency = new Currency(gold, diamond, emerald, amethyst);
+                    Currency currency = BddUtils.mapToCurrency(entry);
                     assertThat(results).containsEntry(gameSaveId, currency);
                 }
             }

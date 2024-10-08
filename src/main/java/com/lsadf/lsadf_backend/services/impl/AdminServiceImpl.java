@@ -86,6 +86,7 @@ public class AdminServiceImpl implements AdminService {
     public void flushAndClearCache() {
         log.info("Clearing all caches");
         cacheFlushService.flushCurrencies();
+        cacheFlushService.flushStages();
         localCacheService.clearCaches();
         redisCacheService.clearCaches();
     }

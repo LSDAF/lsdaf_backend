@@ -20,8 +20,8 @@ Feature: Auth Controller tests
 
   Scenario: A User registers its account with already used email
     Given the following users
-      | id                                   | name       | email               | enabled | verified |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | true     |
+      | id                                   | name       | email               | enabled | verified | roles |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | true     | USER  |
     When the user requests the endpoint to register a user with the following UserCreationRequest
       | email               | name      | password |
       | paul.ochon@test.com | Toto Toto | totototo |
@@ -191,8 +191,8 @@ Feature: Auth Controller tests
 
   Scenario: A User wants to validate its account using an invalid verification token
     Given the following users
-      | id                                   | name       | email               | enabled | verified |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | false    |
+      | id                                   | name       | email               | enabled | verified | roles |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | true    | false    | USER  |
     And the following user verification tokens
       | token | status | expirationDate          | userEmail           |
       | YYY   | ACTIVE | 2024-01-02 00:00:00.000 | paul.ochon@test.com |

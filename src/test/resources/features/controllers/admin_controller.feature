@@ -36,10 +36,10 @@ Feature: Admin Controller tests
       | 8ea5a501-2429-4e89-881c-f19aa191cabb | Paul AITTE | paul.aitte@test.com | toto1234 | USER       | true     | true    |
       | 08a446bb-7a12-48fd-b4bf-b01d0b60b5c0 | Paul HISSE | paul.hisse@test.com | toto1234 | USER       | true     | true    |
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 8ea5a501-2429-4e89-881c-f19aa191cabb | 100  | 100          | 100    |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 08a446bb-7a12-48fd-b4bf-b01d0b60b5c0 | 1000 | 1000         | 1000   |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | currentStage | maxStage | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10       | 10           | 10     |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 8ea5a501-2429-4e89-881c-f19aa191cabb | 100  | 100     | 100     | 100      | 100          | 100      | 100          | 100    |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 08a446bb-7a12-48fd-b4bf-b01d0b60b5c0 | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1000         | 1000   |
     And the time clock set to the following value 2020-01-01T00:00:00Z
 
 
@@ -74,31 +74,65 @@ Feature: Admin Controller tests
       | 08a446bb-7a12-48fd-b4bf-b01d0b60b5c0 | Paul HISSE | paul.hisse@test.com | toto1234 | USER       | true     | true    |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
-  Scenario: An admin user requests all the game saves
+  Scenario: An admin user requests all the game saves without cache
     Given the following users
       | id                                   | name       | email               | password | roles      | verified | enabled |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 10      | 10      | 10       |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | 100     | 100     | 100      |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   | 1000    | 1000    | 1000     |
+      | id                                   | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 10      | 10      | 10       | 10       | 10           |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | 100     | 100     | 100      | 100      | 100          |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   | 1000    | 1000    | 1000     | 1000     | 1000         |
 
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the admin endpoint to get all the save games ordered by ID_DESC
+    And the user requests the admin endpoint to get all the game saves ordered by ID_DESC
 
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100     | 100     | 100      | 100          | 100    |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 10   | 10      | 10      | 10       | 10           | 10     |
+      | id                                   | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | 1000     | 1000         |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100     | 100     | 100      | 100          | 100    | 100      | 100          |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 10   | 10      | 10      | 10       | 10           | 10     | 10       | 10           |
+
+  Scenario: An admin user requests all the game saves with cache
+    Given the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+
+    And the following game saves
+      | id                                   | userId                               | gold | healthPoints | attack | diamond | emerald | amethyst | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | 10      | 10      | 10       | 10       | 10           |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | 100     | 100     | 100      | 100      | 100          |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   | 1000    | 1000    | 1000     | 1000     | 1000         |
+
+    And the following currency entries in cache
+      | gameSaveId                           | gold | diamond | emerald | amethyst |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 100  | 100     | 100     | 100      |
+
+    And the following stage entries in cache
+      | gameSaveId                           | currentStage | maxStage |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 1000         | 1000     |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to get all the game saves ordered by ID_DESC
+
+    Then the response status code should be 200
+
+    And the response should have the following GameSaves
+      | id                                   | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | 1000     | 1000         |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100     | 100     | 100      | 100          | 100    | 1000     | 1000         |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 100  | 100     | 100     | 100      | 10           | 10     | 10       | 10           |
+
 
   Scenario: An admin user requests a user's details by non-existing id
     Given the following users
@@ -279,10 +313,10 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | currentStage | maxStage | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10       | 10           | 10     |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100      | 100          | 100    |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1000         | 1000   |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -298,10 +332,10 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000         | 1000   |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | currentStage | maxStage | healthPoints | attack |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10       | 10           | 10     |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100      | 100          | 100    |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1000         | 1000   |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -321,8 +355,8 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst | nickname                             |
-      | paul.ochon@test.com | 10   | 10           | 10     | 100     | 1000    | 10000    | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d |
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst | nickname                             | currentStage | maxStage |
+      | paul.ochon@test.com | 10   | 10           | 10     | 100     | 1000    | 10000    | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 300          | 400      |
 
     Then the response status code should be 200
 
@@ -336,8 +370,23 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst |
-      | paul.ochon@test.com | -15  | 10           | 10     | 100     | 1000    | 10000    |
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst | currentStage | maxStage |
+      | paul.ochon@test.com | -15  | 10           | 10     | 100     | 1000    | 10000    | 100          | 120      |
+
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the creation of a new game save with invalid stage values
+    Given the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
+      | userEmail           | gold | healthPoints | attack | diamond | emerald | amethyst | currentStage | maxStage |
+      | paul.ochon@test.com | 10   | 10           | 10     | 10      | 10      | 10       | 100          | 99       |
 
     Then the response status code should be 400
 
@@ -347,16 +396,16 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10       | 10           |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 80c4387f-3bd9-4f43-afac-ea1980f0ee64 with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack |
-      | 10000 | 10000        | 10000  |
+      | healthPoints | attack |
+      | 10000        | 10000  |
 
     Then the response status code should be 404
 
@@ -366,22 +415,22 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  | 1            | 1        |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | player3  |
+      | healthPoints | attack | nickname |
+      | 10000        | 10000  | player3  |
 
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | player3  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | player3  | 1        | 1            |
 
   Scenario: An admin user requests the update of an existing game save with a custom nickname
     Given the following users
@@ -389,22 +438,21 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | player1  | 1        | 1            |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname   |
-      | 10000 | 10000        | 10000  | Play3r-0n3 |
-
+      | healthPoints | attack | nickname   |
+      | 10000        | 10000  | Play3r-0n3 |
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userId                               | gold  | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname   |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10000 | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | Play3r-0n3 |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | nickname   | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10000        | 10000  | paul.ochon@test.com | Play3r-0n3 | 1        | 1            |
 
   Scenario: An admin user requests the update of an existing game save with an existing nickname
     Given the following users
@@ -413,101 +461,101 @@ Feature: Admin Controller tests
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | maxStage | currentStage | attack | userEmail            | nickname |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | player2  |
+      | healthPoints | attack | nickname |
+      | 10           | 10000  | player2  |
 
     Then the response status code should be 400
 
-  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too long
+  Scenario: An admin user requests the update of an existing game save with a nickname too long
     Given the following users
       | id                                   | name       | email                | password | roles      | enabled | verified |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  | 1            | 1        |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  | 1            | 1        |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname           |
-      | 10000 | 10000        | 10000  | 012345678901234567 |
+      | healthPoints | attack | nickname           |
+      | 10000        | 10000  | 012345678901234567 |
 
     Then the response status code should be 400
 
-  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname too short
+  Scenario: An admin user requests the update of an existing game save with a nickname too short
     Given the following users
       | id                                   | name       | email                | password | roles      | enabled | verified |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  | 1            | 1        |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  | 1            | 1        |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | 01       |
+      | healthPoints | attack | nickname |
+      | 10000        | 10000  | 01       |
 
     Then the response status code should be 400
 
-  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains spaces
+  Scenario: An admin user requests the update of an existing game save with a nickname containing spaces
     Given the following users
       | id                                   | name       | email                | password | roles      | enabled | verified |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  | 1            | 1        |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  | 1            | 1        |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname    |
-      | 10000 | 10000        | 10000  | 01234 56789 |
+      | healthPoints | attack | nickname    |
+      | 10000        | 10000  | 01234 56789 |
 
     Then the response status code should be 400
 
-  Scenario: An admin user requests the update of an existing game save with an existing nickname -> nickname contains invalid characters
+  Scenario: An admin user requests the update of an existing game save with a nickname containing invalid characters
     Given the following users
       | id                                   | name       | email                | password | roles      | enabled | verified |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com  | toto1234 | USER,ADMIN | true    | true     |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | Paul OCHON | paul.ochon2@test.com | toto1234 | USER,ADMIN | true    | true     |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | nickname | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | player1  | 1            | 1        |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1e | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon2@test.com | player2  | 1            | 1        |
 
     When the user logs in with the following credentials
       | email               | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following AdminGameSaveUpdateRequest
-      | gold  | healthPoints | attack | nickname |
-      | 10000 | 10000        | 10000  | \@azeeza |
+      | healthPoints | attack | nickname |
+      | 10000        | 10000  | \@azeeza |
 
     Then the response status code should be 400
 
@@ -520,8 +568,8 @@ Feature: Admin Controller tests
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the admin endpoint to update the game save with id 80c4387f-3bd9-4f43-afac-ea1980f0ee64 with the following AdminGameSaveUpdateRequest
-      | gold  | diamond | emerald | amethyst | healthPoints | attack |
-      | 10000 | 10      | 10      | 10       | -100         | 10000  |
+      | healthPoints | attack |
+      | -100         | 10000  |
 
     Then the response status code should be 400
 
@@ -587,10 +635,10 @@ Feature: Admin Controller tests
       | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Paul EMPLOI | paul.emploi@test.com | toto5678 | USER       | LOCAL    | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100    | paul.ochon@test.com  |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | maxStage | currentStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com  | 10       | 10           |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100    | paul.ochon@test.com  | 100      | 100          |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com | 1000     | 1000         |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -603,8 +651,8 @@ Feature: Admin Controller tests
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail            | maxStage | currentStage |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | paul.emploi@test.com | 1000     | 1000         |
 
   Scenario: An admin user searches for game saves with invalid SearchRequest
     Given the following users
@@ -613,10 +661,10 @@ Feature: Admin Controller tests
       | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Camille COMBALE | camille.combale@test.com | toto2345 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail                |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com      |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | paul.ochon@test.com      |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | camille.combale@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail                | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com      | 10           | 10       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100    | paul.ochon@test.com      | 100          | 100      |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | camille.combale@test.com | 1000         | 1000     |
 
     When the user logs in with the following credentials
       | email               | password |
@@ -635,15 +683,15 @@ Feature: Admin Controller tests
       | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | Camille COMBALE | camille.combale@test.com | toto2345 | USER,ADMIN | true     | true    |
 
     And the following game saves
-      | id                                   | userId                               | gold | healthPoints | attack | userEmail                |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10           | 10     | paul.ochon@test.com      |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100          | 100    | paul.ochon@test.com      |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000         | 1000   | camille.combale@test.com |
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail                | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com      | 10           | 10       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 100          | 100    | paul.ochon@test.com      | 100          | 100      |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | 97d5a418-7cc6-44e8-b66f-20ac32e47e1f | 1000 | 1000    | 1000    | 1000     | 1000         | 1000   | camille.combale@test.com | 1000         | 1000     |
     And the following currency entries in cache
       | gameSaveId                           | gold | diamond | emerald | amethyst |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 5000 | 5000    | 5000    | 5000     |
       | 3bb1a064-79cc-4279-920a-fd0760663ca5 | 6000 | 6000    | 6000    | 6000     |
-    And the following game save ownerships in cache
+    And the following game_save_ownership entries in cache
       | gameSaveId                           | userEmail           |
       | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com |
       | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com |

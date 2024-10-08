@@ -51,7 +51,17 @@ public final class EntityAttributes {
         public static final String GAME_SAVE_HEALTH_POINTS = "health_points";
         public static final String GAME_SAVE_ATTACK = "attack";
         public static final String GAME_SAVE_CURRENCY_ID = "currency_id";
+        public static final String GAME_SAVE_STAGE_ID = "stage_id";
         public static final String GAME_SAVE_NICKNAME = "nickname";
+    }
+
+    // STAGES
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Stages {
+        public static final String STAGE_ENTITY = "t_stage";
+        public static final String STAGE_CURRENT = "current_stage";
+        public static final String STAGE_MAX = "max_stage";
+        public static final String STAGE_USER_EMAIL = "user_email";
     }
 
     // CURRENCIES

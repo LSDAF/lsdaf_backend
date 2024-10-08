@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
+import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
@@ -25,25 +26,34 @@ import static org.awaitility.Awaitility.await;
  */
 @Slf4j(topic = "[GOLD WHEN STEP DEFINITIONS]")
 public class BddCurrencyWhenStepDefinitions extends BddLoader {
-    @When("^the gold cache is flushed$")
+    @When("^the cache is flushed$")
     public void when_the_cache_is_flushed() {
         log.info("Flushing cache...");
         this.cacheFlushService.flushCurrencies();
+        this.cacheFlushService.flushStages();
     }
 
-    @When("^a currency cache entry is expired$")
-    public void when_a_currency_cache_entry_is_expired() {
-        int size = currencyCache.getAllHisto().size();
-        log.info("Waiting for currency cache entry to expire...");
+    @When("^a (.*) cache entry is expired$")
+    public void when_a_cache_entry_is_expired(String cacheType) {
+        CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
+        int size = switch (cacheEntryType) {
+            case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+            case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
+            case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
+        };
+        log.info("Waiting for {} cache entry to expire...", cacheType);
         await().atMost(1200, TimeUnit.SECONDS).until(() -> {
             try {
-                var newSize = currencyCache.getAllHisto().size();
+                int newSize = switch (cacheEntryType) {
+                    case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+                    case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
+                    case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
+                };
                 return newSize < size;
             } catch (Exception e) {
                 return false;
             }
         });
-        log.info("Gold cache entry expired");
     }
 
     @When("^we want to get the currencies for the game save with id (.*)$")
@@ -58,7 +68,7 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
     }
 
     @When("^we want to set the following currencies for the game save with id (.*) with toCache to (.*)$")
-    public void when_we_want_to_set_the_gold_for_the_game_save_with_id_to_with_cache(String gameSaveId, boolean toCache, DataTable dataTable) {
+    public void when_we_want_to_set_the_currencies_for_the_game_save_with_id_to_with_cache(String gameSaveId, boolean toCache, DataTable dataTable) {
         var data = dataTable.asMaps(String.class, String.class);
         assertThat(data).hasSize(1);
 

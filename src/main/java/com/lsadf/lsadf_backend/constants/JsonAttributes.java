@@ -26,6 +26,8 @@ public final class JsonAttributes {
         public static final String USER_EMAIL = "user_email";
         public static final String ATTACK = "attack";
         public static final String NICKNAME = "nickname";
+        public static final String CURRENCY = "currency";
+        public static final String STAGE = "stage";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -65,6 +67,12 @@ public final class JsonAttributes {
         public static final String EMAIL = "email";
         public static final String ROLES = "roles";
         public static final String VERIFIED = "validated";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Stage {
+        public static final String CURRENT_STAGE = "current_stage";
+        public static final String MAX_STAGE = "max_stage";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

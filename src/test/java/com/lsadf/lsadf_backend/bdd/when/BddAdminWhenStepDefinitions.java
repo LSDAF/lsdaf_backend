@@ -167,7 +167,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         }
     }
 
-    @When("^the user requests the admin endpoint to get all the save games ordered by (.*)$")
+    @When("^the user requests the admin endpoint to get all the game saves ordered by (.*)$")
     public void when_the_user_requests_the_admin_endpoint_to_get_all_save_games_ordered_by(String orderBy) {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.GAME_SAVES + "?order_by=" + orderBy;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);

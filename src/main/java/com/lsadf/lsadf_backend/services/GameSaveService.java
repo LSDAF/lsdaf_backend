@@ -6,7 +6,6 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -87,7 +86,7 @@ public interface GameSaveService {
      * @param userEmail the user email
      * @return the stream of game saves
      */
-    List<GameSaveEntity> getGameSavesByUserEmail(String userEmail);
+    Stream<GameSaveEntity> getGameSavesByUserEmail(String userEmail);
 
     /**
      * Checks if the user owns the game save

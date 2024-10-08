@@ -246,8 +246,8 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(gameSaveRepository.count()).isZero();
     }
 
-    @Then("^I should have no gold entries in DB$")
-    public void then_i_should_have_no_gold_entries_in_db() {
+    @Then("^I should have no currency entries in DB$")
+    public void then_i_should_have_no_currency_entries_in_db() {
         assertThat(currencyRepository.count()).isZero();
     }
 
