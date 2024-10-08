@@ -113,19 +113,6 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public AdminService adminService(UserService userService,
-                                     GameSaveService gameSaveService,
-                                     Mapper mapper,
-                                     SearchService searchService,
-                                     @Qualifier(LOCAL_CACHE_SERVICE) CacheService localCacheService,
-                                     @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
-                                     CacheFlushService cacheFlushService,
-                                     ClockService clockService,
-                                     EmailService emailService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService, clockService, emailService);
-    }
-
-    @Bean
     public ClockService clockService(Clock clock) {
         return new ClockServiceImpl(clock);
     }

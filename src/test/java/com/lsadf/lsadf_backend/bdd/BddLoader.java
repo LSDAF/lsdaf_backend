@@ -173,9 +173,6 @@ public class BddLoader {
     @Autowired
     protected UserDetailsService lsadfUserDetailsService;
 
-    @Autowired
-    protected AdminService adminService;
-
     // BDD Specific Stacks & Maps
 
     @Autowired
