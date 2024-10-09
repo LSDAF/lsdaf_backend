@@ -3,6 +3,8 @@ package com.lsadf.lsadf_backend.bdd;
 public enum CacheEntryType {
     CURRENCY,
     CURRENCY_HISTO,
+    STAGE,
+    STAGE_HISTO,
     GAME_SAVE_OWNERSHIP;
 
     public static CacheEntryType fromString(String cacheEntryType) {

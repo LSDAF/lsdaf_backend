@@ -4,11 +4,13 @@ import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -38,15 +40,16 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public GameSave mapToGameSave(GameSaveEntity gameSaveEntity) {
+        Stage stage = mapStageEntityToStage(gameSaveEntity.getStageEntity());
+        Currency currency = mapCurrencyEntityToCurrency(gameSaveEntity.getCurrencyEntity());
+
         return GameSave.builder()
                 .id(gameSaveEntity.getId())
                 .userEmail(gameSaveEntity.getUser().getEmail())
                 .userId(gameSaveEntity.getUser().getId())
                 .nickname(gameSaveEntity.getNickname())
-                .gold(gameSaveEntity.getCurrencyEntity().getGoldAmount())
-                .diamond(gameSaveEntity.getCurrencyEntity().getDiamondAmount())
-                .emerald(gameSaveEntity.getCurrencyEntity().getEmeraldAmount())
-                .amethyst(gameSaveEntity.getCurrencyEntity().getAmethystAmount())
+                .currency(currency)
+                .stage(stage)
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())
                 .id(gameSaveEntity.getId())
@@ -64,6 +67,17 @@ public class MapperImpl implements Mapper {
                 currencyEntity.getDiamondAmount(),
                 currencyEntity.getEmeraldAmount(),
                 currencyEntity.getAmethystAmount());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stage mapStageEntityToStage(StageEntity stageEntity) {
+        return Stage.builder()
+                .maxStage(stageEntity.getMaxStage())
+                .currentStage(stageEntity.getCurrentStage())
+                .build();
     }
 
     /**
@@ -142,5 +156,16 @@ public class MapperImpl implements Mapper {
                 true,
                 buildSimpleGrantedAuthorities(user.getRoles()),
                 user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stage mapStageRequestToStage(StageRequest stageRequest) {
+        return Stage.builder()
+                .maxStage(stageRequest.getMaxStage())
+                .currentStage(stageRequest.getCurrentStage())
+                .build();
     }
 }

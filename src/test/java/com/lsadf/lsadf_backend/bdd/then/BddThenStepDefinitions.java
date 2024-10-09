@@ -246,8 +246,8 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(gameSaveRepository.count()).isZero();
     }
 
-    @Then("^I should have no gold entries in DB$")
-    public void then_i_should_have_no_gold_entries_in_db() {
+    @Then("^I should have no currency entries in DB$")
+    public void then_i_should_have_no_currency_entries_in_db() {
         assertThat(currencyRepository.count()).isZero();
     }
 
@@ -286,6 +286,24 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_i_should_throw_a_forbidden_exception() {
         Exception exception = exceptionStack.peek();
         assertThat(exception).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Then("^the response should have the following Stage$")
+    public void then_the_response_should_have_the_following_stage(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        Stage expected = BddUtils.mapToStage(row);
+        Stage actual = (Stage) responseStack.peek().getData();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     @Then("^the response should have the following Currency$")

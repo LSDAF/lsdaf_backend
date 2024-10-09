@@ -78,7 +78,6 @@ public class UserControllerImpl extends BaseController implements UserController
             String email = localUser.getUsername();
 
             List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(email)
-                    .stream()
                     .map(mapper::mapToGameSave)
                     .toList();
 

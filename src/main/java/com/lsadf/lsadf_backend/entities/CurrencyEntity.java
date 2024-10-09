@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @Data
 @Entity(name = EntityAttributes.Currencies.CURRENCY_ENTITY)
 @Table(name = EntityAttributes.Currencies.CURRENCY_ENTITY)
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class CurrencyEntity implements com.lsadf.lsadf_backend.entities.Entity {
@@ -40,21 +41,20 @@ public class CurrencyEntity implements com.lsadf.lsadf_backend.entities.Entity {
     @Column(name = EntityAttributes.Currencies.CURRENCY_GOLD_AMOUNT)
     @PositiveOrZero
     @Builder.Default
-    private long goldAmount = 0L;
+    private Long goldAmount = 0L;
 
     @Column(name = EntityAttributes.Currencies.CURRENCY_DIAMOND_AMOUNT)
     @PositiveOrZero
     @Builder.Default
-    private long diamondAmount = 0L;
+    private Long diamondAmount = 0L;
 
     @Column(name = EntityAttributes.Currencies.CURRENCY_EMERALD_AMOUNT)
     @PositiveOrZero
     @Builder.Default
-    private long emeraldAmount = 0L;
+    private Long emeraldAmount = 0L;
 
     @Column(name = EntityAttributes.Currencies.CURRENCY_AMETHYST_AMOUNT)
     @PositiveOrZero
     @Builder.Default
-    private long amethystAmount = 0L;
-
+    private Long amethystAmount = 0L;
 }

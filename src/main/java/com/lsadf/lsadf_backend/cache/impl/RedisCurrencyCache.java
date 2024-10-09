@@ -36,11 +36,17 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
         return log;
     }
 
+
+    @Override
+    public void set(String key, Currency value) {
+        set(key, value, this.expirationSeconds);
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public void set(String gameSaveId, Currency currency) {
+    public void set(String gameSaveId, Currency currency, int expirationSeconds) {
         try {
             Currency toUpdateCurrency = currency;
             Optional<Currency> optionalCurrency = get(gameSaveId);
@@ -89,13 +95,5 @@ public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCac
     public void clear() {
         super.clear();
         clearCache(redisTemplate, HISTO_KEY_TYPE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return this.isEnabled.get();
     }
 }

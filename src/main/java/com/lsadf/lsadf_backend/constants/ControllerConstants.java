@@ -14,6 +14,7 @@ public final class ControllerConstants {
     public static final String USER = "/api/v1/user";
     public static final String ADMIN = "/api/admin";
     public static final String CURRENCY = "/api/v1/currency";
+    public static final String STAGE = "/api/v1/stage";
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Swagger {
@@ -22,6 +23,12 @@ public final class ControllerConstants {
         public static final String AUTH_CONTROLLER = "Auth Controller";
         public static final String ADMIN_CONTROLLER = "Admin Controller";
         public static final String CURRENCY_CONTROLLER = "Currency Controller";
+        public static final String STAGE_CONTROLLER = "Stage Controller";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Stage {
+        public static final String GAME_SAVE_ID = "/{game_save_id}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -34,20 +41,21 @@ public final class ControllerConstants {
         public static final String GLOBAL_INFO = "/global_info";
 
         public static final String USERS = "/users";
-        public static final String USER_ID = USERS + "/{user_id}";
-        public static final String USER_GAME_SAVES = USERS + "/{user_id}/game_saves";
-        public static final String USER_EMAIL = USERS + "/email/{user_email}";
-        public static final String CREATE_USER = USERS + "/new";
-        public static final String SEARCH_USERS = USERS + "/search";
+        public static final String USER_ID = "/users/{user_id}";
+        public static final String USER_EMAIL = "/users/email/{user_email}";
+        public static final String CREATE_USER = "/users/new";
+        public static final String SEARCH_USERS = "/users/search";
 
         public static final String GAME_SAVES = "/game_saves";
-        public static final String CREATE_GAME_SAVE = GAME_SAVES + "/new";
-        public static final String SEARCH_GAME_SAVES = GAME_SAVES + "/search";
-        public static final String GAME_SAVE_ID = GAME_SAVES + "/{game_save_id}";
+        public static final String CREATE_GAME_SAVE = "/game_saves/new";
+        public static final String SEARCH_GAME_SAVES = "/game_saves/search";
+        public static final String GAME_SAVE_ID = "/game_saves/{game_save_id}";
+        public static final String UPDATE_GAME_SAVE_CURRENCIES = "/game_saves/{game_save_id}/currencies";
+        public static final String UPDATE_GAME_SAVE_STAGES = "/game_saves/{game_save_id}/stages";
 
         public static final String CACHE = "/cache";
-        public static final String TOGGLE_CACHE = CACHE + "/toggle";
-        public static final String CACHE_ENABLED = CACHE + "/enabled";
+        public static final String TOGGLE_CACHE = "/cache/toggle";
+        public static final String CACHE_ENABLED = "/cache/enabled";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

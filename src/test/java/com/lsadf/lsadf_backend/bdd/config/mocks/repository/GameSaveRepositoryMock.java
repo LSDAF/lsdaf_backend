@@ -1,14 +1,15 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.services.ClockService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -19,11 +20,14 @@ import java.util.stream.Stream;
 public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> implements GameSaveRepository {
 
     private final CurrencyRepository currencyRepository;
+    private final StageRepository stageRepository;
     private final ClockService clockService;
 
     public GameSaveRepositoryMock(CurrencyRepository currencyRepository,
+                                  StageRepository stageRepository,
                                   ClockService clockService) {
         this.currencyRepository = currencyRepository;
+        this.stageRepository = stageRepository;
         this.clockService = clockService;
     }
 
@@ -52,6 +56,10 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> impl
             if (currencyEntity != null) {
                 currencyRepository.save(currencyEntity);
             }
+            StageEntity stageEntity = entity.getStageEntity();
+            if (stageEntity != null) {
+                stageRepository.save(stageEntity);
+            }
             return entity;
         }
         toUpdate.setAttack(entity.getAttack());
@@ -60,19 +68,22 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> impl
 
         CurrencyEntity currencyEntity = entity.getCurrencyEntity();
         CurrencyEntity updatedCurrencyEntity = currencyRepository.save(currencyEntity);
-
         toUpdate.setCurrencyEntity(updatedCurrencyEntity);
+
+        StageEntity stageEntity = entity.getStageEntity();
+        StageEntity updatedStageEntity = stageRepository.save(stageEntity);
+        toUpdate.setStageEntity(updatedStageEntity);
+
         entities.put(entity.getId(), toUpdate);
 
         return (S) toUpdate;
     }
 
     @Override
-    public List<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userEmail) {
+    public Stream<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userEmail) {
         return entities.values()
                 .stream()
-                .filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userEmail))
-                .toList();
+                .filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userEmail));
     }
 
     /**

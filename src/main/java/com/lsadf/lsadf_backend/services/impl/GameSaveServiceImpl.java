@@ -1,13 +1,18 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
@@ -17,7 +22,6 @@ import com.lsadf.lsadf_backend.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -31,14 +35,20 @@ public class GameSaveServiceImpl implements GameSaveService {
     private final GameSaveRepository gameSaveRepository;
 
     private final Cache<String> gameSaveOwnershipCache;
+    private final HistoCache<Stage> stageCache;
+    private final HistoCache<Currency> currencyCache;
 
 
     public GameSaveServiceImpl(UserService userService,
                                GameSaveRepository gameSaveRepository,
-                               Cache<String> gameSaveOwnershipCache) {
+                               Cache<String> gameSaveOwnershipCache,
+                               HistoCache<Stage> stageCache,
+                               HistoCache<Currency> currencyCache) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
         this.gameSaveOwnershipCache = gameSaveOwnershipCache;
+        this.stageCache = stageCache;
+        this.currencyCache = currencyCache;
     }
 
     /**
@@ -65,6 +75,12 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         saved.setCurrencyEntity(currencyEntity);
 
+        StageEntity stageEntity = StageEntity.builder()
+                .userEmail(userEntity.getEmail())
+                .id(saved.getId())
+                .build();
+
+        saved.setStageEntity(stageEntity);
 
         return gameSaveRepository.save(saved);
     }
@@ -75,8 +91,9 @@ public class GameSaveServiceImpl implements GameSaveService {
     @Override
     @Transactional(readOnly = true)
     public GameSaveEntity getGameSave(String saveId) throws NotFoundException {
-        return gameSaveRepository.findById(saveId)
+        GameSaveEntity gameSaveEntity = gameSaveRepository.findById(saveId)
                 .orElseThrow(NotFoundException::new);
+        return enrichGameSaveWithCachedData(gameSaveEntity);
     }
 
     /**
@@ -100,7 +117,8 @@ public class GameSaveServiceImpl implements GameSaveService {
             entity.setId(creationRequest.getId());
         }
 
-        var saved = gameSaveRepository.save(entity);
+        GameSaveEntity saved = gameSaveRepository.save(entity);
+
         saved.setNickname(entity.getId());
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
@@ -113,6 +131,15 @@ public class GameSaveServiceImpl implements GameSaveService {
                 .build();
 
         saved.setCurrencyEntity(currencyEntity);
+
+        StageEntity stageEntity = StageEntity.builder()
+                .currentStage(creationRequest.getCurrentStage())
+                .maxStage(creationRequest.getMaxStage())
+                .userEmail(userEntity.getEmail())
+                .id(saved.getId())
+                .build();
+
+        saved.setStageEntity(stageEntity);
 
         return gameSaveRepository.save(saved);
     }
@@ -163,6 +190,15 @@ public class GameSaveServiceImpl implements GameSaveService {
             throw new NotFoundException("Game save with id " + saveId + " not found");
         }
         gameSaveRepository.deleteById(saveId);
+        if (currencyCache.isEnabled()) {
+            currencyCache.unset(saveId);
+        }
+        if (stageCache.isEnabled()) {
+            stageCache.unset(saveId);
+        }
+        if (gameSaveOwnershipCache.isEnabled()) {
+            gameSaveOwnershipCache.unset(saveId);
+        }
     }
 
     /**
@@ -171,9 +207,17 @@ public class GameSaveServiceImpl implements GameSaveService {
     @Override
     @Transactional(readOnly = true)
     public Stream<GameSaveEntity> getGameSaves() {
-        return gameSaveRepository.findAllGameSaves();
+        return gameSaveRepository.findAllGameSaves()
+                .map(this::enrichGameSaveWithCachedData);
     }
 
+    /**
+     * Update the game save entity with the new nickname
+     *
+     * @param gameSaveEntity                the game save entity
+     * @param gameSaveUpdateNicknameRequest the nickname update request
+     * @return the updated game save entity
+     */
     private GameSaveEntity updateGameSaveEntityNickname(GameSaveEntity gameSaveEntity, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
         boolean hasUpdates = false;
 
@@ -189,6 +233,13 @@ public class GameSaveServiceImpl implements GameSaveService {
         return gameSaveEntity;
     }
 
+    /**
+     * Update the game save entity with the new data
+     *
+     * @param gameSaveEntity     the game save entity
+     * @param adminUpdateRequest the admin update request
+     * @return the updated game save entity
+     */
     private GameSaveEntity updateGameSaveEntity(GameSaveEntity gameSaveEntity, AdminGameSaveUpdateRequest adminUpdateRequest) {
         boolean hasUpdates = false;
 
@@ -203,28 +254,6 @@ public class GameSaveServiceImpl implements GameSaveService {
         }
         if (gameSaveEntity.getHealthPoints() != adminUpdateRequest.getHealthPoints()) {
             gameSaveEntity.setHealthPoints(adminUpdateRequest.getHealthPoints());
-            hasUpdates = true;
-        }
-
-        CurrencyEntity currencyEntity = gameSaveEntity.getCurrencyEntity();
-
-        if (adminUpdateRequest.getGold() != null && currencyEntity.getGoldAmount() != adminUpdateRequest.getGold()) {
-            currencyEntity.setGoldAmount(adminUpdateRequest.getGold());
-            hasUpdates = true;
-        }
-
-        if (adminUpdateRequest.getDiamond() != null && currencyEntity.getDiamondAmount() != adminUpdateRequest.getDiamond()) {
-            currencyEntity.setDiamondAmount(adminUpdateRequest.getDiamond());
-            hasUpdates = true;
-        }
-
-        if (adminUpdateRequest.getEmerald() != null && currencyEntity.getEmeraldAmount() != adminUpdateRequest.getEmerald()) {
-            currencyEntity.setEmeraldAmount(adminUpdateRequest.getEmerald());
-            hasUpdates = true;
-        }
-
-        if (adminUpdateRequest.getAmethyst() != null && currencyEntity.getAmethystAmount() != adminUpdateRequest.getAmethyst()) {
-            currencyEntity.setAmethystAmount(adminUpdateRequest.getAmethyst());
             hasUpdates = true;
         }
 
@@ -273,7 +302,27 @@ public class GameSaveServiceImpl implements GameSaveService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<GameSaveEntity> getGameSavesByUserEmail(String userEmail) {
-        return gameSaveRepository.findGameSaveEntitiesByUserEmail(userEmail);
+    public Stream<GameSaveEntity> getGameSavesByUserEmail(String userEmail) {
+        return gameSaveRepository.findGameSaveEntitiesByUserEmail(userEmail)
+                .map(this::enrichGameSaveWithCachedData);
+    }
+
+    /**
+     * Enrich the game save with cached data
+     *
+     * @param gameSave the game save
+     * @return the game save with cached data
+     */
+    private GameSaveEntity enrichGameSaveWithCachedData(GameSaveEntity gameSave) {
+        if (currencyCache.isEnabled()) {
+            Optional<Currency> optionalCurrency = currencyCache.get(gameSave.getId());
+            optionalCurrency.ifPresent(gameSave::setCurrencyEntity);
+        }
+        if (stageCache.isEnabled()) {
+            Optional<Stage> optionalStage = stageCache.get(gameSave.getId());
+            optionalStage.ifPresent(gameSave::setStageEntity);
+        }
+
+        return gameSave;
     }
 }

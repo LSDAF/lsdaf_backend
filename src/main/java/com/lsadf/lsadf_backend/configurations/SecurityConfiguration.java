@@ -1,18 +1,24 @@
 package com.lsadf.lsadf_backend.configurations;
 
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.properties.*;
+import com.lsadf.lsadf_backend.properties.AuthProperties;
+import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
+import com.lsadf.lsadf_backend.properties.HttpLogProperties;
+import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import com.lsadf.lsadf_backend.security.jwt.TokenAuthenticationFilter;
 import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
-import com.lsadf.lsadf_backend.security.oauth2.*;
+import com.lsadf.lsadf_backend.security.oauth2.CustomOAuth2UserService;
+import com.lsadf.lsadf_backend.security.oauth2.CustomOidcUserService;
+import com.lsadf.lsadf_backend.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.lsadf.lsadf_backend.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.lsadf.lsadf_backend.services.impl.CustomAuthenticationProviderImpl;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +48,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Base64;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_REFRESH_TOKEN_PARSER;
+import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
 import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
 
 @Configuration
@@ -83,7 +89,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
     public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService lsadfUserDetailsService,
-                                                                         ExpiringMap<String, LocalUser> localUserCache) {
+                                                                         Cache<LocalUser> localUserCache) {
         return new CustomAuthenticationProviderImpl(lsadfUserDetailsService, localUserCache);
     }
 

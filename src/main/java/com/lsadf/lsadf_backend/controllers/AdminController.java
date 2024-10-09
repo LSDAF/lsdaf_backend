@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
@@ -13,6 +14,7 @@ import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -223,12 +225,12 @@ public interface AdminController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    @Operation(summary = "Gets a save game by its id")
+    @Operation(summary = "Gets a game save by its id")
     @GetMapping(value = ControllerConstants.Admin.GAME_SAVES)
     ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(LocalUser localUser, GameSaveOrderBy orderBy);
 
     /**
-     * Gets a save game by its id
+     * Gets a game save by its id
      *
      * @param localUser
      * @param gameSaveId the id of the game save
@@ -241,7 +243,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    @Operation(summary = "Gets a save game by its id")
+    @Operation(summary = "Gets a game save by its id")
     @GetMapping(value = ControllerConstants.Admin.GAME_SAVE_ID)
     ResponseEntity<GenericResponse<GameSave>> getGameSave(LocalUser localUser, String gameSaveId);
 
@@ -263,6 +265,42 @@ public interface AdminController {
     @Operation(summary = "Updates a new game")
     @PostMapping(value = ControllerConstants.Admin.GAME_SAVE_ID)
     ResponseEntity<GenericResponse<GameSave>> updateGameSave(LocalUser localUser, String gameSaveId, AdminGameSaveUpdateRequest adminGameSaveUpdateRequest);
+
+    /**
+     * Updates the currency of a game save
+     * @param localUser the user
+     * @param gameSaveId the game save id
+     * @param currencyRequest the currency request
+     * @return the updated game save
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Updates the currency of a game save")
+    @PostMapping(value = ControllerConstants.Admin.UPDATE_GAME_SAVE_CURRENCIES)
+    ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(LocalUser localUser, String gameSaveId, CurrencyRequest currencyRequest);
+
+    /**
+     * Updates the stages of a game save
+     * @param localUser the user
+     * @param gameSaveId the game save id
+     * @param stageRequest the stage request
+     * @return the updated game save
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Updates the stages of a game save")
+    @PostMapping(value = ControllerConstants.Admin.UPDATE_GAME_SAVE_STAGES)
+    ResponseEntity<GenericResponse<Void>> updateGameSaveStages(LocalUser localUser, String gameSaveId, StageRequest stageRequest);
 
     /**
      * Creates a game save
