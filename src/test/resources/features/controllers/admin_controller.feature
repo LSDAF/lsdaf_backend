@@ -736,3 +736,125 @@ Feature: Admin Controller tests
     Then the response status code should be 200
 
     And the redis cache should be disabled
+
+  Scenario: An admin user requests the update of the currencies of a game save with cache enabled
+    Given the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+    And the following currency entries in cache
+      | gameSaveId                           | gold | diamond | emerald | amethyst |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 100  | 100     | 100     | 100      |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the currencies of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following CurrencyRequest
+      | gold | diamond | emerald | amethyst |
+      | 1000 | 1000    | 1000    | 1000     |
+
+    Then the response status code should be 200
+
+    And the currency cache should contain the following values
+      | gameSaveId                           | gold | diamond | emerald | amethyst |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 1000 | 1000    | 1000    | 1000     |
+
+    And I should have the following game saves in DB
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+
+  Scenario: An admin user requests the update of the currencies of a game save with cache disabled
+    Given the cache is disabled
+    And the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the currencies of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following CurrencyRequest
+      | gold | diamond | emerald | amethyst |
+      | 1000 | 1000    | 1000    | 1000     |
+
+    Then the response status code should be 200
+
+    And I should have the following game saves in DB
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 1000 | 1000    | 1000    | 1000     | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+
+  Scenario: An admin user requests the update of the stages of a game save with cache enabled
+    Given the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+    And the following stage entries in cache
+      | gameSaveId                           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 100          | 100      |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the stages of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following StageRequest
+      | currentStage | maxStage |
+      | 499          | 500      |
+    Then the response status code should be 200
+
+    And the stage cache should contain the following values
+      | gameSaveId                           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 499          | 500      |
+
+    And I should have the following game saves in DB
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+
+  Scenario: An admin user requests the update of the stages of a game save with invalid data
+    Given the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+    And the following stage entries in cache
+      | gameSaveId                           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 100          | 100      |
+
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the stages of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following StageRequest
+      | currentStage | maxStage |
+      | 500          | 400      |
+    Then the response status code should be 400
+
+  Scenario: An admin user requests the update of the stages of a game save with cache disabled
+    Given the cache is disabled
+    And the following users
+      | id                                   | name       | email               | password | roles      | verified | enabled |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | USER,ADMIN | true     | true    |
+    And the following game saves
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 10           | 10       |
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the admin endpoint to update the stages of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following StageRequest
+      | currentStage | maxStage |
+      | 499          | 500      |
+
+    Then the response status code should be 200
+
+    And I should have the following game saves in DB
+      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | userEmail           | currentStage | maxStage |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 10   | 10      | 10      | 10       | 10           | 10     | paul.ochon@test.com | 499          | 500      |

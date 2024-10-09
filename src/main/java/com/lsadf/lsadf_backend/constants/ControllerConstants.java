@@ -50,8 +50,8 @@ public final class ControllerConstants {
         public static final String CREATE_GAME_SAVE = "/game_saves/new";
         public static final String SEARCH_GAME_SAVES = "/game_saves/search";
         public static final String GAME_SAVE_ID = "/game_saves/{game_save_id}";
-        public static final String UPDATE_GAME_SAVE_CURRENCIES = "/game_saves/currencies";
-        public static final String UPDATE_GAME_SAVE_STAGES = "/game_saves/stages";
+        public static final String UPDATE_GAME_SAVE_CURRENCIES = "/game_saves/{game_save_id}/currencies";
+        public static final String UPDATE_GAME_SAVE_STAGES = "/game_saves/{game_save_id}/stages";
 
         public static final String CACHE = "/cache";
         public static final String TOGGLE_CACHE = "/cache/toggle";

@@ -78,6 +78,26 @@ Feature: Stage Controller tests
 
     Then the response status code should be 403
 
+  Scenario: A user tries to set the stages of one of his game saves with invalid data
+    Given the following users
+      | id                                   | name       | email               | password | enabled | verified | roles |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
+    And the following game saves
+      | id                                   | userId                               | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
+    And the following stage entries in cache
+      | gameSaveId                           | currentStage | maxStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | 666          | 667      |
+    When the user logs in with the following credentials
+      | email               | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to set the stages with the following StageRequest for the game save with id f81b710d-3e02-4871-a86f-390377798dd1
+      | currentStage | maxStage |
+      | 700          | 600      |
+
+    Then the response status code should be 400
+
   Scenario: A user sets the stages of one of his game saves with cache
     Given the following users
       | id                                   | name       | email               | password | enabled | verified | roles |

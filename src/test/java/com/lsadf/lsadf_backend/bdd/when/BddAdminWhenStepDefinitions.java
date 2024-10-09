@@ -15,8 +15,10 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
+import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -423,6 +425,60 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<AdminGameSaveUpdateRequest> request = new HttpEntity<>(updateRequest, headers);
+            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
+            GenericResponse<GameSave> body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to update the currencies of the game save with id (.*) with the following CurrencyRequest$")
+    public void when_the_user_requests_the_admin_endpoint_to_update_the_currencies_of_the_game_save_with_id_with_the_following_currency_request(String saveId, DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        assertThat(rows).hasSize(1);
+
+        Map<String, String> row = rows.get(0);
+
+        CurrencyRequest currencyRequest = BddUtils.mapToCurrencyRequest(row);
+
+        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.UPDATE_GAME_SAVE_CURRENCIES.replace("{game_save_id}", saveId);
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtTokenStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<CurrencyRequest> request = new HttpEntity<>(currencyRequest, headers);
+            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
+            GenericResponse<GameSave> body = result.getBody();
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to update the stages of the game save with id (.*) with the following StageRequest$")
+    public void when_the_user_requests_the_admin_endpoint_to_update_the_stages_of_the_game_save_with_id_with_the_following_stage_request(String saveId, DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        assertThat(rows).hasSize(1);
+
+        Map<String, String> row = rows.get(0);
+
+        StageRequest stageRequest = BddUtils.mapToStageRequest(row);
+
+        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.UPDATE_GAME_SAVE_STAGES.replace("{game_save_id}", saveId);
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            String token = jwtTokenStack.peek();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<StageRequest> request = new HttpEntity<>(stageRequest, headers);
             ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
             GenericResponse<GameSave> body = result.getBody();
             responseStack.push(body);
