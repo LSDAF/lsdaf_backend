@@ -70,6 +70,7 @@
                             <recipe>org.openrewrite.java.format.RemoveTrailingWhitespace</recipe>
                             <recipe>org.openrewrite.java.format.Spaces</recipe>
                             <recipe>org.openrewrite.java.format.EmptyNewlineAtEndOfFile</recipe>
+                            <recipe>org.openrewrite.java.ShortenFullyQualifiedTypeReferences</recipe>
                         </activeRecipes>
                     </configuration>
                 </plugin>
