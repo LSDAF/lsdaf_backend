@@ -10,5 +10,6 @@ import java.util.stream.Stream;
 
 public interface SearchService {
     Stream<UserEntity> searchUsers(SearchRequest searchRequest, UserOrderBy orderBy);
+
     Stream<GameSaveEntity> searchGameSaves(SearchRequest searchRequest, GameSaveOrderBy orderBy);
 }

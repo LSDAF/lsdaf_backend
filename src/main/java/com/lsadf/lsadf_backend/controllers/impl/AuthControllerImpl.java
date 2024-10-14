@@ -204,7 +204,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
 
             return generateResponse(HttpStatus.OK, userInfo);
         } catch (InvalidTokenException e) {
-            log.error("InvalidTokenException: "+ e.getMessage(), e);
+            log.error("InvalidTokenException: " + e.getMessage(), e);
             return generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         } catch (NotFoundException e) {
             log.error("NotFoundException: ", e);

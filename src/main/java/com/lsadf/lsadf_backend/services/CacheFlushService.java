@@ -10,5 +10,5 @@ public interface CacheFlushService {
      * Flush the stage cache, and persists the stage of every entries in the database
      */
     void flushStages();
-    
+
 }

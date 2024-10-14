@@ -13,7 +13,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.JwtAuthentication
 @Data
 @AllArgsConstructor
 @JsonPropertyOrder({ACCESS_TOKEN, REFRESH_TOKEN, USER_INFO})
-public class JwtAuthentication implements Model  {
+public class JwtAuthentication implements Model {
 
     @Serial
     private static final long serialVersionUID = -5360094704215801310L;

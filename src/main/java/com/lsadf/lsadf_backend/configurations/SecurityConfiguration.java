@@ -151,7 +151,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     }
 
 
-
     @Bean
     public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
         return new RestAuthenticationEntryPoint();
@@ -162,7 +161,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     @Bean

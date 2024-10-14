@@ -5,7 +5,7 @@ import jakarta.validation.Constraint;
 
 import java.lang.annotation.*;
 
-@Target({ ElementType.PARAMETER, ElementType.FIELD })
+@Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NicknameValidator.class)
 @Documented

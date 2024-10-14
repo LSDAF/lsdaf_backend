@@ -1,12 +1,12 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
 import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
@@ -15,8 +15,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import jakarta.mail.MessagingException;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.lsadf.lsadf_backend.bdd.BddFieldConstants.RefreshToken.REFRESH_TOKEN;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Step definitions for the then steps in the BDD scenarios
@@ -195,7 +193,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
         assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "createdAt", "updatedAt","user","expirationDate")
+                .ignoringFields("id", "createdAt", "updatedAt", "user", "expirationDate")
                 .isEqualTo(expected);
     }
 
@@ -464,7 +462,7 @@ public class BddThenStepDefinitions extends BddLoader {
 
         assertThat(actualUserInfo)
                 .usingRecursiveComparison()
-                .ignoringFields("id","createdAt", "updatedAt")
+                .ignoringFields("id", "createdAt", "updatedAt")
                 .isEqualTo(expectedUserInfo);
     }
 

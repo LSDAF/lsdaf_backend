@@ -15,7 +15,9 @@ import java.util.stream.Stream;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, String> {
     Optional<UserEntity> findUserEntityByEmail(String email);
+
     void deleteUserEntityByEmail(String email);
+
     boolean existsByEmail(String email);
 
     @Query("select u from t_user u")
