@@ -51,6 +51,7 @@ purgedb:
 
 purgelogs:
 	@rm -rf docker/data/lsadf_backend_data/*
+	@rm -rf docker/data/lsadf_backend_dev_data/*
 	@echo "Backend logs purged"
 
 help:
