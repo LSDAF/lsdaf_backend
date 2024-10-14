@@ -28,6 +28,15 @@ public class DateUtils {
     }
 
     /**
+     * Convert Date to String
+     * @param date Date to convert
+     * @return Converted Date in String format
+     */
+    public static String dateToString(Date date) {
+        return dateToLocalDateTime(date).format(formatter);
+    }
+
+    /**
      * Convert Date to LocalDateTime
      * @param dateToConvert Date to convert
      * @return Converted LocalDateTime

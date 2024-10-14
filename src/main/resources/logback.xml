@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <withJansi>true</withJansi>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <filter class="com.lsadf.lsadf_backend.configurations.logback_filter.MarkerSkippingFilter">
+            <markerToMatch>CONSOLE</markerToMatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight([%thread]) %magenta(%-4level) %logger{36} - %msg%n</pattern>
-        </layout>
+        </encoder>
+
     </appender>
 
     <root level="INFO">

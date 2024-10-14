@@ -12,5 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class HttpLogProperties {
     private boolean enabled;
+    private boolean colorEnabled;
     private List<HttpMethod> loggedMethods;
 }

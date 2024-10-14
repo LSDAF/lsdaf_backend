@@ -15,6 +15,7 @@ db:
 
 http-log:
   enabled: true
+  color-enabled: false
   logged-methods:
     - GET
     - POST

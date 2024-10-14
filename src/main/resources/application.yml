@@ -46,6 +46,7 @@ http-log:
     - POST
     - PUT
     - DELETE
+  color-enabled: true
 
 db:
   url: ${DB_URL_LOCALHOST}

@@ -1,50 +1,138 @@
 package com.lsadf.lsadf_backend.configurations.interceptors;
 
+import com.lsadf.lsadf_backend.constants.LogColor;
 import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.models.RequestLog;
 import com.lsadf.lsadf_backend.properties.HttpLogProperties;
+import com.lsadf.lsadf_backend.services.ClockService;
+import com.lsadf.lsadf_backend.utils.ColorUtils;
 import com.lsadf.lsadf_backend.utils.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.lsadf.lsadf_backend.constants.LogColor.*;
 
 @Slf4j(topic = "[HTTP]")
 public class RequestLoggerInterceptor implements HandlerInterceptor {
 
     private static final String ANONYMOUS_USER = "anonymousUser";
 
+    private static final String FILE = "FILE";
+    private static final Marker FILE_MARKER = MarkerFactory.getMarker(FILE);
+    private static final String CONSOLE = "CONSOLE";
+    private static final Marker CONSOLE_MARKER = MarkerFactory.getMarker(CONSOLE);
+
     private final Set<String> loggedMethods;
+    private final boolean colorEnabled;
+    private final ClockService clockService;
 
 
-    public RequestLoggerInterceptor(HttpLogProperties httpLogProperties) {
+    public RequestLoggerInterceptor(HttpLogProperties httpLogProperties,
+                                    ClockService clockService) {
         this.loggedMethods = httpLogProperties.getLoggedMethods().stream().map(HttpMethod::toString).collect(Collectors.toSet());
+        this.colorEnabled = httpLogProperties.isColorEnabled();
+        this.clockService = clockService;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (loggedMethods.contains(request.getMethod())) {
-            String username = null;
+            Date now = clockService.nowDate();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof LocalUser localUserPrincipal) {
-                username = localUserPrincipal.getUsername();
-            } else if (principal instanceof String principalString && !principal.equals(ANONYMOUS_USER)) {
-                username = principalString;
-            }
-            String now = "date:" + DateUtils.dateTimeToString(LocalDateTime.now());
-            log.info("[{}][{}][{}]{} Received incoming HTTP request",
-                    request.getMethod(),
-                    request.getRequestURI(),
+            RequestLog requestLog = buildRequestLog(request,
+                    response,
                     now,
-                    username != null ? "[user:" + username + "]" : "");
+                    authentication);
+            logToConsole(requestLog, colorEnabled);
+            logToFile(requestLog);
         }
-        return true;
+    }
+
+    /**
+     * Logs request to console
+     *
+     * @param requestLog   RequestLog object to log
+     * @param colorEnabled true if color is enabled, false otherwise
+     */
+    private static void logToConsole(RequestLog requestLog, boolean colorEnabled) {
+        String usernameLog = requestLog.getUsername() != null ? "[user:" + requestLog.getUsername() + "]" : "";
+        int status = requestLog.getStatus();
+        String statusString;
+        if (colorEnabled) {
+            LogColor color;
+            if (status >= 200 && status < 300) {
+                color = GREEN;
+            } else if (status >= 400 && status < 500) {
+                color = YELLOW;
+            } else {
+                color = RED;
+            }
+            statusString = ColorUtils.colorizeString(String.valueOf(status), color);
+        } else {
+            statusString = String.valueOf(status);
+        }
+        log.info(CONSOLE_MARKER, "[{}][{}][{}][{}]{}",
+                statusString,
+                requestLog.getMethod(),
+                requestLog.getRequestUri(),
+                requestLog.getNow(),
+                usernameLog);
+    }
+
+    /**
+     * Logs request to file
+     *
+     * @param requestLog RequestLog object to log
+     */
+    private static void logToFile(RequestLog requestLog) {
+        String usernameLog = requestLog.getUsername() != null ? "[user:" + requestLog.getUsername() + "]" : "";
+        log.info(FILE_MARKER, "[{}][{}][{}][{}]{}",
+                requestLog.getStatus(),
+                requestLog.getMethod(),
+                requestLog.getRequestUri(),
+                requestLog.getNow(),
+                usernameLog);
+    }
+
+    /**
+     * Builds RequestLog object from request, response, now, and authentication
+     *
+     * @param request        HttpServletRequest object
+     * @param response       HttpServletResponse object
+     * @param now            Date object representing current time
+     * @param authentication Authentication object
+     * @return RequestLog object
+     */
+    private static RequestLog buildRequestLog(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              Date now,
+                                              Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        String username = null;
+        if (principal instanceof LocalUser localUserPrincipal) {
+            username = localUserPrincipal.getUsername();
+        } else if (principal instanceof String principalString && !principal.equals(ANONYMOUS_USER)) {
+            username = principalString;
+        }
+        String nowString = DateUtils.dateToString(now);
+        RequestLog.RequestLogBuilder requestLogBuilder = RequestLog.builder()
+                .status(response.getStatus())
+                .now(nowString)
+                .method(request.getMethod())
+                .requestUri(request.getRequestURI())
+                .username(username);
+        return requestLogBuilder.build();
     }
 }
