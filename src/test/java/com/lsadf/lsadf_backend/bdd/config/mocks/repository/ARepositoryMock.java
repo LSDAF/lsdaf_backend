@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
 
 import com.lsadf.lsadf_backend.entities.Entity;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.*;
 
@@ -9,7 +10,7 @@ import java.util.*;
  * Abstract class for repository mocks
  * @param <T> the entity type
  */
-public abstract class ARepositoryMock<T extends Entity> implements org.springframework.data.repository.CrudRepository<T, String> {
+public abstract class ARepositoryMock<T extends Entity> implements CrudRepository<T, String> {
     protected final Map<String, T> entities = new HashMap<>();
 
     @Override

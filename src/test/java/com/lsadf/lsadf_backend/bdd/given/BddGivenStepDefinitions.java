@@ -2,12 +2,14 @@ package com.lsadf.lsadf_backend.bdd.given;
 
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
+import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import com.lsadf.lsadf_backend.exceptions.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import com.lsadf.lsadf_backend.utils.MockUtils;
 import io.cucumber.datatable.DataTable;
@@ -20,6 +22,7 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -137,6 +140,8 @@ public class BddGivenStepDefinitions extends BddLoader {
 
         assertThat(currencyCache.getAll()).isEmpty();
         assertThat(currencyCache.getAllHisto()).isEmpty();
+        assertThat(stageCache.getAll()).isEmpty();
+        assertThat(stageCache.getAllHisto()).isEmpty();
         assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
         assertThat(invalidatedJwtTokenCache.getAll()).isEmpty();
         assertThat(localUserCache.getAll()).isEmpty();
@@ -193,40 +198,44 @@ public class BddGivenStepDefinitions extends BddLoader {
         log.info("Game saves created");
     }
 
-    @Given("^the following currency entries in cache$")
-    public void given_i_have_the_following_currency_entries_in_cache(DataTable dataTable) {
+    @Given("^the following (.*) entries in cache$")
+    public void given_the_following_cache_entries_in_cache(String cacheType, DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        log.info("Creating currency entries in cache...");
+        log.info("Creating {} entries in cache...", cacheType);
+        CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
+        AtomicInteger count = new AtomicInteger();
+        switch (cacheEntryType) {
+            case CURRENCY -> rows.forEach(row -> {
+                String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
+                Currency currency = BddUtils.mapToCurrency(row);
+                currencyCache.set(gameSaveId, currency);
+                count.getAndIncrement();
+            });
+            case STAGE -> rows.forEach(row -> {
+                String gameSaveId = row.get(BddFieldConstants.StageCacheEntry.GAME_SAVE_ID);
+                Stage stage = BddUtils.mapToStage(row);
+                stageCache.set(gameSaveId, stage);
+                count.getAndIncrement();
+            });
+            case GAME_SAVE_OWNERSHIP -> rows.forEach(row -> {
+                String gameSaveId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.GAME_SAVE_ID);
+                String userId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.USER_EMAIL);
+                gameSaveOwnershipCache.set(gameSaveId, userId);
+                count.getAndIncrement();
+            });
+            default -> throw new IllegalArgumentException("Unknown cache type: " + cacheType);
+        }
 
-        rows.forEach(row -> {
-            String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
-            Currency currency = BddUtils.mapToCurrency(row);
-            currencyCache.set(gameSaveId, currency);
-        });
+        int finalCount = count.get();
 
-        log.info("currency entries in cache created");
-    }
-
-
-    @Given("^the following game save ownerships in cache$")
-    public void given_i_have_the_following_game_save_ownerships_in_cache(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        log.info("Creating game save ownerships in cache...");
-
-        rows.forEach(row -> {
-            String gameSaveId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.GAME_SAVE_ID);
-            String userId = row.get(BddFieldConstants.GameSaveOwnershipCacheEntry.USER_EMAIL);
-            gameSaveOwnershipCache.set(gameSaveId, userId);
-            log.info("Game save ownership created: gameSaveId={}, userId={}", gameSaveId, userId);
-        });
-
-        log.info("Game save ownerships in cache created");
+        log.info("{} {} entries in cache created", finalCount, cacheType);
     }
 
     @Given("^the expiration seconds properties set to (.*)$")
     public void given_the_expiration_seconds_properties_set_to(int expirationSeconds) {
         log.info("Setting expiration seconds properties to {}", expirationSeconds);
         currencyCache.setExpiration(expirationSeconds);
+        stageCache.setExpiration(expirationSeconds);
         gameSaveOwnershipCache.setExpiration(expirationSeconds);
         invalidatedJwtTokenCache.setExpiration(expirationSeconds);
     }

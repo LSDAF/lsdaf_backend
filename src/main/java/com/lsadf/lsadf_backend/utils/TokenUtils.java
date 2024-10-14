@@ -17,6 +17,7 @@ public class TokenUtils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64UrlEncoder = Base64.getUrlEncoder().withoutPadding();
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
+
     /**
      * Generates a token.
      *

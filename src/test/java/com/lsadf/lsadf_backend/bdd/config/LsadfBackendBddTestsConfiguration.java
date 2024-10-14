@@ -62,6 +62,11 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Stack<Stage> stageStack() {
+        return new Stack<>();
+    }
+
+    @Bean
     public Stack<List<GameSave>> gameSaveStack() {
         return new Stack<>();
     }
@@ -151,6 +156,12 @@ public class LsadfBackendBddTestsConfiguration {
 
     @Bean
     @Primary
+    public StageRepository stageRepository() {
+        return new StageRepositoryMock();
+    }
+
+    @Bean
+    @Primary
     public RefreshTokenRepository refreshTokenRepository(ClockService clockService) {
         return new RefreshTokenRepositoryMock(clockService);
     }
@@ -158,8 +169,9 @@ public class LsadfBackendBddTestsConfiguration {
     @Bean
     @Primary
     public GameSaveRepository gameSaveRepository(ClockService clockService,
-                                                 CurrencyRepository currencyRepository) {
-        return new GameSaveRepositoryMock(currencyRepository, clockService);
+                                                 CurrencyRepository currencyRepository,
+                                                 StageRepository stageRepository) {
+        return new GameSaveRepositoryMock(currencyRepository, stageRepository, clockService);
     }
 
     @Bean

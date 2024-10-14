@@ -19,6 +19,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
@@ -64,6 +65,21 @@ public class BddUtils {
         long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
 
         return new CurrencyRequest(goldLong, diamondLong, emeraldLong, amethystLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a StageRequest
+     * @param row row from BDD table
+     * @return StageRequest
+     */
+    public static StageRequest mapToStageRequest(Map<String, String> row) {
+        String currentStage = row.get(BddFieldConstants.Stage.CURRENT_STAGE);
+        String maxStage = row.get(BddFieldConstants.Stage.MAX_STAGE);
+
+        long currentStageLong = Long.parseLong(currentStage);
+        long maxStageLong = Long.parseLong(maxStage);
+
+        return new StageRequest(currentStageLong, maxStageLong);
     }
 
     /**
@@ -122,13 +138,17 @@ public class BddUtils {
         String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
+        String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
 
-        long attackLong = attack == null ? 0 : Long.parseLong(attack);
-        long healthPointsLong = healthPoints == null ? 0 : Long.parseLong(healthPoints);
-        long goldLong = gold == null ? 0 : Long.parseLong(gold);
-        long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
-        long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
-        long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
+        long attackLong = Long.parseLong(attack);
+        long healthPointsLong = Long.parseLong(healthPoints);
+        long goldLong = Long.parseLong(gold);
+        long diamondLong = Long.parseLong(diamond);
+        long emeraldLong = Long.parseLong(emerald);
+        long amethystLong = Long.parseLong(amethyst);
+        long currentStage = Long.parseLong(currentStageString);
+        long maxStage = Long.parseLong(maxStageString);
 
         if (userId == null) {
             userId = "";
@@ -141,11 +161,10 @@ public class BddUtils {
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
                 .user(userOptional.orElse(null))
                 .nickname(nickname)
+                .id(id)
                 .attack(attackLong)
                 .healthPoints(healthPointsLong)
                 .build();
-
-        gameSaveEntity.setId(id);
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .id(id)
@@ -158,6 +177,15 @@ public class BddUtils {
                 .build();
 
         gameSaveEntity.setCurrencyEntity(currencyEntity);
+
+        StageEntity stageEntity = StageEntity.builder()
+                .id(id)
+                .currentStage(currentStage)
+                .maxStage(maxStage)
+                .gameSave(gameSaveEntity)
+                .build();
+
+        gameSaveEntity.setStageEntity(stageEntity);
 
         return gameSaveEntity;
     }
@@ -242,14 +270,18 @@ public class BddUtils {
         String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
         String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
         String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+        String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
+        String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
 
 
-        Long gold = goldString != null ? Long.parseLong(goldString) : null;
-        Long healthPoints = healthPointsString != null ? Long.parseLong(healthPointsString) : null;
-        Long attack = attackString != null ? Long.parseLong(attackString) : null;
-        Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
-        Long emerald = emeraldString != null ? Long.parseLong(emeraldString) : null;
-        Long amethyst = amethystString != null ? Long.parseLong(amethystString) : null;
+        Long gold = Long.parseLong(goldString);
+        Long healthPoints = Long.parseLong(healthPointsString);
+        Long attack = Long.parseLong(attackString);
+        Long diamond = Long.parseLong(diamondString);
+        Long emerald = Long.parseLong(emeraldString);
+        Long amethyst = Long.parseLong(amethystString);
+        Long currentStage = Long.parseLong(currentStageString);
+        Long maxStage = Long.parseLong(maxStageString);
 
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
@@ -262,6 +294,8 @@ public class BddUtils {
                 .healthPoints(healthPoints)
                 .attack(attack)
                 .id(id)
+                .maxStage(maxStage)
+                .currentStage(currentStage)
                 .userEmail(userEmail)
                 .build();
     }
@@ -276,19 +310,13 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
-        String goldString = row.get(BddFieldConstants.GameSave.GOLD);
-        String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
-        String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
-        String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
-
-        Long gold = goldString != null ? Long.parseLong(goldString) : null;
-        Long diamond = diamondString != null ? Long.parseLong(diamondString) : null;
-        Long emerald = emeraldString != null ? Long.parseLong(emeraldString) : null;
-        Long amethyst = amethystString != null ? Long.parseLong(amethystString) : null;
 
         long healthPoints = Long.parseLong(row.get(BddFieldConstants.GameSave.HEALTH_POINTS));
         long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
+
+        Currency currency = mapToCurrency(row);
+        Stage stage = mapToStage(row);
 
         return GameSave.builder()
                 .attack(attack)
@@ -297,10 +325,8 @@ public class BddUtils {
                 .nickname(nickname)
                 .id(id)
                 .healthPoints(healthPoints)
-                .gold(gold)
-                .diamond(diamond)
-                .emerald(emerald)
-                .amethyst(amethyst)
+                .currency(currency)
+                .stage(stage)
                 .build();
     }
 
@@ -310,18 +336,36 @@ public class BddUtils {
      * @param row row from BDD table
      * @return Currency
      */
-    public static com.lsadf.lsadf_backend.models.Currency mapToCurrency(Map<String, String> row) {
+    public static Currency mapToCurrency(Map<String, String> row) {
         String gold = row.get(BddFieldConstants.Currency.GOLD);
         String diamond = row.get(BddFieldConstants.Currency.DIAMOND);
         String emerald = row.get(BddFieldConstants.Currency.EMERALD);
         String amethyst = row.get(BddFieldConstants.Currency.AMETHYST);
 
-        long goldLong = gold == null ? 0 : Long.parseLong(gold);
-        long diamondLong = diamond == null ? 0 : Long.parseLong(diamond);
-        long emeraldLong = emerald == null ? 0 : Long.parseLong(emerald);
-        long amethystLong = amethyst == null ? 0 : Long.parseLong(amethyst);
+        Long goldLong = gold == null ? null : Long.parseLong(gold);
+        Long diamondLong = diamond == null ? null : Long.parseLong(diamond);
+        Long emeraldLong = emerald == null ? null : Long.parseLong(emerald);
+        Long amethystLong = amethyst == null ? null : Long.parseLong(amethyst);
 
         return new Currency(goldLong, diamondLong, emeraldLong, amethystLong);
+    }
+
+    /**
+     * Maps a row from a BDD table to a Stage
+     * @param row row from BDD table
+     * @return Stage
+     */
+    public static Stage mapToStage(Map<String, String> row) {
+        String currentStage = row.get(BddFieldConstants.Stage.CURRENT_STAGE);
+        String maxStage = row.get(BddFieldConstants.Stage.MAX_STAGE);
+
+        long currentStageLong = Long.parseLong(currentStage);
+        long maxStageLong = Long.parseLong(maxStage);
+
+        return Stage.builder()
+                .currentStage(currentStageLong)
+                .maxStage(maxStageLong)
+                .build();
     }
 
     /**
@@ -331,27 +375,15 @@ public class BddUtils {
      * @return AdminGameSaveUpdateRequest
      */
     public static AdminGameSaveUpdateRequest mapToAdminGameSaveUpdateRequest(Map<String, String> row) {
-        String gold = row.get(BddFieldConstants.GameSave.GOLD);
-        String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
-        String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
-        String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
         String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
         String attack = row.get(BddFieldConstants.GameSave.ATTACK);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
-        Long goldLong = gold == null ? null : Long.parseLong(gold);
-        Long diamondLong = diamond == null ? null : Long.parseLong(diamond);
-        Long emeraldLong = emerald == null ? null : Long.parseLong(emerald);
-        Long amethystLong = amethyst == null ? null : Long.parseLong(amethyst);
-        Long healthPointsLong = healthPoints == null ? null : Long.parseLong(healthPoints);
-        Long attackLong = attack == null ? null : Long.parseLong(attack);
+        Long healthPointsLong = Long.parseLong(healthPoints);
+        Long attackLong = Long.parseLong(attack);
 
 
         return AdminGameSaveUpdateRequest.builder()
-                .diamond(diamondLong)
-                .gold(goldLong)
-                .emerald(emeraldLong)
-                .amethyst(amethystLong)
                 .healthPoints(healthPointsLong)
                 .attack(attackLong)
                 .nickname(nickname)
@@ -387,29 +419,24 @@ public class BddUtils {
         String roles = row.get(BddFieldConstants.User.ROLES);
 
 
-        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
+        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
         SocialProvider socialProvider = SocialProvider.fromString(provider);
-        Set<UserRole> roleSet = roles == null
-                ? Set.of(UserRole.USER)
-                : Arrays.stream(roles.split(COMMA))
+        Set<UserRole> roleSet = Arrays.stream(roles.split(COMMA))
                 .map(UserRole::valueOf)
                 .collect(Collectors.toSet());
 
 
-        UserEntity userEntity = UserEntity.builder()
+        return UserEntity.builder()
                 .email(email)
                 .name(name)
+                .id(id)
                 .verified(verifiedBoolean)
                 .enabled(enabledBoolean)
                 .password(password)
                 .provider(socialProvider)
                 .roles(roleSet)
                 .build();
-
-        userEntity.setId(id);
-
-        return userEntity;
     }
 
     /**
@@ -497,8 +524,8 @@ public class BddUtils {
         if (userRoles != null) {
             roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
         }
-        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
+        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
         return new AdminUserUpdateRequest(name, password, verifiedBoolean, email, enabledBoolean, roles);
     }
@@ -527,8 +554,8 @@ public class BddUtils {
         }
         SocialProvider socialProvider = SocialProvider.fromString(provider);
 
-        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
+        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
         return new AdminUserCreationRequest(name, userId, enabledBoolean, verifiedBoolean, email, password, socialProvider, roles, providerUserId);
 
@@ -557,10 +584,10 @@ public class BddUtils {
         String nbUsers = row.get(BddFieldConstants.GlobalInfo.USER_COUNTER);
         String now = row.get(BddFieldConstants.GlobalInfo.NOW);
 
-        Long nbGameSavesLong = nbGameSaves == null ? 0L : Long.parseLong(nbGameSaves);
-        Long nbUsersLong = nbUsers == null ? 0L : Long.parseLong(nbUsers);
+        Long nbGameSavesLong = Long.parseLong(nbGameSaves);
+        Long nbUsersLong = Long.parseLong(nbUsers);
 
-        Instant nowInstant = now == null ? null : Instant.parse(now);
+        Instant nowInstant = Instant.parse(now);
 
         return new GlobalInfo(nowInstant, nbGameSavesLong, nbUsersLong);
     }
@@ -593,8 +620,8 @@ public class BddUtils {
         String verified = row.get(BddFieldConstants.UserAdminDetails.VERIFIED);
         String roles = row.get(BddFieldConstants.UserAdminDetails.ROLES);
 
-        Boolean enabledBoolean = enabled == null ? null : Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = verified == null ? null : Boolean.parseBoolean(verified);
+        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
         SocialProvider socialProvider = SocialProvider.fromString(provider);
         Set<UserRole> roleSet = roles == null
                 ? Set.of(UserRole.USER)

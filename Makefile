@@ -51,6 +51,8 @@ prune:
 	@docker system prune -a -f
 	@docker image prune -f
 
+purge: purgedb purgelogs
+
 purgedb:
 	@rm -rf docker/data/postgres/*
 	@echo "Postgres data purged"
@@ -71,6 +73,7 @@ help:
 	@echo "> monitorup           |-----------------------------------------|  Runs db docker images + monitoring tools"
 	@echo "> monitordown         |-----------------------------------------|  Kills db + monitoring tools docker images"
 	@echo "> prune               |-----------------------------------------|  Cleans all docker local storages"
+	@echo "> purge               |-----------------------------------------|  Performs purgedb and purgelogs"
 	@echo "> purgedb             |-----------------------------------------|  Cleans all data from docker-data folder for db"
 	@echo "> purgelogs           |-----------------------------------------|  Cleans all logs from docker-data folder for lsadf_backend_data"
 	@echo "> logs                |-----------------------------------------|  Reads all logs from docker images"
@@ -79,3 +82,5 @@ help:
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"
 	@echo "> test                |-----------------------------------------|  Runs BDD & unit tests"
 	@echo "> clean               |-----------------------------------------|  Clean local build files"
+	@echo "> lint-check          |-----------------------------------------|  Dry lints code and lists issues in target/rewrite folder"
+	@echo "> lint                |-----------------------------------------|  Lints and fixes issues in source code"

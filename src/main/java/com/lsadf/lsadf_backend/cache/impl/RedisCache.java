@@ -81,6 +81,7 @@ public class RedisCache<T> implements Cache<T> {
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -110,6 +111,18 @@ public class RedisCache<T> implements Cache<T> {
         this.isEnabled.set(enabled);
         String type = keyType.substring(0, keyType.length() - 1);
         log.error("Redis {} cache is now " + (enabled ? "enabled" : "disabled"), type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unset(String key) {
+        try {
+            redisTemplate.delete(keyType + key);
+        } catch (DataAccessException e) {
+            log.warn("Error while deleting entry from redis cache", e);
+        }
     }
 
     @Override

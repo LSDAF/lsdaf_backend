@@ -12,7 +12,7 @@ public class CurrencyRepositoryMock extends ARepositoryMock<CurrencyEntity> impl
     @Override
     public <S extends CurrencyEntity> @NotNull S save(S entity) {
         if (entity.getId() == null) {
-            throw new IllegalArgumentException("The gold id must not be empty, since it should be the id of the associated game save");
+            throw new IllegalArgumentException("The currency id must not be empty, since it should be the id of the associated game save");
         }
 
         entities.put(entity.getId(), entity);

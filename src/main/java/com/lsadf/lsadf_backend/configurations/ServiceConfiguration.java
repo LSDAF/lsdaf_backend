@@ -1,8 +1,11 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
 import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
+import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.EmailProperties;
 import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.properties.UserVerificationProperties;
@@ -47,8 +50,9 @@ public class ServiceConfiguration {
 
     @Bean
     public UserService userService(final UserRepository userRepository,
-                                   final PasswordEncoder passwordEncoder) {
-        return new UserServiceImpl(userRepository, passwordEncoder);
+                                   final PasswordEncoder passwordEncoder,
+                                   final Cache<LocalUser> localUserCache) {
+        return new UserServiceImpl(userRepository, passwordEncoder, localUserCache);
     }
 
     @Bean
@@ -59,10 +63,19 @@ public class ServiceConfiguration {
     }
 
     @Bean
+    public StageService stageService(StageRepository stageRepository,
+                                     Cache<Stage> stageCache,
+                                     Mapper mapper) {
+        return new StageServiceImpl(stageRepository, stageCache, mapper);
+    }
+
+    @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
-                                           @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache);
+                                           @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache,
+                                           HistoCache<Stage> stageHistoCache,
+                                           HistoCache<Currency> currencyHistoCache) {
+        return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache, stageHistoCache, currencyHistoCache);
     }
 
     @Bean(name = REFRESH_TOKEN_PROVIDER)
@@ -97,19 +110,6 @@ public class ServiceConfiguration {
     @Bean
     public Mapper mapper() {
         return new MapperImpl();
-    }
-
-    @Bean
-    public AdminService adminService(UserService userService,
-                                     GameSaveService gameSaveService,
-                                     Mapper mapper,
-                                     SearchService searchService,
-                                     @Qualifier(LOCAL_CACHE_SERVICE) CacheService localCacheService,
-                                     @Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
-                                     CacheFlushService cacheFlushService,
-                                     ClockService clockService,
-                                     EmailService emailService) {
-        return new AdminServiceImpl(userService, gameSaveService, mapper, searchService, localCacheService, redisCacheService, cacheFlushService, clockService, emailService);
     }
 
     @Bean

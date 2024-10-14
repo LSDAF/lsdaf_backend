@@ -14,10 +14,13 @@ public class BddFieldConstants {
     private static final String UPDATED_AT = "updatedAt";
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class StageCacheEntry {
+        public static final String GAME_SAVE_ID = "gameSaveId";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class CurrencyCacheEntry {
         public static final String GAME_SAVE_ID = "gameSaveId";
-        public static final String CURRENCY = "gold";
-        public static final String CURRENCY_HISTO = "gold";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,6 +31,14 @@ public class BddFieldConstants {
         public static final String USER_EMAIL = "userEmail";
         public static final String REFRESH_TOKEN = "refreshToken";
         public static final String STATUS = "status";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Stage {
+        public static final String ID = BddFieldConstants.ID;
+        public static final String USER_EMAIL = "userEmail";
+        public static final String CURRENT_STAGE = "currentStage";
+        public static final String MAX_STAGE = "maxStage";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,6 +67,8 @@ public class BddFieldConstants {
         public static final String AMETHYST = "amethyst";
         public static final String HEALTH_POINTS = "healthPoints";
         public static final String ATTACK = "attack";
+        public static final String CURRENT_STAGE = "currentStage";
+        public static final String MAX_STAGE = "maxStage";
         public static final String CREATED_AT = BddFieldConstants.CREATED_AT;
         public static final String UPDATED_AT = BddFieldConstants.UPDATED_AT;
     }

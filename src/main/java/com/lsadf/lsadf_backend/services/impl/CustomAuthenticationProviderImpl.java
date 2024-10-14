@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
+import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -10,10 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public class CustomAuthenticationProviderImpl implements org.springframework.security.authentication.AuthenticationProvider {
     private final UserDetailsService lsadfUserDetailsService;
-    private final ExpiringMap<String, LocalUser> localUserCache;
+    private final Cache<LocalUser> localUserCache;
 
     public CustomAuthenticationProviderImpl(UserDetailsService lsadfUserDetailsService,
-                                            ExpiringMap<String, LocalUser> localUserCache) {
+                                            Cache<LocalUser> localUserCache) {
         this.lsadfUserDetailsService = lsadfUserDetailsService;
         this.localUserCache = localUserCache;
     }
@@ -24,7 +24,7 @@ public class CustomAuthenticationProviderImpl implements org.springframework.sec
         if (email == null) {
             throw new IllegalArgumentException("Email is required");
         }
-        final LocalUser user = localUserCache.getOrDefault(email, (LocalUser) lsadfUserDetailsService.loadUserByUsername(email));
+        final LocalUser user = localUserCache.get(email).orElseGet(() -> (LocalUser) lsadfUserDetailsService.loadUserByUsername(email));
         return createSuccessfulAuthentication(authentication, user);
     }
 

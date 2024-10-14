@@ -16,6 +16,7 @@ import com.lsadf.lsadf_backend.services.GameSaveService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
 
     private final Mapper mapper;
 
+    @Autowired
     public CurrencyControllerImpl(GameSaveService gameSaveService,
                                   CurrencyService currencyService,
                                   @Qualifier(REDIS_CACHE_SERVICE) CacheService cacheService,
@@ -67,7 +69,7 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
             return generateResponse(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error("Illegal argument exception while saving currency: ", e);
-            return generateResponse(HttpStatus.BAD_REQUEST, "No currency to save: " + e.getMessage(), null);
+            return generateResponse(HttpStatus.BAD_REQUEST, "Illegal argument while saving currency: " + e.getMessage(), null);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while saving currency: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while saving currency.", null);

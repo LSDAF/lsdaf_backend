@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 @Repository
 public interface RefreshTokenRepository extends CrudRepository<RefreshTokenEntity, String> {
     Optional<RefreshTokenEntity> findByUserAndStatus(UserEntity user, TokenStatus status);
+
     Optional<RefreshTokenEntity> findByToken(String token);
 
     @Query("select r from t_refresh_token r where r.expirationDate < :date")
