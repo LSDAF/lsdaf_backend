@@ -62,8 +62,14 @@
                     <configuration>
                         <exportDatatables>true</exportDatatables>
                         <activeRecipes>
-                            <recipe>org.openrewrite.java.RemoveUnusedImports</recipe>
-                            <recipe>org.openrewrite.java.ShortenFullyQualifiedTypeReferences</recipe>
+                            <recipe>org.openrewrite.java.format.BlankLines</recipe>
+                            <recipe>org.openrewrite.java.format.WrappingAndBraces</recipe>
+                            <recipe>org.openrewrite.java.format.MethodParamPad</recipe>
+                            <recipe>org.openrewrite.java.format.NoWhitespaceBefore</recipe>
+                            <recipe>org.openrewrite.java.format.NoWhitespaceAfter</recipe>
+                            <recipe>org.openrewrite.java.format.RemoveTrailingWhitespace</recipe>
+                            <recipe>org.openrewrite.java.format.Spaces</recipe>
+                            <recipe>org.openrewrite.java.format.EmptyNewlineAtEndOfFile</recipe>
                         </activeRecipes>
                     </configuration>
                 </plugin>
