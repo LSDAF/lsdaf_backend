@@ -39,6 +39,7 @@
         <postgresql.version>42.7.3</postgresql.version>
         <swagger.version>2.5.0</swagger.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <rewrite.maven.plugin.version>5.42.0</rewrite.maven.plugin.version>
         <zonky.version>2.5.0</zonky.version>
         <zonky-embedded-postgres.version>2.0.7</zonky-embedded-postgres.version>
         <azure-okhttp.version>1.11.18</azure-okhttp.version>
@@ -54,6 +55,24 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <version>${rewrite.maven.plugin.version}</version>
+                    <configuration>
+                        <exportDatatables>true</exportDatatables>
+                        <activeRecipes>
+                            <recipe>org.openrewrite.java.format.BlankLines</recipe>
+                            <recipe>org.openrewrite.java.format.WrappingAndBraces</recipe>
+                            <recipe>org.openrewrite.java.format.MethodParamPad</recipe>
+                            <recipe>org.openrewrite.java.format.NoWhitespaceBefore</recipe>
+                            <recipe>org.openrewrite.java.format.NoWhitespaceAfter</recipe>
+                            <recipe>org.openrewrite.java.format.RemoveTrailingWhitespace</recipe>
+                            <recipe>org.openrewrite.java.format.Spaces</recipe>
+                            <recipe>org.openrewrite.java.format.EmptyNewlineAtEndOfFile</recipe>
+                        </activeRecipes>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -90,6 +109,10 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
