@@ -25,6 +25,10 @@ Feature: User Controller tests
 
     Then the response status code should be 200
 
+    And the response should have the following UserInfo
+      | email               | name       | roles | verified |
+      | paul.ochon@test.com | Paul OCHON | USER  | true     |
+
   Scenario: A non-logged in user tries to get his GameSaves
     Given the following users
       | id                                   | name       | email               | password | enabled | verified | roles |
