@@ -79,10 +79,18 @@ public class GameSaveEntity extends AEntity {
      * @param currency Currency
      */
     public void setCurrencyEntity(Currency currency) {
-        this.currencyEntity.setGoldAmount(currency.getGold());
-        this.currencyEntity.setDiamondAmount(currency.getDiamond());
-        this.currencyEntity.setEmeraldAmount(currency.getEmerald());
-        this.currencyEntity.setAmethystAmount(currency.getAmethyst());
+        if (currency.getGold() != null) {
+            this.currencyEntity.setGoldAmount(currency.getGold());
+        }
+        if (currency.getDiamond() != null) {
+            this.currencyEntity.setDiamondAmount(currency.getDiamond());
+        }
+        if (currency.getEmerald() != null) {
+            this.currencyEntity.setEmeraldAmount(currency.getEmerald());
+        }
+        if (currency.getAmethyst() != null) {
+            this.currencyEntity.setAmethystAmount(currency.getAmethyst());
+        }
     }
 
     /**
@@ -90,7 +98,11 @@ public class GameSaveEntity extends AEntity {
      * @param stage Stage
      */
     public void setStageEntity(Stage stage) {
-        this.stageEntity.setCurrentStage(stage.getCurrentStage());
-        this.stageEntity.setMaxStage(stage.getMaxStage());
+        if (stage.getCurrentStage() != null) {
+            this.stageEntity.setCurrentStage(stage.getCurrentStage());
+        }
+        if (stage.getMaxStage() != null) {
+            this.stageEntity.setMaxStage(stage.getMaxStage());
+        }
     }
 }
