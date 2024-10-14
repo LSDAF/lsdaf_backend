@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Implementation of the stage service.
+ */
 public class StageServiceImpl implements StageService {
 
     private final StageRepository stageRepository;
@@ -23,6 +26,9 @@ public class StageServiceImpl implements StageService {
         this.mapper = mapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Stage getStage(String gameSaveId) throws NotFoundException {
@@ -47,6 +53,9 @@ public class StageServiceImpl implements StageService {
                 .orElseThrow(() -> new NotFoundException("Stage not found"));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public void saveStage(String gameSaveId, Stage stage, boolean toCache) throws NotFoundException {
