@@ -8,6 +8,12 @@ test:
 clean:
 	@mvn clean
 
+lint-check:
+	@mvn rewrite:dryRun
+
+lint:
+	@mvn rewrite:run
+
 dbup:
 	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml up -d
 
