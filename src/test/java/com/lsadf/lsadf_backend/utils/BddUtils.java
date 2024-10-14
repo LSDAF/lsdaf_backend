@@ -336,7 +336,7 @@ public class BddUtils {
      * @param row row from BDD table
      * @return Currency
      */
-    public static com.lsadf.lsadf_backend.models.Currency mapToCurrency(Map<String, String> row) {
+    public static Currency mapToCurrency(Map<String, String> row) {
         String gold = row.get(BddFieldConstants.Currency.GOLD);
         String diamond = row.get(BddFieldConstants.Currency.DIAMOND);
         String emerald = row.get(BddFieldConstants.Currency.EMERALD);

@@ -3,23 +3,23 @@ package com.lsadf.lsadf_backend.constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BeanConstants {
 
 
-    @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Service {
         public static final String REDIS_CACHE_SERVICE = "redisCacheService";
         public static final String LOCAL_CACHE_SERVICE = "localCacheService";
     }
 
-    @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class TokenProvider {
         public static final String JWT_TOKEN_PROVIDER = "jwtTokenProvider";
         public static final String REFRESH_TOKEN_PROVIDER = "refreshTokenProvider";
     }
 
-    @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Cache {
         public static final String CURRENCY_CACHE = "currencyCache";
         public static final String STAGE_CACHE = "stageCache";
