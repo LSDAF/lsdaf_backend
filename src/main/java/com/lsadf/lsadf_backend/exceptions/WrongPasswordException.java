@@ -1,11 +1,10 @@
 package com.lsadf.lsadf_backend.exceptions;
 
-public class WrongPasswordException extends RuntimeException {
-    public WrongPasswordException(String message) {
-        super(message);
-    }
+import lombok.experimental.StandardException;
 
-    public WrongPasswordException() {
-        super();
-    }
+/**
+ * Exception for when a password is wrong.
+ */
+@StandardException
+public class WrongPasswordException extends RuntimeException {
 }
