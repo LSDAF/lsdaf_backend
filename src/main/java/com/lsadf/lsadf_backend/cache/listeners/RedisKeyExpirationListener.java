@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.cache.listeners;
 
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.services.CurrencyService;

@@ -1,12 +1,11 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
@@ -18,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,15 +53,15 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@AuthenticationPrincipal Jwt jwt) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
 
-            String email = localUser.getUsername();
+            String username = jwt.getSubject();
 
-            GameSaveEntity newSave = gameSaveService.createGameSave(email);
+            GameSaveEntity newSave = gameSaveService.createGameSave(username);
 
-            log.info("Successfully created new game for user with email {}", email);
+            log.info("Successfully created new game for user with username {}", username);
             GameSave newGameSave = mapper.mapToGameSave(newSave);
 
             return generateResponse(HttpStatus.OK, newGameSave);
@@ -77,14 +78,15 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateNickname(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> updateNickname(@AuthenticationPrincipal Jwt jwt,
                                                                 @PathVariable(value = GAME_SAVE_ID) String id,
                                                                 @Valid @RequestBody GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
         try {
-            validateUser(localUser);
-            gameSaveService.checkGameSaveOwnership(id, localUser.getUsername());
+            validateUser(jwt);
+            String username = jwt.getSubject();
+            gameSaveService.checkGameSaveOwnership(id, username);
             gameSaveService.updateNickname(id, gameSaveUpdateNicknameRequest);
-            log.info("Successfully saved game with id {} for user with email {}", id, localUser.getUsername());
+            log.info("Successfully saved game with id {} for user with email {}", id, username);
             return generateResponse(HttpStatus.OK);
         } catch (NotFoundException e) {
             log.error("Not found exception while saving game: ", e);

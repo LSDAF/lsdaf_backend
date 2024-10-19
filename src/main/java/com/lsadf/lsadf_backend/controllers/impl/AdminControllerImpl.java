@@ -1,14 +1,14 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.AdminController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.exceptions.*;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
+import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
@@ -26,9 +26,10 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,8 +39,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.LOCAL_CACHE_SERVICE;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
@@ -52,15 +51,16 @@ public class AdminControllerImpl extends BaseController implements AdminControll
     private final CurrencyService currencyService;
     private final Mapper mapper;
     private final CacheService redisCacheService;
-    private final UserService userService;
     private final GameSaveService gameSaveService;
     private final SearchService searchService;
     private final CacheService localCacheService;
     private final CacheFlushService cacheFlushService;
     private final ClockService clockService;
     private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
+    @SuppressWarnings("java:S107")
     public AdminControllerImpl(StageService stageService,
                                CurrencyService currencyService,
                                Mapper mapper,
@@ -92,13 +92,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
 
     /**
      * {@inheritDoc}
-     *
-     * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(@AuthenticationPrincipal Jwt jwt) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             Long userCount = userService.getUsers().count();
             Long gameSaveCount = gameSaveService.getGameSaves().count();
             Instant now = clockService.nowInstant();
@@ -122,9 +120,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(@AuthenticationPrincipal Jwt jwt) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             boolean cacheEnabled = redisCacheService.isEnabled();
             return generateResponse(HttpStatus.OK, cacheEnabled);
         } catch (UnauthorizedException e) {
@@ -140,9 +138,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(@AuthenticationPrincipal Jwt jwt) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             redisCacheService.toggleCacheEnabling();
             Boolean cacheEnabled = redisCacheService.isEnabled();
             return generateResponse(HttpStatus.OK, cacheEnabled);
@@ -161,31 +159,16 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<User>>> getUsers(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<List<User>>> getUsers(@AuthenticationPrincipal Jwt jwt,
                                                                 @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
-            validateUser(localUser);
-            try (Stream<UserEntity> stream = userService.getUsers()) {
-                if (orderBy != null && !orderBy.equals(UserOrderBy.NONE)) {
-                    Stream<UserEntity> orderedStream = StreamUtils.sortUsers(stream, orderBy);
-
-                    List<User> users = orderedStream
-                            .map(mapper::mapToUser)
-                            .toList();
-
-                    return generateResponse(HttpStatus.OK, users);
-                }
-
-                List<User> users = stream
-                        .map(mapper::mapToUser)
-                        .toList();
-
-                return generateResponse(HttpStatus.OK, users);
-            }
-        } catch (UnauthorizedException e) {
+            return generateResponse(HttpStatus.OK);
+        } catch (
+                UnauthorizedException e) {
             log.error("Unauthorized exception while getting users: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
     }
@@ -196,13 +179,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserById(@CurrentUser LocalUser localUser,
-                                                                                 @PathVariable(value = USER_ID) String userId) {
+    public ResponseEntity<GenericResponse<User>> getDetailedUserById(@AuthenticationPrincipal Jwt jwt,
+                                                                     @PathVariable(value = USER_ID) String userId) {
         try {
-            validateUser(localUser);
-            UserEntity user = userService.getUserById(userId);
-            UserAdminDetails userAdminDetails = mapper.mapToUserAdminDetails(user);
-            return generateResponse(HttpStatus.OK, userAdminDetails);
+            validateUser(jwt);
+            User user = userService.getUserById(userId);
+            return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user by id: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -221,13 +203,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserByEmail(@CurrentUser LocalUser localUser,
-                                                                                    @PathVariable(value = USER_EMAIL) String userEmail) {
+    public ResponseEntity<GenericResponse<User>> getDetailedUserByEmail(@AuthenticationPrincipal Jwt jwt,
+                                                                        @PathVariable(value = USER_EMAIL) String userEmail) {
         try {
-            validateUser(localUser);
-            UserEntity user = userService.getUserByEmail(userEmail);
-            UserAdminDetails userAdminDetails = mapper.mapToUserAdminDetails(user);
-            return generateResponse(HttpStatus.OK, userAdminDetails);
+            validateUser(jwt);
+            User user = userService.getUserByUsername(userEmail);
+            return generateResponse(HttpStatus.OK, user);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while getting user by email: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -246,14 +227,13 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> updateUser(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<User>> updateUser(@AuthenticationPrincipal Jwt jwt,
                                                             @PathVariable(value = USER_ID) String userId,
                                                             @Valid @RequestBody AdminUserUpdateRequest user) {
         try {
-            validateUser(localUser);
-            UserEntity updatedUserEntity = userService.updateUser(userId, user);
-            User updatedUser = mapper.mapToUser(updatedUserEntity);
-            return generateResponse(HttpStatus.OK, updatedUser);
+            validateUser(jwt);
+            userService.updateUser(userId, user);
+            return generateResponse(HttpStatus.OK, null);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while updating user: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -272,10 +252,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteUser(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> deleteUser(@AuthenticationPrincipal Jwt jwt,
                                                             @PathVariable(value = USER_ID) String userId) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             userService.deleteUser(userId);
             return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
@@ -296,24 +276,22 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> createUser(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<User>> createUser(@AuthenticationPrincipal Jwt jwt,
                                                             @Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             UserCreationRequest userCreationRequest = UserCreationRequest.builder()
-                    .email(adminUserCreationRequest.getEmail())
-                    .name(adminUserCreationRequest.getName())
-                    .password(adminUserCreationRequest.getPassword())
-                    .userRoles(adminUserCreationRequest.getUserRoles())
-                    .providerUserId(adminUserCreationRequest.getProviderUserId())
-                    .userId(adminUserCreationRequest.getUserId())
+                    .username(adminUserCreationRequest.getUsername())
+                    .firstName(adminUserCreationRequest.getFirstName())
+                    .lastName(adminUserCreationRequest.getLastName())
+                    .emailVerified(adminUserCreationRequest.getEmailVerified())
+                    .enabled(adminUserCreationRequest.getEnabled())
                     .build();
-            UserEntity user = userService.createUser(userCreationRequest);
+            User user = userService.createUser(userCreationRequest);
             user.setEnabled(adminUserCreationRequest.getEnabled());
-            user.setVerified(adminUserCreationRequest.getVerified());
+            user.setEmailVerified(adminUserCreationRequest.getEmailVerified());
 
-            User newUser = mapper.mapToUser(user);
-            return generateResponse(HttpStatus.OK, newUser);
+            return generateResponse(HttpStatus.OK, null);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while creating user: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -332,10 +310,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@AuthenticationPrincipal Jwt jwt,
                                                                         @RequestParam(value = ORDER_BY, required = false) GameSaveOrderBy orderBy) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             try (Stream<GameSaveEntity> stream = gameSaveService.getGameSaves()) {
                 if (orderBy != null) {
                     Stream<GameSaveEntity> orderedStream = StreamUtils.sortGameSaves(stream, orderBy);
@@ -362,10 +340,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@AuthenticationPrincipal Jwt jwt,
                                                                  @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             GameSaveEntity entity = gameSaveService.getGameSave(gameSaveId);
             GameSave gameSave = mapper.mapToGameSave(entity);
             return generateResponse(HttpStatus.OK, gameSave);
@@ -387,11 +365,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(@AuthenticationPrincipal Jwt jwt,
                                                                     @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                                     @Valid @RequestBody AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             GameSaveEntity gameSaveEntity = gameSaveService.updateNickname(gameSaveId, adminGameSaveUpdateRequest);
             GameSave gameSave = mapper.mapToGameSave(gameSaveEntity);
             return generateResponse(HttpStatus.OK, gameSave);
@@ -416,10 +394,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@AuthenticationPrincipal Jwt jwt,
                                                                          @Valid @RequestBody AdminGameSaveCreationRequest creationRequest) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             GameSaveEntity gameSaveEntity = gameSaveService.createGameSave(creationRequest);
             GameSave gameSave = mapper.mapToGameSave(gameSaveEntity);
             return generateResponse(HttpStatus.OK, gameSave);
@@ -441,18 +419,12 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> searchUsers(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<User>> searchUsers(@AuthenticationPrincipal Jwt jwt,
                                                              @Valid @RequestBody SearchRequest searchRequest,
                                                              @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
-            validateUser(localUser);
-            try (Stream<UserEntity> userStream = searchService.searchUsers(searchRequest, orderBy)) {
-                Stream<UserEntity> sortedStream = StreamUtils.sortUsers(userStream, orderBy);
-                List<User> users = sortedStream
-                        .map(mapper::mapToUser)
-                        .toList();
-                return generateResponse(HttpStatus.OK, users);
-            }
+            validateUser(jwt);
+            return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while searching users: ", e);
             return generateResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
@@ -471,11 +443,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(@AuthenticationPrincipal Jwt jwt,
                                                                      @Valid @RequestBody SearchRequest searchRequest,
                                                                      @RequestParam(value = ORDER_BY) GameSaveOrderBy orderBy) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             try (Stream<GameSaveEntity> gameSaveStream = searchService.searchGameSaves(searchRequest, orderBy)) {
                 Stream<GameSaveEntity> sortedStream = StreamUtils.sortGameSaves(gameSaveStream, orderBy);
                 List<GameSave> gameSaves = sortedStream
@@ -499,10 +471,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteGameSave(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> deleteGameSave(@AuthenticationPrincipal Jwt jwt,
                                                                 @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
 
             gameSaveService.deleteGameSave(gameSaveId);
             return generateResponse(HttpStatus.OK);
@@ -523,9 +495,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> flushAndClearCache(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<GenericResponse<Void>> flushAndClearCache(@AuthenticationPrincipal Jwt jwt) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
 
             log.info("Clearing all caches");
             cacheFlushService.flushCurrencies();
@@ -547,11 +519,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(@AuthenticationPrincipal Jwt jwt,
                                                                         @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                                         @Valid @RequestBody CurrencyRequest currencyRequest) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
             currencyService.saveCurrency(gameSaveId, currency, redisCacheService.isEnabled());
 
@@ -572,11 +544,11 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateGameSaveStages(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveStages(Jwt jwt,
                                                                       @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                                       @Valid @RequestBody StageRequest stageRequest) {
         try {
-            validateUser(localUser);
+            validateUser(jwt);
             Stage stage = mapper.mapStageRequestToStage(stageRequest);
             stageService.saveStage(gameSaveId, stage, redisCacheService.isEnabled());
 

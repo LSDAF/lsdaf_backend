@@ -1,6 +1,5 @@
-package com.lsadf.lsadf_backend.models.admin;
+package com.lsadf.lsadf_backend.models;
 
-import com.lsadf.lsadf_backend.models.Model;
 import lombok.*;
 
 import java.io.Serial;

@@ -15,9 +15,16 @@ public final class ControllerConstants {
     public static final String ADMIN = "/api/admin";
     public static final String CURRENCY = "/api/v1/currency";
     public static final String STAGE = "/api/v1/stage";
+    public static final String OAUTH2 = "/api/oauth2";
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class OAuth2 {
+        public static final String CALLBACK = "/callback";
+    }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Swagger {
+        public static final String OAUTH_2_CONTROLLER = "OAuth2 Controller";
         public static final String GAME_SAVE_CONTROLLER = "Game Save Controller";
         public static final String USER_CONTROLLER = "User Controller";
         public static final String AUTH_CONTROLLER = "Auth Controller";
@@ -67,7 +74,7 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Auth {
         public static final String LOGIN = "/login";
-        public static final String REFRESH_LOGIN = "/refresh_login";
+        public static final String REFRESH = "/refresh";
         public static final String LOGOUT = "/logout";
         public static final String REGISTER = "/register";
         public static final String VALIDATE_TOKEN = "/validate";

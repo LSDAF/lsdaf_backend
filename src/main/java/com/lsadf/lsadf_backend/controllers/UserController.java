@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.UserInfo;
@@ -13,12 +13,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Controller for user operations
@@ -26,6 +28,7 @@ import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER
 @RequestMapping(value = ControllerConstants.USER)
 @Tag(name = ControllerConstants.Swagger.USER_CONTROLLER)
 @SecurityRequirement(name = BEARER_AUTHENTICATION)
+@SecurityRequirement(name = OAUTH2_AUTHENTICATION)
 public interface UserController {
 
     /**
@@ -42,7 +45,7 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<UserInfo>> getUserInfo(LocalUser localUser) throws UnauthorizedException;
+    ResponseEntity<GenericResponse<UserInfo>> getUserInfo(Jwt jwt) throws UnauthorizedException;
 
 
     /**
@@ -58,5 +61,5 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(LocalUser localUser) throws UnauthorizedException;
+    ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(Jwt jwt) throws UnauthorizedException;
 }

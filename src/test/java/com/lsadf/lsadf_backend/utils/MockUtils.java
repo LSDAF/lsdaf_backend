@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.config.mocks.security.LsadfUserDetailsServiceMock;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.services.UserEntityService;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
@@ -22,10 +22,10 @@ public class MockUtils {
      * @param lsadfUserDetailsService the UserDetailsService mock
      */
     public static void initUserDetailsServiceMock(UserDetailsService lsadfUserDetailsService,
-                                                  UserService userService) throws NotFoundException {
+                                                  UserEntityService userEntityService) throws NotFoundException {
         Mockito.reset(lsadfUserDetailsService);
 
-        LsadfUserDetailsServiceMock userDetailsServiceMock = new LsadfUserDetailsServiceMock(userService);
+        LsadfUserDetailsServiceMock userDetailsServiceMock = new LsadfUserDetailsServiceMock(userEntityService);
 
         when(lsadfUserDetailsService.loadUserByUsername(Mockito.anyString())).thenAnswer(invocation -> userDetailsServiceMock.loadUserByUsername(invocation.getArgument(0)));
     }

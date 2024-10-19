@@ -3,11 +3,6 @@ package com.lsadf.lsadf_backend.bdd;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.entities.tokens.JwtTokenEntity;
-import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
-import com.lsadf.lsadf_backend.repositories.*;
-import com.lsadf.lsadf_backend.services.CacheFlushService;
-import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
 import com.lsadf.lsadf_backend.controllers.impl.*;
@@ -15,11 +10,10 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
+import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
+import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.security.jwt.TokenProvider;
 import com.lsadf.lsadf_backend.services.*;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -38,7 +32,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -50,7 +43,6 @@ import java.util.Stack;
 import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
 import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_JWT_TOKEN_CACHE;
 
 /**
  * BDD Loader class for the Cucumber tests
@@ -72,7 +64,9 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_
         CurrencyController.class,
         CurrencyControllerImpl.class,
         StageController.class,
-        StageControllerImpl.class
+        StageControllerImpl.class,
+        OAuth2Controller.class,
+        OAuth2ControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
@@ -93,12 +87,6 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.INVALIDATED_
 public class BddLoader {
 
     // Caches
-    @Autowired
-    protected Cache<LocalUser> localUserCache;
-
-    @Autowired
-    @Qualifier(INVALIDATED_JWT_TOKEN_CACHE)
-    protected Cache<String> invalidatedJwtTokenCache;
 
     @Autowired
     @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
@@ -115,25 +103,10 @@ public class BddLoader {
     protected CurrencyRepository currencyRepository;
 
     @Autowired
-    protected UserVerificationTokenRepository userVerificationTokenRepository;
-
-    @Autowired
-    protected UserRepository userRepository;
-
-    @Autowired
-    protected RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
     protected GameSaveRepository gameSaveRepository;
 
     @Autowired
     protected Mapper mapper;
-
-    @Autowired
-    protected TokenProvider<JwtTokenEntity> tokenProvider;
-
-    @Autowired
-    protected TokenProvider<RefreshTokenEntity> refreshTokenProvider;
 
     @Autowired
     protected PasswordEncoder passwordEncoder;
@@ -161,25 +134,15 @@ public class BddLoader {
     @Autowired
     protected EmailService emailService;
 
-    @Autowired
-    protected UserVerificationService userVerificationService;
 
     @Autowired
     protected GameSaveService gameSaveService;
 
-    @Autowired
-    protected UserService userService;
-
-    @Autowired
-    protected UserDetailsService lsadfUserDetailsService;
 
     // BDD Specific Stacks & Maps
 
     @Autowired
     protected Map<String, Pair<Date, LocalUser>> localUserMap;
-
-    @Autowired
-    protected Stack<RefreshTokenEntity> refreshTokenEntityStack;
 
     @Autowired
     protected Stack<List<GameSave>> gameSaveListStack;
@@ -195,9 +158,6 @@ public class BddLoader {
 
     @Autowired
     protected Stack<List<UserEntity>> userEntityListStack;
-
-    @Autowired
-    protected Stack<UserAdminDetails> userAdminDetailsStack;
 
     @Autowired
     protected Stack<MimeMessage> mimeMessageStack;

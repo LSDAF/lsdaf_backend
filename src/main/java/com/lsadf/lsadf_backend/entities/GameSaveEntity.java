@@ -31,9 +31,8 @@ public class GameSaveEntity extends AEntity {
         super();
     }
 
-    @ManyToOne
-    @JoinColumn(name = EntityAttributes.User.USER_ID)
-    private UserEntity user;
+    @Column(name = EntityAttributes.GameSave.GAME_SAVE_USER_EMAIL)
+    private String userEmail;
 
     @Builder.Default
     @Positive

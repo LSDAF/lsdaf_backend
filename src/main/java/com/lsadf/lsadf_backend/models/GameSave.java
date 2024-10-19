@@ -21,7 +21,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ID, USER_ID, USER_EMAIL, CURRENCY, STAGE, NICKNAME, HP, ATTACK, CREATED_AT, UPDATED_AT})
+@JsonPropertyOrder({ID, USER_EMAIL, CURRENCY, STAGE, NICKNAME, HP, ATTACK, CREATED_AT, UPDATED_AT})
 public class GameSave implements Model {
 
     @Serial
@@ -30,9 +30,6 @@ public class GameSave implements Model {
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;
-
-    @JsonProperty(value = USER_ID)
-    private String userId;
 
     @JsonProperty(value = USER_EMAIL)
     private String userEmail;

@@ -1,10 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.StageController;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.Stage;
@@ -20,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,12 +55,12 @@ public class StageControllerImpl extends BaseController implements StageControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> saveStage(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> saveStage(@AuthenticationPrincipal Jwt jwt,
                                                            @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
                                                            @Valid @RequestBody StageRequest stageRequest) {
         try {
-            validateUser(localUser);
-            String userEmail = localUser.getUsername();
+            validateUser(jwt);
+            String userEmail = jwt.getSubject();
             gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
 
             Stage stage = mapper.mapStageRequestToStage(stageRequest);
@@ -88,11 +89,11 @@ public class StageControllerImpl extends BaseController implements StageControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> getStage(@CurrentUser LocalUser localUser,
+    public ResponseEntity<GenericResponse<Void>> getStage(@AuthenticationPrincipal Jwt jwt,
                                                           @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
         try {
-            validateUser(localUser);
-            String userEmail = localUser.getUsername();
+            validateUser(jwt);
+            String userEmail = jwt.getSubject();
             gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
             Stage stage = stageService.getStage(gameSaveId);
             return generateResponse(HttpStatus.OK, stage);

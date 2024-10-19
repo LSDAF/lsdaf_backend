@@ -7,16 +7,14 @@ import com.lsadf.lsadf_backend.requests.common.OrderBy;
 public enum UserOrderBy implements OrderBy {
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
     ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING),
-    EMAIL(JsonAttributes.User.EMAIL, SortingOrderParameter.ASCENDING),
-    EMAIL_DESC(JsonAttributes.User.EMAIL, SortingOrderParameter.DESCENDING),
-    NAME(JsonAttributes.User.NAME, SortingOrderParameter.ASCENDING),
-    NAME_DESC(JsonAttributes.User.NAME, SortingOrderParameter.DESCENDING),
+    EMAIL(JsonAttributes.User.USERNAME, SortingOrderParameter.ASCENDING),
+    EMAIL_DESC(JsonAttributes.User.USERNAME, SortingOrderParameter.DESCENDING),
+    FIRST_NAME(JsonAttributes.User.FIRST_NAME, SortingOrderParameter.ASCENDING),
+    FIRST_NAME_DESC(JsonAttributes.User.FIRST_NAME, SortingOrderParameter.DESCENDING),
+    LAST_NAME(JsonAttributes.User.LAST_NAME, SortingOrderParameter.ASCENDING),
+    LAST_NAME_DESC(JsonAttributes.User.LAST_NAME, SortingOrderParameter.DESCENDING),
     CREATED_AT(JsonAttributes.CREATED_AT, SortingOrderParameter.ASCENDING),
     CREATED_AT_DESC(JsonAttributes.CREATED_AT, SortingOrderParameter.DESCENDING),
-    UPDATED_AT(JsonAttributes.UPDATED_AT, SortingOrderParameter.ASCENDING),
-    UPDATED_AT_DESC(JsonAttributes.UPDATED_AT, SortingOrderParameter.DESCENDING),
-    PROVIDER(JsonAttributes.User.PROVIDER, SortingOrderParameter.ASCENDING),
-    PROVIDER_DESC(JsonAttributes.User.PROVIDER, SortingOrderParameter.DESCENDING),
     NONE(null, null);
 
     UserOrderBy(String fieldName,

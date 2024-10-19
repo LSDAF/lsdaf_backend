@@ -83,7 +83,7 @@ public class GameSaveRepositoryMock extends ARepositoryMock<GameSaveEntity> impl
     public Stream<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userEmail) {
         return entities.values()
                 .stream()
-                .filter(gameSaveEntity -> gameSaveEntity.getUser().getEmail().equals(userEmail));
+                .filter(gameSaveEntity -> gameSaveEntity.getUserEmail().equals(userEmail));
     }
 
     /**

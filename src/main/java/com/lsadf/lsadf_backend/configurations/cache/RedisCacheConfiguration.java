@@ -101,19 +101,11 @@ public class RedisCacheConfiguration {
         return new RedisStageCache(redisTemplate, cacheExpirationProperties.getStageExpirationSeconds(), redisProperties);
     }
 
-    @Bean(name = INVALIDATED_JWT_TOKEN_CACHE)
-    public Cache<String> jwtTokenCache(RedisTemplate<String, String> redisTemplate,
-                                       @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache,
-                                       RedisProperties redisProperties) {
-        return new InvalidatedJwtTokenCache(redisTemplate, localInvalidatedJwtTokenCache, redisProperties);
-    }
-
     @Bean(name = REDIS_CACHE_SERVICE)
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
                                           HistoCache<Currency> currencyCache,
-                                          HistoCache<Stage> stageCache,
-                                          @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, stageCache, invalidatedJwtTokenCache);
+                                          HistoCache<Stage> stageCache) {
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, stageCache);
     }
 
     @Bean

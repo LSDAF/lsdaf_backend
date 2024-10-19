@@ -9,16 +9,23 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Controller for game save operations
  */
 @RequestMapping(value = ControllerConstants.GAME_SAVE)
 @Tag(name = ControllerConstants.Swagger.GAME_SAVE_CONTROLLER)
+@SecurityRequirement(name = BEARER_AUTHENTICATION)
+@SecurityRequirement(name = OAUTH2_AUTHENTICATION)
 public interface GameSaveController {
 
     String GAME_SAVE_ID = "game_save_id";
@@ -36,7 +43,7 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(LocalUser localUser);
+    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(Jwt jwt);
 
     /**
      * Updates a game nickname in function of its id
@@ -54,5 +61,5 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    ResponseEntity<GenericResponse<Void>> updateNickname(LocalUser localUser, String gameSaveId, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest);
+    ResponseEntity<GenericResponse<Void>> updateNickname(Jwt jwt, String gameSaveId, GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest);
 }

@@ -2,19 +2,15 @@ package com.lsadf.lsadf_backend.requests.admin;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
@@ -28,8 +24,13 @@ public class AdminUserCreationRequest implements Request {
 
     @NotBlank
     @Schema(description = "Name of user to create", example = "Toto Dupont")
-    @JsonProperty(value = NAME)
-    private String name;
+    @JsonProperty(value = FIRST_NAME)
+    private String firstName;
+
+    @NotBlank
+    @Schema(description = "Lastname of user to create", example = "Dupont")
+    @JsonProperty(value = LAST_NAME)
+    private String lastName;
 
     @Schema(description = "User id of user to create. Can be null", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     @JsonProperty(value = USER_ID)
@@ -40,29 +41,12 @@ public class AdminUserCreationRequest implements Request {
     private Boolean enabled;
 
     @Schema(description = "Verified email status of user to create", example = "true")
-    @JsonProperty(value = VERIFIED)
-    private Boolean verified;
+    @JsonProperty(value = EMAIL_VERIFIED)
+    private Boolean emailVerified;
 
     @Email
     @NotBlank
-    @Schema(description = "Email of user to create", example = "toto@toto.fr")
-    @JsonProperty(value = EMAIL)
-    private String email;
-
-    @Size(min = 8)
-    @Schema(description = "Password of user to create", example = "k127F978")
-    @JsonProperty(value = PASSWORD)
-    private String password;
-
-    @Schema(description = "Social provider of user to create", example = "LOCAL")
-    @JsonProperty(value = PROVIDER)
-    private SocialProvider socialProvider;
-
-    @Schema(description = "Roles of user to create", example = "[\"USER\"]")
-    @JsonProperty(value = USER_ROLES)
-    private List<UserRole> userRoles;
-
-    @Schema(description = "Provider user id of user to create")
-    @JsonProperty(value = PROVIDER_USER_ID)
-    private String providerUserId;
+    @Schema(description = "Username of user to create", example = "toto@toto.fr")
+    @JsonProperty(value = USERNAME)
+    private String username;
 }

@@ -4,12 +4,14 @@ import com.lsadf.lsadf_backend.models.LocalUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.experimental.UtilityClass;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class TokenUtils {
@@ -17,6 +19,9 @@ public class TokenUtils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64UrlEncoder = Base64.getUrlEncoder().withoutPadding();
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
+
+    private static final String REALM_ACCESS = "realm_access";
+    private static final String ROLES = "roles";
 
     /**
      * Generates a token.
@@ -82,5 +87,19 @@ public class TokenUtils {
      */
     public static Jws<Claims> parseToken(JwtParser parser, String token) {
         return parser.parseClaimsJws(token);
+    }
+
+    /**
+     * Get roles from claims
+     * @param claims the claims
+     * @return the roles
+     */
+    public static List<GrantedAuthority> getRolesFromClaims(Map<String, Object> claims) {
+        List<String> roles = new ArrayList<>();
+        if (claims.containsKey(REALM_ACCESS)) {
+            Map<String, Object> realmAccess = (Map<String, Object>) claims.get(REALM_ACCESS);
+            roles = ((List<String>) realmAccess.get(ROLES));
+        }
+        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
     }
 }

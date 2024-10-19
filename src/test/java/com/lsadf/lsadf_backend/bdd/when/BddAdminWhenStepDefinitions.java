@@ -4,22 +4,18 @@ import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
-import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
@@ -138,48 +134,6 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
             GenericResponse<List<GameSave>> body = result.getBody();
             gameSaveListStack.push(body.getData());
-            responseStack.push(body);
-
-            log.info("Response: {}", result);
-
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^the user requests the admin endpoint to get details of the user with id (.*)$")
-    public void when_the_user_requests_the_admin_endpoint_to_get_users_details_of_the_user_with_id(String userId) {
-        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.USER_ID.replace("{user_id}", userId);
-        String url = BddUtils.buildUrl(this.serverPort, fullPath);
-        try {
-            String token = jwtTokenStack.peek();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-            HttpEntity<Void> request = new HttpEntity<>(headers);
-            ResponseEntity<GenericResponse<UserAdminDetails>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserAdminDetailsResponse());
-            GenericResponse<UserAdminDetails> body = result.getBody();
-            userAdminDetailsStack.push(body.getData());
-            responseStack.push(body);
-
-            log.info("Response: {}", result);
-
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^the user requests the admin endpoint to get details of the user with email (.*)$")
-    public void when_the_user_requests_the_admin_endpoint_to_get_users_details_of_the_user_with_email(String userEmail) {
-        String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.USER_EMAIL.replace("{user_email}", userEmail);
-        String url = BddUtils.buildUrl(this.serverPort, fullPath);
-        try {
-            String token = jwtTokenStack.peek();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-            HttpEntity<Void> request = new HttpEntity<>(headers);
-            ResponseEntity<GenericResponse<UserAdminDetails>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserAdminDetailsResponse());
-            GenericResponse<UserAdminDetails> body = result.getBody();
-            userAdminDetailsStack.push(body.getData());
             responseStack.push(body);
 
             log.info("Response: {}", result);

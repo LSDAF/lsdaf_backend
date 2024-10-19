@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.properties.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,9 +19,15 @@ public class PropertiesConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "user-email-verification")
-    public UserVerificationProperties userValidationProperties() {
-        return new UserVerificationProperties();
+    @ConfigurationProperties(prefix = "keycloak")
+    public KeycloakProperties keycloakProperties() {
+        return new KeycloakProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "keycloak.admin")
+    public KeycloakAdminProperties keycloakAdminProperties() {
+        return new KeycloakAdminProperties();
     }
 
     @Bean
@@ -81,12 +88,6 @@ public class PropertiesConfiguration {
     @ConfigurationProperties(prefix = "auth")
     public AuthProperties authProperties() {
         return new AuthProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "db.init")
-    public DbInitProperties dbInitProperties() {
-        return new DbInitProperties();
     }
 
     @ConfigurationProperties(prefix = "swagger")

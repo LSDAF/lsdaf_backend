@@ -1,18 +1,16 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.constants.ResponseMessages;
+import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
@@ -20,17 +18,24 @@ import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Admin controller
  */
 @RequestMapping(value = ControllerConstants.ADMIN)
 @Tag(name = ControllerConstants.Swagger.ADMIN_CONTROLLER)
+@SecurityRequirement(name = BEARER_AUTHENTICATION)
+@SecurityRequirement(name = OAUTH2_AUTHENTICATION)
 public interface AdminController {
 
     String ORDER_BY = "order_by";
@@ -51,14 +56,15 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets the global info of the application")
-    ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(LocalUser localUser);
+    ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(Jwt jwt);
 
 
     // Cache
 
     /**
-     * Clears the cache
-     * @param localUser the user
+     * Clears all the caches of the application
+     *
+     * @param jwt the requester JWT
      * @return empty response
      */
     @PutMapping(value = ControllerConstants.Admin.CACHE)
@@ -69,11 +75,12 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Clears all the caches of the application")
-    ResponseEntity<GenericResponse<Void>> flushAndClearCache(LocalUser localUser);
+    ResponseEntity<GenericResponse<Void>> flushAndClearCache(Jwt jwt);
 
     /**
      * Checks if the cache is enabled
-     * @param localUser the user
+     *
+     * @param jwt the requester JWT
      * @return true if the cache is enabled, false otherwise
      */
     @GetMapping(value = ControllerConstants.Admin.CACHE_ENABLED)
@@ -84,12 +91,12 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Checks if the cache is enabled")
-    ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(LocalUser localUser);
+    ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(Jwt jwt);
 
     /**
      * Enables/Disables the cache
      *
-     * @param localUser the user
+     * @param jwt the requester JWT
      * @return empty response
      */
     @PutMapping(value = ControllerConstants.Admin.TOGGLE_CACHE)
@@ -100,7 +107,7 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Enables/Disables the cache")
-    ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(LocalUser localUser);
+    ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(Jwt jwt);
 
     // User
 
@@ -117,13 +124,13 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets all users")
-    ResponseEntity<GenericResponse<List<User>>> getUsers(LocalUser localUser, UserOrderBy orderBy);
+    ResponseEntity<GenericResponse<List<User>>> getUsers(Jwt jwt, UserOrderBy orderBy);
 
     /**
      * Gets a user by its id
      *
-     * @param localUser
-     * @param userId    the id of the user
+     * @param jwt    the requester JWT
+     * @param userId the id of the user
      * @return the user details
      */
     @GetMapping(value = ControllerConstants.Admin.USER_ID)
@@ -135,12 +142,12 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a UserAdminDetails by the user id")
-    ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserById(LocalUser localUser, String userId);
+    ResponseEntity<GenericResponse<User>> getDetailedUserById(Jwt jwt, String userId);
 
     /**
      * Gets a user by its email
      *
-     * @param localUser
+     * @param jwt       the requester JWT
      * @param userEmail the email of the user
      * @return the user
      */
@@ -153,14 +160,14 @@ public interface AdminController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a user by its email")
-    ResponseEntity<GenericResponse<UserAdminDetails>> getDetailedUserByEmail(LocalUser localUser, String userEmail);
+    ResponseEntity<GenericResponse<User>> getDetailedUserByEmail(Jwt jwt, String userEmail);
 
     /**
      * Updates a user
      *
-     * @param localUser
-     * @param userId    the id of the user
-     * @param user      the user to update
+     * @param jwt    the requester JWT
+     * @param userId the id of the user
+     * @param user   the user to update
      * @return the updated user
      */
     @ApiResponses(value = {
@@ -172,13 +179,13 @@ public interface AdminController {
     })
     @PostMapping(value = ControllerConstants.Admin.USER_ID)
     @Operation(summary = "Updates a user")
-    ResponseEntity<GenericResponse<User>> updateUser(LocalUser localUser, String userId, AdminUserUpdateRequest user);
+    ResponseEntity<GenericResponse<User>> updateUser(Jwt jwt, String userId, AdminUserUpdateRequest user);
 
     /**
      * Deletes a user
      *
-     * @param localUser
-     * @param userId    the id of the user
+     * @param jwt    the requester JWT
+     * @param userId the id of the user
      * @return empty response
      */
     @ApiResponses(value = {
@@ -190,12 +197,12 @@ public interface AdminController {
     })
     @Operation(summary = "Deletes a user")
     @DeleteMapping(value = ControllerConstants.Admin.USER_ID)
-    ResponseEntity<GenericResponse<Void>> deleteUser(LocalUser localUser, String userId);
+    ResponseEntity<GenericResponse<Void>> deleteUser(Jwt jwt, String userId);
 
     /**
      * Creates a new user
      *
-     * @param localUser
+     * @param jwt                      the requester JWT
      * @param adminUserCreationRequest the user creation request
      * @return the created user
      */
@@ -208,15 +215,15 @@ public interface AdminController {
     })
     @Operation(summary = "Creates a new user")
     @PostMapping(value = ControllerConstants.Admin.CREATE_USER)
-    ResponseEntity<GenericResponse<User>> createUser(LocalUser localUser, AdminUserCreationRequest adminUserCreationRequest);
+    ResponseEntity<GenericResponse<User>> createUser(Jwt jwt, AdminUserCreationRequest adminUserCreationRequest);
 
     // GameSave
 
     /**
      * Gets all game saves with given criterias
      *
-     * @param localUser
-     * @param orderBy   the sorting order if any
+     * @param jwt     the requester JWT
+     * @param orderBy the sorting order if any
      * @return the game saves
      */
     @ApiResponses(value = {
@@ -227,12 +234,12 @@ public interface AdminController {
     })
     @Operation(summary = "Gets a game save by its id")
     @GetMapping(value = ControllerConstants.Admin.GAME_SAVES)
-    ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(LocalUser localUser, GameSaveOrderBy orderBy);
+    ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(Jwt jwt, GameSaveOrderBy orderBy);
 
     /**
      * Gets a game save by its id
      *
-     * @param localUser
+     * @param jwt        the requester JWT
      * @param gameSaveId the id of the game save
      * @return the game save
      */
@@ -245,12 +252,12 @@ public interface AdminController {
     })
     @Operation(summary = "Gets a game save by its id")
     @GetMapping(value = ControllerConstants.Admin.GAME_SAVE_ID)
-    ResponseEntity<GenericResponse<GameSave>> getGameSave(LocalUser localUser, String gameSaveId);
+    ResponseEntity<GenericResponse<GameSave>> getGameSave(Jwt jwt, String gameSaveId);
 
     /**
      * Updates a game save
      *
-     * @param localUser
+     * @param jwt                        the requester JWT
      * @param gameSaveId                 the id of the game save
      * @param adminGameSaveUpdateRequest the game save to update
      * @return the updated game save
@@ -264,12 +271,13 @@ public interface AdminController {
     })
     @Operation(summary = "Updates a new game")
     @PostMapping(value = ControllerConstants.Admin.GAME_SAVE_ID)
-    ResponseEntity<GenericResponse<GameSave>> updateGameSave(LocalUser localUser, String gameSaveId, AdminGameSaveUpdateRequest adminGameSaveUpdateRequest);
+    ResponseEntity<GenericResponse<GameSave>> updateGameSave(Jwt jwt, String gameSaveId, AdminGameSaveUpdateRequest adminGameSaveUpdateRequest);
 
     /**
      * Updates the currency of a game save
-     * @param localUser the user
-     * @param gameSaveId the game save id
+     *
+     * @param jwt             the requester JWT
+     * @param gameSaveId      the game save id
      * @param currencyRequest the currency request
      * @return the updated game save
      */
@@ -282,12 +290,13 @@ public interface AdminController {
     })
     @Operation(summary = "Updates the currency of a game save")
     @PostMapping(value = ControllerConstants.Admin.UPDATE_GAME_SAVE_CURRENCIES)
-    ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(LocalUser localUser, String gameSaveId, CurrencyRequest currencyRequest);
+    ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(Jwt jwt, String gameSaveId, CurrencyRequest currencyRequest);
 
     /**
      * Updates the stages of a game save
-     * @param localUser the user
-     * @param gameSaveId the game save id
+     *
+     * @param jwt          the requester JWT
+     * @param gameSaveId   the game save id
      * @param stageRequest the stage request
      * @return the updated game save
      */
@@ -300,12 +309,12 @@ public interface AdminController {
     })
     @Operation(summary = "Updates the stages of a game save")
     @PostMapping(value = ControllerConstants.Admin.UPDATE_GAME_SAVE_STAGES)
-    ResponseEntity<GenericResponse<Void>> updateGameSaveStages(LocalUser localUser, String gameSaveId, StageRequest stageRequest);
+    ResponseEntity<GenericResponse<Void>> updateGameSaveStages(Jwt jwt, String gameSaveId, StageRequest stageRequest);
 
     /**
      * Creates a game save
      *
-     * @param localUser
+     * @param jwt             the requester JWT
      * @param creationRequest the creation request
      * @return the created game save
      */
@@ -317,12 +326,12 @@ public interface AdminController {
     })
     @Operation(summary = "Generates a new game save")
     @PostMapping(value = ControllerConstants.Admin.CREATE_GAME_SAVE)
-    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(LocalUser localUser, AdminGameSaveCreationRequest creationRequest);
+    ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(Jwt jwt, AdminGameSaveCreationRequest creationRequest);
 
     /**
      * Deletes a game save
      *
-     * @param localUser
+     * @param jwt        the requester JWT
      * @param gameSaveId the id of the game save
      * @return empty response
      */
@@ -335,12 +344,12 @@ public interface AdminController {
     })
     @Operation(summary = "Deletes a game save")
     @DeleteMapping(value = ControllerConstants.Admin.GAME_SAVE_ID)
-    ResponseEntity<GenericResponse<Void>> deleteGameSave(LocalUser localUser, String gameSaveId);
+    ResponseEntity<GenericResponse<Void>> deleteGameSave(Jwt jwt, String gameSaveId);
 
     /**
      * Searches for users in function of the given search criteria
      *
-     * @param localUser
+     * @param jwt           the requester JWT
      * @param searchRequest the search criteria
      * @param orderBy       the sorting order if any
      * @return the list of users
@@ -354,12 +363,12 @@ public interface AdminController {
     })
     @PostMapping(value = ControllerConstants.Admin.SEARCH_USERS)
     @Operation(summary = "Searches for users in function of the give search criteria")
-    ResponseEntity<GenericResponse<User>> searchUsers(LocalUser localUser, SearchRequest searchRequest, UserOrderBy orderBy);
+    ResponseEntity<GenericResponse<User>> searchUsers(Jwt jwt, SearchRequest searchRequest, UserOrderBy orderBy);
 
     /**
      * Searches for game saves in function of the given search criteria
      *
-     * @param localUser
+     * @param jwt           the requester JWT
      * @param searchRequest the search criteria
      * @param orderBy
      * @return the list of game saves
@@ -373,5 +382,5 @@ public interface AdminController {
     })
     @PostMapping(value = ControllerConstants.Admin.SEARCH_GAME_SAVES)
     @Operation(summary = "Searches for game saves in function of the give search criteria")
-    ResponseEntity<GenericResponse<GameSave>> searchGameSaves(LocalUser localUser, SearchRequest searchRequest, GameSaveOrderBy orderBy);
+    ResponseEntity<GenericResponse<GameSave>> searchGameSaves(Jwt jwt, SearchRequest searchRequest, GameSaveOrderBy orderBy);
 }

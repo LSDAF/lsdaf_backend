@@ -1,10 +1,11 @@
 package com.lsadf.lsadf_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lsadf.lsadf_backend.serializers.DateToLongSerializer;
+import com.lsadf.lsadf_backend.serializers.LongToDateSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 @Builder
 @Data
 @AllArgsConstructor
-@JsonPropertyOrder({ID, NAME, EMAIL, PROVIDER, CREATED_AT, UPDATED_AT})
+@JsonPropertyOrder({ID, FIRST_NAME, LAST_NAME, USERNAME, ENABLED, EMAIL_VERIFIED, USER_ROLES, CREATION_TIMESTAMP})
 public class User implements Model {
 
     @Serial
@@ -33,32 +34,34 @@ public class User implements Model {
     @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private final String id;
 
-    @JsonProperty(value = NAME)
-    @Schema(description = "User name", example = "Toto Ducoin")
-    private final String name;
+    @JsonProperty(value = FIRST_NAME)
+    @Schema(description = "First name", example = "Toto")
+    private String firstName;
 
-    @JsonProperty(value = EMAIL)
-    @Schema(description = "User email", example = "toto@toto.com")
-    private final String email;
+    @JsonProperty(value = LAST_NAME)
+    @Schema(description = "Last name", example = "TUTU")
+    private String lastName;
 
-    @JsonIgnore
-    private final String password;
+    @JsonProperty(value = USERNAME)
+    @Schema(description = "User username", example = "toto@toto.com")
+    private final String username;
 
-    @JsonIgnore
-    private final boolean enabled;
+    @JsonProperty(value = ENABLED)
+    @Schema(description = "User enabled", example = "true")
+    private boolean enabled;
+
+    @JsonProperty(value = EMAIL_VERIFIED)
+    @Schema(description = "Email verified", example = "true")
+    private boolean emailVerified;
 
     @JsonProperty(value = USER_ROLES)
     @Schema(description = "User roles", example = "[\"USER\"]")
-    private final List<UserRole> userRoles;
+    private List<String> userRoles;
 
-    @JsonProperty(value = PROVIDER)
-    private final SocialProvider socialProvider;
-
-    @JsonProperty(value = CREATED_AT)
+    @JsonProperty(value = CREATION_TIMESTAMP)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
-    private final Date createdAt;
+    @JsonSerialize(using = DateToLongSerializer.class)
+    @JsonDeserialize(using = LongToDateSerializer.class)
+    private final Date creationTimestamp;
 
-    @JsonProperty(value = UPDATED_AT)
-    @Schema(description = "Update date", example = "2022-01-01 00:00:00.000")
-    private final Date updatedAt;
 }

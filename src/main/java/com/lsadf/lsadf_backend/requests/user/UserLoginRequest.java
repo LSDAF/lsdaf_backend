@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.EMAIL;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.USERNAME;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.PASSWORD;
 
 @Data
@@ -22,9 +22,9 @@ public class UserLoginRequest implements Request {
     private static final long serialVersionUID = 4723986067784943176L;
 
     @NotBlank
-    @JsonProperty(value = EMAIL)
+    @JsonProperty(value = USERNAME)
     @Email
-    private String email;
+    private String username;
 
     @NotBlank
     @JsonProperty(value = PASSWORD)

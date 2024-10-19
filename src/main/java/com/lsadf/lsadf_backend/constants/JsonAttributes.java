@@ -22,7 +22,6 @@ public final class JsonAttributes {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
         public static final String HP = "health_points";
-        public static final String USER_ID = "user_id";
         public static final String USER_EMAIL = "user_email";
         public static final String ATTACK = "attack";
         public static final String NICKNAME = "nickname";
@@ -32,15 +31,15 @@ public final class JsonAttributes {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String NAME = "name";
-        public static final String EMAIL = "email";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
+        public static final String USERNAME = "username";
         public static final String USER_ID = "user_id";
+        public static final String CREATION_TIMESTAMP = "creationTimestamp";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
-        public static final String PROVIDER = "provider";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String USER_ROLES = "user_roles";
-        public static final String PROVIDER_USER_ID = "provider_user_id";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -86,7 +85,8 @@ public final class JsonAttributes {
     public static final class JwtAuthentication {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String USER_INFO = "user_info";
+        public static final String EXPIRES_IN = "expires_in";
+        public static final String REFRESH_EXPIRES_IN = "refresh_expires_in";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

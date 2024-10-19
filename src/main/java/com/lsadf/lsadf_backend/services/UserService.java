@@ -1,161 +1,89 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.WrongPasswordException;
-import com.lsadf.lsadf_backend.models.LocalUser;
+import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
  * Service for managing users
  */
 public interface UserService {
+
     /**
-     * Creates a new user
-     *
-     * @param id                the id of the user if any
-     * @param email             the email of the user
-     * @param password          the password of the user
-     * @param provider          the social provider if any, else local
-     * @param optionalUserRoles the roles of the user if any to use
-     * @param name              the name of the user
-     * @param verified
-     * @return the created user
+     * @return List of all users
      */
-    UserEntity createUser(String id, String email, String password, SocialProvider provider, Set<UserRole> optionalUserRoles, String name, boolean verified) throws AlreadyExistingUserException;
+    Stream<User> getUsers();
 
     /**
-     * Validates a user
+     * Search users by name, or by username
      *
-     * @param userEmail the email of the user
-     * @return the validated user
+     * @param search search query
+     * @return Stream of users
      */
-    UserEntity verifyUser(String userEmail) throws NotFoundException;
+    Stream<User> getUsers(String search);
 
     /**
-     * Creates a new user
+     * Get user by id
      *
-     * @param userRoles the roles of the user if any to use
-     * @param email     the email of the user
-     * @param password  the password of the user
-     * @param provider  the social provider if any, else local
-     * @param name      the name of the user
-     * @param verified  the verification status of the user
-     * @return the created user
+     * @param id
+     * @return
      */
-    UserEntity createUser(String email, String password, SocialProvider provider, Set<UserRole> userRoles, String name, boolean verified) throws AlreadyExistingUserException;
-
-
-    /**
-     * Creates a new user
-     *
-     * @param creationRequest the user creation request
-     * @return the created user
-     */
-    UserEntity createUser(UserCreationRequest creationRequest) throws AlreadyExistingUserException;
+    User getUserById(String id);
 
     /**
-     * Validates given user password
+     * Get user by email
      *
-     * @param email    the email of the user
-     * @param password the password of the user
-     * @throws WrongPasswordException if the password is wrong
-     */
-    boolean validateUserPassword(String email, String password) throws NotFoundException;
-
-    /**
-     * Gets all users
-     *
-     * @return the list of users
-     */
-    Stream<UserEntity> getUsers();
-
-    /**
-     * Gets user by email
-     *
-     * @param email
+     * @param email user email
      * @return user
      */
-    UserEntity getUserByEmail(String email) throws NotFoundException;
+    User getUserByUsername(String email);
 
     /**
-     * Checks if user exists by email
+     * Update existing user
      *
-     * @param email the email of the user
-     * @return true if user exists, false otherwise
+     * @param user user to update
      */
-    boolean existsByEmail(String email);
+    void updateUser(String id, AdminUserUpdateRequest user);
 
     /**
-     * Gets user by id
+     * Update existing user
      *
-     * @param id
-     * @return
+     * @param id   user id
+     * @param user user to update
      */
-    UserEntity getUserById(String id) throws NotFoundException;
+    void updateUser(String id, UserUpdateRequest user);
+
 
     /**
-     * Updates user by id
-     *
-     * @param id                the id of the user
-     * @param userUpdateRequest the update request
-     * @return
+     * Reset user password
+     * @param id user id
      */
-    UserEntity updateUser(String id, UserUpdateRequest userUpdateRequest) throws NotFoundException;
+    void resetUserPassword(String id);
 
     /**
-     * Updates user by id
+     * Delete user by id
      *
-     * @param id                     the id of the user
-     * @param adminUserUpdateRequest the request to update the user data
-     * @return the updated user
-     * @throws NotFoundException if the user is not found
+     * @param id user id
      */
-    UserEntity updateUser(String id, AdminUserUpdateRequest adminUserUpdateRequest) throws NotFoundException, AlreadyExistingUserException;
+    void deleteUser(String id);
 
     /**
-     * Updates user password with its user email
+     * Create new user
      *
-     * @param userEmail   the user email
-     * @param oldPassword the old password
-     * @param newPassword the new password
-     * @return
+     * @param request user creation request
+     * @return created user
      */
-    UserEntity updateUserPassword(String userEmail, String oldPassword, String newPassword) throws NotFoundException;
+    User createUser(UserCreationRequest request);
 
     /**
-     * Deletes user by id
+     * Create new user by admin
      *
-     * @param id
+     * @param adminUserCreationRequest admin user creation request
+     * @return created user
      */
-    void deleteUser(String id) throws NotFoundException;
-
-    /**
-     * Deletes user by email
-     *
-     * @param email
-     */
-    void deleteUserByEmail(String email) throws NotFoundException;
-
-    /**
-     * Processes user registration
-     *
-     * @param registrationId
-     * @param attributes
-     * @param idToken
-     * @param userInfo
-     * @return
-     */
-    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws NotFoundException, AlreadyExistingUserException;
+    User createUser(AdminUserCreationRequest adminUserCreationRequest);
 }

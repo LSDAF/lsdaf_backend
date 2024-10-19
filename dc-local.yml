@@ -27,6 +27,8 @@ services:
     command: "start-dev --http-port 8081"
     networks:
       - backend
+    depends_on:
+      - postgres
 
   postgres:
     image: postgres:16.0-alpine

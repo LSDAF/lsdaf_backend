@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.bdd.config.mocks.security;
 
 import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.LocalUser;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.lsadf_backend.services.UserEntityService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,15 +14,15 @@ import static com.lsadf.lsadf_backend.models.LocalUser.buildSimpleGrantedAuthori
  * Mock implementation of the UserDetailsService
  */
 public class LsadfUserDetailsServiceMock implements UserDetailsService {
-    private final UserService userService;
+    private final UserEntityService userEntityService;
 
-    public LsadfUserDetailsServiceMock(UserService userService) {
-        this.userService = userService;
+    public LsadfUserDetailsServiceMock(UserEntityService userEntityService) {
+        this.userEntityService = userEntityService;
     }
 
 
     public LocalUser loadUserByEmail(String email) throws NotFoundException {
-        UserEntity userEntity = userService.getUserByEmail(email);
+        UserEntity userEntity = userEntityService.getUserByEmail(email);
         return createLocalUser(userEntity);
     }
 
@@ -41,7 +41,7 @@ public class LsadfUserDetailsServiceMock implements UserDetailsService {
                 true,
                 true,
                 true,
-                buildSimpleGrantedAuthorities(user.getRoles()),
+                buildSimpleGrantedAuthorities(null),
                 user);
     }
 }

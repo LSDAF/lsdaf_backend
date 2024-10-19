@@ -2,11 +2,6 @@ package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.converters.SocialProviderConverter;
-import com.lsadf.lsadf_backend.converters.UserRoleConverter;
-import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
-import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
@@ -15,8 +10,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * User Entity
@@ -66,29 +59,5 @@ public class UserEntity extends AEntity {
     @Column(name = EntityAttributes.User.USER_VERIFIED)
     private Boolean verified;
 
-    @Convert(converter = SocialProviderConverter.class)
     private SocialProvider provider;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @Builder.Default
-    private Set<GameSaveEntity> gameSaves = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @Builder.Default
-    private Set<RefreshTokenEntity> refreshTokens = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @Builder.Default
-    private Set<UserVerificationTokenEntity> validationTokens = new HashSet<>();
-
-    @Column(name = EntityAttributes.User.USER_ROLES)
-    @Convert(converter = UserRoleConverter.class)
-    @ToString.Exclude
-    private Set<UserRole> roles;
 }

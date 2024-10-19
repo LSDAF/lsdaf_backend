@@ -3,15 +3,13 @@ package com.lsadf.lsadf_backend.utils;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.constants.SocialProvider;
 import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.entities.*;
-import com.lsadf.lsadf_backend.entities.tokens.RefreshTokenEntity;
-import com.lsadf.lsadf_backend.entities.tokens.UserVerificationTokenEntity;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.lsadf_backend.entities.CurrencyEntity;
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.lsadf_backend.entities.UserEntity;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
-import com.lsadf.lsadf_backend.repositories.UserRepository;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
@@ -69,6 +67,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a StageRequest
+     *
      * @param row row from BDD table
      * @return StageRequest
      */
@@ -82,52 +81,14 @@ public class BddUtils {
         return new StageRequest(currentStageLong, maxStageLong);
     }
 
-    /**
-     * Maps a row from a BDD table to a RefreshTokenEntity
-     *
-     * @param row            row from BDD table
-     * @param userRepository UserRepository
-     * @return RefreshTokenEntity
-     */
-    public static RefreshTokenEntity mapToRefreshTokenEntity(Map<String, String> row, UserRepository userRepository) {
-        String token = row.get(BddFieldConstants.RefreshToken.REFRESH_TOKEN);
-        String expirationDate = row.get(BddFieldConstants.RefreshToken.EXPIRATION_DATE);
-        String invalidationDate = row.get(BddFieldConstants.RefreshToken.INVALIDATION_DATE);
-        String status = row.get(BddFieldConstants.RefreshToken.STATUS);
-        String userEmail = row.get(BddFieldConstants.RefreshToken.USER_EMAIL);
-
-        Date expirationDateDate = null;
-        Date invalidationDateDate = null;
-
-        if (expirationDate != null) {
-            expirationDateDate = DateUtils.stringToDate(expirationDate);
-        }
-        if (invalidationDate != null) {
-            invalidationDateDate = DateUtils.stringToDate(invalidationDate);
-        }
-        TokenStatus statusEnum = TokenStatus.valueOf(status);
-
-        Optional<UserEntity> userEntityOptional = userRepository.findUserEntityByEmail(userEmail);
-        UserEntity userEntity = userEntityOptional.orElse(null);
-
-        RefreshTokenEntity entity = new RefreshTokenEntity();
-        entity.setToken(token);
-        entity.setExpirationDate(expirationDateDate);
-        entity.setInvalidationDate(invalidationDateDate);
-        entity.setStatus(statusEnum);
-        entity.setUser(userEntity);
-
-        return entity;
-    }
 
     /**
      * Maps a row from a BDD table to a GameSaveEntity
      *
      * @param row            row from BDD table
-     * @param userRepository UserRepository
      * @return GameSaveEntity
      */
-    public static GameSaveEntity mapToGameSaveEntity(Map<String, String> row, UserRepository userRepository) {
+    public static GameSaveEntity mapToGameSaveEntity(Map<String, String> row) {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
@@ -150,16 +111,8 @@ public class BddUtils {
         long currentStage = Long.parseLong(currentStageString);
         long maxStage = Long.parseLong(maxStageString);
 
-        if (userId == null) {
-            userId = "";
-        }
-        Optional<UserEntity> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            userOptional = userRepository.findUserEntityByEmail(userEmail);
-        }
-
         GameSaveEntity gameSaveEntity = GameSaveEntity.builder()
-                .user(userOptional.orElse(null))
+                .userEmail(userEmail)
                 .nickname(nickname)
                 .id(id)
                 .attack(attackLong)
@@ -207,8 +160,8 @@ public class BddUtils {
         }
 
         boolean verified = Boolean.parseBoolean(verifiedString);
-
-        return new UserInfo(name, email, verified, roles, null, null);
+        return null;
+        //return new UserInfo(name, email, verified, roles, null, null);
     }
 
 
@@ -232,27 +185,23 @@ public class BddUtils {
     /**
      * Maps a row from a BDD table to a User
      *
-     * @param row            row from BDD table
-     * @param userRepository UserRepository
+     * @param row row from BDD table
      * @return User
      * @throws NotFoundException if user is not found
      */
-    public static User mapToUser(Map<String, String> row, UserRepository userRepository) throws NotFoundException {
+    public static User mapToUser(Map<String, String> row) throws NotFoundException {
         String id = row.get(BddFieldConstants.User.ID);
         String email = row.get(BddFieldConstants.User.EMAIL);
-        String name = row.get(BddFieldConstants.User.NAME);
+        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
         String provider = row.get(BddFieldConstants.User.PROVIDER);
-        UserEntity userEntity = userRepository.findUserEntityByEmail(email).orElseThrow(NotFoundException::new);
-
+        String roles = row.get(BddFieldConstants.User.ROLES);
         return User.builder()
-                .userRoles(userEntity.getRoles().stream().toList())
-                .password(userEntity.getPassword())
-                .socialProvider(SocialProvider.fromString(provider))
+                .userRoles(Arrays.stream(roles.split(",")).toList())
                 .id(id)
-                .createdAt(userEntity.getCreatedAt())
-                .updatedAt(userEntity.getUpdatedAt())
-                .email(email)
-                .name(name)
+                .username(email)
+                .firstName(firstName)
+                .lastName(lastName)
                 .build();
     }
 
@@ -319,7 +268,6 @@ public class BddUtils {
 
         return GameSave.builder()
                 .attack(attack)
-                .userId(userId)
                 .userEmail(userEmail)
                 .nickname(nickname)
                 .id(id)
@@ -351,6 +299,7 @@ public class BddUtils {
 
     /**
      * Maps a row from a BDD table to a Stage
+     *
      * @param row row from BDD table
      * @return Stage
      */
@@ -409,7 +358,8 @@ public class BddUtils {
      */
     public static UserEntity mapToUserEntity(Map<String, String> row) {
         String email = row.get(BddFieldConstants.User.EMAIL);
-        String name = row.get(BddFieldConstants.User.NAME);
+        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
         String id = row.get(BddFieldConstants.User.ID);
         String password = row.get(BddFieldConstants.User.PASSWORD);
         String provider = row.get(BddFieldConstants.User.PROVIDER);
@@ -428,13 +378,11 @@ public class BddUtils {
 
         return UserEntity.builder()
                 .email(email)
-                .name(name)
                 .id(id)
                 .verified(verifiedBoolean)
                 .enabled(enabledBoolean)
                 .password(password)
                 .provider(socialProvider)
-                .roles(roleSet)
                 .build();
     }
 
@@ -446,12 +394,14 @@ public class BddUtils {
      */
     public static UserCreationRequest mapToUserCreationRequest(Map<String, String> row) {
         String email = row.get(BddFieldConstants.UserCreationRequest.EMAIL);
-        String name = row.get(BddFieldConstants.UserCreationRequest.NAME);
+        String firstName = row.get(BddFieldConstants.UserCreationRequest.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.UserCreationRequest.LAST_NAME);
         String password = row.get(BddFieldConstants.UserCreationRequest.PASSWORD);
 
         return UserCreationRequest.builder()
-                .email(email)
-                .name(name)
+                .username(email)
+                .firstName(firstName)
+                .lastName(lastName)
                 .password(password)
                 .build();
     }
@@ -500,9 +450,10 @@ public class BddUtils {
      * @return JwtAuthentication
      */
     public static UserUpdateRequest mapToUserUpdateRequest(Map<String, String> row) {
-        String name = row.get(BddFieldConstants.UserUpdateRequest.NAME);
+        String firstName = row.get(BddFieldConstants.UserUpdateRequest.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.UserUpdateRequest.LAST_NAME);
 
-        return new UserUpdateRequest(name);
+        return new UserUpdateRequest(firstName, lastName);
     }
 
     /**
@@ -512,21 +463,18 @@ public class BddUtils {
      * @return AdminUserUpdateRequest
      */
     public static AdminUserUpdateRequest mapToAdminUserUpdateRequest(Map<String, String> row) {
-        String name = row.get(BddFieldConstants.AdminUserUpdateRequest.NAME);
-        String password = row.get(BddFieldConstants.AdminUserUpdateRequest.PASSWORD);
-        String email = row.get(BddFieldConstants.AdminUserUpdateRequest.EMAIL);
+        String firstName = row.get(BddFieldConstants.AdminUserUpdateRequest.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.AdminUserUpdateRequest.LAST_NAME);
         String enabled = row.get(BddFieldConstants.AdminUserUpdateRequest.ENABLED);
         String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.VERIFIED);
         String userRoles = row.get(BddFieldConstants.AdminUserUpdateRequest.USER_ROLES);
 
-        Set<UserRole> roles = null;
-        if (userRoles != null) {
-            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
-        }
+        List<String> roles = Arrays.stream(userRoles.split(COMMA)).toList();
+
         Boolean enabledBoolean = Boolean.parseBoolean(enabled);
         Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
-        return new AdminUserUpdateRequest(name, password, verifiedBoolean, email, enabledBoolean, roles);
+        return new AdminUserUpdateRequest(firstName, lastName, verifiedBoolean, enabledBoolean, roles);
     }
 
     /**
@@ -536,27 +484,17 @@ public class BddUtils {
      * @return AdminUserCreationRequest
      */
     public static AdminUserCreationRequest mapToAdminUserCreationRequest(Map<String, String> row) {
-        String name = row.get(BddFieldConstants.AdminUserCreationRequest.NAME);
+        String firstName = row.get(BddFieldConstants.AdminUserCreationRequest.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.AdminUserCreationRequest.LAST_NAME);
         String email = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL);
         String enabled = row.get(BddFieldConstants.AdminUserCreationRequest.ENABLED);
         String userId = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ID);
-        String password = row.get(BddFieldConstants.AdminUserCreationRequest.PASSWORD);
-        String provider = row.get(BddFieldConstants.AdminUserCreationRequest.SOCIAL_PROVIDER);
         String verified = row.get(BddFieldConstants.AdminUserCreationRequest.VERIFIED);
-        String providerUserId = row.get(BddFieldConstants.AdminUserCreationRequest.PROVIDER_USER_ID);
-        String userRoles = row.get(BddFieldConstants.AdminUserCreationRequest.ROLES);
-
-        List<UserRole> roles = null;
-
-        if (userRoles != null) {
-            roles = Arrays.stream(userRoles.split(COMMA)).map(UserRole::valueOf).toList();
-        }
-        SocialProvider socialProvider = SocialProvider.fromString(provider);
 
         Boolean enabledBoolean = Boolean.parseBoolean(enabled);
         Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
-        return new AdminUserCreationRequest(name, userId, enabledBoolean, verifiedBoolean, email, password, socialProvider, roles, providerUserId);
+        return new AdminUserCreationRequest(firstName, lastName, userId, enabledBoolean, verifiedBoolean, email);
 
     }
 
@@ -599,76 +537,6 @@ public class BddUtils {
      */
     public static UserRefreshLoginRequest mapToUserRefreshLoginRequest(Map<String, String> row) {
         String refreshToken = row.get(BddFieldConstants.UserRefreshLoginRequest.REFRESH_TOKEN);
-        String email = row.get(BddFieldConstants.UserRefreshLoginRequest.EMAIL);
-        return new UserRefreshLoginRequest(email, refreshToken);
-    }
-
-    /**
-     * Maps a row from a BDD table to a UserAdminDetails
-     *
-     * @param row row from BDD table
-     * @return UserAdminDetails
-     */
-    public static UserAdminDetails mapToUserAdminDetails(Map<String, String> row) {
-        String id = row.get(BddFieldConstants.UserAdminDetails.ID);
-        String email = row.get(BddFieldConstants.UserAdminDetails.EMAIL);
-        String name = row.get(BddFieldConstants.UserAdminDetails.NAME);
-        String password = row.get(BddFieldConstants.UserAdminDetails.PASSWORD);
-        String provider = row.get(BddFieldConstants.UserAdminDetails.SOCIAL_PROVIDER);
-        String enabled = row.get(BddFieldConstants.UserAdminDetails.ENABLED);
-        String verified = row.get(BddFieldConstants.UserAdminDetails.VERIFIED);
-        String roles = row.get(BddFieldConstants.UserAdminDetails.ROLES);
-
-        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
-        SocialProvider socialProvider = SocialProvider.fromString(provider);
-        Set<UserRole> roleSet = roles == null
-                ? Set.of(UserRole.USER)
-                : Arrays.stream(roles.split(COMMA))
-                .map(UserRole::valueOf)
-                .collect(Collectors.toSet());
-
-
-        return UserAdminDetails.builder()
-                .id(id)
-                .email(email)
-                .name(name)
-                .verified(verifiedBoolean)
-                .password(password)
-                .socialProvider(socialProvider)
-                .enabled(enabledBoolean)
-                .userRoles(roleSet.stream().toList())
-                .build();
-    }
-
-    /**
-     * Maps a row from a BDD table to a UserVerificationTokenEntity
-     *
-     * @param row row from BDD table
-     * @return UserVerificationTokenEntity
-     */
-    public static UserVerificationTokenEntity mapToUserVerificationTokenEntity(Map<String, String> row,
-                                                                               UserRepository userRepository) {
-        String token = row.get(BddFieldConstants.UserVerificationToken.TOKEN);
-        String userEmail = row.get(BddFieldConstants.UserVerificationToken.USER_EMAIL);
-        String status = row.get(BddFieldConstants.UserVerificationToken.STATUS);
-        String expirationDate = row.get(BddFieldConstants.UserVerificationToken.EXPIRATION_DATE);
-        Date expirationDateDate = null;
-
-        UserEntity user = userRepository.findUserEntityByEmail(userEmail).orElse(null);
-
-        if (expirationDate != null) {
-            expirationDateDate = DateUtils.stringToDate(expirationDate);
-        }
-
-        TokenStatus tokenStatus = TokenStatus.valueOf(status);
-
-        UserVerificationTokenEntity entity = new UserVerificationTokenEntity();
-        entity.setToken(token);
-        entity.setUser(user);
-        entity.setExpirationDate(expirationDateDate);
-        entity.setStatus(tokenStatus);
-
-        return entity;
+        return new UserRefreshLoginRequest(refreshToken);
     }
 }
