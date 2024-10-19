@@ -35,7 +35,7 @@ public class UserControllerImpl extends BaseController implements UserController
     private final Mapper mapper;
     private final GameSaveService gameSaveService;
 
-    public UserControllerImpl( Mapper mapper, GameSaveService gameSaveService) {
+    public UserControllerImpl(Mapper mapper, GameSaveService gameSaveService) {
         this.mapper = mapper;
         this.gameSaveService = gameSaveService;
     }

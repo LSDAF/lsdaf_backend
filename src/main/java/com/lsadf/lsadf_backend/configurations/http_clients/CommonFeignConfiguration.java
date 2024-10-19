@@ -1,6 +1,9 @@
 package com.lsadf.lsadf_backend.configurations.http_clients;
 
-import feign.*;
+import feign.Contract;
+import feign.Logger;
+import feign.Request;
+import feign.Retryer;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
@@ -11,7 +14,6 @@ import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +27,8 @@ public class CommonFeignConfiguration {
         return new ResponseEntityDecoder(new SpringDecoder(HttpMessageConverters::new));
     }
 
-    @Bean OptionalFeignFormatterRegistrar optionalFeignFormatterRegistrar() {
+    @Bean
+ OptionalFeignFormatterRegistrar optionalFeignFormatterRegistrar() {
         return new OptionalFeignFormatterRegistrar();
     }
 
