@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.security.LsadfUserDetailsServiceMock;
+import com.lsadf.lsadf_backend.mocks.security.LsadfUserDetailsServiceMock;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.services.UserEntityService;
 import lombok.experimental.UtilityClass;

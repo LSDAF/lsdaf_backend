@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks.repository;
+package com.lsadf.lsadf_backend.mocks.repository;
 
 import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.repositories.StageRepository;

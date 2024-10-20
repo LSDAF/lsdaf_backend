@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.bdd.config.mocks;
+package com.lsadf.lsadf_backend.mocks;
 
 import jakarta.mail.internet.MimeMessage;
 import org.jetbrains.annotations.NotNull;
