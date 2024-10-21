@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
@@ -13,6 +12,7 @@ import java.util.stream.Stream;
 @UtilityClass
 public class StreamUtils {
     public static Stream<User> sortUsers(Stream<User> userStream, UserOrderBy orderBy) {
+        orderBy = orderBy == null ? UserOrderBy.NONE : orderBy;
         return switch (orderBy) {
             case ID -> userStream.sorted(Comparator.comparing(User::getId));
             case ID_DESC -> userStream.sorted(Comparator.comparing(User::getId).reversed());
@@ -29,6 +29,7 @@ public class StreamUtils {
     }
 
     public static Stream<GameSaveEntity> sortGameSaves(Stream<GameSaveEntity> gameSaveStream, GameSaveOrderBy orderBy) {
+        orderBy = orderBy == null ? GameSaveOrderBy.NONE : orderBy;
         return switch (orderBy) {
             case CREATED_AT -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getCreatedAt));
             case CREATED_AT_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getCreatedAt).reversed());
