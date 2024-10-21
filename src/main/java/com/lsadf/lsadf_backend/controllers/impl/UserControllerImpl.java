@@ -81,7 +81,7 @@ public class UserControllerImpl extends BaseController implements UserController
     public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@AuthenticationPrincipal Jwt jwt) {
         try {
             validateUser(jwt);
-            String email = jwt.getSubject();
+            String email = jwt.getClaimAsString("preferred_username");
 
             List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(email)
                     .map(mapper::mapToGameSave)
