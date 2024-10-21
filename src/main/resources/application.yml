@@ -76,7 +76,7 @@ spring:
           keycloak:
             url: ${keycloak.uri}
           keycloak-admin:
-            url: ${keycloak.uri}
+            url: ${keycloak.admin-uri}
 
 
 keycloak:
@@ -86,6 +86,7 @@ keycloak:
   client-id: ${KEYCLOAK_CLIENT_ID}
   client-secret: ${KEYCLOAK_CLIENT_SECRET}
   uri: ${KEYCLOAK_URI}
+  admin-uri: ${KEYCLOAK_ADMIN_URI}
   realm: ${KEYCLOAK_REALM}
   issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
 

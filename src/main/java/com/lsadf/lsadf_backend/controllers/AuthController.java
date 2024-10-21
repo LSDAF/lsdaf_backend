@@ -23,7 +23,6 @@ public interface AuthController {
     /**
      * Logs in a user
      *
-     * @param userLoginRequest the user credentials to login
      * @return the JWT object containing the token
      */
     @GetMapping(value = ControllerConstants.Auth.LOGIN)
@@ -37,8 +36,9 @@ public interface AuthController {
 
     /**
      * Logins a new user with the password grant type
-     * @param userLoginRequest
-     * @return
+     *
+     * @param userLoginRequest the user login request containing the username and the password
+     * @return the JWT object containing the token
      */
     @PostMapping(value = ControllerConstants.Auth.LOGIN)
     @Operation(summary = "Logins a user, returns a JWT object contaning the token to request the API")
@@ -53,6 +53,7 @@ public interface AuthController {
 
     /**
      * Refreshes a user token
+     *
      * @param userRefreshLoginRequest the refresh token request containing the username and the refresh token
      * @return the new JWT object containing the new token
      */

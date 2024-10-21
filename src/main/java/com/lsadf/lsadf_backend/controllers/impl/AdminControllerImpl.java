@@ -424,6 +424,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
                                                              @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
         try {
             validateUser(jwt);
+            searchService.searchUsers(searchRequest, orderBy);
             return generateResponse(HttpStatus.OK);
         } catch (UnauthorizedException e) {
             log.error("Unauthorized exception while searching users: ", e);

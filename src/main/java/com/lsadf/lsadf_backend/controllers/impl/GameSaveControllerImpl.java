@@ -8,7 +8,6 @@ import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.GameSaveService;
@@ -57,7 +56,7 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
         try {
             validateUser(jwt);
 
-            String username = jwt.getSubject();
+            String username = jwt.getClaimAsString("preferred_username");
 
             GameSaveEntity newSave = gameSaveService.createGameSave(username);
 

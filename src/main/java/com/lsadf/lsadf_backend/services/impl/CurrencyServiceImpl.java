@@ -29,6 +29,9 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     @Transactional(readOnly = true)
     public Currency getCurrency(String gameSaveId) throws NotFoundException {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
         if (currencyCache.isEnabled()) {
             Optional<Currency> optionalCachedCurrency = currencyCache.get(gameSaveId);
             if (optionalCachedCurrency.isPresent()) {
@@ -71,7 +74,10 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     @Transactional
     public void saveCurrency(String gameSaveId, Currency currency, boolean toCache) throws NotFoundException {
-        if (isCurrencyNull(currency)) {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
+        if (currency == null || isCurrencyNull(currency)) {
             throw new IllegalArgumentException("Currency cannot be null");
         }
         if (toCache) {
