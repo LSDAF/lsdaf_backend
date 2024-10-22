@@ -1,23 +1,22 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.AuthController;
-import com.lsadf.lsadf_backend.exceptions.*;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import feign.FeignException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
@@ -87,12 +86,15 @@ public class AuthControllerImpl extends BaseController implements AuthController
 
             log.info("Received token: {}", jwt);
             return generateResponse(HttpStatus.OK, jwt);
-        } catch (FeignException e) {
-            log.error("Feign exception {} while getting access token: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Feign exception " + e.getClass() + " while getting access token: ", e.getMessage());
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception {} while getting access token: ", e.getClass(), e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception " + e.getClass() + " while getting access token: ", null);
+        } catch (NotFoundException e) {
+            log.error("Not found exception {} while getting access token: ", e.getClass(), e);
+            return generateResponse(HttpStatus.NOT_FOUND, "Not found exception " + e.getClass() + " while getting access token: ", null);
         } catch (Exception e) {
             log.error("Exception {} while getting access token: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting access token: ", e.getMessage());
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting access token: ", null);
         }
     }
 
@@ -112,16 +114,19 @@ public class AuthControllerImpl extends BaseController implements AuthController
                     "&client_secret=" + clientSecret +
                     "&refresh_token=" + userRefreshLoginRequest.getRefreshToken();
 
-            JwtAuthentication jwt = keycloakClient.getToken(keycloakProperties.getRealm(), bodyString);
+            JwtAuthentication response = keycloakClient.getToken(keycloakProperties.getRealm(), bodyString);
 
-            log.info("Received token: {}", jwt);
-            return generateResponse(HttpStatus.OK, jwt);
-        } catch (FeignException e) {
-            log.error("Feign exception {} while getting access token: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Feign exception " + e.getClass() + " while getting access token: ", e.getMessage());
+            log.info("Received token: {}", response);
+            return generateResponse(HttpStatus.OK, response);
+        } catch (UnauthorizedException e) {
+            log.error("Unauthorized exception {} while getting access token: ", e.getClass(), e);
+            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception " + e.getClass() + " while getting access token: " + e, null);
+        } catch (NotFoundException e) {
+            log.error("Not found exception {} while getting access token: " + e, e.getClass(), null);
+            return generateResponse(HttpStatus.NOT_FOUND, "Not found exception " + e.getClass() + " while getting access token: " + e, null);
         } catch (Exception e) {
             log.error("Exception {} while getting access token: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting access token: ", e.getMessage());
+            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting access token: " + e, null);
         }
     }
 }
