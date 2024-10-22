@@ -22,8 +22,8 @@ public class StreamUtils {
             case FIRST_NAME_DESC -> userStream.sorted(Comparator.comparing(User::getLastName).reversed());
             case LAST_NAME -> userStream.sorted(Comparator.comparing(User::getLastName));
             case LAST_NAME_DESC -> userStream.sorted(Comparator.comparing(User::getLastName).reversed());
-            case CREATED_AT -> userStream.sorted(Comparator.comparing(User::getCreationTimestamp));
-            case CREATED_AT_DESC -> userStream.sorted(Comparator.comparing(User::getCreationTimestamp).reversed());
+            case CREATED_AT -> userStream.sorted(Comparator.comparing(User::getCreatedTimestamp));
+            case CREATED_AT_DESC -> userStream.sorted(Comparator.comparing(User::getCreatedTimestamp).reversed());
             case NONE -> userStream;
         };
     }
