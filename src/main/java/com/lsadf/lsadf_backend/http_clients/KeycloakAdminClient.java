@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = HttpClientTypes.KEYCLOAK_ADMIN, configuration = KeycloakAdminFeignConfiguration.class)
+@FeignClient(name = HttpClientTypes.KEYCLOAK_ADMIN, configuration = KeycloakAdminFeignConfiguration.class, primary = false)
 public interface KeycloakAdminClient {
     String REALM = "realm";
     String SEARCH = "search";
