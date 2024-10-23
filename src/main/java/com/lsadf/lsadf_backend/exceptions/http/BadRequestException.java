@@ -1,7 +1,10 @@
 package com.lsadf.lsadf_backend.exceptions.http;
 
-import lombok.experimental.StandardException;
-
-@StandardException
+/**
+ * Bad Request Exception
+ */
 public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
+        super(message);
+    }
 }

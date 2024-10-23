@@ -9,7 +9,7 @@ import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.services.SearchService;
 import com.lsadf.lsadf_backend.services.UserService;
-import org.springframework.transaction.annotation.Transactional;
+import com.lsadf.lsadf_backend.utils.StreamUtils;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,7 +35,6 @@ public class SearchServiceImpl implements SearchService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public Stream<User> searchUsers(SearchRequest searchRequest, UserOrderBy orderBy) {
         Stream<User> userStream = userService.getUsers();
         List<Filter> filters = searchRequest.getFilters();
@@ -49,14 +48,14 @@ public class SearchServiceImpl implements SearchService {
                 default -> throw new IllegalArgumentException("Invalid filter type");
             }
         }
-        return userStream;
+
+        return StreamUtils.sortUsers(userStream, orderBy);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public Stream<GameSaveEntity> searchGameSaves(SearchRequest searchRequest, GameSaveOrderBy orderBy) {
         Stream<GameSaveEntity> gameSaveStream = gameSaveService.getGameSaves();
         List<Filter> filters = searchRequest.getFilters();
@@ -67,6 +66,6 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        return gameSaveStream;
+        return StreamUtils.sortGameSaves(gameSaveStream, orderBy);
     }
 }

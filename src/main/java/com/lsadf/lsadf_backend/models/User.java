@@ -8,8 +8,8 @@ import com.lsadf.lsadf_backend.serializers.DateToLongSerializer;
 import com.lsadf.lsadf_backend.serializers.LongToDateSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.util.Date;
@@ -21,10 +21,10 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 /**
  * User DTO
  */
-@Builder
+@SuperBuilder
 @Data
 @AllArgsConstructor
-@JsonPropertyOrder({ID, FIRST_NAME, LAST_NAME, USERNAME, ENABLED, EMAIL_VERIFIED, USER_ROLES, CREATION_TIMESTAMP})
+@JsonPropertyOrder({ID, FIRST_NAME, LAST_NAME, USERNAME, ENABLED, EMAIL_VERIFIED, USER_ROLES, CREATED_TIMESTAMP})
 public class User implements Model {
 
     @Serial
@@ -58,10 +58,9 @@ public class User implements Model {
     @Schema(description = "User roles", example = "[\"USER\"]")
     private List<String> userRoles;
 
-    @JsonProperty(value = CREATION_TIMESTAMP)
+    @JsonProperty(value = CREATED_TIMESTAMP)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
     @JsonSerialize(using = DateToLongSerializer.class)
     @JsonDeserialize(using = LongToDateSerializer.class)
-    private final Date creationTimestamp;
-
+    private final Date createdTimestamp;
 }

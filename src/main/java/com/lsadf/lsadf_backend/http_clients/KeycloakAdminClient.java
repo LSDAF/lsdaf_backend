@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = HttpClientTypes.KEYCLOAK_ADMIN, configuration = KeycloakAdminFeignConfiguration.class)
+@FeignClient(name = HttpClientTypes.KEYCLOAK_ADMIN, configuration = KeycloakAdminFeignConfiguration.class, primary = false)
 public interface KeycloakAdminClient {
     String REALM = "realm";
     String SEARCH = "search";
@@ -56,7 +56,7 @@ public interface KeycloakAdminClient {
      * @return user
      */
     @GetMapping(path = USERS_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    User getUserByUsername(@PathVariable(value = REALM) String realm,
+    List<User> getUserByUsername(@PathVariable(value = REALM) String realm,
                            @RequestParam(value = USERNAME) String username,
                            @RequestParam(value = EXACT) Boolean exact);
 
@@ -70,7 +70,7 @@ public interface KeycloakAdminClient {
      */
     default User getUserByUsername(@PathVariable(value = REALM) String realm,
                                    @RequestParam(value = USERNAME) String username) {
-        return getUserByUsername(realm, username, true);
+        return getUserByUsername(realm, username, true).get(0);
     }
 
     /**

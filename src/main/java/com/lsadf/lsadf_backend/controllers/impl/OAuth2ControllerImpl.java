@@ -1,9 +1,11 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.controllers.OAuth2Controller;
 import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
+import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -21,10 +23,13 @@ public class OAuth2ControllerImpl extends BaseController implements OAuth2Contro
 
     private final KeycloakClient keycloakClient;
     private final KeycloakProperties keycloakProperties;
+    private final ServerProperties serverProperties;
 
     public OAuth2ControllerImpl(KeycloakClient keycloakClient,
-                                KeycloakProperties keycloakProperties) {
+                                KeycloakProperties keycloakProperties,
+                                ServerProperties serverProperties) {
         this.keycloakClient = keycloakClient;
+        this.serverProperties = serverProperties;
         this.keycloakProperties = keycloakProperties;
     }
 
@@ -40,7 +45,7 @@ public class OAuth2ControllerImpl extends BaseController implements OAuth2Contro
 
         String clientId = keycloakProperties.getClientId();
         String clientSecret = keycloakProperties.getClientSecret();
-        String redirectUri = "http://localhost:8080/api/oauth2/callback";
+        String redirectUri = serverProperties.isHttps() ? "https://" : "http://" + serverProperties.getHostName() + ":" + serverProperties.getPort() + ControllerConstants.OAUTH2 + ControllerConstants.OAuth2.CALLBACK;
 
         String bodyString = "grant_type=authorization_code" +
                 "&client_id=" + clientId +

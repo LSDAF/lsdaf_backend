@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.JavaMailSenderMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.CurrencyRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.StageRepositoryMock;
+import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
+import com.lsadf.lsadf_backend.mocks.repository.CurrencyRepositoryMock;
+import com.lsadf.lsadf_backend.mocks.repository.GameSaveRepositoryMock;
+import com.lsadf.lsadf_backend.mocks.repository.StageRepositoryMock;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.Currency;

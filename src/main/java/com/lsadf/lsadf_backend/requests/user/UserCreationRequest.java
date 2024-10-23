@@ -7,10 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
@@ -46,9 +48,11 @@ public class UserCreationRequest implements Request {
     private String username;
 
     @JsonIgnore
+    @Builder.Default
     private boolean enabled = true;
 
     @JsonIgnore
+    @Builder.Default
     private boolean emailVerified = false;
 
     @JsonIgnore

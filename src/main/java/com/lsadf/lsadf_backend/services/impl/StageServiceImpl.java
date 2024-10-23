@@ -32,6 +32,9 @@ public class StageServiceImpl implements StageService {
     @Override
     @Transactional(readOnly = true)
     public Stage getStage(String gameSaveId) throws NotFoundException {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
         if (stageCache.isEnabled()) {
             Optional<Stage> optionalCachedStage = stageCache.get(gameSaveId);
             if (optionalCachedStage.isPresent()) {
@@ -59,7 +62,10 @@ public class StageServiceImpl implements StageService {
     @Override
     @Transactional
     public void saveStage(String gameSaveId, Stage stage, boolean toCache) throws NotFoundException {
-        if (isStageNull(stage)) {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
+        if (stage == null || isStageNull(stage)) {
             throw new IllegalArgumentException("Stage cannot be null");
         }
         if (toCache) {
