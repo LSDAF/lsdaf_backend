@@ -12,7 +12,9 @@ import com.lsadf.lsadf_backend.services.SearchService;
 import com.lsadf.lsadf_backend.services.UserService;
 import com.lsadf.lsadf_backend.services.impl.SearchServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class SearchServiceTests {
     @Mock
     UserService userService;

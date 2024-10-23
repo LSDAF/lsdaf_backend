@@ -7,7 +7,9 @@ import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.StageService;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -16,6 +18,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class RedisCacheFlushServiceTests {
 
     RedisCacheFlushServiceImpl redisCacheFlushService;

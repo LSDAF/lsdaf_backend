@@ -10,7 +10,9 @@ import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.impl.CurrencyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -22,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class CurrencyServiceTests {
     private CurrencyService currencyService;
 
