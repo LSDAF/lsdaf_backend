@@ -48,9 +48,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     *
-     * @param ex
-     * @return
+     * Exception handler for AlreadyExistingGameSaveException
+     * @param e AlreadyExistingGameSaveException
+     * @return ResponseEntity containing the error
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<GenericResponse<Void>> handleValidationException(HandlerMethodValidationException e) {
