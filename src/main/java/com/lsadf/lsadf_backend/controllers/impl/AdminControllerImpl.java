@@ -91,7 +91,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<GenericResponse<GlobalInfo>> getGlobalInfo(Jwt jwt) {
         validateUser(jwt);
         Long userCount = userService.getUsers().count();
         Long gameSaveCount = gameSaveService.getGameSaves().count();
@@ -109,7 +109,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<GenericResponse<Boolean>> isCacheEnabled(Jwt jwt) {
         validateUser(jwt);
         boolean cacheEnabled = redisCacheService.isEnabled();
         return generateResponse(HttpStatus.OK, cacheEnabled);
@@ -119,7 +119,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<GenericResponse<Boolean>> toggleRedisCacheEnabling(Jwt jwt) {
         validateUser(jwt);
         redisCacheService.toggleCacheEnabling();
         Boolean cacheEnabled = redisCacheService.isEnabled();
@@ -132,8 +132,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<User>>> getUsers(@AuthenticationPrincipal Jwt jwt,
-                                                                @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<List<User>>> getUsers(Jwt jwt,
+                                                                UserOrderBy orderBy) {
         var users = userService.getUsers()
                 .toList();
         return generateResponse(HttpStatus.OK, users);
@@ -145,8 +145,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> getDetailedUserById(@AuthenticationPrincipal Jwt jwt,
-                                                                     @PathVariable(value = USER_ID) String userId) {
+    public ResponseEntity<GenericResponse<User>> getDetailedUserById(Jwt jwt,
+                                                                     String userId) {
         validateUser(jwt);
         User user = userService.getUserById(userId);
         return generateResponse(HttpStatus.OK, user);
@@ -158,8 +158,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> getDetailedUserByEmail(@AuthenticationPrincipal Jwt jwt,
-                                                                        @PathVariable(value = USER_EMAIL) String userEmail) {
+    public ResponseEntity<GenericResponse<User>> getDetailedUserByEmail(Jwt jwt,
+                                                                        String userEmail) {
         validateUser(jwt);
         User user = userService.getUserByUsername(userEmail);
         return generateResponse(HttpStatus.OK, user);
@@ -171,9 +171,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> updateUser(@AuthenticationPrincipal Jwt jwt,
-                                                            @PathVariable(value = USER_ID) String userId,
-                                                            @Valid @RequestBody AdminUserUpdateRequest user) {
+    public ResponseEntity<GenericResponse<User>> updateUser(Jwt jwt,
+                                                            String userId,
+                                                            AdminUserUpdateRequest user) {
         validateUser(jwt);
         userService.updateUser(userId, user);
         return generateResponse(HttpStatus.OK, null);
@@ -185,8 +185,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteUser(@AuthenticationPrincipal Jwt jwt,
-                                                            @PathVariable(value = USER_ID) String userId) {
+    public ResponseEntity<GenericResponse<Void>> deleteUser(Jwt jwt,
+                                                            String userId) {
         validateUser(jwt);
         userService.deleteUser(userId);
         return generateResponse(HttpStatus.OK);
@@ -198,8 +198,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> createUser(@AuthenticationPrincipal Jwt jwt,
-                                                            @Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest) {
+    public ResponseEntity<GenericResponse<User>> createUser(Jwt jwt,
+                                                            AdminUserCreationRequest adminUserCreationRequest) {
         validateUser(jwt);
         UserCreationRequest userCreationRequest = UserCreationRequest.builder()
                 .username(adminUserCreationRequest.getUsername())
@@ -221,8 +221,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@AuthenticationPrincipal Jwt jwt,
-                                                                        @RequestParam(value = ORDER_BY, required = false) GameSaveOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(Jwt jwt,
+                                                                        GameSaveOrderBy orderBy) {
         validateUser(jwt);
         try (Stream<GameSaveEntity> stream = gameSaveService.getGameSaves()) {
             if (orderBy != null) {
@@ -243,8 +243,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> getGameSave(@AuthenticationPrincipal Jwt jwt,
-                                                                 @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
+    public ResponseEntity<GenericResponse<GameSave>> getGameSave(Jwt jwt,
+                                                                 String gameSaveId) {
         validateUser(jwt);
         GameSaveEntity entity = gameSaveService.getGameSave(gameSaveId);
         GameSave gameSave = mapper.mapToGameSave(entity);
@@ -257,9 +257,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(@AuthenticationPrincipal Jwt jwt,
-                                                                    @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
-                                                                    @Valid @RequestBody AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
+    public ResponseEntity<GenericResponse<GameSave>> updateGameSave(Jwt jwt,
+                                                                    String gameSaveId,
+                                                                    AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
 
         validateUser(jwt);
         GameSaveEntity gameSaveEntity = gameSaveService.updateNickname(gameSaveId, adminGameSaveUpdateRequest);
@@ -273,8 +273,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@AuthenticationPrincipal Jwt jwt,
-                                                                         @Valid @RequestBody AdminGameSaveCreationRequest creationRequest) {
+    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(Jwt jwt,
+                                                                         AdminGameSaveCreationRequest creationRequest) {
 
         validateUser(jwt);
         GameSaveEntity gameSaveEntity = gameSaveService.createGameSave(creationRequest);
@@ -288,9 +288,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> searchUsers(@AuthenticationPrincipal Jwt jwt,
-                                                             @Valid @RequestBody SearchRequest searchRequest,
-                                                             @RequestParam(value = ORDER_BY) UserOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<User>> searchUsers(Jwt jwt,
+                                                             SearchRequest searchRequest,
+                                                             UserOrderBy orderBy) {
 
         validateUser(jwt);
         searchService.searchUsers(searchRequest, orderBy);
@@ -303,9 +303,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(@AuthenticationPrincipal Jwt jwt,
-                                                                     @Valid @RequestBody SearchRequest searchRequest,
-                                                                     @RequestParam(value = ORDER_BY) GameSaveOrderBy orderBy) {
+    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(Jwt jwt,
+                                                                     SearchRequest searchRequest,
+                                                                     GameSaveOrderBy orderBy) {
         validateUser(jwt);
         try (Stream<GameSaveEntity> gameSaveStream = searchService.searchGameSaves(searchRequest, orderBy)) {
             Stream<GameSaveEntity> sortedStream = StreamUtils.sortGameSaves(gameSaveStream, orderBy);
@@ -320,8 +320,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> deleteGameSave(@AuthenticationPrincipal Jwt jwt,
-                                                                @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
+    public ResponseEntity<GenericResponse<Void>> deleteGameSave(Jwt jwt,
+                                                                String gameSaveId) {
 
         validateUser(jwt);
 
@@ -334,7 +334,7 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> flushAndClearCache(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<GenericResponse<Void>> flushAndClearCache(Jwt jwt) {
         validateUser(jwt);
 
         log.info("Clearing all caches");
@@ -350,9 +350,9 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(@AuthenticationPrincipal Jwt jwt,
-                                                                        @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
-                                                                        @Valid @RequestBody CurrencyRequest currencyRequest) {
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrency(Jwt jwt,
+                                                                        String gameSaveId,
+                                                                        CurrencyRequest currencyRequest) {
 
         validateUser(jwt);
         Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
@@ -366,8 +366,8 @@ public class AdminControllerImpl extends BaseController implements AdminControll
      */
     @Override
     public ResponseEntity<GenericResponse<Void>> updateGameSaveStages(Jwt jwt,
-                                                                      @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
-                                                                      @Valid @RequestBody StageRequest stageRequest) {
+                                                                      String gameSaveId,
+                                                                      StageRequest stageRequest) {
 
         validateUser(jwt);
         Stage stage = mapper.mapStageRequestToStage(stageRequest);
