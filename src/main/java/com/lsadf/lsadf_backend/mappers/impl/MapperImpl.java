@@ -32,7 +32,7 @@ public class MapperImpl implements Mapper {
      * {@inheritDoc}
      */
     @Override
-    public GameSave mapToGameSave(GameSaveEntity gameSaveEntity) {
+    public GameSave mapGameSaveEntityToGameSave(GameSaveEntity gameSaveEntity) {
         Stage stage = mapStageEntityToStage(gameSaveEntity.getStageEntity());
         Currency currency = mapCurrencyEntityToCurrency(gameSaveEntity.getCurrencyEntity());
 
@@ -89,7 +89,7 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public User mapUserRepresentationToUser(UserRepresentation userRepresentation) {
-        Date createdTimestamp = new Date(userRepresentation.getCreatedTimestamp());
+        Date createdTimestamp = (userRepresentation.getCreatedTimestamp() != null) ? new Date(userRepresentation.getCreatedTimestamp()) : null;
         return User.builder()
                 .id(userRepresentation.getId())
                 .username(userRepresentation.getUsername())

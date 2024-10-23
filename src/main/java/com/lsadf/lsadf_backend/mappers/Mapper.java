@@ -17,7 +17,7 @@ public interface Mapper {
      * @param gameSaveEntity GameSaveEntity
      * @return
      */
-    GameSave mapToGameSave(GameSaveEntity gameSaveEntity);
+    GameSave mapGameSaveEntityToGameSave(GameSaveEntity gameSaveEntity);
 
     /**
      * Maps CurrencyRequest to Currency
