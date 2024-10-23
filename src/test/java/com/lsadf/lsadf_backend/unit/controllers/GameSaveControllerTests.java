@@ -116,7 +116,8 @@ class GameSaveControllerTests {
     @ValueSource(strings = {
             "tr",
             "ertyuioqsdfghjklm",
-            "test!"})
+            "test!",
+            "test tu671"})
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
     void updateNickname_should_return_400_when_nickname_value_is_invalid(String nickname) {
         // given

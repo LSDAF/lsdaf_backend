@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.unit.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.UserControllerImpl;
@@ -29,15 +28,12 @@ class UserControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
 
     @Test
     @SneakyThrows
     void getUserInfo_should_return_200_when_user_not_authenticated() {
         // when
-        mockMvc.perform(get("/api/v1/user/info"))
+        mockMvc.perform(get("/api/v1/user/me"))
                 // then
                 .andExpect(status().isUnauthorized());
     }
@@ -47,7 +43,7 @@ class UserControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
     void getUserInfo_should_return_200_when_user_authenticated() {
         // when
-        mockMvc.perform(get("/api/v1/user/info"))
+        mockMvc.perform(get("/api/v1/user/me"))
                 // then
                 .andExpect(status().isOk());
     }
