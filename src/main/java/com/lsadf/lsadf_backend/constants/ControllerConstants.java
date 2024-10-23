@@ -68,6 +68,7 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
         public static final String GENERATE = "/generate";
+        public static final String ME = "/me";
         public static final String UPDATE_NICKNAME = "/{game_save_id}/nickname";
     }
 
@@ -82,7 +83,7 @@ public final class ControllerConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String USER_ME = "/me";
+        public static final String ME = "/me";
         public static final String USER_ME_GAME_SAVES = "/me/game_saves";
     }
 }

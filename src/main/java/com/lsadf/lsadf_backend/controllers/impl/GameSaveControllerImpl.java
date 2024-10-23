@@ -18,9 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
@@ -52,56 +55,46 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(@AuthenticationPrincipal Jwt jwt) {
-        try {
-            validateUser(jwt);
+    public ResponseEntity<GenericResponse<GameSave>> generateNewGameSave(Jwt jwt) {
+        validateUser(jwt);
 
-            String username = jwt.getClaimAsString("preferred_username");
+        String username = jwt.getClaimAsString("preferred_username");
 
-            GameSaveEntity newSave = gameSaveService.createGameSave(username);
+        GameSaveEntity newSave = gameSaveService.createGameSave(username);
 
-            log.info("Successfully created new game for user with username {}", username);
-            GameSave newGameSave = mapper.mapToGameSave(newSave);
+        log.info("Successfully created new game for user with username {}", username);
+        GameSave newGameSave = mapper.mapToGameSave(newSave);
 
-            return generateResponse(HttpStatus.OK, newGameSave);
-        } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while generating new save: ", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while generating new save.", null);
-        } catch (Exception e) {
-            log.error("Exception {} while generating new save: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while generating new save.", e.getMessage());
-        }
+        return generateResponse(HttpStatus.OK, newGameSave);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateNickname(@AuthenticationPrincipal Jwt jwt,
-                                                                @PathVariable(value = GAME_SAVE_ID) String id,
-                                                                @Valid @RequestBody GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
-        try {
-            validateUser(jwt);
-            String username = jwt.getSubject();
-            gameSaveService.checkGameSaveOwnership(id, username);
-            gameSaveService.updateNickname(id, gameSaveUpdateNicknameRequest);
-            log.info("Successfully saved game with id {} for user with email {}", id, username);
-            return generateResponse(HttpStatus.OK);
-        } catch (NotFoundException e) {
-            log.error("Not found exception while saving game: ", e);
-            return generateResponse(HttpStatus.NOT_FOUND, "Game save not found.", null);
-        } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while saving game: ", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while saving game.", null);
-        } catch (ForbiddenException e) {
-            log.error("Forbidden exception while saving game: ", e);
-            return generateResponse(HttpStatus.FORBIDDEN, "The given userEmail is not the owner of the game save.", null);
-        } catch (AlreadyTakenNicknameException e) {
-            log.error("AlreadyTakenNicknameException exception while saving game: ", e);
-            return generateResponse(HttpStatus.BAD_REQUEST, "The given nickname is already taken.", null);
-        } catch (Exception e) {
-            log.error("Exception {} while saving game: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while saving game.", e.getMessage());
-        }
+    public ResponseEntity<GenericResponse<Void>> updateNickname(Jwt jwt,
+                                                                String id,
+                                                                GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest) {
+        validateUser(jwt);
+        String username = jwt.getSubject();
+        gameSaveService.checkGameSaveOwnership(id, username);
+        gameSaveService.updateNickname(id, gameSaveUpdateNicknameRequest);
+        log.info("Successfully saved game with id {} for user with email {}", id, username);
+        return generateResponse(HttpStatus.OK);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@AuthenticationPrincipal Jwt jwt) {
+        validateUser(jwt);
+        String email = jwt.getClaimAsString("preferred_username");
+
+        List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(email)
+                .map(mapper::mapToGameSave)
+                .toList();
+
+        return generateResponse(HttpStatus.OK, gameSaveList);
     }
 }
