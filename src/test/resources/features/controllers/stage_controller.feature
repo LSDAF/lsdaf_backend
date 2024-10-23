@@ -1,4 +1,4 @@
-Feature: Stage Controller tests
+Feature: Stage Controller BDD tests
 
   Background:
     Given the BDD engine is ready
@@ -7,17 +7,14 @@ Feature: Stage Controller tests
     And the time clock set to the present
 
   Scenario: A user gets the stages of one of his game saves with cache
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
+    Given the following game saves
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 99           | 100      |
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the endpoint to get the stages of the game save with id f81b710d-3e02-4871-a86f-390377798dd1
 
@@ -28,15 +25,12 @@ Feature: Stage Controller tests
       | 99           | 100      |
 
   Scenario: A user gets the stages of one of his game saves without cache
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
+    Given the following game saves
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to get the stages of the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -46,15 +40,12 @@ Feature: Stage Controller tests
       | 10           | 10       |
 
   Scenario: A user gets the stages of a game save that does not exist
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+    Given the following game saves
+      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to get the stages of the game save with id 9d96507e-56e8-447d-aa0f-b2248ae59454
@@ -62,16 +53,12 @@ Feature: Stage Controller tests
     Then the response status code should be 404
 
   Scenario: A user gets the stages of a non-owned game save
-    Given the following users
-      | id                                   | name        | email                | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     | USER  |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+    Given the following game saves
+      | id                                   | userEmail            | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to get the stages of the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -79,17 +66,14 @@ Feature: Stage Controller tests
     Then the response status code should be 403
 
   Scenario: A user tries to set the stages of one of his game saves with invalid data
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
+    Given the following game saves
+      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 666          | 667      |
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to set the stages with the following StageRequest for the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -99,17 +83,14 @@ Feature: Stage Controller tests
     Then the response status code should be 400
 
   Scenario: A user sets the stages of one of his game saves with cache
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
+    Given the following game saves
+      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 666          | 667      |
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to set the stages with the following StageRequest for the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -123,17 +104,14 @@ Feature: Stage Controller tests
       | f81b710d-3e02-4871-a86f-390377798dd1 | 700          | 700      |
 
   Scenario: A user sets the stages of one of his game saves without cache
-    Given the following users
-      | id                                   | name       | email               | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON | paul.ochon@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+    Given the following game saves
+      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
 
     And the cache is disabled
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to set the stages with the following StageRequest for the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -143,16 +121,12 @@ Feature: Stage Controller tests
     Then the response status code should be 200
 
   Scenario: A user sets the stages of a non-owned game save
-    Given the following users
-      | id                                   | name        | email                | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     | USER  |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | tutu5678 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+    Given the following game saves
+      | id                                   | userEmail            | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to set the stages with the following StageRequest for the game save with id f81b710d-3e02-4871-a86f-390377798dd1
@@ -162,16 +136,12 @@ Feature: Stage Controller tests
     Then the response status code should be 403
 
   Scenario: A user sets the stages of a non-existing game save
-    Given the following users
-      | id                                   | name        | email                | password | enabled | verified | roles |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | Paul OCHON  | paul.ochon@test.com  | toto1234 | true    | true     | USER  |
-      | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | Paul ITESSE | paul.itesse@test.com | toto1234 | true    | true     | USER  |
-    And the following game saves
-      | id                                   | userId                               | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | acaaf7b2-6ecb-4516-bdec-7c27f2fc55cd | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+    Given the following game saves
+      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
 
     When the user logs in with the following credentials
-      | email               | password |
+      | username            | password |
       | paul.ochon@test.com | toto1234 |
 
     And the user requests the endpoint to set the stages with the following StageRequest for the game save with id 7545eed0-237c-4182-849f-f9d4e1d112b5

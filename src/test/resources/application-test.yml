@@ -48,6 +48,56 @@ spring:
     allow-bean-definition-overriding: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss.SSS
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            authorization-uri: ${keycloak.issuer-uri}/protocol/openid-connect/auth
+            token-uri: ${keycloak.issuer-uri}/protocol/openid-connect/token
+            user-info-uri: ${keycloak.issuer-uri}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak.issuer-uri}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            authorization-grant-type: authorization_code
+            client-id: ${keycloak.client-id}
+            redirect-uri: "{baseUrl}/api/oauth2/callback"
+            client-secret: ${keycloak.client-secret}
+            provider: keycloak
+            scope: openid, profile
+          keycloak-admin:
+            authorization-grant-type: client_credentials
+            client-id: ${keycloak.admin.client-id}
+            client-secret: ${keycloak.admin.client-secret}
+            provider: keycloak
+            scope: openid, profile
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri} # Will be replaced by the real keycloak uri in the integration tests
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: FULL
+          keycloak:
+            url: ${keycloak.uri}
+          keycloak-admin:
+            url: ${keycloak.admin-uri}
+
+keycloak:
+  admin:
+    client-id: BDDADMIN
+    client-secret: SECRET_BDDADMIN
+  client-id: BDD-API
+  client-secret: SECRET_BDDAPI
+  uri: http://localhost:8080 # Will be replaced by the real keycloak uri in the integration tests
+  admin-uri: ${keycloak.uri} # Will be replaced by the real keycloak uri in the integration tests
+  realm: BDD_REALM
+  issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
 
 auth:
   refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf

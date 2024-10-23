@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
@@ -71,7 +72,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
 
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -106,7 +108,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.USERS + "?order_by=" + orderBy;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -127,7 +130,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.GAME_SAVES + "?order_by=" + orderBy;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -148,7 +152,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.USER_ID.replace("{user_id}", userId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -166,7 +171,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.GAME_SAVE_ID.replace("{game_save_id}", gameSaveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -189,7 +195,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         List<Filter> filters = rows.stream().map(BddUtils::mapToFilter).toList();
 
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<SearchRequest> request = new HttpEntity<>(new SearchRequest(filters), headers);
@@ -214,7 +221,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         List<Filter> filters = rows.stream().map(BddUtils::mapToFilter).toList();
 
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<SearchRequest> request = new HttpEntity<>(new SearchRequest(filters), headers);
@@ -240,7 +248,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
 
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<AdminUserUpdateRequest> request = new HttpEntity<>(adminUserUpdateRequest, headers);
@@ -268,7 +277,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         AdminUserCreationRequest adminRequest = requests.get(0);
 
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<AdminUserCreationRequest> request = new HttpEntity<>(adminRequest, headers);
@@ -287,7 +297,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.TOGGLE_CACHE;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -304,7 +315,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.CACHE_ENABLED;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -321,7 +333,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.CACHE;
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -347,7 +360,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         AdminGameSaveCreationRequest adminRequest = requests.get(0);
 
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<AdminGameSaveCreationRequest> request = new HttpEntity<>(adminRequest, headers);
@@ -375,7 +389,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.GAME_SAVE_ID.replace("{game_save_id}", saveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<AdminGameSaveUpdateRequest> request = new HttpEntity<>(updateRequest, headers);
@@ -402,7 +417,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.UPDATE_GAME_SAVE_CURRENCIES.replace("{game_save_id}", saveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<CurrencyRequest> request = new HttpEntity<>(currencyRequest, headers);
@@ -429,7 +445,8 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.ADMIN + ControllerConstants.Admin.UPDATE_GAME_SAVE_STAGES.replace("{game_save_id}", saveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<StageRequest> request = new HttpEntity<>(stageRequest, headers);

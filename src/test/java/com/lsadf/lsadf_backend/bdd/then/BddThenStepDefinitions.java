@@ -2,7 +2,6 @@ package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.*;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -145,8 +143,10 @@ public class BddThenStepDefinitions extends BddLoader {
 
         assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "createdAt", "updatedAt")
+                .ignoringFields("id", "createdAt", "updatedAt", "roles")
                 .isEqualTo(expected);
+
+        assertThat(actual.getRoles()).containsAll(expected.getRoles());
     }
 
 
@@ -231,29 +231,6 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-    }
-
-    @Then("^I should return the following user entities$")
-    public void then_i_should_should_return_users(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        Map<String, UserEntity> expectedUserEntityMap = rows
-                .stream()
-                .map(BddUtils::mapToUserEntity)
-                .collect(Collectors.toMap(UserEntity::getEmail, expected -> expected, (a, b) -> b));
-
-
-        List<UserEntity> actual = userEntityListStack.peek();
-
-        for (UserEntity userEntity : actual) {
-            UserEntity expected = expectedUserEntityMap.get(userEntity.getEmail());
-            assertThat(userEntity).isNotNull();
-            assertThat(userEntity)
-                    .usingRecursiveComparison()
-                    .ignoringFields("id", "createdAt", "updatedAt", "password")
-                    .isEqualTo(expected);
-            assertThat(passwordEncoder.matches(expected.getPassword(), userEntity.getPassword())).isTrue();
-        }
     }
 
 

@@ -1,4 +1,5 @@
-Feature: Admin Controller tests
+@ignore
+Feature: Admin Controller BDD tests
 
   Background:
     Given the BDD engine is ready

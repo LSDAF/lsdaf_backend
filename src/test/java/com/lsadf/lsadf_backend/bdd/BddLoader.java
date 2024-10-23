@@ -5,22 +5,24 @@ import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
+import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.*;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
+import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.*;
+import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.keycloak.admin.client.Keycloak;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,14 +36,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
-import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
-import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
 
 /**
@@ -51,7 +51,7 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
         LsadfBackendConfiguration.class,
         LsadfBackendBddTestsConfiguration.class,
-
+        GlobalExceptionHandler.class,
         // Precise both the interface and the implementation to avoid ambiguity & errors for testing
         AuthController.class,
         AuthControllerImpl.class,
@@ -114,6 +114,12 @@ public class BddLoader {
     // Services
 
     @Autowired
+    protected UserService userService;
+
+    @Autowired
+    protected Keycloak keycloakAdminClient;
+
+    @Autowired
     protected ClockService clockService;
 
     @Autowired
@@ -131,18 +137,12 @@ public class BddLoader {
     @Autowired
     protected CacheFlushService cacheFlushService;
 
-    @Autowired
-    protected EmailService emailService;
-
 
     @Autowired
     protected GameSaveService gameSaveService;
 
 
     // BDD Specific Stacks & Maps
-
-    @Autowired
-    protected Map<String, Pair<Date, LocalUser>> localUserMap;
 
     @Autowired
     protected Stack<List<GameSave>> gameSaveListStack;
@@ -155,9 +155,6 @@ public class BddLoader {
 
     @Autowired
     protected Stack<GlobalInfo> globalInfoStack;
-
-    @Autowired
-    protected Stack<List<UserEntity>> userEntityListStack;
 
     @Autowired
     protected Stack<MimeMessage> mimeMessageStack;
@@ -181,16 +178,14 @@ public class BddLoader {
     protected Stack<Boolean> booleanStack;
 
     @Autowired
-    @Qualifier(JWT_STACK)
-    protected Stack<String> jwtTokenStack;
-
-    @Autowired
-    @Qualifier(REFRESH_JWT_TOKEN_STACK)
-    protected Stack<String> refreshJwtTokenStack;
+    protected Stack<JwtAuthentication> jwtAuthenticationStack;
 
     // Properties
     @Autowired
     protected CacheExpirationProperties cacheExpirationProperties;
+
+    @Autowired
+    protected KeycloakProperties keycloakProperties;
 
     // Controller testing properties
 
@@ -200,7 +195,19 @@ public class BddLoader {
     @Autowired
     protected TestRestTemplate testRestTemplate;
 
+    private static KeycloakContainer keycloak;
+
     static {
         log.info("Start BDD loader...");
+        keycloak = new KeycloakContainer().withRealmImportFile("keycloak/bdd_realm-export.json");
+        keycloak.start();
     }
+
+    @DynamicPropertySource
+    static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
+        registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> keycloak.getAuthServerUrl() + "/realms/BDD_REALM");
+        registry.add("keycloak.uri", () -> keycloak.getAuthServerUrl());
+        registry.add("keycloak.adminUri", () -> keycloak.getAuthServerUrl());
+    }
+
 }
