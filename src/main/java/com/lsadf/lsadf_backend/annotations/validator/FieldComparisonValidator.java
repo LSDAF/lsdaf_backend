@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.annotations.impl;
+package com.lsadf.lsadf_backend.annotations.validator;
 
 import com.lsadf.lsadf_backend.annotations.StageConsistency;
 import jakarta.validation.ConstraintValidator;

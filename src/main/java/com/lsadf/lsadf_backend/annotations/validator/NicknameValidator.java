@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.annotations.impl;
+package com.lsadf.lsadf_backend.annotations.validator;
 
 import com.lsadf.lsadf_backend.annotations.Nickname;
 import jakarta.validation.ConstraintValidator;
@@ -10,8 +10,9 @@ public class NicknameValidator implements ConstraintValidator<Nickname, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        // If nickname is null, then should return false
         if (value == null) {
-            return true;
+            return false;
         }
 
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
