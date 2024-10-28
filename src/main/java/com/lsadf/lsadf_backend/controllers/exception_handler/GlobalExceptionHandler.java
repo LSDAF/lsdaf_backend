@@ -48,6 +48,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Exception handler for IllegalArgumentException
+     * @param e IllegalArgumentException
+     * @return ResponseEntity containing the error
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<GenericResponse<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("IllegalArgumentException: ", e);
+        return generateResponse(HttpStatus.BAD_REQUEST, "Illegal argument: " + e.getMessage(), null);
+    }
+
+    /**
      * Exception handler for AlreadyExistingGameSaveException
      * @param e AlreadyExistingGameSaveException
      * @return ResponseEntity containing the error
