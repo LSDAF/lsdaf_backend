@@ -15,6 +15,8 @@ import java.lang.annotation.Target;
 public @interface Uuid {
     String message() default "Invalid UUID format";
 
+    boolean nullable() default false;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

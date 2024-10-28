@@ -7,11 +7,19 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.UUID;
 
 public class UuidValidator implements ConstraintValidator<Uuid, String> {
+
+    private boolean nullable;
+
+    @Override
+    public void initialize(Uuid constraintAnnotation) {
+        this.nullable = constraintAnnotation.nullable();
+    }
+
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         // Check if the value is a valid UUID
         if (value == null) {
-            return true;  // Assume null values are handled separately or allowed
+            return nullable;
         }
         try {
             UUID.fromString(value);
