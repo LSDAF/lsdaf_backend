@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.annotations;
 
-import com.lsadf.lsadf_backend.annotations.impl.NicknameValidator;
+import com.lsadf.lsadf_backend.annotations.validator.NicknameValidator;
 import jakarta.validation.Constraint;
 
 import java.lang.annotation.*;
