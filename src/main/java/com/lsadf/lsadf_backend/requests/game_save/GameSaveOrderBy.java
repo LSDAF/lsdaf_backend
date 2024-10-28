@@ -17,6 +17,10 @@ public enum GameSaveOrderBy implements OrderBy {
     EMERALD_DESC(JsonAttributes.Currency.EMERALD, SortingOrderParameter.DESCENDING),
     AMETHYST(JsonAttributes.Currency.AMETHYST, SortingOrderParameter.ASCENDING),
     AMETHYST_DESC(JsonAttributes.Currency.AMETHYST, SortingOrderParameter.DESCENDING),
+    NICKNAME(JsonAttributes.GameSave.NICKNAME, SortingOrderParameter.ASCENDING),
+    NICKNAME_DESC(JsonAttributes.GameSave.NICKNAME, SortingOrderParameter.DESCENDING),
+    MAX_STAGE(JsonAttributes.Stage.MAX_STAGE, SortingOrderParameter.ASCENDING),
+    MAX_STAGE_DESC(JsonAttributes.Stage.MAX_STAGE, SortingOrderParameter.DESCENDING),
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
     ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING),
     NONE(null, null);
