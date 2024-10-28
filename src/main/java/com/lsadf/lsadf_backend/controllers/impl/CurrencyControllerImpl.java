@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
 
 /**
  * Implementation of the Currency Controller
@@ -59,7 +60,7 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
                                                               String gameSaveId,
                                                               CurrencyRequest currencyRequest) {
         validateUser(jwt);
-        String userEmail = jwt.getSubject();
+        String userEmail = getUsernameFromJwt(jwt);
         gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
 
         Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
@@ -75,7 +76,7 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
     public ResponseEntity<GenericResponse<Void>> getCurrency(Jwt jwt,
                                                              String gameSaveId) {
         validateUser(jwt);
-        String userEmail = jwt.getSubject();
+        String userEmail = getUsernameFromJwt(jwt);
         gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
         Currency currency = currencyService.getCurrency(gameSaveId);
         return generateResponse(HttpStatus.OK, currency);

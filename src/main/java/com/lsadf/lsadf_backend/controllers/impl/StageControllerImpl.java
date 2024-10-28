@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
 
 /**
  * Implementation of the Stage Controller
@@ -51,8 +52,8 @@ public class StageControllerImpl extends BaseController implements StageControll
                                                            String gameSaveId,
                                                            StageRequest stageRequest) {
         validateUser(jwt);
-        String userEmail = jwt.getSubject();
-        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        String username = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, username);
 
         Stage stage = mapper.mapStageRequestToStage(stageRequest);
         stageService.saveStage(gameSaveId, stage, cacheService.isEnabled());
@@ -67,8 +68,8 @@ public class StageControllerImpl extends BaseController implements StageControll
     public ResponseEntity<GenericResponse<Void>> getStage(Jwt jwt,
                                                           String gameSaveId) {
         validateUser(jwt);
-        String userEmail = jwt.getClaimAsString("preferred_username");
-        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        String username = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, username);
         Stage stage = stageService.getStage(gameSaveId);
         return generateResponse(HttpStatus.OK, stage);
     }
