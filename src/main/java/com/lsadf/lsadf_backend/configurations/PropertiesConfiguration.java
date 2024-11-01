@@ -2,7 +2,6 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.properties.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +10,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class PropertiesConfiguration {
+
+    @Bean
+    @ConfigurationProperties(prefix = "json-view")
+    public JsonViewProperties jsonViewProperties() {
+        return new JsonViewProperties();
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "http-log")
@@ -82,12 +87,6 @@ public class PropertiesConfiguration {
     @ConfigurationProperties(prefix = "db")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "auth")
-    public AuthProperties authProperties() {
-        return new AuthProperties();
     }
 
     @ConfigurationProperties(prefix = "swagger")
