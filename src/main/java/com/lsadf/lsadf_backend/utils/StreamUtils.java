@@ -16,8 +16,8 @@ public class StreamUtils {
         return switch (orderBy) {
             case ID -> userStream.sorted(Comparator.comparing(User::getId));
             case ID_DESC -> userStream.sorted(Comparator.comparing(User::getId).reversed());
-            case EMAIL -> userStream.sorted(Comparator.comparing(User::getUsername));
-            case EMAIL_DESC -> userStream.sorted(Comparator.comparing(User::getUsername).reversed());
+            case USERNAME -> userStream.sorted(Comparator.comparing(User::getUsername));
+            case USERNAME_DESC -> userStream.sorted(Comparator.comparing(User::getUsername).reversed());
             case FIRST_NAME -> userStream.sorted(Comparator.comparing(User::getLastName));
             case FIRST_NAME_DESC -> userStream.sorted(Comparator.comparing(User::getLastName).reversed());
             case LAST_NAME -> userStream.sorted(Comparator.comparing(User::getLastName));
@@ -45,6 +45,10 @@ public class StreamUtils {
             case EMERALD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getEmeraldAmount()).reversed());
             case AMETHYST -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getAmethystAmount()));
             case AMETHYST_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getAmethystAmount()).reversed());
+            case NICKNAME -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getNickname));
+            case NICKNAME_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getNickname).reversed());
+            case MAX_STAGE -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getStageEntity().getMaxStage()));
+            case MAX_STAGE_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getStageEntity().getMaxStage()).reversed());
             case NONE -> gameSaveStream;
         };
     }

@@ -7,8 +7,8 @@ import com.lsadf.lsadf_backend.requests.common.OrderBy;
 public enum UserOrderBy implements OrderBy {
     ID(JsonAttributes.ID, SortingOrderParameter.ASCENDING),
     ID_DESC(JsonAttributes.ID, SortingOrderParameter.DESCENDING),
-    EMAIL(JsonAttributes.User.USERNAME, SortingOrderParameter.ASCENDING),
-    EMAIL_DESC(JsonAttributes.User.USERNAME, SortingOrderParameter.DESCENDING),
+    USERNAME(JsonAttributes.User.USERNAME, SortingOrderParameter.ASCENDING),
+    USERNAME_DESC(JsonAttributes.User.USERNAME, SortingOrderParameter.DESCENDING),
     FIRST_NAME(JsonAttributes.User.FIRST_NAME, SortingOrderParameter.ASCENDING),
     FIRST_NAME_DESC(JsonAttributes.User.FIRST_NAME, SortingOrderParameter.DESCENDING),
     LAST_NAME(JsonAttributes.User.LAST_NAME, SortingOrderParameter.ASCENDING),
