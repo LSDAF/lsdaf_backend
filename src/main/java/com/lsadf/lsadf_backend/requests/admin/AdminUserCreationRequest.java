@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
@@ -50,4 +51,8 @@ public class AdminUserCreationRequest implements Request {
     @Schema(description = "Username of user to create", example = "toto@toto.fr")
     @JsonProperty(value = USERNAME)
     private String username;
+
+    @Schema(description = "Roles of user to create", example = "[\"ADMIN\", \"USER\"]")
+    @JsonProperty(value = USER_ROLES)
+    private List<String> userRoles;
 }
