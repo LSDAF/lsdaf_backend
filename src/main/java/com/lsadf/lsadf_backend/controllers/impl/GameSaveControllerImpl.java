@@ -84,7 +84,7 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
         validateUser(jwt);
         String username = getUsernameFromJwt(jwt);
 
-        List<GameSave> gameSaveList = gameSaveService.getGameSavesByUserEmail(username)
+        List<GameSave> gameSaveList = gameSaveService.getGameSavesByUsername(username)
                 .map(mapper::mapGameSaveEntityToGameSave)
                 .toList();
 

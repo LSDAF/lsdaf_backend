@@ -1,7 +1,9 @@
 package com.lsadf.lsadf_backend.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.lsadf_backend.annotations.Uuid;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.constants.JsonViews;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
@@ -46,6 +48,7 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
+    @JsonView(JsonViews.Internal.class)
     ResponseEntity<GenericResponse<GameSave>> generateNewGameSave(@AuthenticationPrincipal Jwt jwt);
 
 
@@ -65,6 +68,7 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
+    @JsonView(JsonViews.Internal.class)
     ResponseEntity<GenericResponse<Void>> updateNickname(@AuthenticationPrincipal Jwt jwt,
                                                          @PathVariable(value = GAME_SAVE_ID) @Uuid String id,
                                                          @Valid @RequestBody GameSaveUpdateNicknameRequest gameSaveUpdateNicknameRequest);
@@ -82,5 +86,6 @@ public interface GameSaveController {
             @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
+    @JsonView(JsonViews.Internal.class)
     ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(Jwt jwt);
 }
