@@ -109,7 +109,7 @@ public interface AdminGameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    @Operation(summary = "Gets a game save by its id")
+    @Operation(summary = "Gets a user's game saves")
     @GetMapping(value = ControllerConstants.AdminGameSave.USER_GAME_SAVES)
     @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(@AuthenticationPrincipal Jwt jwt,
@@ -128,7 +128,7 @@ public interface AdminGameSaveController {
             @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
-    @Operation(summary = "Gets a game save by its id")
+    @Operation(summary = "Gets all game saves")
     @GetMapping
     @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@AuthenticationPrincipal Jwt jwt,

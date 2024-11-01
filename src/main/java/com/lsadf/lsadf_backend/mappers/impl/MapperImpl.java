@@ -4,7 +4,10 @@ import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
@@ -44,7 +47,6 @@ public class MapperImpl implements Mapper {
                 .stage(stage)
                 .healthPoints(gameSaveEntity.getHealthPoints())
                 .attack(gameSaveEntity.getAttack())
-                .id(gameSaveEntity.getId())
                 .createdAt(gameSaveEntity.getCreatedAt())
                 .updatedAt(gameSaveEntity.getUpdatedAt())
                 .build();
@@ -91,10 +93,10 @@ public class MapperImpl implements Mapper {
     public User mapUserRepresentationToUser(UserRepresentation userRepresentation) {
         Date createdTimestamp = (userRepresentation.getCreatedTimestamp() != null) ? new Date(userRepresentation.getCreatedTimestamp()) : null;
         return User.builder()
-                .id(userRepresentation.getId())
                 .username(userRepresentation.getUsername())
                 .firstName(userRepresentation.getFirstName())
                 .lastName(userRepresentation.getLastName())
+                .id(userRepresentation.getId())
                 .emailVerified(userRepresentation.isEmailVerified())
                 .enabled(userRepresentation.isEnabled())
                 .createdTimestamp(createdTimestamp)
@@ -127,6 +129,7 @@ public class MapperImpl implements Mapper {
                 .firstName(adminUserCreationRequest.getFirstName())
                 .lastName(adminUserCreationRequest.getLastName())
                 .emailVerified(adminUserCreationRequest.getEmailVerified())
+                .userRoles(adminUserCreationRequest.getUserRoles())
                 .enabled(adminUserCreationRequest.getEnabled())
                 .build();
     }

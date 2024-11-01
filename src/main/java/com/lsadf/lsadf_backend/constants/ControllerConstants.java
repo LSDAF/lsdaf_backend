@@ -30,7 +30,7 @@ public final class ControllerConstants {
         public static final String GAME_SAVE_ID = "game_save_id";
         public static final String ORDER_BY = "order_by";
         public static final String USER_ID = "user_id";
-        public static final String USER_EMAIL = "user_email";
+        public static final String USERNAME = "username";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -67,15 +67,16 @@ public final class ControllerConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AdminGameSave {
-        public static final String GAME_SAVE_ID = "/{game_save_id}";
-        public static final String UPDATE_GAME_SAVE_CURRENCIES = "/{game_save_id}/currencies";
-        public static final String UPDATE_GAME_SAVE_STAGES = "/{game_save_id}/stages";
+        public static final String USER_GAME_SAVES = "/user/{username}";
+        public static final String GAME_SAVE_ID = "/id/{game_save_id}";
+        public static final String UPDATE_GAME_SAVE_CURRENCIES = "/id/{game_save_id}/currencies";
+        public static final String UPDATE_GAME_SAVE_STAGES = "/id/{game_save_id}/stages";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AdminUser {
         public static final String USER_ID = "/id/{user_id}";
-        public static final String USER_EMAIL = "/email/{user_email}";
+        public static final String USERNAME = "/username/{username}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

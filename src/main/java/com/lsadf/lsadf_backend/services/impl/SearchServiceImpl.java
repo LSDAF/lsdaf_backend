@@ -14,6 +14,8 @@ import com.lsadf.lsadf_backend.utils.StreamUtils;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.NICKNAME;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.USER_EMAIL;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
@@ -42,8 +44,8 @@ public class SearchServiceImpl implements SearchService {
             switch (filter.getType()) {
                 case FIRST_NAME -> userStream = userStream.filter(user -> user.getFirstName().equals(filter.getValue()));
                 case LAST_NAME -> userStream = userStream.filter(user -> user.getLastName().equals(filter.getValue()));
+                case USERNAME, USER_EMAIL -> userStream = userStream.filter(user -> user.getUsername().equals(filter.getValue()));
                 case ID -> userStream = userStream.filter(user -> user.getId().equals(filter.getValue()));
-                case USERNAME -> userStream = userStream.filter(user -> user.getUsername().equals(filter.getValue()));
                 case USER_ROLES -> userStream = userStream.filter(user -> user.getUserRoles().stream().anyMatch(role -> role.equals(filter.getValue())));
                 default -> throw new IllegalArgumentException("Invalid filter type");
             }
@@ -62,6 +64,8 @@ public class SearchServiceImpl implements SearchService {
         for (Filter filter : filters) {
             switch (filter.getType()) {
                 case ID -> gameSaveStream = gameSaveStream.filter(gameSave -> gameSave.getId().equals(filter.getValue()));
+                case USER_EMAIL -> gameSaveStream = gameSaveStream.filter(gameSave -> gameSave.getUserEmail().equals(filter.getValue()));
+                case NICKNAME -> gameSaveStream = gameSaveStream.filter(gameSave -> gameSave.getNickname().equals(filter.getValue()));
                 default -> throw new IllegalArgumentException("Invalid filter type");
             }
         }
