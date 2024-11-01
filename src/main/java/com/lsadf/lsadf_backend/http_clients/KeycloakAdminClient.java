@@ -21,10 +21,10 @@ public interface KeycloakAdminClient {
     String LIFESPAN = "lifespan";
 
     // ENDPOINTS
-    String USERS_ENDPOINT = "/{realm}/users";
-    String USER_ID_ENDPOINT = "/{realm}/users/{id}";
-    String EXECUTE_ACTIONS_EMAIL_ENDPOINT = "/{realm}/users/{id}/execute-actions-email";
-    String SEND_VERIFY_EMAIL_ENDPOINT = "/{realm}/users/{id}/send-verify-email";
+    String USERS_ENDPOINT = "/admin/realms/{realm}/users";
+    String USER_ID_ENDPOINT = "/admin/realms/{realm}/users/{id}";
+    String EXECUTE_ACTIONS_EMAIL_ENDPOINT = "/admin/realms/{realm}/users/{id}/execute-actions-email";
+    String SEND_VERIFY_EMAIL_ENDPOINT = "/admin/realms/{realm}/users/{id}/send-verify-email";
 
     /**
      * Get users
