@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.GameSaveControllerImpl;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;

@@ -6,6 +6,10 @@ Feature: Stage Controller BDD tests
     And a clean database
     And the time clock set to the present
 
+    # We assume we have the two following users in keycloak
+    # paul.ochon@test.com: ADMIN,USER: toto1234
+    # paul.itesse@test.com: USER: toto5678
+
   Scenario: A user gets the stages of one of his game saves with cache
     Given the following game saves
       | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |

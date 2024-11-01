@@ -617,6 +617,7 @@
       "groups": []
     },
     {
+      "id": "ce60ea41-3765-4562-8c96-8673de8f96b0",
       "username": "paul.ochon@test.com",
       "email": "paul.ochon@test.com",
       "firstName": "Paul",
@@ -642,6 +643,7 @@
       }
     },
     {
+      "id": "71d6755e-1dfd-4f1f-8d7b-bdec9a62c6e8",
       "username": "paul.itesse@test.com",
       "email": "paul.itesse@test.com",
       "firstName": "Paul",

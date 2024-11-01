@@ -5,6 +5,10 @@ Feature: Auth Controller BDD tests
     And a clean database
     And the time clock set to the present
 
+    # We assume we have the two following users in keycloak
+    # paul.ochon@test.com: ADMIN,USER: toto1234
+    # paul.itesse@test.com: USER: toto5678
+
   Scenario: A user logs in with valid credentials
     When the user logs in with the following credentials
       | username            | password |

@@ -5,7 +5,10 @@ import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.admin.*;
+import com.lsadf.lsadf_backend.controllers.admin.impl.*;
+import com.lsadf.lsadf_backend.controllers.advices.DynamicJsonViewAdvice;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.*;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
@@ -52,6 +55,7 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
         LsadfBackendConfiguration.class,
         LsadfBackendBddTestsConfiguration.class,
         GlobalExceptionHandler.class,
+        DynamicJsonViewAdvice.class,
         // Precise both the interface and the implementation to avoid ambiguity & errors for testing
         AuthController.class,
         AuthControllerImpl.class,
@@ -59,14 +63,23 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
         GameSaveControllerImpl.class,
         UserController.class,
         UserControllerImpl.class,
-        AdminController.class,
-        AdminControllerImpl.class,
         CurrencyController.class,
         CurrencyControllerImpl.class,
         StageController.class,
         StageControllerImpl.class,
         OAuth2Controller.class,
         OAuth2ControllerImpl.class,
+        // ADMIN
+        AdminUserController.class,
+        AdminUserControllerImpl.class,
+        AdminGameSaveController.class,
+        AdminGameSaveControllerImpl.class,
+        AdminSearchController.class,
+        AdminSearchControllerImpl.class,
+        AdminGlobalInfoController.class,
+        AdminGlobalInfoControllerImpl.class,
+        AdminCacheController.class,
+        AdminCacheControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties

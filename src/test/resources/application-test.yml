@@ -125,6 +125,10 @@ shutdown:
 user-email-verification:
   expiration-seconds: 3_600
 
+json-view:
+  default-json-view: ADMIN
+  default-json-view-enabled: true
+
 mail:
   host: smtp.test_mail.com
   port: 6666

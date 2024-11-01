@@ -191,7 +191,7 @@ public class BddUtils {
         String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
         String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
         String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
-
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long gold = Long.parseLong(goldString);
         Long healthPoints = Long.parseLong(healthPointsString);
@@ -205,17 +205,45 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
 
+        StageRequest stageRequest = new StageRequest(currentStage, maxStage);
+        CurrencyRequest currencyRequest = new CurrencyRequest(gold, diamond, emerald, amethyst);
+
         return AdminGameSaveCreationRequest.builder()
-                .diamond(diamond)
-                .gold(gold)
-                .emerald(emerald)
-                .amethyst(amethyst)
                 .healthPoints(healthPoints)
                 .attack(attack)
+                .nickname(nickname)
                 .id(id)
-                .maxStage(maxStage)
-                .currentStage(currentStage)
+                .stage(stageRequest)
+                .currency(currencyRequest)
                 .userEmail(userEmail)
+                .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a User
+     * @param row row from BDD table
+     * @return User
+     */
+    public static User mapToUser(Map<String, String> row) {
+        String email = row.get(BddFieldConstants.User.USERNAME);
+        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
+        String enabled = row.get(BddFieldConstants.User.ENABLED);
+        String verified = row.get(BddFieldConstants.User.EMAIL_VERIFIED);
+        String userRoles = row.get(BddFieldConstants.User.ROLES);
+
+        List<String> roles = Arrays.stream(userRoles.split(COMMA)).toList();
+
+        boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        boolean verifiedBoolean = Boolean.parseBoolean(verified);
+
+        return User.builder()
+                .username(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .enabled(enabledBoolean)
+                .emailVerified(verifiedBoolean)
+                .userRoles(roles)
                 .build();
     }
 
@@ -400,7 +428,7 @@ public class BddUtils {
         String firstName = row.get(BddFieldConstants.AdminUserUpdateRequest.FIRST_NAME);
         String lastName = row.get(BddFieldConstants.AdminUserUpdateRequest.LAST_NAME);
         String enabled = row.get(BddFieldConstants.AdminUserUpdateRequest.ENABLED);
-        String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.VERIFIED);
+        String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.EMAIL_VERIFIED);
         String userRoles = row.get(BddFieldConstants.AdminUserUpdateRequest.USER_ROLES);
 
         List<String> roles = Arrays.stream(userRoles.split(COMMA)).toList();
@@ -420,14 +448,17 @@ public class BddUtils {
     public static AdminUserCreationRequest mapToAdminUserCreationRequest(Map<String, String> row) {
         String firstName = row.get(BddFieldConstants.AdminUserCreationRequest.FIRST_NAME);
         String lastName = row.get(BddFieldConstants.AdminUserCreationRequest.LAST_NAME);
-        String email = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL);
+        String email = row.get(BddFieldConstants.AdminUserCreationRequest.USERNAME);
         String enabled = row.get(BddFieldConstants.AdminUserCreationRequest.ENABLED);
-        String verified = row.get(BddFieldConstants.AdminUserCreationRequest.VERIFIED);
+        String verified = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL_VERIFIED);
+        String roles = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ROLES);
 
         Boolean enabledBoolean = Boolean.parseBoolean(enabled);
         Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
-        return new AdminUserCreationRequest(firstName, lastName, enabledBoolean, verifiedBoolean, email);
+        List<String> userRoles = roles == null ? null : Arrays.stream(roles.split(COMMA)).toList();
+
+        return new AdminUserCreationRequest(firstName, lastName, enabledBoolean, verifiedBoolean, email, userRoles);
 
     }
 

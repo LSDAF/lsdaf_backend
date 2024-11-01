@@ -3,7 +3,7 @@ package com.lsadf.lsadf_backend.unit.controllers.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.admin.AdminCacheController;
 import com.lsadf.lsadf_backend.controllers.admin.impl.AdminCacheControllerImpl;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
 import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;

@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.CurrencyController;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.CurrencyControllerImpl;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;

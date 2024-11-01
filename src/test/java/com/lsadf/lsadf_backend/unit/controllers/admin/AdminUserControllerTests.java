@@ -3,7 +3,7 @@ package com.lsadf.lsadf_backend.unit.controllers.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.admin.AdminUserController;
 import com.lsadf.lsadf_backend.controllers.admin.impl.AdminUserControllerImpl;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -299,9 +298,9 @@ class AdminUserControllerTests {
 
     @Test
     @SneakyThrows
-    void getUserByEmail_should_return_401_when_user_not_authenticated() {
+    void getUserByUsername_should_return_401_when_user_not_authenticated() {
         // when
-        mockMvc.perform(get("/api/v1/admin/users/email/{email}", "paul.ochon@test.com")
+        mockMvc.perform(get("/api/v1/admin/users/username/{username}", "paul.ochon@test.com")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -311,9 +310,9 @@ class AdminUserControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
-    void getUserByEmail_should_return_403_when_user_not_admin() {
+    void getUserByUsername_should_return_403_when_user_not_admin() {
         // when
-        mockMvc.perform(get("/api/v1/admin/users/email/{email}", "paul.ochon@test.com")
+        mockMvc.perform(get("/api/v1/admin/users/username/{username}", "paul.ochon@test.com")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -323,9 +322,9 @@ class AdminUserControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void getUserByEmail_should_return_200_when_authenticated_user_is_admin() {
+    void getUserByUsername_should_return_200_when_authenticated_user_is_admin() {
         // when
-        mockMvc.perform(get("/api/v1/admin/users/email/{email}", "test@test.com")
+        mockMvc.perform(get("/api/v1/admin/users/username/{username}", "test@test.com")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -335,9 +334,9 @@ class AdminUserControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void getUserByEmail_should_return_400_when_email_is_not_valid() {
+    void getUserByUsername_should_return_400_when_username_is_not_valid() {
         // when
-        mockMvc.perform(get("/api/v1/admin/users/email/{email}", "test")
+        mockMvc.perform(get("/api/v1/admin/users/username/{username}", "test")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then

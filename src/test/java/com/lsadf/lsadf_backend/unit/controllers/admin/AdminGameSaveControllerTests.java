@@ -3,14 +3,16 @@ package com.lsadf.lsadf_backend.unit.controllers.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.admin.AdminGameSaveController;
 import com.lsadf.lsadf_backend.controllers.admin.impl.AdminGameSaveControllerImpl;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
+import com.lsadf.lsadf_backend.services.GameSaveService;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
 import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -18,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -29,6 +32,7 @@ import java.util.stream.Stream;
 
 import static com.lsadf.lsadf_backend.constants.ControllerConstants.Params.ORDER_BY;
 import static com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy.NICKNAME;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,11 +47,19 @@ class AdminGameSaveControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private GameSaveService gameSaveService;
+
+    @BeforeEach
+    public void setUp() {
+        when(gameSaveService.existsById(Mockito.anyString())).thenReturn(true);
+    }
+
     @Test
     @SneakyThrows
     void deleteGameSave_should_return_401_when_user_not_authenticated() {
         // when
-        mockMvc.perform(delete("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(delete("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -59,7 +71,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
     void deleteGameSave_should_return_403_when_user_not_admin() {
         // when
-        mockMvc.perform(delete("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(delete("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -71,7 +83,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void deleteGameSave_should_return_400_when_game_save_id_is_not_uuid() {
         // when
-        mockMvc.perform(delete("/api/v1/admin/game_saves/{game_save_id}", "testtesttest")
+        mockMvc.perform(delete("/api/v1/admin/game_saves/id/{game_save_id}", "testtesttest")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -83,7 +95,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void deleteGameSave_should_return_200_when_authenticated_user_is_admin() {
         // when
-        mockMvc.perform(delete("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(delete("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -244,7 +256,7 @@ class AdminGameSaveControllerTests {
     @SneakyThrows
     void getGameSave_should_return_401_when_user_not_authenticated() {
         // when
-        mockMvc.perform(get("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(get("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -256,7 +268,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
     void getGameSave_should_return_403_when_user_not_admin() {
         // when
-        mockMvc.perform(get("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(get("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -268,7 +280,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void getGameSave_should_return_400_when_game_save_id_is_not_uuid() {
         // when
-        mockMvc.perform(get("/api/v1/admin/game_saves/{game_save_id}", "testtesttest")
+        mockMvc.perform(get("/api/v1/admin/game_saves/id/{game_save_id}", "testtesttest")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -280,7 +292,7 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void getGameSave_should_return_200_when_authenticated_user_is_admin() {
         // when
-        mockMvc.perform(get("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(get("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 // then
@@ -350,6 +362,53 @@ class AdminGameSaveControllerTests {
 
     @Test
     @SneakyThrows
+    void getUserGameSaves_should_return_401_when_user_not_authenticated() {
+        // when
+        mockMvc.perform(get("/api/v1/admin/game_saves/user/{username}", "paul.ochon@test.com")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                // then
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
+    void getUserGameSaves_should_return_403_when_user_not_admin() {
+        // when
+        mockMvc.perform(get("/api/v1/admin/game_saves/user/{username}", "paul.ochon@test.com")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                // then
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void getUserGameSaves_should_return_200_when_authenticated_user_is_admin() {
+        // when
+        mockMvc.perform(get("/api/v1/admin/game_saves/user/{username}", "paul.ochon@test.com")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                // then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void getUserGameSaves_should_return_200_when_username_is_not_email() {
+        // when
+        mockMvc.perform(get("/api/v1/admin/game_saves/user/{username}", "testtesttest")
+                        .content(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @SneakyThrows
     void updateGameSave_should_return_401_when_user_not_authenticated() {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
@@ -395,7 +454,7 @@ class AdminGameSaveControllerTests {
                 .healthPoints(100L)
                 .build();
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}", "testtesttest")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "testtesttest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -427,7 +486,7 @@ class AdminGameSaveControllerTests {
                 .healthPoints(hp)
                 .build();
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -441,7 +500,7 @@ class AdminGameSaveControllerTests {
         // given
         AdminGameSaveUpdateRequest request = null;
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -459,7 +518,7 @@ class AdminGameSaveControllerTests {
                 .healthPoints(100L)
                 .build();
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -500,7 +559,7 @@ class AdminGameSaveControllerTests {
         // given
         CurrencyRequest request = new CurrencyRequest(100L, 100L, 100L, 100L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/currencies", "testtesttest")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/currencies", "testtesttest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -514,7 +573,7 @@ class AdminGameSaveControllerTests {
         // given
         CurrencyRequest request = null;
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -528,7 +587,7 @@ class AdminGameSaveControllerTests {
         // given
         CurrencyRequest request = new CurrencyRequest(100L, 100L, 100L, -100L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -540,9 +599,11 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void updateCurrencies_should_return_200_when_authenticated_user_is_admin() {
         // given
+        // define response when mock gameSaveService checks game save id existence
+
         CurrencyRequest request = new CurrencyRequest(100L, 100L, 100L, 100L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -555,7 +616,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = new StageRequest(1L, 10L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -569,7 +630,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = new StageRequest(1L, 10L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -583,7 +644,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = new StageRequest(1L, 10L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "testtesttest")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "testtesttest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -597,7 +658,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = null;
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -611,7 +672,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = new StageRequest(10L, 1L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then
@@ -625,7 +686,7 @@ class AdminGameSaveControllerTests {
         // given
         StageRequest request = new StageRequest(1L, 10L);
         // when
-        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/stages", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then

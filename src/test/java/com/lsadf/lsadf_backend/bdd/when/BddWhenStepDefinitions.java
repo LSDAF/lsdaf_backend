@@ -159,7 +159,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^we want to get all game saves for the user with email (.*)$")
     public void when_we_want_to_get_all_game_saves_for_the_user_with_email(String email) {
         try {
-            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUserEmail(email)
+            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUsername(email)
                     .toList();
             gameSaveEntityListStack.push(gameSaves);
         } catch (Exception e) {

@@ -64,11 +64,9 @@ public class BddFieldConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String ID = BddFieldConstants.ID;
         public static final String FIRST_NAME = "firstName";
         public static final String LAST_NAME = "lastName";
         public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
         public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String ROLES = "roles";
@@ -137,10 +135,8 @@ public class BddFieldConstants {
     public static final class AdminUserUpdateRequest {
         public static final String FIRST_NAME = "firstName";
         public static final String LAST_NAME = "lastName";
-        public static final String PASSWORD = "password";
-        public static final String EMAIL = "email";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String USER_ROLES = "userRoles";
     }
 
@@ -149,12 +145,12 @@ public class BddFieldConstants {
         public static final String FIRST_NAME = "firstName";
         public static final String LAST_NAME = "lastName";
         public static final String PASSWORD = "password";
-        public static final String EMAIL = "email";
+        public static final String USERNAME = "username";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String SOCIAL_PROVIDER = "socialProvider";
         public static final String PROVIDER_USER_ID = "providerUserId";
-        public static final String ROLES = "roles";
+        public static final String USER_ROLES = "userRoles";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

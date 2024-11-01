@@ -3,7 +3,7 @@ package com.lsadf.lsadf_backend.unit.controllers.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.admin.AdminSearchController;
 import com.lsadf.lsadf_backend.controllers.admin.impl.AdminSearchControllerImpl;
-import com.lsadf.lsadf_backend.controllers.exception_handler.GlobalExceptionHandler;
+import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
