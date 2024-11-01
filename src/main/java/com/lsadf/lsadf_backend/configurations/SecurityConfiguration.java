@@ -1,13 +1,11 @@
 package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
+import com.lsadf.lsadf_backend.configurations.keycloak.KeycloakJwtAuthenticationConverter;
 import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.properties.AuthProperties;
 import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
 import com.lsadf.lsadf_backend.properties.HttpLogProperties;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +24,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -35,16 +32,12 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Base64;
 import java.util.Collection;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_REFRESH_TOKEN_PARSER;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.TokenParser.JWT_TOKEN_PARSER;
 import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
 
 @Configuration
 @Import({
-        AuthProperties.class,
         OAuth2Properties.class
 })
 @EnableWebSecurity
@@ -55,10 +48,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     private RequestLoggerInterceptor requestLoggerInterceptor;
 
     private HttpLogProperties httpLogProperties;
-
-    private static final String ROLE_PREFIX = "ROLE_";
-    private static final String AUTHORITIES_CLAIM_NAME = "roles";
-    private static final String PREFERRED_USERNAME = "preferred_username";
 
     @Autowired
     public SecurityConfiguration(RequestLoggerInterceptor requestLoggerInterceptor,
@@ -79,31 +68,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     public static final String ADMIN_URLS = ADMIN + "/**";
 
-//    @Bean
-//    public CustomAuthenticationProviderImpl customAuthenticationProvider(UserDetailsService lsadfUserDetailsService,
-//                                                                         Cache<LocalUser> localUserCache) {
-//        return new CustomAuthenticationProviderImpl(lsadfUserDetailsService, localUserCache);
-//    }
-//
-    @Bean(name = JWT_TOKEN_PARSER)
-    public JwtParser jwtParser(AuthProperties authProperties) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Base64.getEncoder().encode(authProperties.getTokenSecret().getBytes()))
-                .build();
-    }
-
-    @Bean(name = JWT_REFRESH_TOKEN_PARSER)
-    public JwtParser jwtRefreshTokenParser(AuthProperties authProperties) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Base64.getEncoder().encode(authProperties.getRefreshTokenSecret().getBytes()))
-                .build();
-    }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security,
                                            CorsFilter corsFilter,
-//                                           TokenAuthenticationFilter tokenAuthenticationFilter,
                                            RestAuthenticationEntryPoint restAuthenticationEntryPoint,
                                            JwtAuthenticationConverter customJwtAuthenticationProvider) throws Exception {
         security
@@ -128,14 +96,15 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public JwtAuthenticationConverter customJwtAuthenticationConverter() {
+    public JwtAuthenticationConverter jwtAuthenticationConverter(Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter) {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        authoritiesConverter.setAuthoritiesClaimName(AUTHORITIES_CLAIM_NAME);
-        authoritiesConverter.setAuthorityPrefix(ROLE_PREFIX);
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
-        jwtAuthenticationConverter.setPrincipalClaimName(PREFERRED_USERNAME);
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
+    }
+
+    @Bean
+    public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
+        return new KeycloakJwtAuthenticationConverter();
     }
 
 //    @Bean

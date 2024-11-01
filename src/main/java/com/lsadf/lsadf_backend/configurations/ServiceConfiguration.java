@@ -46,10 +46,18 @@ public class ServiceConfiguration {
     @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
+                                           StageRepository stageRepository,
+                                           CurrencyRepository currencyRepository,
                                            @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache,
                                            HistoCache<Stage> stageHistoCache,
                                            HistoCache<Currency> currencyHistoCache) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache, stageHistoCache, currencyHistoCache);
+        return new GameSaveServiceImpl(userService,
+                gameSaveRepository,
+                stageRepository,
+                currencyRepository,
+                gameSaveOwnershipCache,
+                stageHistoCache,
+                currencyHistoCache);
     }
 
     @Bean
