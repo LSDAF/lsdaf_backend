@@ -1,8 +1,11 @@
 package com.lsadf.lsadf_backend.controllers.admin.impl;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.lsadf.lsadf_backend.constants.JsonViews;
 import com.lsadf.lsadf_backend.controllers.admin.AdminGameSaveController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.GameSave;
@@ -72,6 +75,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * @return
      */
     @Override
+    @JsonView(JsonViews.Admin.class)
     public ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(Jwt jwt,
                                                                         String orderBy) {
         GameSaveOrderBy gameSaveOrderBy = orderBy != null ? GameSaveOrderBy.valueOf(orderBy) : GameSaveOrderBy.NONE;
@@ -85,10 +89,24 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<List<GameSave>>> getUserGameSaves(Jwt jwt,
+                                                                      String username) {
+        validateUser(jwt);
+        try (Stream<GameSaveEntity> stream = gameSaveService.getGameSavesByUsername(username)) {
+            List<GameSave> gameSaves = stream.map(mapper::mapGameSaveEntityToGameSave).toList();
+            return generateResponse(HttpStatus.OK, gameSaves);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @return
      */
     @Override
+    @JsonView(JsonViews.Admin.class)
     public ResponseEntity<GenericResponse<GameSave>> getGameSave(Jwt jwt,
                                                                  String gameSaveId) {
         validateUser(jwt);
@@ -103,6 +121,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * @return
      */
     @Override
+    @JsonView(JsonViews.Admin.class)
     public ResponseEntity<GenericResponse<GameSave>> updateGameSave(Jwt jwt,
                                                                     String gameSaveId,
                                                                     AdminGameSaveUpdateRequest adminGameSaveUpdateRequest) {
@@ -119,6 +138,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * @return
      */
     @Override
+    @JsonView(JsonViews.Admin.class)
     public ResponseEntity<GenericResponse<GameSave>> generateNewSaveGame(Jwt jwt,
                                                                          AdminGameSaveCreationRequest creationRequest) {
 
@@ -132,6 +152,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * {@inheritDoc}
      */
     @Override
+    @JsonView(JsonViews.Admin.class)
     public ResponseEntity<GenericResponse<Void>> deleteGameSave(Jwt jwt,
                                                                 String gameSaveId) {
 
@@ -151,6 +172,9 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
 
         validateUser(jwt);
         Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
+        if (!gameSaveService.existsById(gameSaveId)) {
+            throw new NotFoundException("Game save not found");
+        }
         currencyService.saveCurrency(gameSaveId, currency, redisCacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
@@ -166,6 +190,9 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
 
         validateUser(jwt);
         Stage stage = mapper.mapStageRequestToStage(stageRequest);
+        if (!gameSaveService.existsById(gameSaveId)) {
+            throw new NotFoundException("Game save not found");
+        }
         stageService.saveStage(gameSaveId, stage, redisCacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);

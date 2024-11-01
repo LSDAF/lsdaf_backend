@@ -57,7 +57,7 @@ public class AdminSearchControllerImpl extends BaseController implements AdminSe
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> searchUsers(Jwt jwt,
+    public ResponseEntity<GenericResponse<List<User>>> searchUsers(Jwt jwt,
                                                              SearchRequest searchRequest,
                                                              String orderBy) {
         UserOrderBy userOrderBy = orderBy != null ? UserOrderBy.valueOf(orderBy) : UserOrderBy.NONE;
@@ -74,7 +74,7 @@ public class AdminSearchControllerImpl extends BaseController implements AdminSe
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<GameSave>> searchGameSaves(Jwt jwt,
+    public ResponseEntity<GenericResponse<List<GameSave>>> searchGameSaves(Jwt jwt,
                                                                      SearchRequest searchRequest,
                                                                      String orderBy) {
         GameSaveOrderBy gameSaveOrderBy = orderBy != null ? GameSaveOrderBy.valueOf(orderBy) : GameSaveOrderBy.NONE;

@@ -5,7 +5,6 @@ import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
-import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.UserService;
@@ -78,10 +77,10 @@ public class AdminUserControllerImpl extends BaseController implements AdminUser
      * @return
      */
     @Override
-    public ResponseEntity<GenericResponse<User>> getUserByEmail(Jwt jwt,
-                                                                String userEmail) {
+    public ResponseEntity<GenericResponse<User>> getUserByUsername(Jwt jwt,
+                                                                   String username) {
         validateUser(jwt);
-        User user = userService.getUserByUsername(userEmail);
+        User user = userService.getUserByUsername(username);
         return generateResponse(HttpStatus.OK, user);
     }
 
@@ -95,8 +94,8 @@ public class AdminUserControllerImpl extends BaseController implements AdminUser
                                                             String userId,
                                                             AdminUserUpdateRequest user) {
         validateUser(jwt);
-        userService.updateUser(userId, user);
-        return generateResponse(HttpStatus.OK, null);
+        User updatedUser = userService.updateUser(userId, user);
+        return generateResponse(HttpStatus.OK, updatedUser);
     }
 
     /**
@@ -121,14 +120,7 @@ public class AdminUserControllerImpl extends BaseController implements AdminUser
     public ResponseEntity<GenericResponse<User>> createUser(Jwt jwt,
                                                             AdminUserCreationRequest adminUserCreationRequest) {
         validateUser(jwt);
-        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
-                .username(adminUserCreationRequest.getUsername())
-                .firstName(adminUserCreationRequest.getFirstName())
-                .lastName(adminUserCreationRequest.getLastName())
-                .emailVerified(adminUserCreationRequest.getEmailVerified())
-                .enabled(adminUserCreationRequest.getEnabled())
-                .build();
-        User user = userService.createUser(userCreationRequest);
+        User user = userService.createUser(adminUserCreationRequest);
 
         return generateResponse(HttpStatus.OK, user);
     }

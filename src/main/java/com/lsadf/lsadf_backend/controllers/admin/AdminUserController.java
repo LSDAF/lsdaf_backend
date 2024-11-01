@@ -1,7 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.admin;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.lsadf_backend.annotations.Uuid;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.lsadf_backend.constants.JsonViews;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
@@ -48,6 +50,7 @@ public interface AdminUserController {
     })
     @PostMapping(value = ControllerConstants.AdminUser.USER_ID)
     @Operation(summary = "Updates a user")
+    @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<User>> updateUser(@AuthenticationPrincipal Jwt jwt,
                                                      @PathVariable(value = USER_ID) @Uuid String userId,
                                                      @Valid @RequestBody AdminUserUpdateRequest user);
@@ -67,7 +70,8 @@ public interface AdminUserController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Creates a new user")
-    @PostMapping()
+    @JsonView(JsonViews.Admin.class)
+    @PostMapping
     ResponseEntity<GenericResponse<User>> createUser(@AuthenticationPrincipal Jwt jwt,
                                                      @Valid @RequestBody AdminUserCreationRequest adminUserCreationRequest);
 
@@ -87,6 +91,7 @@ public interface AdminUserController {
     })
     @Operation(summary = "Deletes a user")
     @DeleteMapping(value = ControllerConstants.AdminUser.USER_ID)
+    @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<Void>> deleteUser(@AuthenticationPrincipal Jwt jwt,
                                                      @PathVariable(value = USER_ID) @Uuid String userId);
 
@@ -94,10 +99,10 @@ public interface AdminUserController {
      * Gets a user by its email
      *
      * @param jwt       the requester JWT
-     * @param userEmail the email of the user
+     * @param username the email of the user
      * @return the user
      */
-    @GetMapping(value = ControllerConstants.AdminUser.USER_EMAIL)
+    @GetMapping(value = ControllerConstants.AdminUser.USERNAME)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
             @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
@@ -106,8 +111,9 @@ public interface AdminUserController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a user by its email")
-    ResponseEntity<GenericResponse<User>> getUserByEmail(@AuthenticationPrincipal Jwt jwt,
-                                                         @Valid @Email @PathVariable(value = USER_EMAIL) String userEmail);
+    @JsonView(JsonViews.Admin.class)
+    ResponseEntity<GenericResponse<User>> getUserByUsername(@AuthenticationPrincipal Jwt jwt,
+                                                            @Valid @Email @PathVariable(value = USERNAME) String username);
 
     /**
      * Gets a user by its id
@@ -125,6 +131,7 @@ public interface AdminUserController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets a UserAdminDetails by the user id")
+    @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<User>> getUserById(@AuthenticationPrincipal Jwt jwt,
                                                       @PathVariable(value = USER_ID) @Uuid String userId);
 
@@ -142,6 +149,7 @@ public interface AdminUserController {
             @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
     })
     @Operation(summary = "Gets all users")
+    @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<List<User>>> getUsers(@AuthenticationPrincipal Jwt jwt,
                                                          @RequestParam(value = ORDER_BY, required = false) String orderBy);
 }
