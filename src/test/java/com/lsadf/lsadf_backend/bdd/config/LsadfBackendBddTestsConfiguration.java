@@ -1,11 +1,10 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
+import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
 import com.lsadf.lsadf_backend.mocks.repository.CurrencyRepositoryMock;
 import com.lsadf.lsadf_backend.mocks.repository.GameSaveRepositoryMock;
 import com.lsadf.lsadf_backend.mocks.repository.StageRepositoryMock;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
@@ -20,11 +19,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
-import java.util.*;
-
-import static org.mockito.Mockito.mock;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Configuration class for BDD tests
@@ -136,12 +133,6 @@ public class LsadfBackendBddTestsConfiguration {
                                                  CurrencyRepository currencyRepository,
                                                  StageRepository stageRepository) {
         return new GameSaveRepositoryMock(currencyRepository, stageRepository, clockService);
-    }
-
-    @Bean
-    @Primary
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return mock(ClientRegistrationRepository.class);
     }
 
 

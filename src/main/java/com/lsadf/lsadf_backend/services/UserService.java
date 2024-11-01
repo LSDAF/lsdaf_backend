@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -27,10 +28,16 @@ public interface UserService {
     Stream<User> getUsers(String search);
 
     /**
-     * Get user by id
+     * Get user roles defined in keycloak
      *
-     * @param id
-     * @return
+     * @return list of user roles
+     */
+    List<String> getUserRoles();
+
+    /**
+     * Get user by id
+     * @param id user id
+     * @return user
      */
     User getUserById(String id);
 
@@ -47,7 +54,7 @@ public interface UserService {
      *
      * @param user user to update
      */
-    void updateUser(String id, AdminUserUpdateRequest user);
+    User updateUser(String id, AdminUserUpdateRequest user);
 
     /**
      * Update existing user
@@ -60,6 +67,7 @@ public interface UserService {
 
     /**
      * Reset user password
+     *
      * @param id user id
      */
     void resetUserPassword(String id);
@@ -86,4 +94,20 @@ public interface UserService {
      * @return created user
      */
     User createUser(AdminUserCreationRequest adminUserCreationRequest);
+
+    /**
+     * Check if user exists with its username
+     *
+     * @param username username
+     * @return true if user exists
+     */
+    boolean checkUsernameExists(String username);
+
+    /**
+     * Check if user exists with its id
+     *
+     * @param id user id
+     * @return true if user exists
+     */
+    boolean checkIdExists(String id);
 }
