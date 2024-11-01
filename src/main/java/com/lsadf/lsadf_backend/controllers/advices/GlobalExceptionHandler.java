@@ -1,22 +1,21 @@
-package com.lsadf.lsadf_backend.controllers.exception_handler;
+package com.lsadf.lsadf_backend.controllers.advices;
 
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
 import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
+import com.lsadf.lsadf_backend.exceptions.DynamicJsonViewException;
 import com.lsadf.lsadf_backend.exceptions.http.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,27 +27,37 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for MethodArgumentNotValidException
+     *
      * @param e MethodArgumentNotValidException
      * @return ResponseEntity containing the errors
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<GenericResponse<List<FieldError>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<GenericResponse<Map<String, String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException: ", e);
-        List<FieldError> errors = e.getFieldErrors()
-                .stream()
-                .map(error -> {
-                    String field = error.getField();
-                    String msg = error.getDefaultMessage();
-                    String rejectedValue = error.getRejectedValue() == null ? null : error.getRejectedValue().toString();
-                    return new FieldError(field, msg, rejectedValue);
-                })
-                .toList();
+        Map<String, String> fieldErrorMap = new HashMap<>();
+        e.getFieldErrors().forEach(error -> {
+            String field = error.getField();
+            String msg = error.getDefaultMessage();
+            fieldErrorMap.put(field, msg);
+        });
         String message = "Validation failed for the following fields";
-        return generateResponse(HttpStatus.BAD_REQUEST, message, errors);
+        return generateResponse(HttpStatus.BAD_REQUEST, message, fieldErrorMap);
+    }
+
+    /**
+     * Exception handler for DynamicJsonViewException
+     * @param e DynamicJsonViewException
+     * @return ResponseEntity containing the error
+     */
+    @ExceptionHandler(DynamicJsonViewException.class)
+    public ResponseEntity<GenericResponse<Void>> handleDynamicJsonViewException(DynamicJsonViewException e) {
+        log.error("Cannot render dynamically json view of the object: ", e);
+        return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error: " + e.getMessage(), null);
     }
 
     /**
      * Exception handler for IllegalArgumentException
+     *
      * @param e IllegalArgumentException
      * @return ResponseEntity containing the error
      */
@@ -60,25 +69,27 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for AlreadyExistingGameSaveException
+     *
      * @param e AlreadyExistingGameSaveException
      * @return ResponseEntity containing the error
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<GenericResponse<Void>> handleValidationException(HandlerMethodValidationException e) {
+    public ResponseEntity<GenericResponse<Map<String, String>>> handleValidationException(HandlerMethodValidationException e) {
         log.error("HandlerMethodValidationException: ", e);
-        List<FieldError> fieldErrors = new ArrayList<>();
+        Map<String, String> fieldErrorMap = new HashMap<>();
         e.getAllValidationResults().forEach(parameterValidationResult -> {
             String rejectedValue = Objects.requireNonNull(parameterValidationResult.getArgument()).toString();
             parameterValidationResult.getResolvableErrors().forEach(resolvableError -> {
                 String msg = resolvableError.getDefaultMessage();
-                fieldErrors.add(new FieldError(null, msg, rejectedValue));
+                fieldErrorMap.put(rejectedValue, msg);
             });
         });
-        return generateResponse(HttpStatus.BAD_REQUEST, "Fields validation failed", fieldErrors);
+        return generateResponse(HttpStatus.BAD_REQUEST, "Fields validation failed", fieldErrorMap);
     }
 
     /**
      * Exception handler for HttpMessageNotReadableException
+     *
      * @param e HttpMessageNotReadableException
      * @return ResponseEntity containing the error
      */
@@ -91,6 +102,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for UnauthorizedException
+     *
      * @param e UnauthorizedException
      * @return ResponseEntity containing the error
      */
@@ -102,6 +114,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for NotFoundException
+     *
      * @param e NotFoundException
      * @return ResponseEntity containing the error
      */
@@ -113,6 +126,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for ForbiddenException
+     *
      * @param e ForbiddenException
      * @return ResponseEntity containing the error
      */
@@ -124,6 +138,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for InternalServerErrorException
+     *
      * @param e InternalServerErrorException
      * @return ResponseEntity containing the error
      */
@@ -135,6 +150,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for BadRequestException
+     *
      * @param e BadRequestException
      * @return ResponseEntity containing the error
      */
@@ -146,6 +162,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for AlreadyExistingGameSaveException
+     *
      * @param e AlreadyExistingGameSaveException
      * @return ResponseEntity containing the error
      */
@@ -157,6 +174,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for AlreadyExistingUserException
+     *
      * @param e AlreadyExistingUserException
      * @return ResponseEntity containing the error
      */
@@ -168,6 +186,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler for AlreadyTakenNicknameException
+     *
      * @param e AlreadyTakenNicknameException
      * @return ResponseEntity containing the error
      */
@@ -179,6 +198,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Generic Exception handler for Exception
+     *
      * @param e Exception
      * @return ResponseEntity containing the error
      */
