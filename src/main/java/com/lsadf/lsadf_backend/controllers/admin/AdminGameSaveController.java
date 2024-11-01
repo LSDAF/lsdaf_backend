@@ -36,7 +36,6 @@ import static com.lsadf.lsadf_backend.constants.ControllerConstants.Params.*;
 public interface AdminGameSaveController {
 
 
-
     /**
      * Deletes a game save
      *
@@ -133,7 +132,6 @@ public interface AdminGameSaveController {
     @JsonView(JsonViews.Admin.class)
     ResponseEntity<GenericResponse<List<GameSave>>> getSaveGames(@AuthenticationPrincipal Jwt jwt,
                                                                  @RequestParam(value = ORDER_BY, required = false) String orderBy);
-
 
 
     /**

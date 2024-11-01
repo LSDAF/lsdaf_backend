@@ -60,7 +60,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     }
 
     @When("the user logs in with the following credentials")
-    public void when_the_user_logs_in_with_the_following_credentials(io.cucumber.datatable.DataTable dataTable) {
+    public void when_the_user_logs_in_with_the_following_credentials(DataTable dataTable) {
         try {
             var rows = dataTable.asMaps(String.class, String.class);
 

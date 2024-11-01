@@ -12,8 +12,12 @@ import java.lang.annotation.Target;
 @WithSecurityContext(factory = CustomJwtSecurityContextFactory.class)
 public @interface WithMockJwtUser {
     String username() default "test@example.com";
+
     String name() default "Test User";
+
     String[] roles() default {"USER"};
+
     boolean emailVerified() default true;
+
     boolean enabled() default true;
 }
