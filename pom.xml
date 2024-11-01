@@ -30,6 +30,7 @@
         <postgresql.version>42.7.3</postgresql.version>
         <swagger.version>2.5.0</swagger.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <rewrite.maven.plugin.version>5.42.0</rewrite.maven.plugin.version>
         <zonky.version>2.5.0</zonky.version>
         <zonky-embedded-postgres.version>2.0.7</zonky-embedded-postgres.version>
@@ -38,7 +39,6 @@
         <start-class>com.lsadf.lsadf_backend.LsadfBackendApplication</start-class>
         <delombok.output>${project.build.directory}/delombok</delombok.output>
         <embedded-redis.version>1.4.2</embedded-redis.version>
-        <expiringmap.jodah.version>0.5.11</expiringmap.jodah.version>
         <velocity-engine.version>2.3</velocity-engine.version>
         <testcontainers-keycloak.version>3.5.1</testcontainers-keycloak.version>
     </properties>
@@ -224,6 +224,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -321,6 +327,10 @@
                     <artifactId>jsonassert</artifactId>
                     <groupId>org.skyscreamer</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>xmlunit-core</artifactId>
+                    <groupId>org.xmlunit</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -364,6 +374,12 @@
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-postgres</artifactId>
             <version>${zonky-embedded-postgres.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -403,11 +419,6 @@
             <version>${embedded-redis.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.jodah</groupId>
-            <artifactId>expiringmap</artifactId>
-            <version>${expiringmap.jodah.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
             <scope>test</scope>
@@ -431,6 +442,11 @@
             <groupId>com.github.dasniko</groupId>
             <artifactId>testcontainers-keycloak</artifactId>
             <version>${testcontainers-keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
     </dependencies>
 
