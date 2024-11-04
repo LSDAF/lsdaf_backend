@@ -10,6 +10,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,7 @@ public class BddThenStepDefinitions extends BddLoader {
     }
 
     @Then("^the number of game saves should be (.*)$")
+    @Transactional(readOnly = true)
     public void then_the_number_of_game_saves_should_be(int expected) {
         long actual = gameSaveService.getGameSaves().count();
         assertThat(actual).isEqualTo(expected);

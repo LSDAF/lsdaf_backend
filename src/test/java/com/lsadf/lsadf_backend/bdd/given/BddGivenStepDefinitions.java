@@ -11,6 +11,7 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -79,13 +80,18 @@ public class BddGivenStepDefinitions extends BddLoader {
     }
 
     @Given("^a clean database$")
+    @Transactional
     public void given_i_have_a_clean_database() throws NotFoundException {
         log.info("Cleaning database repositories...");
 
+        this.currencyRepository.deleteAll();
+        this.stageRepository.deleteAll();
         this.gameSaveRepository.deleteAll();
         this.currencyRepository.deleteAll();
 
         assertThat(gameSaveRepository.count()).isZero();
+        assertThat(currencyRepository.count()).isZero();
+        assertThat(stageRepository.count()).isZero();
         assertThat(currencyRepository.count()).isZero();
 
 

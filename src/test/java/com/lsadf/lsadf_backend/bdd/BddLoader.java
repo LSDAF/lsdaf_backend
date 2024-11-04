@@ -17,11 +17,11 @@ import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
+import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.*;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.cucumber.spring.CucumberContextConfiguration;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.reactive.ReactiveOAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -37,10 +38,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.Network;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Stack;
@@ -84,19 +90,15 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
 @CucumberContextConfiguration
-// Autoconfigure database for overall config of the app.
-@AutoConfigureEmbeddedDatabase(
-        provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
-        type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES)
-//@ImportAutoConfiguration(
-//        AopAutoConfiguration.class
-//)
+@EnableJpaRepositories(basePackages = "com.lsadf.lsadf_backend.repositories")
+@EntityScan(basePackages = "com.lsadf.lsadf_backend.entities")
 @EnableAutoConfiguration(exclude = {
         SecurityAutoConfiguration.class,
         ReactiveOAuth2ResourceServerAutoConfiguration.class,
         ReactiveOAuth2ClientAutoConfiguration.class,
 })
 @ActiveProfiles("test")
+@Testcontainers
 public class BddLoader {
 
     // Caches
@@ -114,6 +116,9 @@ public class BddLoader {
     // Repositories
     @Autowired
     protected CurrencyRepository currencyRepository;
+
+    @Autowired
+    protected StageRepository stageRepository;
 
     @Autowired
     protected GameSaveRepository gameSaveRepository;
@@ -208,12 +213,37 @@ public class BddLoader {
     @Autowired
     protected TestRestTemplate testRestTemplate;
 
-    private static KeycloakContainer keycloak;
+    private static final Network testcontainersNetwork = Network.newNetwork();
+
+    @Container
+    private static final KeycloakContainer keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:26.0.0")
+            .withRealmImportFile("keycloak/bdd_realm-export.json")
+            .withNetwork(testcontainersNetwork)
+            .withNetworkAliases("keycloak-bdd");
+
+    @Container
+    private static final PostgreSQLContainer<?> postgreSqlContainer = new PostgreSQLContainer<>("postgres:16.0-alpine")
+            .withDatabaseName("bdd")
+            .withUsername("bdd")
+            .withPassword("bdd")
+            .withNetwork(testcontainersNetwork)
+            .withNetworkAliases("postgres-bdd");
 
     static {
         log.info("Start BDD loader...");
-        keycloak = new KeycloakContainer().withRealmImportFile("keycloak/bdd_realm-export.json");
         keycloak.start();
+        postgreSqlContainer.start();
+    }
+
+    @DynamicPropertySource
+    static void registerPostgresProperties(DynamicPropertyRegistry registry) {
+        String url = postgreSqlContainer.getJdbcUrl();
+        String username = postgreSqlContainer.getUsername();
+        String password = postgreSqlContainer.getPassword();
+
+        registry.add("db.url", () -> url);
+        registry.add("db.username", () -> username);
+        registry.add("db.password", () -> password);
     }
 
     @DynamicPropertySource

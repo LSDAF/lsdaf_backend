@@ -2,15 +2,8 @@ package com.lsadf.lsadf_backend.bdd.config;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
-import com.lsadf.lsadf_backend.mocks.repository.CurrencyRepositoryMock;
-import com.lsadf.lsadf_backend.mocks.repository.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.mocks.repository.StageRepositoryMock;
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.ClockService;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -113,26 +106,6 @@ public class LsadfBackendBddTestsConfiguration {
         var stack = new Stack<GenericResponse<?>>();
         stackCleaner.addStack(stack);
         return stack;
-    }
-
-    @Bean
-    @Primary
-    public CurrencyRepository currencyRepository(BddStackCleaner stackCleaner) {
-        return new CurrencyRepositoryMock();
-    }
-
-    @Bean
-    @Primary
-    public StageRepository stageRepository(BddStackCleaner stackCleaner) {
-        return new StageRepositoryMock();
-    }
-
-    @Bean
-    @Primary
-    public GameSaveRepository gameSaveRepository(ClockService clockService,
-                                                 CurrencyRepository currencyRepository,
-                                                 StageRepository stageRepository) {
-        return new GameSaveRepositoryMock(currencyRepository, stageRepository, clockService);
     }
 
 
