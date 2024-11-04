@@ -72,7 +72,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security,
                                            CorsFilter corsFilter,
-                                           RestAuthenticationEntryPoint restAuthenticationEntryPoint,
                                            JwtAuthenticationConverter customJwtAuthenticationProvider) throws Exception {
         security
                 .addFilter(corsFilter)
@@ -80,7 +79,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-//                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(WHITELIST_URLS).permitAll()
                         .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
@@ -89,8 +87,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                         .loginPage("/oauth2/login"))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtAuthenticationProvider)));
-
-        //security.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return security.build();
     }
@@ -106,14 +102,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
         return new KeycloakJwtAuthenticationConverter();
     }
-
-//    @Bean
-//    public TokenAuthenticationFilter tokenAuthenticationFilter(TokenProvider<JwtTokenEntity> tokenProvider,
-//                                                               UserDetailsService lsadfUserDetailsService,
-//                                                               com.lsadf.lsadf_backend.cache.Cache<LocalUser> localUserCache) {
-//        return new TokenAuthenticationFilter(tokenProvider, lsadfUserDetailsService, localUserCache);
-//    }
-
 
     @Bean
     public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
@@ -142,11 +130,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
         return new CorsFilter(source);
     }
-
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean(CustomAuthenticationProviderImpl authenticationProvider) {
-//        return new ProviderManager(authenticationProvider);
-//    }
 
     @Bean
     public RoleHierarchy roleHierarchy() {
