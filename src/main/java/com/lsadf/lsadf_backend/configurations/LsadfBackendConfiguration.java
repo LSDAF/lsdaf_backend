@@ -1,9 +1,10 @@
 package com.lsadf.lsadf_backend.configurations;
 
-import com.lsadf.lsadf_backend.configurations.cache.LocalCacheConfiguration;
 import com.lsadf.lsadf_backend.configurations.cache.NoRedisCacheConfiguration;
 import com.lsadf.lsadf_backend.configurations.cache.RedisCacheConfiguration;
 import com.lsadf.lsadf_backend.configurations.cache.RedisEmbeddedCacheConfiguration;
+import com.lsadf.lsadf_backend.configurations.keycloak.KeycloakConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
+@EnableFeignClients(basePackages = "com.lsadf.lsadf_backend.http_clients")
 @Import({
         DataSourceConfiguration.class,
         PropertiesConfiguration.class,
@@ -22,16 +24,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         ServiceConfiguration.class,
         WebConfiguration.class,
         SecurityConfiguration.class,
-        OAuth2Configuration.class,
         LoggingConfiguration.class,
         RedisCacheConfiguration.class,
         ApplicationListenerConfiguration.class,
         RedisEmbeddedCacheConfiguration.class,
-        LocalCacheConfiguration.class,
         RedisCacheConfiguration.class,
         NoRedisCacheConfiguration.class,
         ClockConfiguration.class,
-        VelocityConfiguration.class
+        VelocityConfiguration.class,
+        KeycloakConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

@@ -35,11 +35,6 @@ public class NoRedisCacheConfiguration {
         return new NoOpHistoCache<>();
     }
 
-    @Bean(name = INVALIDATED_JWT_TOKEN_CACHE)
-    public Cache<String> invalidatedJwtTokenCache(@Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache) {
-        return localInvalidatedJwtTokenCache;
-    }
-
     @Bean(name = GAME_SAVE_OWNERSHIP_CACHE)
     public Cache<String> gameSaveOwnershipCache() {
         return new NoOpCache<>();

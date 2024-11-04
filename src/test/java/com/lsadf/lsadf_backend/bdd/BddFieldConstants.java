@@ -24,16 +24,6 @@ public class BddFieldConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class RefreshToken {
-        public static final String ID = BddFieldConstants.ID;
-        public static final String EXPIRATION_DATE = "expirationDate";
-        public static final String INVALIDATION_DATE = "invalidationDate";
-        public static final String USER_EMAIL = "userEmail";
-        public static final String REFRESH_TOKEN = "refreshToken";
-        public static final String STATUS = "status";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Stage {
         public static final String ID = BddFieldConstants.ID;
         public static final String USER_EMAIL = "userEmail";
@@ -58,7 +48,6 @@ public class BddFieldConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
         public static final String ID = BddFieldConstants.ID;
-        public static final String USER_ID = "userId";
         public static final String USER_EMAIL = "userEmail";
         public static final String NICKNAME = "nickname";
         public static final String GOLD = "gold";
@@ -75,21 +64,18 @@ public class BddFieldConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String ID = BddFieldConstants.ID;
-        public static final String NAME = "name";
-        public static final String EMAIL = "email";
-        public static final String PASSWORD = "password";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
+        public static final String USERNAME = "username";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
-        public static final String PROVIDER = "provider";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String ROLES = "roles";
-        public static final String CREATED_AT = BddFieldConstants.CREATED_AT;
-        public static final String UPDATED_AT = BddFieldConstants.UPDATED_AT;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UserCreationRequest {
-        public static final String NAME = "name";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
         public static final String PASSWORD = "password";
         public static final String EMAIL = "email";
     }
@@ -104,13 +90,14 @@ public class BddFieldConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UserLoginRequest {
-        public static final String EMAIL = "email";
+        public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UserUpdateRequest {
-        public static final String NAME = "name";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -146,25 +133,24 @@ public class BddFieldConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AdminUserUpdateRequest {
-        public static final String NAME = "name";
-        public static final String PASSWORD = "password";
-        public static final String EMAIL = "email";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String USER_ROLES = "userRoles";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AdminUserCreationRequest {
-        public static final String NAME = "name";
-        public static final String USER_ID = "userId";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
         public static final String PASSWORD = "password";
-        public static final String EMAIL = "email";
+        public static final String USERNAME = "username";
         public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
+        public static final String EMAIL_VERIFIED = "emailVerified";
         public static final String SOCIAL_PROVIDER = "socialProvider";
         public static final String PROVIDER_USER_ID = "providerUserId";
-        public static final String ROLES = "roles";
+        public static final String USER_ROLES = "userRoles";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -179,11 +165,10 @@ public class BddFieldConstants {
         public static final String EMAIL = "email";
     }
 
-    @NoArgsConstructor
-    public static final class UserVerificationToken {
-        public static final String USER_EMAIL = "userEmail";
-        public static final String STATUS = "status";
-        public static final String TOKEN = "token";
-        public static final String EXPIRATION_DATE = "expirationDate";
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Keycloak {
+        public static final String CLIENT_ID = "clientId";
+        public static final String CLIENT_SECRET = "clientSecret";
+        public static final String REALM = "realm";
     }
 }

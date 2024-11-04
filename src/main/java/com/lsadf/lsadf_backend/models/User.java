@@ -1,64 +1,74 @@
 package com.lsadf.lsadf_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lsadf.lsadf_backend.constants.JsonViews;
+import com.lsadf.lsadf_backend.serializers.DateToLongSerializer;
+import com.lsadf.lsadf_backend.serializers.LongToDateSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.util.Date;
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.*;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
 /**
  * User DTO
  */
-@Builder
+@SuperBuilder
 @Data
 @AllArgsConstructor
-@JsonPropertyOrder({ID, NAME, EMAIL, PROVIDER, CREATED_AT, UPDATED_AT})
 public class User implements Model {
 
     @Serial
     private static final long serialVersionUID = 144315795668992686L;
 
+    @JsonView(JsonViews.Admin.class)
     @JsonProperty(value = ID)
     @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private final String id;
 
-    @JsonProperty(value = NAME)
-    @Schema(description = "User name", example = "Toto Ducoin")
-    private final String name;
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = FIRST_NAME)
+    @Schema(description = "First name", example = "Toto")
+    private String firstName;
 
-    @JsonProperty(value = EMAIL)
-    @Schema(description = "User email", example = "toto@toto.com")
-    private final String email;
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = LAST_NAME)
+    @Schema(description = "Last name", example = "TUTU")
+    private String lastName;
 
-    @JsonIgnore
-    private final String password;
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = USERNAME)
+    @Schema(description = "User username", example = "toto@toto.com")
+    private final String username;
 
-    @JsonIgnore
-    private final boolean enabled;
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = ENABLED)
+    @Schema(description = "User enabled", example = "true")
+    private boolean enabled;
 
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = EMAIL_VERIFIED)
+    @Schema(description = "Email verified", example = "true")
+    private boolean emailVerified;
+
+    @JsonView(JsonViews.Admin.class)
     @JsonProperty(value = USER_ROLES)
     @Schema(description = "User roles", example = "[\"USER\"]")
-    private final List<UserRole> userRoles;
+    private List<String> userRoles;
 
-    @JsonProperty(value = PROVIDER)
-    private final SocialProvider socialProvider;
-
-    @JsonProperty(value = CREATED_AT)
+    @JsonView(JsonViews.Admin.class)
+    @JsonProperty(value = CREATED_TIMESTAMP)
     @Schema(description = "Creation date", example = "2022-01-01 00:00:00.000")
-    private final Date createdAt;
-
-    @JsonProperty(value = UPDATED_AT)
-    @Schema(description = "Update date", example = "2022-01-01 00:00:00.000")
-    private final Date updatedAt;
+    @JsonSerialize(using = DateToLongSerializer.class)
+    @JsonDeserialize(using = LongToDateSerializer.class)
+    private final Date createdTimestamp;
 }

@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.annotations;
 
-import com.lsadf.lsadf_backend.annotations.impl.FieldComparisonValidator;
+import com.lsadf.lsadf_backend.annotations.validator.FieldComparisonValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

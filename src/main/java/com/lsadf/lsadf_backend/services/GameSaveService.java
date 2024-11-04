@@ -2,6 +2,9 @@ package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.*;
+import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
@@ -62,6 +65,12 @@ public interface GameSaveService {
      */
     GameSaveEntity updateNickname(String saveId, AdminGameSaveUpdateRequest updateRequest) throws ForbiddenException, NotFoundException, UnauthorizedException, AlreadyTakenNicknameException;
 
+    /**
+     * Checks if a game save exists
+     * @param gameSaveId the game save id
+     * @return true if the game save exists, false otherwise
+     */
+    boolean existsById(String gameSaveId);
 
     /**
      * Deletes a game save
@@ -86,7 +95,7 @@ public interface GameSaveService {
      * @param userEmail the user email
      * @return the stream of game saves
      */
-    Stream<GameSaveEntity> getGameSavesByUserEmail(String userEmail);
+    Stream<GameSaveEntity> getGameSavesByUsername(String userEmail);
 
     /**
      * Checks if the user owns the game save

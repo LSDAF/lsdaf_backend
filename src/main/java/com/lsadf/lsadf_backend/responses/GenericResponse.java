@@ -3,6 +3,8 @@ package com.lsadf.lsadf_backend.responses;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.lsadf.lsadf_backend.constants.JsonViews;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,11 +30,14 @@ public class GenericResponse<T> implements Serializable {
     private static final long serialVersionUID = 5392685232533641077L;
 
     @JsonProperty(value = STATUS)
+    @JsonView(JsonViews.External.class)
     private int status;
 
     @JsonProperty(value = MESSAGE)
+    @JsonView(JsonViews.External.class)
     private String message;
 
     @JsonProperty(value = DATA)
-    private T data;
+    @JsonView(JsonViews.External.class)
+    private transient T data;
 }

@@ -27,10 +27,11 @@ public class ResponseUtils {
 
     /**
      * Builds a response
-     * @param status HTTP status of the response
+     *
+     * @param status      HTTP status of the response
      * @param responseObj Object to return
+     * @param <T>         Type of object to return
      * @return ResponseEntity of GenericResponse containing all inputs
-     * @param <T> Type of object to return
      */
     public static <T> ResponseEntity<GenericResponse<T>> generateResponse(HttpStatus status, Object responseObj) {
         return generateResponse(status, null, responseObj);
@@ -38,9 +39,10 @@ public class ResponseUtils {
 
     /**
      * Builds a response
+     *
      * @param status HTTP status of the response
+     * @param <T>    Type of object to return
      * @return ResponseEntity of GenericResponse containing all inputs
-     * @param <T> Type of object to return
      */
     public static <T> ResponseEntity<GenericResponse<T>> generateResponse(HttpStatus status) {
         return generateResponse(status, null, null);

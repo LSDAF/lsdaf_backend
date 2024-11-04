@@ -36,3 +36,5 @@ docker/data/**
 docker-data/**
 
 **/env.properties
+
+keycloak_realm/**

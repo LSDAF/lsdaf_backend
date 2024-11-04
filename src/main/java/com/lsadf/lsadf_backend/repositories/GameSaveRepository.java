@@ -18,6 +18,7 @@ public interface GameSaveRepository extends CrudRepository<GameSaveEntity, Strin
 
     Optional<GameSaveEntity> findGameSaveEntityByNickname(String nickname);
 
-    @Query("select gs from t_game_save gs where gs.user.email = :userId")
+    @Query("select gs from t_game_save gs where gs.userEmail = :userId")
     Stream<GameSaveEntity> findGameSaveEntitiesByUserEmail(String userId);
+
 }

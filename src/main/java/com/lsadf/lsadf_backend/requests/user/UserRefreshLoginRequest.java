@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.JwtAuthentication.REFRESH_TOKEN;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.EMAIL;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.USERNAME;
 
 @Data
 @NoArgsConstructor
@@ -20,11 +20,6 @@ public class UserRefreshLoginRequest implements Request {
 
     @Serial
     private static final long serialVersionUID = -1758378448778560290L;
-
-    @JsonProperty(value = EMAIL)
-    @NotBlank
-    @Email
-    private String email;
 
     @JsonProperty(value = REFRESH_TOKEN)
     @NotBlank

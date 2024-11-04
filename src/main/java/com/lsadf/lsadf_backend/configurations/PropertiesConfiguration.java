@@ -12,15 +12,27 @@ import org.springframework.context.annotation.Configuration;
 public class PropertiesConfiguration {
 
     @Bean
+    @ConfigurationProperties(prefix = "json-view")
+    public JsonViewProperties jsonViewProperties() {
+        return new JsonViewProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "http-log")
     public HttpLogProperties httpLogProperties() {
         return new HttpLogProperties();
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "user-email-verification")
-    public UserVerificationProperties userValidationProperties() {
-        return new UserVerificationProperties();
+    @ConfigurationProperties(prefix = "keycloak")
+    public KeycloakProperties keycloakProperties() {
+        return new KeycloakProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "keycloak.admin")
+    public KeycloakAdminProperties keycloakAdminProperties() {
+        return new KeycloakAdminProperties();
     }
 
     @Bean
@@ -75,18 +87,6 @@ public class PropertiesConfiguration {
     @ConfigurationProperties(prefix = "db")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "auth")
-    public AuthProperties authProperties() {
-        return new AuthProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "db.init")
-    public DbInitProperties dbInitProperties() {
-        return new DbInitProperties();
     }
 
     @ConfigurationProperties(prefix = "swagger")

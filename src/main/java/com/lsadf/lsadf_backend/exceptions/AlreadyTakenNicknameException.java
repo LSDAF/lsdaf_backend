@@ -1,6 +1,9 @@
 package com.lsadf.lsadf_backend.exceptions;
 
-public class AlreadyTakenNicknameException extends Exception {
+/**
+ * Exception for when a nickname is already taken
+ */
+public class AlreadyTakenNicknameException extends RuntimeException {
     public AlreadyTakenNicknameException(String message) {
         super(message);
     }

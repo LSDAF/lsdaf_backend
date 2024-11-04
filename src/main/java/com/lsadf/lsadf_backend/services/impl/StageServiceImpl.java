@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.StageEntity;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
@@ -32,6 +32,9 @@ public class StageServiceImpl implements StageService {
     @Override
     @Transactional(readOnly = true)
     public Stage getStage(String gameSaveId) throws NotFoundException {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
         if (stageCache.isEnabled()) {
             Optional<Stage> optionalCachedStage = stageCache.get(gameSaveId);
             if (optionalCachedStage.isPresent()) {
@@ -59,7 +62,10 @@ public class StageServiceImpl implements StageService {
     @Override
     @Transactional
     public void saveStage(String gameSaveId, Stage stage, boolean toCache) throws NotFoundException {
-        if (isStageNull(stage)) {
+        if (gameSaveId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
+        if (stage == null || isStageNull(stage)) {
             throw new IllegalArgumentException("Stage cannot be null");
         }
         if (toCache) {

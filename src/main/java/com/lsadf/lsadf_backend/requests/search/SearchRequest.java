@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.requests.search;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.requests.Request;
 import com.lsadf.lsadf_backend.requests.common.Filter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,6 @@ public class SearchRequest implements Request {
     private static final long serialVersionUID = 573371570502433749L;
 
     @JsonProperty(value = FILTERS)
+    @Valid
     private List<Filter> filters;
 }

@@ -1,8 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.models.admin.GlobalInfo;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.models.GlobalInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.ParameterizedTypeReference;
@@ -92,15 +91,6 @@ public class ParameterizedTypeReferenceUtils {
      * @return ParameterizedTypeReference
      */
     public static ParameterizedTypeReference<GenericResponse<GlobalInfo>> buildParameterizedGlobalInfoResponse() {
-        return new ParameterizedTypeReference<>() {
-        };
-    }
-
-    /**
-     * Builds a ParameterizedTypeReference for a GenericResponse of UserAdminDetails
-     * @return ParameterizedTypeReference
-     */
-    public static ParameterizedTypeReference<GenericResponse<UserAdminDetails>> buildParameterizedUserAdminDetailsResponse() {
         return new ParameterizedTypeReference<>() {
         };
     }

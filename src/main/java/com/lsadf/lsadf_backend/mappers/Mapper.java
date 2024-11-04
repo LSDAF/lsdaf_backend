@@ -3,11 +3,12 @@ package com.lsadf.lsadf_backend.mappers;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.models.admin.UserAdminDetails;
+import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
+import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
+import org.keycloak.representations.idm.UserRepresentation;
 
 public interface Mapper {
     /**
@@ -16,46 +17,7 @@ public interface Mapper {
      * @param gameSaveEntity GameSaveEntity
      * @return
      */
-    GameSave mapToGameSave(GameSaveEntity gameSaveEntity);
-
-    /**
-     * Maps UserEntity to User
-     *
-     * @param userEntity UserEntity
-     * @return User
-     */
-    User mapToUser(UserEntity userEntity);
-
-    /**
-     * Maps UserEntity to UserAdminDetails
-     *
-     * @param userEntity UserEntity
-     * @return UserAdminDetails
-     */
-    UserAdminDetails mapToUserAdminDetails(UserEntity userEntity);
-
-    /**
-     * Maps LocalUser to UserInfo
-     *
-     * @param localUser LocalUser
-     * @return UserInfo
-     */
-    UserInfo mapLocalUserToUserInfo(LocalUser localUser);
-
-    /**
-     * Maps UserEntity to UserInfo
-     *
-     * @param userEntity UserEntity
-     * @return UserInfo
-     */
-    UserInfo mapUserEntityToUserInfo(UserEntity userEntity);
-
-    /**
-     * Maps UserEntity to LocalUser
-     * @param user UserEntity
-     * @return LocalUser
-     */
-    LocalUser mapUserEntityToLocalUser(UserEntity user);
+    GameSave mapGameSaveEntityToGameSave(GameSaveEntity gameSaveEntity);
 
     /**
      * Maps CurrencyRequest to Currency
@@ -67,6 +29,7 @@ public interface Mapper {
 
     /**
      * Maps Currency to CurrencyEntity
+     *
      * @param currencyEntity CurrencyEntity
      * @return CurrencyEntity
      */
@@ -74,6 +37,7 @@ public interface Mapper {
 
     /**
      * Maps StageEntity to Stage
+     *
      * @param stageEntity StageEntity
      * @return Stage
      */
@@ -81,8 +45,33 @@ public interface Mapper {
 
     /**
      * Maps StageRequest to Stage
+     *
      * @param stageRequest StageRequest
      * @return Stage
      */
     Stage mapStageRequestToStage(StageRequest stageRequest);
+
+    /**
+     * Maps Keycloak UserRepresentation to User
+     *
+     * @param userRepresentation UserRepresentation
+     * @return User
+     */
+    User mapUserRepresentationToUser(UserRepresentation userRepresentation);
+
+    /**
+     * Maps UserCreationRequest to Keycloak UserRepresentation
+     *
+     * @param userCreationRequest UserCreationRequest
+     * @return UserRepresentation
+     */
+    UserRepresentation mapUserCreationRequestToUserRepresentation(UserCreationRequest userCreationRequest);
+
+    /**
+     * Maps AdminUserCreationRequest to UserCreationRequest
+     *
+     * @param adminUserCreationRequest AdminUserCreationRequest
+     * @return UserCreationRequest
+     */
+    UserCreationRequest mapAdminUserCreationRequestToUserCreationRequest(AdminUserCreationRequest adminUserCreationRequest);
 }

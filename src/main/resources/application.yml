@@ -38,6 +38,57 @@ spring:
     redis:
       repositories:
         enabled: false
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            authorization-uri: ${keycloak.issuer-uri}/protocol/openid-connect/auth
+            token-uri: ${keycloak.issuer-uri}/protocol/openid-connect/token
+            user-info-uri: ${keycloak.issuer-uri}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak.issuer-uri}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            authorization-grant-type: authorization_code
+            client-id: ${keycloak.client-id}
+            redirect-uri: "{baseUrl}/api/oauth2/callback"
+            client-secret: ${keycloak.client-secret}
+            provider: keycloak
+            scope: openid, profile
+          keycloak-admin:
+            authorization-grant-type: client_credentials
+            client-id: ${keycloak.admin.client-id}
+            client-secret: ${keycloak.admin.client-secret}
+            provider: keycloak
+            scope: openid, profile
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri}
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: FULL
+          keycloak:
+            url: ${keycloak.uri}
+          keycloak-admin:
+            url: ${keycloak.admin-uri}
+
+
+keycloak:
+  admin:
+    client-id: ${KEYCLOAK_ADMIN_CLIENT_ID}
+    client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  uri: ${KEYCLOAK_URI}
+  admin-uri: ${KEYCLOAK_ADMIN_URI}
+  realm: ${KEYCLOAK_REALM}
+  issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
 
 http-log:
   enabled: true
@@ -76,6 +127,8 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+    oauth:
+      client-id: ${keycloak.client-id}
 
 
 logging:
@@ -162,6 +215,6 @@ mail:
 clock:
   time-zone: "Europe/Paris"
 
-
-user-email-verification:
-  expiration-seconds: 86_400
+json-view:
+  default-json-view: ADMIN
+  default-json-view-enabled: false

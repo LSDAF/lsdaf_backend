@@ -2,22 +2,20 @@ package com.lsadf.lsadf_backend.configurations.cache;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.lsadf_backend.cache.impl.RedisCache;
+import com.lsadf.lsadf_backend.cache.impl.RedisCurrencyCache;
 import com.lsadf.lsadf_backend.cache.impl.RedisStageCache;
+import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
+import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
-import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
+import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.StageService;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheServiceImpl;
-import com.lsadf.lsadf_backend.cache.impl.InvalidatedJwtTokenCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisCurrencyCache;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
-import com.lsadf.lsadf_backend.properties.RedisProperties;
-import com.lsadf.lsadf_backend.services.CurrencyService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,19 +99,11 @@ public class RedisCacheConfiguration {
         return new RedisStageCache(redisTemplate, cacheExpirationProperties.getStageExpirationSeconds(), redisProperties);
     }
 
-    @Bean(name = INVALIDATED_JWT_TOKEN_CACHE)
-    public Cache<String> jwtTokenCache(RedisTemplate<String, String> redisTemplate,
-                                       @Qualifier(LOCAL_INVALIDATED_JWT_TOKEN_CACHE) Cache<String> localInvalidatedJwtTokenCache,
-                                       RedisProperties redisProperties) {
-        return new InvalidatedJwtTokenCache(redisTemplate, localInvalidatedJwtTokenCache, redisProperties);
-    }
-
     @Bean(name = REDIS_CACHE_SERVICE)
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
                                           HistoCache<Currency> currencyCache,
-                                          HistoCache<Stage> stageCache,
-                                          @Qualifier(INVALIDATED_JWT_TOKEN_CACHE) Cache<String> invalidatedJwtTokenCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, stageCache, invalidatedJwtTokenCache);
+                                          HistoCache<Stage> stageCache) {
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, stageCache);
     }
 
     @Bean

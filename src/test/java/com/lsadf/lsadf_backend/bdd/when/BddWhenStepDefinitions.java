@@ -3,19 +3,16 @@ package com.lsadf.lsadf_backend.bdd.when;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
-import com.lsadf.lsadf_backend.requests.user.UserUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.*;
 
 import java.util.*;
@@ -39,15 +36,54 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
-    @When("^the user requests the endpoint to validate the account with the following verification token (.*)$")
-    public void when_the_user_requests_the_endpoint_to_validate_its_account_with_the_following_verification_token(String token) {
+    @When("^the user logs in with the following refresh token (.*)$")
+    public void logInWithRefreshToken(String refreshToken) {
         try {
-            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.VALIDATE_TOKEN + "?token=" + token;
+            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REFRESH;
+
             String url = BddUtils.buildUrl(this.serverPort, fullPath);
-            HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
-            ResponseEntity<GenericResponse<UserInfo>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedUserInfoResponse());
-            GenericResponse<UserInfo> body = result.getBody();
-            responseStack.push(body);
+            UserRefreshLoginRequest userRefreshLoginRequest = new UserRefreshLoginRequest(refreshToken);
+
+            HttpEntity<UserRefreshLoginRequest> request = BddUtils.buildHttpEntity(userRefreshLoginRequest);
+            ResponseEntity<GenericResponse<JwtAuthentication>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedJwtAuthenticationResponse());
+            var response = result.getBody();
+            assertThat(response).isNotNull();
+            responseStack.push(response);
+            var jwtAuthentication = response.getData();
+            if (jwtAuthentication != null) {
+                jwtAuthenticationStack.push(jwtAuthentication);
+            }
+            log.info("Response: {}", result);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("the user logs in with the following credentials")
+    public void when_the_user_logs_in_with_the_following_credentials(DataTable dataTable) {
+        try {
+            var rows = dataTable.asMaps(String.class, String.class);
+
+            // it should have only one line
+            if (rows.size() > 1) {
+                throw new IllegalArgumentException("Expected only one row in the DataTable");
+            }
+
+            Map<String, String> row = rows.get(0);
+            String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.LOGIN;
+
+            String url = BddUtils.buildUrl(this.serverPort, fullPath);
+            UserLoginRequest userLoginRequest = BddUtils.mapToUserLoginRequest(row);
+
+            HttpEntity<UserLoginRequest> request = BddUtils.buildHttpEntity(userLoginRequest);
+            ResponseEntity<GenericResponse<JwtAuthentication>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedJwtAuthenticationResponse());
+            var response = result.getBody();
+            assertThat(response).isNotNull();
+            responseStack.push(response);
+            var jwtAuthentication = response.getData();
+            if (jwtAuthentication != null) {
+                jwtAuthenticationStack.push(jwtAuthentication);
+            }
             log.info("Response: {}", result);
         } catch (Exception e) {
             exceptionStack.push(e);
@@ -76,83 +112,6 @@ public class BddWhenStepDefinitions extends BddLoader {
             responseStack.push(body);
             log.info("Response: {}", result);
 
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to create a new user with the following data$")
-    public void when_we_want_to_create_a_new_user_with_the_following_data(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        // it should have only one line
-        if (rows.size() > 1) {
-            throw new IllegalArgumentException("Expected only one row in the DataTable");
-        }
-
-        Map<String, String> row = rows.get(0);
-        UserCreationRequest userCreationRequest = BddUtils.mapToUserCreationRequest(row);
-        try {
-            UserEntity user = userService.createUser(userCreationRequest);
-            userEntityListStack.push(Collections.singletonList(user));
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to validate the user password with email (.*) and password (.*)$")
-    public void when_we_want_to_validate_the_user_password_with_email_and_password(String userEmail, String password) {
-        try {
-            booleanStack.push(userService.validateUserPassword(userEmail, password));
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^the user logs out$")
-    public void when_the_user_logs_out() {
-        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.LOGOUT;
-
-        String url = BddUtils.buildUrl(this.serverPort, fullPath);
-        try {
-            String token = jwtTokenStack.peek();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-            HttpEntity<Void> request = new HttpEntity<>(headers);
-            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedVoidResponse());
-            GenericResponse<Void> body = result.getBody();
-            responseStack.push(body);
-            log.info("Response: {}", result);
-
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to update the user with id (.*) with the following UserUpdateRequest$")
-    public void when_we_want_to_update_the_user_with_id_with_the_following_user_update_request(String userId, DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        // it should have only one line
-        if (rows.size() > 1) {
-            throw new IllegalArgumentException("Expected only one row in the DataTable");
-        }
-
-        Map<String, String> row = rows.get(0);
-        UserUpdateRequest userUpdateRequest = BddUtils.mapToUserUpdateRequest(row);
-        try {
-            UserEntity updated = userService.updateUser(userId, userUpdateRequest);
-            userEntityListStack.push(Collections.singletonList(updated));
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to update the password of the user with email (.*) from (.*) to (.*)$")
-    public void when_we_want_to_update_the_password_of_the_user_with_email_from_to(String userEmail, String oldPassword, String newPassword) {
-        try {
-            UserEntity user = userService.updateUserPassword(userEmail, oldPassword, newPassword);
-            userEntityListStack.push(Collections.singletonList(user));
         } catch (Exception e) {
             exceptionStack.push(e);
         }
@@ -200,7 +159,7 @@ public class BddWhenStepDefinitions extends BddLoader {
     @When("^we want to get all game saves for the user with email (.*)$")
     public void when_we_want_to_get_all_game_saves_for_the_user_with_email(String email) {
         try {
-            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUserEmail(email)
+            List<GameSaveEntity> gameSaves = gameSaveService.getGameSavesByUsername(email)
                     .toList();
             gameSaveEntityListStack.push(gameSaves);
         } catch (Exception e) {
@@ -236,73 +195,6 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
-    @When("^the user logs in with the following refresh token credentials$")
-    public void when_the_user_logs_in_with_the_following_refresh_token_credentials(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.REFRESH_LOGIN;
-        String url = BddUtils.buildUrl(this.serverPort, fullPath);
-
-        assertThat(rows).hasSize(1);
-        Map<String, String> row = rows.get(0);
-
-        UserRefreshLoginRequest refreshLoginRequest = BddUtils.mapToUserRefreshLoginRequest(row);
-        HttpEntity<UserRefreshLoginRequest> request = BddUtils.buildHttpEntity(refreshLoginRequest);
-        try {
-            ResponseEntity<GenericResponse<JwtAuthentication>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedJwtAuthenticationResponse());
-            GenericResponse<JwtAuthentication> body = result.getBody();
-            assertThat(body).isNotNull();
-            JwtAuthentication jwtAuthentication = body.getData();
-            if (jwtAuthentication != null) {
-                jwtTokenStack.push(jwtAuthentication.getAccessToken());
-                refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(refreshLoginRequest.getEmail());
-                ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
-                localUserMap.put(jwtAuthentication.getAccessToken(), pair);
-            }
-            responseStack.push(body);
-            log.info("Response: {}", result);
-
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("the user logs in with the following credentials")
-    public void when_the_user_logs_in_with_the_following_credentials(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        // it should have only one line
-        if (rows.size() > 1) {
-            throw new IllegalArgumentException("Expected only one row in the DataTable");
-        }
-
-        UserLoginRequest userLoginRequest = BddUtils.mapToUserLoginRequest(rows.get(0));
-
-        String fullPath = ControllerConstants.AUTH + ControllerConstants.Auth.LOGIN;
-
-        String url = BddUtils.buildUrl(this.serverPort, fullPath);
-
-        HttpEntity<UserLoginRequest> request = BddUtils.buildHttpEntity(userLoginRequest);
-        try {
-            ResponseEntity<GenericResponse<JwtAuthentication>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedJwtAuthenticationResponse());
-            GenericResponse<JwtAuthentication> body = result.getBody();
-            assertThat(body).isNotNull();
-            JwtAuthentication jwtAuthentication = body.getData();
-            if (jwtAuthentication != null) {
-                jwtTokenStack.push(jwtAuthentication.getAccessToken());
-                refreshJwtTokenStack.push(jwtAuthentication.getRefreshToken());
-                LocalUser localUser = (LocalUser) lsadfUserDetailsService.loadUserByUsername(userLoginRequest.getEmail());
-                ImmutablePair<Date, LocalUser> pair = new ImmutablePair<>(clockService.nowDate(), localUser);
-                localUserMap.put(jwtAuthentication.getAccessToken(), pair);
-            }
-            responseStack.push(body);
-            log.info("Response: {}", result);
-
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
     @When("^the user requests the endpoint to generate a GameSave$")
     public void when_the_user_requests_the_endpoint_to_create_a_game_save() {
         String fullPath = ControllerConstants.GAME_SAVE + ControllerConstants.GameSave.GENERATE;
@@ -310,9 +202,9 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
+            headers.setBearerAuth(jwtAuthentication.getAccessToken());
             HttpEntity<Void> request = new HttpEntity<>(headers);
             ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
             GenericResponse<GameSave> body = result.getBody();
@@ -376,7 +268,8 @@ public class BddWhenStepDefinitions extends BddLoader {
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<GameSaveUpdateNicknameRequest> request = new HttpEntity<>(updateRequest, headers);
@@ -392,7 +285,7 @@ public class BddWhenStepDefinitions extends BddLoader {
 
     @When("^the user requests the endpoint to get his UserInfo with no token$")
     public void when_the_user_requests_the_endpoint_to_get_his_user_info_with_no_token() {
-        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME;
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.ME;
 
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
@@ -409,12 +302,13 @@ public class BddWhenStepDefinitions extends BddLoader {
 
     @When("^the user requests the endpoint to get his UserInfo$")
     public void when_the_user_requests_the_endpoint_to_get_his_user_info() {
-        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME;
+        String fullPath = ControllerConstants.USER + ControllerConstants.User.ME;
 
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -430,12 +324,13 @@ public class BddWhenStepDefinitions extends BddLoader {
 
     @When("^the user requests the endpoint to get his GameSaves$")
     public void when_the_user_requests_the_endpoint_to_get_his_game_saves() {
-        String fullPath = ControllerConstants.USER + ControllerConstants.User.USER_ME_GAME_SAVES;
+        String fullPath = ControllerConstants.GAME_SAVE + ControllerConstants.GameSave.ME;
 
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
 
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);
@@ -467,62 +362,10 @@ public class BddWhenStepDefinitions extends BddLoader {
         }
     }
 
-    @When("^we want to check the existence of the user with email (.*)$")
-    public void when_we_want_to_check_the_existence_of_the_user_with_email(String userEmail) {
-        try {
-            boolean exists = userService.existsByEmail(userEmail);
-            booleanStack.push(exists);
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
+    @When("the user uses the previously generated refresh token to log in")
+    public void when_the_user_uses_the_previously_generated_refresh_token_to_log_in() {
+        JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+        String refreshToken = jwtAuthentication.getRefreshToken();
+        logInWithRefreshToken(refreshToken);
     }
-
-    @When("^we want to get the user with id (.*)$")
-    public void when_we_want_to_get_the_user_with_id(String userId) {
-        try {
-            UserEntity user = userService.getUserById(userId);
-            userEntityListStack.push(Collections.singletonList(user));
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to delete the user with id (.*)$")
-    public void when_we_want_to_delete_the_user_with_id(String userId) {
-        try {
-            userService.deleteUser(userId);
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to delete the user with email (.*)$")
-    public void when_we_want_to_delete_the_user_with_email(String userEmail) {
-        try {
-            userService.deleteUserByEmail(userEmail);
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to get the user with email (.*)$")
-    public void when_we_want_to_get_the_user_with_email(String userEmail) {
-        try {
-            UserEntity user = userService.getUserByEmail(userEmail);
-            userEntityListStack.push(Collections.singletonList(user));
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
-    @When("^we want to get all the users$")
-    public void when_we_want_to_get_all_the_users() {
-        try {
-            List<UserEntity> users = userService.getUsers().toList();
-            userEntityListStack.push(users);
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
-    }
-
 }

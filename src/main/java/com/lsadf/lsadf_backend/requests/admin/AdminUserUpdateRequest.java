@@ -1,19 +1,17 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.util.Set;
+import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
@@ -27,29 +25,25 @@ public class AdminUserUpdateRequest implements Request {
 
     @NotBlank
     @Schema(description = "Name of user to update", example = "Toto Dupont")
-    @JsonProperty(value = NAME)
-    private String name;
+    @JsonProperty(value = FIRST_NAME)
+    private String firstName;
 
-    @Size(min = 8)
-    @Schema(description = "Password of user to update", example = "k127F978")
-    @JsonProperty(value = PASSWORD)
-    private String password;
+    @NotBlank
+    @Schema(description = "Lastname of user to update", example = "Dupont")
+    @JsonProperty(value = LAST_NAME)
+    private String lastName;
 
     @Schema(description = "Verified status of user to update", example = "true")
-    @JsonProperty(value = VERIFIED)
-    private Boolean verified;
-
-    @Email
-    @NotBlank
-    @Schema(description = "Email of user to update", example = "toto@toto.fr")
-    @JsonProperty(value = EMAIL)
-    private String email;
+    @JsonProperty(value = EMAIL_VERIFIED)
+    @NotNull
+    private Boolean emailVerified;
 
     @Schema(description = "Enabled status of user to update", example = "true")
     @JsonProperty(value = ENABLED)
+    @NotNull
     private Boolean enabled;
 
     @Schema(description = "Roles of user to update", example = "[\"USER\"]")
     @JsonProperty(value = USER_ROLES)
-    private Set<UserRole> userRoles;
+    private List<String> userRoles;
 }

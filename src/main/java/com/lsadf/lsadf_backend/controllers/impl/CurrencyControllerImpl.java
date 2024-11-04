@@ -1,14 +1,12 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.services.CacheService;
-import com.lsadf.lsadf_backend.annotations.CurrentUser;
 import com.lsadf.lsadf_backend.controllers.CurrencyController;
-import com.lsadf.lsadf_backend.exceptions.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.NotFoundException;
-import com.lsadf.lsadf_backend.exceptions.UnauthorizedException;
+import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
+import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.CurrencyService;
@@ -20,12 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
 
 /**
  * Implementation of the Currency Controller
@@ -55,61 +56,30 @@ public class CurrencyControllerImpl extends BaseController implements CurrencyCo
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> saveCurrency(@CurrentUser LocalUser localUser,
-                                                              @PathVariable(value = GAME_SAVE_ID) String gameSaveId,
-                                                              @RequestBody @Valid CurrencyRequest currencyRequest) {
-        try {
-            validateUser(localUser);
-            String userEmail = localUser.getUsername();
-            gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+    public ResponseEntity<GenericResponse<Void>> saveCurrency(Jwt jwt,
+                                                              String gameSaveId,
+                                                              CurrencyRequest currencyRequest) {
+        validateUser(jwt);
+        String userEmail = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
 
-            Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
-            currencyService.saveCurrency(gameSaveId, currency, cacheService.isEnabled());
+        Currency currency = mapper.mapCurrencyRequestToCurrency(currencyRequest);
+        currencyService.saveCurrency(gameSaveId, currency, cacheService.isEnabled());
 
-            return generateResponse(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            log.error("Illegal argument exception while saving currency: ", e);
-            return generateResponse(HttpStatus.BAD_REQUEST, "Illegal argument while saving currency: " + e.getMessage(), null);
-        } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while saving currency: ", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while saving currency.", null);
-        } catch (ForbiddenException e) {
-            log.error("Forbidden exception while saving currency: ", e);
-            return generateResponse(HttpStatus.FORBIDDEN, "Forbidden exception while saving currency.", null);
-        } catch (NotFoundException e) {
-            log.error("Not found exception while saving currency: ", e);
-            return generateResponse(HttpStatus.NOT_FOUND, "Not found exception while saving currency: " + e.getMessage(), null);
-        } catch (Exception e) {
-            log.error("Exception {} while saving currency: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while saving currency: " + e.getMessage(), null);
-        }
+        return generateResponse(HttpStatus.OK);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> getCurrency(@CurrentUser LocalUser localUser,
-                                                             @PathVariable(value = GAME_SAVE_ID) String gameSaveId) {
-        try {
-            validateUser(localUser);
-            String userEmail = localUser.getUsername();
-            gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-            Currency currency = currencyService.getCurrency(gameSaveId);
-            return generateResponse(HttpStatus.OK, currency);
-        } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while getting currency: ", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting currency.", null);
-        } catch (ForbiddenException e) {
-            log.error("Forbidden exception while getting currency: ", e);
-            return generateResponse(HttpStatus.FORBIDDEN, "Forbidden exception while getting currency.", null);
-        } catch (NotFoundException e) {
-            log.error("Not found exception while getting currency: ", e);
-            return generateResponse(HttpStatus.NOT_FOUND, "Not found exception while getting currency: " + e.getMessage(), null);
-        } catch (Exception e) {
-            log.error("Exception {} while getting currency: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting currency: " + e.getMessage(), null);
-        }
+    public ResponseEntity<GenericResponse<Void>> getCurrency(Jwt jwt,
+                                                             String gameSaveId) {
+        validateUser(jwt);
+        String userEmail = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        Currency currency = currencyService.getCurrency(gameSaveId);
+        return generateResponse(HttpStatus.OK, currency);
     }
 
     /**
