@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.annotations.Nickname;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,11 +31,13 @@ public class AdminGameSaveUpdateRequest implements Request {
 
     @JsonProperty(value = HP)
     @Positive
+    @NotNull
     @Schema(description = "Health points", example = "100")
     private Long healthPoints;
 
     @JsonProperty(value = ATTACK)
-    @PositiveOrZero
+    @Positive
+    @NotNull
     @Schema(description = "Attack points", example = "100")
     private Long attack;
 }

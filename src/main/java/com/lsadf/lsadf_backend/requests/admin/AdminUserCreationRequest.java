@@ -6,17 +6,21 @@ import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class AdminUserCreationRequest implements Request {
 
     @Serial
@@ -32,16 +36,14 @@ public class AdminUserCreationRequest implements Request {
     @JsonProperty(value = LAST_NAME)
     private String lastName;
 
-    @Schema(description = "User id of user to create. Can be null", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
-    @JsonProperty(value = USER_ID)
-    private String userId;
-
     @Schema(description = "Enabled status of user to create", example = "true")
     @JsonProperty(value = ENABLED)
+    @NotNull
     private Boolean enabled;
 
     @Schema(description = "Verified email status of user to create", example = "true")
     @JsonProperty(value = EMAIL_VERIFIED)
+    @NotNull
     private Boolean emailVerified;
 
     @Email
@@ -49,4 +51,8 @@ public class AdminUserCreationRequest implements Request {
     @Schema(description = "Username of user to create", example = "toto@toto.fr")
     @JsonProperty(value = USERNAME)
     private String username;
+
+    @Schema(description = "Roles of user to create", example = "[\"ADMIN\", \"USER\"]")
+    @JsonProperty(value = USER_ROLES)
+    private List<String> userRoles;
 }

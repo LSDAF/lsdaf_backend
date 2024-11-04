@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.bdd.when;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
@@ -61,7 +62,8 @@ public class BddStageWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.STAGE + ControllerConstants.Stage.GAME_SAVE_ID.replace("{game_save_id}", gameSaveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
 
@@ -82,7 +84,8 @@ public class BddStageWhenStepDefinitions extends BddLoader {
         String fullPath = ControllerConstants.STAGE + ControllerConstants.Stage.GAME_SAVE_ID.replace("{game_save_id}", gameSaveId);
         String url = BddUtils.buildUrl(this.serverPort, fullPath);
         try {
-            String token = jwtTokenStack.peek();
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             HttpEntity<Void> request = new HttpEntity<>(headers);

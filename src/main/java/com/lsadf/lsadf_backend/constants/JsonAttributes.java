@@ -31,32 +31,19 @@ public final class JsonAttributes {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class User {
-        public static final String FIRST_NAME = "firstName";
-        public static final String LAST_NAME = "lastName";
+        public static final String FIRST_NAME = "first_name";
+        public static final String LAST_NAME = "last_name";
         public static final String USERNAME = "username";
-        public static final String USER_ID = "user_id";
-        public static final String CREATION_TIMESTAMP = "creationTimestamp";
+        public static final String CREATED_TIMESTAMP = "created_timestamp";
         public static final String PASSWORD = "password";
         public static final String ENABLED = "enabled";
-        public static final String EMAIL_VERIFIED = "emailVerified";
+        public static final String EMAIL_VERIFIED = "email_verified";
         public static final String USER_ROLES = "user_roles";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class SearchRequest {
         public static final String FILTERS = "filters";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class UserAdminDetails {
-        public static final String NAME = "name";
-        public static final String EMAIL = "email";
-        public static final String PASSWORD = "password";
-        public static final String ENABLED = "enabled";
-        public static final String VERIFIED = "verified";
-        public static final String PROVIDER = "provider";
-        public static final String USER_ROLES = "user_roles";
-        public static final String GAME_SAVES = "game_saves";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

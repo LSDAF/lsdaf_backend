@@ -4,7 +4,6 @@ import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
@@ -12,11 +11,11 @@ import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,25 +30,6 @@ public class BddGivenStepDefinitions extends BddLoader {
 
     @Given("^the BDD engine is ready$")
     public void given_the_bdd_engine_is_ready() {
-        this.currencyStack.clear();
-        this.gameSaveListStack.clear();
-        this.gameSaveEntityListStack.clear();
-        this.exceptionStack.clear();
-        this.gameSaveEntityListStack.clear();
-        this.userListStack.clear();
-        this.userEntityListStack.clear();
-        this.globalInfoStack.clear();
-        this.userInfoListStack.clear();
-        this.localUserMap.clear();
-        this.mimeMessageStack.clear();
-        this.responseStack.clear();
-        this.jwtTokenStack.clear();
-        this.refreshJwtTokenStack.clear();
-        this.booleanStack.clear();
-
-        // Mock of JWT local security map
-        this.localUserMap.clear();
-
         BddUtils.initTestRestTemplate(testRestTemplate);
 
         log.info("BDD engine is ready. Using port: {}", this.serverPort);
@@ -100,13 +80,18 @@ public class BddGivenStepDefinitions extends BddLoader {
     }
 
     @Given("^a clean database$")
+    @Transactional
     public void given_i_have_a_clean_database() throws NotFoundException {
         log.info("Cleaning database repositories...");
 
+        this.currencyRepository.deleteAll();
+        this.stageRepository.deleteAll();
         this.gameSaveRepository.deleteAll();
         this.currencyRepository.deleteAll();
 
         assertThat(gameSaveRepository.count()).isZero();
+        assertThat(currencyRepository.count()).isZero();
+        assertThat(stageRepository.count()).isZero();
         assertThat(currencyRepository.count()).isZero();
 
 
@@ -123,20 +108,6 @@ public class BddGivenStepDefinitions extends BddLoader {
 
         log.info("Database repositories + caches cleaned");
         log.info("Mocks initialized");
-    }
-
-    @Given("^the following users$")
-    public void given_i_have_the_following_users(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        log.info("Creating users...");
-
-        rows.stream().map(HashMap::new).forEach(modifiableRow -> {
-            modifiableRow.computeIfPresent("password", (k, clearPassword) -> passwordEncoder.encode(clearPassword));
-            UserEntity user = BddUtils.mapToUserEntity(modifiableRow);
-            log.info("User created: {}", user);
-        });
-
-        log.info("Users created");
     }
 
     @Given("^the following game saves$")

@@ -1,12 +1,10 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.util.List;
-import java.util.Set;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
 
@@ -38,10 +35,12 @@ public class AdminUserUpdateRequest implements Request {
 
     @Schema(description = "Verified status of user to update", example = "true")
     @JsonProperty(value = EMAIL_VERIFIED)
+    @NotNull
     private Boolean emailVerified;
 
     @Schema(description = "Enabled status of user to update", example = "true")
     @JsonProperty(value = ENABLED)
+    @NotNull
     private Boolean enabled;
 
     @Schema(description = "Roles of user to update", example = "[\"USER\"]")

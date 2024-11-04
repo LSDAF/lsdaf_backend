@@ -2,21 +2,19 @@ package com.lsadf.lsadf_backend.bdd.then;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,36 +78,17 @@ public class BddThenStepDefinitions extends BddLoader {
         }
     }
 
-    @Then("^I should return the following game saves in exact order$")
-    public void then_i_should_return_the_following_game_saves_in_exact_order(DataTable dataTable) throws NotFoundException {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        List<GameSave> actual = gameSaveListStack.peek();
-
-        List<GameSave> expected = new ArrayList<>();
-
-        for (Map<String, String> row : rows) {
-            GameSave expectedEntity = BddUtils.mapToGameSave(row);
-            expected.add(expectedEntity);
-        }
-
-        assertThat(actual).hasSameSizeAs(expected);
-
-        for (int i = 0; i < actual.size(); i++) {
-            GameSave actualGameSave = actual.get(i);
-            GameSave expectedGameSave = expected.get(i);
-            assertThat(actualGameSave)
-                    .usingRecursiveComparison()
-                    .ignoringFields("id", "createdAt", "updatedAt")
-                    .isEqualTo(expectedGameSave);
-        }
-    }
-
-
     @Then("^I should return true$")
     public void then_i_should_return_true() {
         boolean actual = booleanStack.peek();
         assertThat(actual).isTrue();
+    }
+
+    @Then("^the number of game saves should be (.*)$")
+    @Transactional(readOnly = true)
+    public void then_the_number_of_game_saves_should_be(int expected) {
+        long actual = gameSaveService.getGameSaves().count();
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Then("^I should return false$")
@@ -130,6 +109,12 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(actual).isEqualTo(statusCode);
     }
 
+    @Then("^the number of users should be (.*)$")
+    public void then_the_number_of_users_should_be(int expected) {
+        long actual = userService.getUsers().count();
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @Then("^the response should have the following UserInfo$")
     public void then_the_response_should_have_the_following_user_info(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
@@ -145,8 +130,10 @@ public class BddThenStepDefinitions extends BddLoader {
 
         assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "createdAt", "updatedAt")
+                .ignoringFields("id", "createdAt", "updatedAt", "roles")
                 .isEqualTo(expected);
+
+        assertThat(actual.getRoles()).containsAll(expected.getRoles());
     }
 
 
@@ -233,29 +220,6 @@ public class BddThenStepDefinitions extends BddLoader {
                 .isEqualTo(expected);
     }
 
-    @Then("^I should return the following user entities$")
-    public void then_i_should_should_return_users(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-
-        Map<String, UserEntity> expectedUserEntityMap = rows
-                .stream()
-                .map(BddUtils::mapToUserEntity)
-                .collect(Collectors.toMap(UserEntity::getEmail, expected -> expected, (a, b) -> b));
-
-
-        List<UserEntity> actual = userEntityListStack.peek();
-
-        for (UserEntity userEntity : actual) {
-            UserEntity expected = expectedUserEntityMap.get(userEntity.getEmail());
-            assertThat(userEntity).isNotNull();
-            assertThat(userEntity)
-                    .usingRecursiveComparison()
-                    .ignoringFields("id", "createdAt", "updatedAt", "password")
-                    .isEqualTo(expected);
-            assertThat(passwordEncoder.matches(expected.getPassword(), userEntity.getPassword())).isTrue();
-        }
-    }
-
 
     @Then("^I should return the following GlobalInfo$")
     public void then_i_should_return_the_following_global_info(DataTable dataTable) {
@@ -330,7 +294,7 @@ public class BddThenStepDefinitions extends BddLoader {
                 .isEqualTo(expected);
     }
 
-    @And("the response should have the following GameSaves")
+    @Then("the response should have the following GameSaves")
     public void then_the_response_should_have_the_following_game_saves(DataTable dataTable) {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
 
@@ -346,7 +310,99 @@ public class BddThenStepDefinitions extends BddLoader {
                     .ignoringFields("id", "createdAt", "updatedAt")
                     .isEqualTo(expected);
         }
+    }
 
+    @Then("^the response should have the following Users in exact order$")
+    public void then_the_response_should_have_the_following_users_in_exact_order(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        List<User> actual = userListStack.peek();
+        List<User> expected = new ArrayList<>();
+
+        for (Map<String, String> row : rows) {
+            User expectedEntity = BddUtils.mapToUser(row);
+            expected.add(expectedEntity);
+        }
+
+        assertThat(actual).hasSameSizeAs(expected);
+
+        for (int i = 0; i < actual.size(); i++) {
+            User actualUser = actual.get(i);
+            User expectedUser = expected.get(i);
+            assertThat(actualUser)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFields("userRoles", "createdTimestamp")
+                    .isEqualTo(expectedUser);
+        }
+    }
+
+    @Then("^the response should have the following User$")
+    public void then_the_response_should_have_the_following_user(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        User actual = (User) responseStack.peek().getData();
+        User expected = BddUtils.mapToUser(row);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("userRoles", "createdTimestamp")
+                .ignoringExpectedNullFields()
+                .isEqualTo(expected);
+
+        expected.getUserRoles().forEach(role -> assertThat(actual.getUserRoles()).contains(role));
+    }
+
+    @Then("^the response should have the following Users$")
+    public void then_the_response_should_have_the_following_users(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        List<User> actual = userListStack.peek();
+
+        for (Map<String, String> row : rows) {
+            User expectedUser = BddUtils.mapToUser(row);
+            User actualUser = actual.stream()
+                    .filter(u -> u.getUsername().equals(expectedUser.getUsername()))
+                    .findFirst().orElseThrow();
+
+            assertThat(actualUser)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFields("userRoles", "createdTimestamp")
+                    .isEqualTo(expectedUser);
+
+            expectedUser.getUserRoles().forEach(role -> assertThat(actualUser.getUserRoles()).contains(role));
+        }
+    }
+
+    @Then("^the response should have the following GameSaves in exact order$")
+    public void then_the_response_should_have_the_following_game_saves_in_exact_order(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        List<GameSave> actual = gameSaveListStack.peek();
+
+        List<GameSave> expected = new ArrayList<>();
+
+        for (Map<String, String> row : rows) {
+            GameSave expectedEntity = BddUtils.mapToGameSave(row);
+            expected.add(expectedEntity);
+        }
+
+        assertThat(actual).hasSameSizeAs(expected);
+
+        for (int i = 0; i < actual.size(); i++) {
+            GameSave actualGameSave = actual.get(i);
+            GameSave expectedGameSave = expected.get(i);
+            assertThat(actualGameSave)
+                    .usingRecursiveComparison()
+                    .ignoringFields("id", "createdAt", "updatedAt")
+                    .isEqualTo(expectedGameSave);
+        }
     }
 
     @Then("^an email should have been sent to (.*)$")

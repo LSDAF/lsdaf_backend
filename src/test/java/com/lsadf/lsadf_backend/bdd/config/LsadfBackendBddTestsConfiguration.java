@@ -1,162 +1,113 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
-import com.lsadf.lsadf_backend.bdd.config.mocks.JavaMailSenderMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.CurrencyRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.GameSaveRepositoryMock;
-import com.lsadf.lsadf_backend.bdd.config.mocks.repository.StageRepositoryMock;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
 import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.ClockService;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
-import java.util.*;
-
-import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.JWT_STACK;
-import static com.lsadf.lsadf_backend.bdd.BddBeanConstants.REFRESH_JWT_TOKEN_STACK;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_FACEBOOK_CLIENT_REGISTRATION;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.ClientRegistration.OAUTH2_GOOGLE_CLIENT_REGISTRATION;
-import static org.mockito.Mockito.mock;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Configuration class for BDD tests
  */
 @TestConfiguration
+@Import(BddStackCleaner.class)
 public class LsadfBackendBddTestsConfiguration {
 
-    @Bean
-    public Stack<MimeMessage> mimeMessageStack() {
-        return new Stack<>();
-    }
 
     @Bean
-    public Stack<Currency> currencyStack() {
-        return new Stack<>();
+    public Stack<MimeMessage> mimeMessageStack(BddStackCleaner stackCleaner) {
+        Stack<MimeMessage> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<Stage> stageStack() {
-        return new Stack<>();
+    public Stack<Currency> currencyStack(BddStackCleaner stackCleaner) {
+        Stack<Currency> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<List<GameSave>> gameSaveStack() {
-        return new Stack<>();
+    public Stack<Stage> stageStack(BddStackCleaner stackCleaner) {
+        Stack<Stage> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<List<User>> userListStack() {
-        return new Stack<>();
+    public Stack<List<GameSave>> gameSaveStack(BddStackCleaner stackCleaner) {
+        Stack<List<GameSave>> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<GlobalInfo> globalInfoStack() {
-        return new Stack<>();
-    }
-
-    @Bean(name = JWT_STACK)
-    public Stack<String> jwtStack() {
-        return new Stack<>();
-    }
-
-    @Bean(name = REFRESH_JWT_TOKEN_STACK)
-    public Stack<String> refreshJwtTokenStack() {
-        return new Stack<>();
+    public Stack<List<User>> userListStack(BddStackCleaner stackCleaner) {
+        Stack<List<User>> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<Boolean> booleanStack() {
-        return new Stack<>();
+    public Stack<GlobalInfo> globalInfoStack(BddStackCleaner stackCleaner) {
+        Stack<GlobalInfo> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<List<UserInfo>> userInfoListStack() {
-        return new Stack<>();
+    public Stack<JwtAuthentication> jwtAuthenticationStack(BddStackCleaner stackCleaner) {
+        Stack<JwtAuthentication> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Map<String, Pair<Date, LocalUser>> localUserMap() {
-        return new HashMap<>();
+    public Stack<Boolean> booleanStack(BddStackCleaner stackCleaner) {
+        var stack = new Stack<Boolean>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<List<UserEntity>> userEntityListStack() {
-        return new Stack<>();
+    public Stack<List<UserInfo>> userInfoListStack(BddStackCleaner stackCleaner) {
+        Stack<List<UserInfo>> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<List<GameSaveEntity>> gameSaveEntityListStack() {
-        return new Stack<>();
+    public Stack<List<GameSaveEntity>> gameSaveEntityListStack(BddStackCleaner stackCleaner) {
+        var stack = new Stack<List<GameSaveEntity>>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<Exception> exceptionStack() {
-        return new Stack<>();
+    public Stack<Exception> exceptionStack(BddStackCleaner stackCleaner) {
+        var stack = new Stack<Exception>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
     @Bean
-    public Stack<GenericResponse<?>> genericResponseStack() {
-        return new Stack<>();
+    public Stack<GenericResponse<?>> genericResponseStack(BddStackCleaner stackCleaner) {
+        var stack = new Stack<GenericResponse<?>>();
+        stackCleaner.addStack(stack);
+        return stack;
     }
 
-    @Bean
-    @Primary
-    public CurrencyRepository currencyRepository() {
-        return new CurrencyRepositoryMock();
-    }
-
-    @Bean
-    @Primary
-    public StageRepository stageRepository() {
-        return new StageRepositoryMock();
-    }
-
-    @Bean
-    @Primary
-    public GameSaveRepository gameSaveRepository(ClockService clockService,
-                                                 CurrencyRepository currencyRepository,
-                                                 StageRepository stageRepository) {
-        return new GameSaveRepositoryMock(currencyRepository, stageRepository, clockService);
-    }
-
-    @Bean
-    @Primary
-    public UserDetailsService userDetailsService() {
-        return mock(UserDetailsService.class);
-    }
-
-    @Bean
-    @Primary
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return mock(ClientRegistrationRepository.class);
-    }
-
-    @Bean(name = OAUTH2_GOOGLE_CLIENT_REGISTRATION)
-    @Primary
-    public ClientRegistration googleClientRegistration() {
-        return mock(ClientRegistration.class);
-    }
-
-    @Bean(name = OAUTH2_FACEBOOK_CLIENT_REGISTRATION)
-    @Primary
-    public ClientRegistration facebookClientRegistration() {
-        return mock(ClientRegistration.class);
-    }
 
     @Bean
     @Primary

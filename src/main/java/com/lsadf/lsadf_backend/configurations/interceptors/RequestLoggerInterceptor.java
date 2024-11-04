@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.configurations.interceptors;
 
 import com.lsadf.lsadf_backend.constants.LogColor;
-import com.lsadf.lsadf_backend.models.LocalUser;
 import com.lsadf.lsadf_backend.models.RequestLog;
 import com.lsadf.lsadf_backend.properties.HttpLogProperties;
 import com.lsadf.lsadf_backend.services.ClockService;
@@ -17,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -121,9 +119,7 @@ public class RequestLoggerInterceptor implements HandlerInterceptor {
                                               Authentication authentication) {
         Object principal = authentication.getPrincipal();
         String username = null;
-        if (principal instanceof LocalUser localUserPrincipal) {
-            username = localUserPrincipal.getUsername();
-        } else if (principal instanceof String principalString && !principal.equals(ANONYMOUS_USER)) {
+        if (principal instanceof String principalString && !principal.equals(ANONYMOUS_USER)) {
             username = principalString;
         }
         String nowString = DateUtils.dateToString(now);

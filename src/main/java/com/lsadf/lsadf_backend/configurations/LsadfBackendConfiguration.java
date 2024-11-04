@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.configurations;
 import com.lsadf.lsadf_backend.configurations.cache.NoRedisCacheConfiguration;
 import com.lsadf.lsadf_backend.configurations.cache.RedisCacheConfiguration;
 import com.lsadf.lsadf_backend.configurations.cache.RedisEmbeddedCacheConfiguration;
+import com.lsadf.lsadf_backend.configurations.keycloak.KeycloakConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         NoRedisCacheConfiguration.class,
         ClockConfiguration.class,
         VelocityConfiguration.class,
+        KeycloakConfiguration.class
 })
 public class LsadfBackendConfiguration {
 }

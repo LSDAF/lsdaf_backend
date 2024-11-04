@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
 import com.lsadf.lsadf_backend.models.User;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
@@ -13,22 +12,24 @@ import java.util.stream.Stream;
 @UtilityClass
 public class StreamUtils {
     public static Stream<User> sortUsers(Stream<User> userStream, UserOrderBy orderBy) {
+        orderBy = orderBy == null ? UserOrderBy.NONE : orderBy;
         return switch (orderBy) {
             case ID -> userStream.sorted(Comparator.comparing(User::getId));
             case ID_DESC -> userStream.sorted(Comparator.comparing(User::getId).reversed());
-            case EMAIL -> userStream.sorted(Comparator.comparing(User::getUsername));
-            case EMAIL_DESC -> userStream.sorted(Comparator.comparing(User::getUsername).reversed());
+            case USERNAME -> userStream.sorted(Comparator.comparing(User::getUsername));
+            case USERNAME_DESC -> userStream.sorted(Comparator.comparing(User::getUsername).reversed());
             case FIRST_NAME -> userStream.sorted(Comparator.comparing(User::getLastName));
             case FIRST_NAME_DESC -> userStream.sorted(Comparator.comparing(User::getLastName).reversed());
             case LAST_NAME -> userStream.sorted(Comparator.comparing(User::getLastName));
             case LAST_NAME_DESC -> userStream.sorted(Comparator.comparing(User::getLastName).reversed());
-            case CREATED_AT -> userStream.sorted(Comparator.comparing(User::getCreationTimestamp));
-            case CREATED_AT_DESC -> userStream.sorted(Comparator.comparing(User::getCreationTimestamp).reversed());
+            case CREATED_AT -> userStream.sorted(Comparator.comparing(User::getCreatedTimestamp));
+            case CREATED_AT_DESC -> userStream.sorted(Comparator.comparing(User::getCreatedTimestamp).reversed());
             case NONE -> userStream;
         };
     }
 
     public static Stream<GameSaveEntity> sortGameSaves(Stream<GameSaveEntity> gameSaveStream, GameSaveOrderBy orderBy) {
+        orderBy = orderBy == null ? GameSaveOrderBy.NONE : orderBy;
         return switch (orderBy) {
             case CREATED_AT -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getCreatedAt));
             case CREATED_AT_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getCreatedAt).reversed());
@@ -44,6 +45,10 @@ public class StreamUtils {
             case EMERALD_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getEmeraldAmount()).reversed());
             case AMETHYST -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getCurrencyEntity().getAmethystAmount()));
             case AMETHYST_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getCurrencyEntity().getAmethystAmount()).reversed());
+            case NICKNAME -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getNickname));
+            case NICKNAME_DESC -> gameSaveStream.sorted(Comparator.comparing(GameSaveEntity::getNickname).reversed());
+            case MAX_STAGE -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> gameSaveEntity.getStageEntity().getMaxStage()));
+            case MAX_STAGE_DESC -> gameSaveStream.sorted(Comparator.comparing(gameSaveEntity -> ((GameSaveEntity) gameSaveEntity).getStageEntity().getMaxStage()).reversed());
             case NONE -> gameSaveStream;
         };
     }

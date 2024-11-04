@@ -7,19 +7,16 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
-import com.lsadf.lsadf_backend.properties.EmailProperties;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.services.impl.*;
-import org.apache.velocity.app.VelocityEngine;
+import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.Clock;
 
@@ -49,19 +46,31 @@ public class ServiceConfiguration {
     @Bean
     public GameSaveService gameSaveService(UserService userService,
                                            GameSaveRepository gameSaveRepository,
+                                           StageRepository stageRepository,
+                                           CurrencyRepository currencyRepository,
                                            @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache,
                                            HistoCache<Stage> stageHistoCache,
                                            HistoCache<Currency> currencyHistoCache) {
-        return new GameSaveServiceImpl(userService, gameSaveRepository, gameSaveOwnershipCache, stageHistoCache, currencyHistoCache);
+        return new GameSaveServiceImpl(userService,
+                gameSaveRepository,
+                stageRepository,
+                currencyRepository,
+                gameSaveOwnershipCache,
+                stageHistoCache,
+                currencyHistoCache);
     }
 
     @Bean
-    public UserService userService(KeycloakProperties keycloakProperties,
+    public UserService userService(Keycloak keycloak,
+                                   KeycloakProperties keycloakProperties,
                                    KeycloakAdminClient keycloakAdminClient,
-                                   ClockService clockService) {
-        return new UserServiceImpl(keycloakProperties,
+                                   ClockService clockService,
+                                   Mapper mapper) {
+        return new UserServiceImpl(keycloak,
+                keycloakProperties,
                 keycloakAdminClient,
-                clockService);
+                clockService,
+                mapper);
     }
 
     @Bean
@@ -80,12 +89,12 @@ public class ServiceConfiguration {
         return new ClockServiceImpl(clock);
     }
 
-    @Bean
-    public EmailService emailService(VelocityEngine velocityEngine,
-                                     JavaMailSender emailSender,
-                                     EmailProperties mailProperties,
-                                     ServerProperties serverProperties) {
-        return new EmailServiceImpl(velocityEngine, emailSender, mailProperties, serverProperties);
-    }
+//    @Bean
+//    public EmailService emailService(VelocityEngine velocityEngine,
+//                                     JavaMailSender emailSender,
+//                                     EmailProperties mailProperties,
+//                                     ServerProperties serverProperties) {
+//        return new EmailServiceImpl(velocityEngine, emailSender, mailProperties, serverProperties);
+//    }
 
 }

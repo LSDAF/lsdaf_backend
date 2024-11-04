@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lsdaf</groupId>
@@ -30,6 +30,7 @@
         <postgresql.version>42.7.3</postgresql.version>
         <swagger.version>2.5.0</swagger.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <rewrite.maven.plugin.version>5.42.0</rewrite.maven.plugin.version>
         <zonky.version>2.5.0</zonky.version>
         <zonky-embedded-postgres.version>2.0.7</zonky-embedded-postgres.version>
@@ -38,8 +39,8 @@
         <start-class>com.lsadf.lsadf_backend.LsadfBackendApplication</start-class>
         <delombok.output>${project.build.directory}/delombok</delombok.output>
         <embedded-redis.version>1.4.2</embedded-redis.version>
-        <expiringmap.jodah.version>0.5.11</expiringmap.jodah.version>
         <velocity-engine.version>2.3</velocity-engine.version>
+        <testcontainers-keycloak.version>3.5.1</testcontainers-keycloak.version>
     </properties>
 
     <dependencyManagement>
@@ -163,7 +164,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
@@ -192,7 +192,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>${maven-clean-plugin.version}</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <filesets>
@@ -225,6 +224,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -241,6 +246,8 @@
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <version>${keycloak-spring-boot-starter.version}</version>
         </dependency>
+
+
 
         <dependency>
             <groupId>org.keycloak</groupId>
@@ -320,6 +327,10 @@
                     <artifactId>jsonassert</artifactId>
                     <groupId>org.skyscreamer</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>xmlunit-core</artifactId>
+                    <groupId>org.xmlunit</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -350,19 +361,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.zonky.test</groupId>
-            <artifactId>embedded-database-spring-test</artifactId>
-            <version>${zonky.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.zonky.test</groupId>
-            <artifactId>embedded-postgres</artifactId>
-            <version>${zonky-embedded-postgres.version}</version>
         </dependency>
 
         <dependency>
@@ -402,9 +400,49 @@
             <version>${embedded-redis.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.jodah</groupId>
-            <artifactId>expiringmap</artifactId>
-            <version>${expiringmap.jodah.version}</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>spring-mock-mvc</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>${testcontainers-keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

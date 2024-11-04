@@ -1,14 +1,9 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
-import com.lsadf.lsadf_backend.constants.SocialProvider;
-import com.lsadf.lsadf_backend.constants.UserRole;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
-import com.lsadf.lsadf_backend.entities.UserEntity;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
@@ -34,7 +29,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -90,7 +88,6 @@ public class BddUtils {
      */
     public static GameSaveEntity mapToGameSaveEntity(Map<String, String> row) {
         String id = row.get(BddFieldConstants.GameSave.ID);
-        String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
         String gold = row.get(BddFieldConstants.GameSave.GOLD);
@@ -154,14 +151,11 @@ public class BddUtils {
         String name = row.get(BddFieldConstants.UserInfo.NAME);
         String rolesString = row.get(BddFieldConstants.UserInfo.ROLES);
         String verifiedString = row.get(BddFieldConstants.UserInfo.VERIFIED);
-        Set<UserRole> roles = Collections.emptySet();
-        if (rolesString != null) {
-            roles = Arrays.stream(rolesString.split(COMMA)).map(UserRole::valueOf).collect(Collectors.toSet());
-        }
+
+        Set<String> roles = Arrays.stream(rolesString.split(COMMA)).collect(Collectors.toSet());
 
         boolean verified = Boolean.parseBoolean(verifiedString);
-        return null;
-        //return new UserInfo(name, email, verified, roles, null, null);
+        return new UserInfo(name, email, verified, roles);
     }
 
 
@@ -183,29 +177,6 @@ public class BddUtils {
     }
 
     /**
-     * Maps a row from a BDD table to a User
-     *
-     * @param row row from BDD table
-     * @return User
-     * @throws NotFoundException if user is not found
-     */
-    public static User mapToUser(Map<String, String> row) throws NotFoundException {
-        String id = row.get(BddFieldConstants.User.ID);
-        String email = row.get(BddFieldConstants.User.EMAIL);
-        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
-        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
-        String provider = row.get(BddFieldConstants.User.PROVIDER);
-        String roles = row.get(BddFieldConstants.User.ROLES);
-        return User.builder()
-                .userRoles(Arrays.stream(roles.split(",")).toList())
-                .id(id)
-                .username(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
-    }
-
-    /**
      * Maps a row from a BDD table to an AdminGameSaveCreationRequest
      *
      * @param row row from BDD table
@@ -220,7 +191,7 @@ public class BddUtils {
         String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
         String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
         String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
-
+        String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long gold = Long.parseLong(goldString);
         Long healthPoints = Long.parseLong(healthPointsString);
@@ -234,17 +205,45 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
 
+        StageRequest stageRequest = new StageRequest(currentStage, maxStage);
+        CurrencyRequest currencyRequest = new CurrencyRequest(gold, diamond, emerald, amethyst);
+
         return AdminGameSaveCreationRequest.builder()
-                .diamond(diamond)
-                .gold(gold)
-                .emerald(emerald)
-                .amethyst(amethyst)
                 .healthPoints(healthPoints)
                 .attack(attack)
+                .nickname(nickname)
                 .id(id)
-                .maxStage(maxStage)
-                .currentStage(currentStage)
+                .stage(stageRequest)
+                .currency(currencyRequest)
                 .userEmail(userEmail)
+                .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a User
+     * @param row row from BDD table
+     * @return User
+     */
+    public static User mapToUser(Map<String, String> row) {
+        String email = row.get(BddFieldConstants.User.USERNAME);
+        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
+        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
+        String enabled = row.get(BddFieldConstants.User.ENABLED);
+        String verified = row.get(BddFieldConstants.User.EMAIL_VERIFIED);
+        String userRoles = row.get(BddFieldConstants.User.ROLES);
+
+        List<String> roles = Arrays.stream(userRoles.split(COMMA)).toList();
+
+        boolean enabledBoolean = Boolean.parseBoolean(enabled);
+        boolean verifiedBoolean = Boolean.parseBoolean(verified);
+
+        return User.builder()
+                .username(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .enabled(enabledBoolean)
+                .emailVerified(verifiedBoolean)
+                .userRoles(roles)
                 .build();
     }
 
@@ -256,7 +255,6 @@ public class BddUtils {
      */
     public static GameSave mapToGameSave(Map<String, String> row) {
         String id = row.get(BddFieldConstants.GameSave.ID);
-        String userId = row.get(BddFieldConstants.GameSave.USER_ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
@@ -351,42 +349,6 @@ public class BddUtils {
     }
 
     /**
-     * Maps a row from a BDD table to a UserEntity
-     *
-     * @param row row from BDD table
-     * @return UserEntity
-     */
-    public static UserEntity mapToUserEntity(Map<String, String> row) {
-        String email = row.get(BddFieldConstants.User.EMAIL);
-        String firstName = row.get(BddFieldConstants.User.FIRST_NAME);
-        String lastName = row.get(BddFieldConstants.User.LAST_NAME);
-        String id = row.get(BddFieldConstants.User.ID);
-        String password = row.get(BddFieldConstants.User.PASSWORD);
-        String provider = row.get(BddFieldConstants.User.PROVIDER);
-        String enabled = row.get(BddFieldConstants.User.ENABLED);
-        String verified = row.get(BddFieldConstants.User.VERIFIED);
-        String roles = row.get(BddFieldConstants.User.ROLES);
-
-
-        Boolean enabledBoolean = Boolean.parseBoolean(enabled);
-        Boolean verifiedBoolean = Boolean.parseBoolean(verified);
-        SocialProvider socialProvider = SocialProvider.fromString(provider);
-        Set<UserRole> roleSet = Arrays.stream(roles.split(COMMA))
-                .map(UserRole::valueOf)
-                .collect(Collectors.toSet());
-
-
-        return UserEntity.builder()
-                .email(email)
-                .id(id)
-                .verified(verifiedBoolean)
-                .enabled(enabledBoolean)
-                .password(password)
-                .provider(socialProvider)
-                .build();
-    }
-
-    /**
      * Maps a row from a BDD table to a UserCreationRequest
      *
      * @param row row from BDD table
@@ -437,7 +399,7 @@ public class BddUtils {
      * @return UserLoginRequest
      */
     public static UserLoginRequest mapToUserLoginRequest(Map<String, String> row) {
-        String email = row.get(BddFieldConstants.UserLoginRequest.EMAIL);
+        String email = row.get(BddFieldConstants.UserLoginRequest.USERNAME);
         String password = row.get(BddFieldConstants.UserLoginRequest.PASSWORD);
 
         return new UserLoginRequest(email, password);
@@ -466,7 +428,7 @@ public class BddUtils {
         String firstName = row.get(BddFieldConstants.AdminUserUpdateRequest.FIRST_NAME);
         String lastName = row.get(BddFieldConstants.AdminUserUpdateRequest.LAST_NAME);
         String enabled = row.get(BddFieldConstants.AdminUserUpdateRequest.ENABLED);
-        String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.VERIFIED);
+        String verified = row.get(BddFieldConstants.AdminUserUpdateRequest.EMAIL_VERIFIED);
         String userRoles = row.get(BddFieldConstants.AdminUserUpdateRequest.USER_ROLES);
 
         List<String> roles = Arrays.stream(userRoles.split(COMMA)).toList();
@@ -486,15 +448,17 @@ public class BddUtils {
     public static AdminUserCreationRequest mapToAdminUserCreationRequest(Map<String, String> row) {
         String firstName = row.get(BddFieldConstants.AdminUserCreationRequest.FIRST_NAME);
         String lastName = row.get(BddFieldConstants.AdminUserCreationRequest.LAST_NAME);
-        String email = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL);
+        String email = row.get(BddFieldConstants.AdminUserCreationRequest.USERNAME);
         String enabled = row.get(BddFieldConstants.AdminUserCreationRequest.ENABLED);
-        String userId = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ID);
-        String verified = row.get(BddFieldConstants.AdminUserCreationRequest.VERIFIED);
+        String verified = row.get(BddFieldConstants.AdminUserCreationRequest.EMAIL_VERIFIED);
+        String roles = row.get(BddFieldConstants.AdminUserCreationRequest.USER_ROLES);
 
         Boolean enabledBoolean = Boolean.parseBoolean(enabled);
         Boolean verifiedBoolean = Boolean.parseBoolean(verified);
 
-        return new AdminUserCreationRequest(firstName, lastName, userId, enabledBoolean, verifiedBoolean, email);
+        List<String> userRoles = roles == null ? null : Arrays.stream(roles.split(COMMA)).toList();
+
+        return new AdminUserCreationRequest(firstName, lastName, enabledBoolean, verifiedBoolean, email, userRoles);
 
     }
 
