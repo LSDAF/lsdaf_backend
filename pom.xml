@@ -18,6 +18,7 @@
 
     <modules>
         <module>lsadf_api</module>
+        <module>lsadf_dependencies</module>
     </modules>
 
     <properties>
