@@ -33,12 +33,12 @@ public class GameSave implements Model {
 
     // Admin fields
 
-    @JsonView(JsonViews.Admin.class)
+    // Internal fields
+
+    @JsonView(JsonViews.Internal.class)
     @JsonProperty(value = JsonAttributes.ID)
     @Schema(description = "Game Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;
-
-    // Internal fields
 
     @JsonView(JsonViews.Internal.class)
     @JsonProperty(value = USER_EMAIL)
