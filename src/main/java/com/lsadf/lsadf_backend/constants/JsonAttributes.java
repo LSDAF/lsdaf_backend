@@ -61,6 +61,15 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Characteristics {
+        public static final String ATTACK = "attack";
+        public static final String CRIT_CHANCE = "crit_chance";
+        public static final String CRIT_DAMAGE = "crit_damage";
+        public static final String HEALTH = "health";
+        public static final String RESISTANCE = "resistance";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Currency {
         public static final String GOLD = "gold";
         public static final String DIAMOND = "diamond";

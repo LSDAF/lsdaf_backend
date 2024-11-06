@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ControllerConstants {
 
-    public static final String GAME_SAVE = "/api/v1/game_save";
     public static final String AUTH = "/api/v1/auth";
-    public static final String USER = "/api/v1/user";
+    public static final String CHARACTERISTICS = "/api/v1/characteristics";
     public static final String CURRENCY = "/api/v1/currency";
-    public static final String STAGE = "/api/v1/stage";
+    public static final String GAME_SAVE = "/api/v1/game_save";
     public static final String OAUTH2 = "/api/oauth2";
+    public static final String STAGE = "/api/v1/stage";
+    public static final String USER = "/api/v1/user";
 
     // ADMIN
     public static final String ADMIN = "/api/v1/admin";
@@ -40,12 +41,13 @@ public final class ControllerConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Swagger {
-        public static final String OAUTH_2_CONTROLLER = "OAuth2 Controller";
-        public static final String GAME_SAVE_CONTROLLER = "Game Save Controller";
-        public static final String USER_CONTROLLER = "User Controller";
         public static final String AUTH_CONTROLLER = "Auth Controller";
+        public static final String CHARACTERISTICS_CONTROLLER = "Characteristics Controller";
         public static final String CURRENCY_CONTROLLER = "Currency Controller";
+        public static final String GAME_SAVE_CONTROLLER = "Game Save Controller";
+        public static final String OAUTH_2_CONTROLLER = "OAuth2 Controller";
         public static final String STAGE_CONTROLLER = "Stage Controller";
+        public static final String USER_CONTROLLER = "User Controller";
 
         // ADMIN
         public static final String ADMIN_CACHE_CONTROLLER = "Admin Cache Controller";
@@ -62,6 +64,11 @@ public final class ControllerConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Currency {
+        public static final String GAME_SAVE_ID = "/{game_save_id}";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Characteristics {
         public static final String GAME_SAVE_ID = "/{game_save_id}";
     }
 
