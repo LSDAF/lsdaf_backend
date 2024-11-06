@@ -1,0 +1,61 @@
+package com.lsadf.lsadf_backend.models;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.lsadf.lsadf_backend.constants.JsonAttributes;
+import com.lsadf.lsadf_backend.constants.JsonViews;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serial;
+
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Characteristics.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "Characteristics", description = "Characteristics object")
+@Data
+@Builder
+@JsonPropertyOrder({ATTACK, CRIT_CHANCE, CRIT_DAMAGE, HEALTH, RESISTANCE})
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonView(JsonViews.External.class)
+public class Characteristics implements Model {
+    @Serial
+    private static final long serialVersionUID = 33494087785391763L;
+
+    // External fields
+    @JsonView(JsonViews.Internal.class)
+    @JsonProperty(value = JsonAttributes.ID)
+    @Schema(description = "Characteristics Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
+    private String id;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = ATTACK)
+    @Schema(description = "Attack level", example = "100")
+    private Long attack = 1L;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = CRIT_CHANCE)
+    @Schema(description = "Crit chance level", example = "100")
+    private Long critChance = 1L;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = CRIT_DAMAGE)
+    @Schema(description = "Crit damage level", example = "100")
+    private Long critDamage = 1L;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = HEALTH)
+    @Schema(description = "Health level", example = "100")
+    private Long health = 1L;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = RESISTANCE)
+    @Schema(description = "Resistance level", example = "100")
+    private Long resistance = 1L;
+}
