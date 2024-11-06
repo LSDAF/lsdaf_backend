@@ -166,6 +166,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
+                        <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
@@ -176,6 +177,19 @@
                 <artifactId>copy-rename-maven-plugin</artifactId>
                 <version>${copy-rename-maven-plugin.version}</version>
                 <executions>
+                    <!-- Copy env.EXAMPLE.properties to env.properties in case it is unset (e.g. in CI) -->
+                    <execution>
+                        <id>copy-file-env-example</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>env/env.EXAMPLE.properties</sourceFile>
+                            <destinationFile>src/main/resources/env.properties</destinationFile>
+                        </configuration>
+                    </execution>
+                    <!-- Copy env.properties to env.properties and overwrite it -->
                     <execution>
                         <id>copy-file-env</id>
                         <phase>generate-sources</phase>
