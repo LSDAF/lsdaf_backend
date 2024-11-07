@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
@@ -76,6 +77,12 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         GameSaveEntity saved = gameSaveRepository.save(entity);
         saved.setNickname(saved.getId());
+
+        CharacteristicsEntity characteristicsEntity = CharacteristicsEntity.builder()
+                .id(saved.getId())
+                .build();
+
+        saved.setCharacteristicsEntity(characteristicsEntity);
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .userEmail(user.getUsername())
