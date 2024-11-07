@@ -28,12 +28,6 @@ public class Characteristics implements Model {
     @Serial
     private static final long serialVersionUID = 33494087785391763L;
 
-    // External fields
-    @JsonView(JsonViews.Internal.class)
-    @JsonProperty(value = JsonAttributes.ID)
-    @Schema(description = "Characteristics Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
-    private String id;
-
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = ATTACK)
     @Schema(description = "Attack level", example = "100")

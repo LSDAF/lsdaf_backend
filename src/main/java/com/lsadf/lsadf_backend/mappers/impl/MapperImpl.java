@@ -1,14 +1,13 @@
 package com.lsadf.lsadf_backend.mappers.impl;
 
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.Stage;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
@@ -19,6 +18,30 @@ import java.util.Date;
 
 @NoArgsConstructor
 public class MapperImpl implements Mapper {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Characteristics mapCharacteristicsRequestToCharacteristics(CharacteristicsRequest characteristicsRequest) {
+        return new Characteristics(characteristicsRequest.getAttack(),
+                characteristicsRequest.getCritChance(),
+                characteristicsRequest.getCritDamage(),
+                characteristicsRequest.getHealth(),
+                characteristicsRequest.getResistance());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Characteristics mapCharacteristicsEntityToCharacteristics(CharacteristicsEntity characteristicsEntity) {
+        return new Characteristics(characteristicsEntity.getAttack(),
+                characteristicsEntity.getCritChance(),
+                characteristicsEntity.getCritDamage(),
+                characteristicsEntity.getHealth(),
+                characteristicsEntity.getResistance());
+    }
 
     /**
      * {@inheritDoc}
