@@ -37,25 +37,25 @@ public class Characteristics implements Model {
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = ATTACK)
     @Schema(description = "Attack level", example = "100")
-    private Long attack = 1L;
+    private Long attack;
 
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = CRIT_CHANCE)
     @Schema(description = "Crit chance level", example = "100")
-    private Long critChance = 1L;
+    private Long critChance;
 
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = CRIT_DAMAGE)
     @Schema(description = "Crit damage level", example = "100")
-    private Long critDamage = 1L;
+    private Long critDamage;
 
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = HEALTH)
     @Schema(description = "Health level", example = "100")
-    private Long health = 1L;
+    private Long health;
 
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = RESISTANCE)
     @Schema(description = "Resistance level", example = "100")
-    private Long resistance = 1L;
+    private Long resistance;
 }

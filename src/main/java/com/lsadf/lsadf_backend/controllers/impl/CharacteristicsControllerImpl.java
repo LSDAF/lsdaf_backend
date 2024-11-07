@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.CacheService;
+import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.GameSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class CharacteristicsControllerImpl extends BaseController implements Cha
         gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
 
         Characteristics characteristics = mapper.mapCharacteristicsRequestToCharacteristics(characteristicsRequest);
-        gameSaveService.saveCharacteristics(gameSaveId, characteristics, cacheService.isEnabled());
+        characteristicsService.saveCharacteristics(gameSaveId, characteristics, cacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }
@@ -66,7 +67,7 @@ public class CharacteristicsControllerImpl extends BaseController implements Cha
         validateUser(jwt);
         String userEmail = getUsernameFromJwt(jwt);
         gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-        Characteristics characteristics = gameSaveService.getCharacteristics(gameSaveId);
+        Characteristics characteristics = characteristicsService.getCharacteristics(gameSaveId);
         return generateResponse(HttpStatus.OK, characteristics);
     }
 
