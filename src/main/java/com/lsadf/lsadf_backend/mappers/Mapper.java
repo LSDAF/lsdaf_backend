@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
@@ -21,12 +22,12 @@ public interface Mapper {
     GameSave mapGameSaveEntityToGameSave(GameSaveEntity gameSaveEntity);
 
     /**
-     * Maps CurrencyRequest to Currency
+     * Maps CharacteristicsRequest to Characteristics
      *
-     * @param currencyRequest CurrencyRequest
-     * @return Currency
+     * @param characteristicsRequest CharacteristicsRequest
+     * @return Characteristics
      */
-    Currency mapCurrencyRequestToCurrency(CurrencyRequest currencyRequest);
+    Characteristics mapCharacteristicsRequestToCharacteristics(CharacteristicsRequest characteristicsRequest);
 
     /**
      * Maps CharacteristicsEntity to Characteristics
@@ -35,6 +36,14 @@ public interface Mapper {
      * @return Characteristics
      */
     Characteristics mapCharacteristicsEntityToCharacteristics(CharacteristicsEntity characteristicsEntity);
+
+    /**
+     * Maps CurrencyRequest to Currency
+     *
+     * @param currencyRequest CurrencyRequest
+     * @return Currency
+     */
+    Currency mapCurrencyRequestToCurrency(CurrencyRequest currencyRequest);
 
     /**
      * Maps Currency to CurrencyEntity
