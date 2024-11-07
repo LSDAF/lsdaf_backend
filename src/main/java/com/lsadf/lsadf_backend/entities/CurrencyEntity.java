@@ -8,7 +8,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 @Data
 @Entity(name = EntityAttributes.Currencies.CURRENCY_ENTITY)

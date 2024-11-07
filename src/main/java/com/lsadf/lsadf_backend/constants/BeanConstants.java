@@ -21,6 +21,7 @@ public class BeanConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Cache {
+        public static final String CHARACTERISTICS_CACHE = "characteristicsCache";
         public static final String CURRENCY_CACHE = "currencyCache";
         public static final String STAGE_CACHE = "stageCache";
         public static final String LOCAL_INVALIDATED_JWT_TOKEN_CACHE = "localInvalidatedJwtTokenCache";
