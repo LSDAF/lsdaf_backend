@@ -48,6 +48,10 @@ public class GameSaveEntity extends AEntity {
     private String nickname;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_CHARACTERISTICS_ID)
+    private CharacteristicsEntity characteristicsEntity;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_CURRENCY_ID)
     private CurrencyEntity currencyEntity;
 
@@ -56,7 +60,16 @@ public class GameSaveEntity extends AEntity {
     private StageEntity stageEntity;
 
     /**
-     * Set the user of the game save
+     * Set the characteristics of the game save
+     * @param characteristicsEntity CharacteristicsEntity
+     */
+    public void setCharacteristicsEntity(CharacteristicsEntity characteristicsEntity) {
+        this.characteristicsEntity = characteristicsEntity;
+        characteristicsEntity.setGameSave(this);
+    }
+
+    /**
+     * Set the currency of the game save
      * @param currencyEntity CurrencyEntity
      */
     public void setCurrencyEntity(CurrencyEntity currencyEntity) {
