@@ -3,9 +3,12 @@ package com.lsadf.lsadf_backend.configurations.cache;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.cache.impl.RedisCache;
+import com.lsadf.lsadf_backend.cache.impl.RedisCharacteristicsCache;
 import com.lsadf.lsadf_backend.cache.impl.RedisCurrencyCache;
 import com.lsadf.lsadf_backend.cache.impl.RedisStageCache;
 import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
+import com.lsadf.lsadf_backend.constants.EntityAttributes;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
@@ -57,6 +60,17 @@ public class RedisCacheConfiguration {
     }
 
     @Bean
+    public RedisTemplate<String, Characteristics> characteristicsRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Characteristics> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericToStringSerializer<>(Characteristics.class));
+        return template;
+    }
+
+    @Bean
     public RedisTemplate<String, Currency> currencyRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Currency> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -83,6 +97,13 @@ public class RedisCacheConfiguration {
                                                      CacheExpirationProperties cacheExpirationProperties,
                                                      RedisProperties redisProperties) {
         return new RedisCache<>(redisTemplate, GAME_SAVE_OWNERSHIP, cacheExpirationProperties.getGameSaveOwnershipExpirationSeconds(), redisProperties);
+    }
+
+    @Bean(name = CHARACTERISTICS_CACHE)
+    public HistoCache<Characteristics> redisCharacteristicsCache(RedisTemplate<String, Characteristics> redisTemplate,
+                                                                 CacheExpirationProperties cacheExpirationProperties,
+                                                                 RedisProperties redisProperties) {
+        return new RedisCharacteristicsCache(redisTemplate, cacheExpirationProperties.getCharacteristicsExpirationSeconds(), redisProperties);
     }
 
     @Bean(name = CURRENCY_CACHE)

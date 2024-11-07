@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.mappers;
 
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
@@ -26,6 +27,14 @@ public interface Mapper {
      * @return Currency
      */
     Currency mapCurrencyRequestToCurrency(CurrencyRequest currencyRequest);
+
+    /**
+     * Maps CharacteristicsEntity to Characteristics
+     *
+     * @param characteristicsEntity CharacteristicsEntity
+     * @return Characteristics
+     */
+    Characteristics mapCharacteristicsEntityToCharacteristics(CharacteristicsEntity characteristicsEntity);
 
     /**
      * Maps Currency to CurrencyEntity

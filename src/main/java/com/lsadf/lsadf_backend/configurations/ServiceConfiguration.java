@@ -5,9 +5,11 @@ import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.http_clients.KeycloakAdminClient;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
+import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
@@ -28,6 +30,13 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
  */
 @Configuration
 public class ServiceConfiguration {
+
+    @Bean
+    public CharacteristicsService characteristicsService(CharacteristicsRepository characteristicsRepository,
+                                                         Cache<Characteristics> characteristicsCache,
+                                                         Mapper mapper) {
+        return new CharacteristicsServiceImpl(characteristicsRepository, characteristicsCache, mapper);
+    }
 
     @Bean
     public CurrencyService currencyService(CurrencyRepository currencyRepository,

@@ -65,6 +65,17 @@ public final class EntityAttributes {
         public static final String STAGE_USER_EMAIL = "user_email";
     }
 
+    // CHARACTERISTICS
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Characteristics {
+        public static final String CHARACTERISTICS_ENTITY = "t_characteristics";
+        public static final String CHARACTERISTICS_ATTACK = "attack";
+        public static final String CHARACTERISTICS_CRIT_CHANCE = "crit_chance";
+        public static final String CHARACTERISTICS_CRIT_DAMAGE = "crit_damage";
+        public static final String CHARACTERISTICS_HEALTH = "health";
+        public static final String CHARACTERISTICS_RESISTANCE = "resistance";
+    }
+
     // CURRENCIES
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Currencies {
