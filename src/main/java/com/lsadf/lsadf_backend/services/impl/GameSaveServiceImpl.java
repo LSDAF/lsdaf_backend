@@ -13,6 +13,7 @@ import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
@@ -38,6 +39,7 @@ public class GameSaveServiceImpl implements GameSaveService {
     private final UserService userService;
     private final GameSaveRepository gameSaveRepository;
     private final StageRepository stageRepository;
+    private final CharacteristicsRepository characteristicsRepository;
     private final CurrencyRepository currencyRepository;
 
     private final Cache<String> gameSaveOwnershipCache;
@@ -48,12 +50,14 @@ public class GameSaveServiceImpl implements GameSaveService {
     public GameSaveServiceImpl(UserService userService,
                                GameSaveRepository gameSaveRepository,
                                StageRepository stageRepository,
+                               CharacteristicsRepository characteristicsRepository,
                                CurrencyRepository currencyRepository,
                                Cache<String> gameSaveOwnershipCache,
                                HistoCache<Stage> stageCache,
                                HistoCache<Currency> currencyCache) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
+        this.characteristicsRepository = characteristicsRepository;
         this.currencyRepository = currencyRepository;
         this.stageRepository = stageRepository;
         this.gameSaveOwnershipCache = gameSaveOwnershipCache;
