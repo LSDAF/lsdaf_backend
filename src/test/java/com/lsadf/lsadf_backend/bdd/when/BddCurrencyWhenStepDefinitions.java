@@ -27,37 +27,6 @@ import static org.awaitility.Awaitility.await;
  */
 @Slf4j(topic = "[CURRENCY WHEN STEP DEFINITIONS]")
 public class BddCurrencyWhenStepDefinitions extends BddLoader {
-    @When("^the cache is flushed$")
-    public void when_the_cache_is_flushed() {
-        log.info("Flushing cache...");
-        this.cacheFlushService.flushCharacteristics();
-        this.cacheFlushService.flushCurrencies();
-        this.cacheFlushService.flushStages();
-    }
-
-    @When("^a (.*) cache entry is expired$")
-    public void when_a_cache_entry_is_expired(String cacheType) {
-        CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
-        int size = switch (cacheEntryType) {
-            case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
-            case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
-            case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
-        };
-        log.info("Waiting for {} cache entry to expire...", cacheType);
-        await().atMost(1200, TimeUnit.SECONDS).until(() -> {
-            try {
-                int newSize = switch (cacheEntryType) {
-                    case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
-                    case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
-                    case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
-                };
-                return newSize < size;
-            } catch (Exception e) {
-                return false;
-            }
-        });
-    }
-
     @When("^we want to get the currencies for the game save with id (.*)$")
     public void when_we_want_to_get_the_currencies_for_the_game_save_with_id(String gameSaveId) {
         try {

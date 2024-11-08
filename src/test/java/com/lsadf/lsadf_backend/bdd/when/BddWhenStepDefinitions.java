@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
+import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.models.*;
@@ -16,15 +17,50 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.awaitility.Awaitility.await;
 
 /**
  * Step definitions for the when steps in the BDD scenarios
  */
 @Slf4j(topic = "[WHEN STEP DEFINITIONS]")
 public class BddWhenStepDefinitions extends BddLoader {
+
+    @When("^a (.*) cache entry is expired$")
+    public void when_a_cache_entry_is_expired(String cacheType) {
+        CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
+        int size = switch (cacheEntryType) {
+            case CHARACTERISTICS, CHARACTERISTICS_HISTO -> characteristicsCache.getAllHisto().size();
+            case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+            case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
+            case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
+        };
+        log.info("Waiting for {} cache entry to expire...", cacheType);
+        await().atMost(1200, TimeUnit.SECONDS).until(() -> {
+            try {
+                int newSize = switch (cacheEntryType) {
+                    case CHARACTERISTICS, CHARACTERISTICS_HISTO -> characteristicsCache.getAllHisto().size();
+                    case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+                    case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
+                    case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
+                };
+                return newSize < size;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+    }
+
+    @When("^the cache is flushed$")
+    public void when_the_cache_is_flushed() {
+        log.info("Flushing cache...");
+        this.cacheFlushService.flushCharacteristics();
+        this.cacheFlushService.flushCurrencies();
+        this.cacheFlushService.flushStages();
+    }
 
     @When("^the user with email (.*) gets the game save with id (.*)$")
     public void when_the_user_with_email_gets_a_game_save_with_id(String userEmail, String gameSaveId) {
