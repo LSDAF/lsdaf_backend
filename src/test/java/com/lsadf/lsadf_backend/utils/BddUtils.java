@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
@@ -42,6 +43,28 @@ import java.util.stream.Collectors;
 public class BddUtils {
 
     private static final String COMMA = ",";
+
+    /**
+     * Maps a row from a BDD table to a CharacteristicsRequest
+     *
+     * @param row row from BDD table
+     * @return CharacteristicsRequest
+     */
+    public static CharacteristicsRequest mapToCharacteristicsRequest(Map<String, String> row) {
+        String attack = row.get(BddFieldConstants.Characteristics.ATTACK);
+        String critChance = row.get(BddFieldConstants.Characteristics.CRIT_CHANCE);
+        String critDamage = row.get(BddFieldConstants.Characteristics.CRIT_DAMAGE);
+        String health = row.get(BddFieldConstants.Characteristics.HEALTH);
+        String resistance = row.get(BddFieldConstants.Characteristics.RESISTANCE);
+
+        long attackLong = attack == null ? 0 : Long.parseLong(attack);
+        long critChanceLong = critChance == null ? 0 : Long.parseLong(critChance);
+        long critDamageLong = critDamage == null ? 0 : Long.parseLong(critDamage);
+        long healthLong = health == null ? 0 : Long.parseLong(health);
+        long resistanceLong = resistance == null ? 0 : Long.parseLong(resistance);
+
+        return new CharacteristicsRequest(attackLong, critChanceLong, critDamageLong, healthLong, resistanceLong);
+    }
 
     /**
      * Maps a row from a BDD table to a CurrencyRequest
@@ -273,6 +296,28 @@ public class BddUtils {
                 .currency(currency)
                 .stage(stage)
                 .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a Characteristics POJO
+     *
+     * @param row row from BDD table
+     * @return Characteristics
+     */
+    public static Characteristics mapToCharacteristics(Map<String, String> row) {
+        String attack = row.get(BddFieldConstants.Characteristics.ATTACK);
+        String critChance = row.get(BddFieldConstants.Characteristics.CRIT_CHANCE);
+        String critDamage = row.get(BddFieldConstants.Characteristics.CRIT_DAMAGE);
+        String health = row.get(BddFieldConstants.Characteristics.HEALTH);
+        String resistance = row.get(BddFieldConstants.Characteristics.RESISTANCE);
+
+        long attackLong = Long.parseLong(attack);
+        long critChanceLong = Long.parseLong(critChance);
+        long critDamageLong = Long.parseLong(critDamage);
+        long healthLong = Long.parseLong(health);
+        long resistanceLong = Long.parseLong(resistance);
+
+        return new Characteristics(attackLong, critChanceLong, critDamageLong, healthLong, resistanceLong);
     }
 
     /**

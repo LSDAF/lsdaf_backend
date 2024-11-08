@@ -42,6 +42,15 @@ public class ParameterizedTypeReferenceUtils {
     }
 
     /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of Characteristics
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<Characteristics>> buildParameterizedCharacteristicsResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
      * Builds a ParameterizedTypeReference for a GenericResponse of Currency
      * @return ParameterizedTypeReference
      */

@@ -5,6 +5,7 @@ import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -84,12 +85,14 @@ public class BddGivenStepDefinitions extends BddLoader {
     public void given_i_have_a_clean_database() throws NotFoundException {
         log.info("Cleaning database repositories...");
 
+        this.characteristicsRepository.deleteAll();
         this.currencyRepository.deleteAll();
         this.stageRepository.deleteAll();
         this.gameSaveRepository.deleteAll();
         this.currencyRepository.deleteAll();
 
         assertThat(gameSaveRepository.count()).isZero();
+        assertThat(characteristicsRepository.count()).isZero();
         assertThat(currencyRepository.count()).isZero();
         assertThat(stageRepository.count()).isZero();
         assertThat(currencyRepository.count()).isZero();
@@ -99,6 +102,8 @@ public class BddGivenStepDefinitions extends BddLoader {
         redisCacheService.clearCaches();
         localCacheService.clearCaches();
 
+        assertThat(characteristicsCache.getAll()).isEmpty();
+        assertThat(characteristicsCache.getAllHisto()).isEmpty();
         assertThat(currencyCache.getAll()).isEmpty();
         assertThat(currencyCache.getAllHisto()).isEmpty();
         assertThat(stageCache.getAll()).isEmpty();
@@ -131,6 +136,12 @@ public class BddGivenStepDefinitions extends BddLoader {
         CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
         AtomicInteger count = new AtomicInteger();
         switch (cacheEntryType) {
+            case CHARACTERISTICS -> rows.forEach(row -> {
+                String gameSaveId = row.get(BddFieldConstants.CharacteristicsCacheEntry.GAME_SAVE_ID);
+                Characteristics characteristics = BddUtils.mapToCharacteristics(row);
+                characteristicsCache.set(gameSaveId, characteristics);
+                count.getAndIncrement();
+            });
             case CURRENCY -> rows.forEach(row -> {
                 String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
                 Currency currency = BddUtils.mapToCurrency(row);
@@ -160,6 +171,7 @@ public class BddGivenStepDefinitions extends BddLoader {
     @Given("^the expiration seconds properties set to (.*)$")
     public void given_the_expiration_seconds_properties_set_to(int expirationSeconds) {
         log.info("Setting expiration seconds properties to {}", expirationSeconds);
+        characteristicsCache.setExpiration(expirationSeconds);
         currencyCache.setExpiration(expirationSeconds);
         stageCache.setExpiration(expirationSeconds);
         gameSaveOwnershipCache.setExpiration(expirationSeconds);

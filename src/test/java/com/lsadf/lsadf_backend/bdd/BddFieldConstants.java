@@ -19,6 +19,11 @@ public class BddFieldConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class CharacteristicsCacheEntry {
+        public static final String GAME_SAVE_ID = "gameSaveId";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class CurrencyCacheEntry {
         public static final String GAME_SAVE_ID = "gameSaveId";
     }
@@ -29,6 +34,15 @@ public class BddFieldConstants {
         public static final String USER_EMAIL = "userEmail";
         public static final String CURRENT_STAGE = "currentStage";
         public static final String MAX_STAGE = "maxStage";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Characteristics {
+        public static final String ATTACK = "attack";
+        public static final String CRIT_CHANCE = "crit_chance";
+        public static final String CRIT_DAMAGE = "crit_damage";
+        public static final String HEALTH = "health";
+        public static final String RESISTANCE = "resistance";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

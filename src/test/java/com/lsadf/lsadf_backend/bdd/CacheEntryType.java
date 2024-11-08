@@ -1,6 +1,8 @@
 package com.lsadf.lsadf_backend.bdd;
 
 public enum CacheEntryType {
+    CHARACTERISTICS,
+    CHARACTERISTICS_HISTO,
     CURRENCY,
     CURRENCY_HISTO,
     STAGE,
