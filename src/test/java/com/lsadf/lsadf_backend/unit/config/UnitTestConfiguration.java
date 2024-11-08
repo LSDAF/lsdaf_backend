@@ -50,6 +50,9 @@ public class UnitTestConfiguration {
     private GameSaveService gameSaveService;
 
     @MockBean
+    private CharacteristicsService characteristicsService;
+
+    @MockBean
     private CurrencyService currencyService;
 
     @MockBean
