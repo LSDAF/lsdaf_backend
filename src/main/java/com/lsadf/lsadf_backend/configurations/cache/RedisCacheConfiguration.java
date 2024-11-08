@@ -119,9 +119,10 @@ public class RedisCacheConfiguration {
 
     @Bean(name = REDIS_CACHE_SERVICE)
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
+                                          HistoCache<Characteristics> characteristicsCache,
                                           HistoCache<Currency> currencyCache,
                                           HistoCache<Stage> stageCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, currencyCache, stageCache);
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, characteristicsCache, currencyCache, stageCache);
     }
 
     @Bean
