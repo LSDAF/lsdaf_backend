@@ -13,10 +13,7 @@ import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
-import com.lsadf.lsadf_backend.services.CacheFlushService;
-import com.lsadf.lsadf_backend.services.CacheService;
-import com.lsadf.lsadf_backend.services.CurrencyService;
-import com.lsadf.lsadf_backend.services.StageService;
+import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -154,18 +151,22 @@ public class RedisCacheConfiguration {
 
 
     @Bean
-    public RedisKeyExpirationListener redisKeyExpirationListener(CurrencyService currencyService,
+    public RedisKeyExpirationListener redisKeyExpirationListener(CharacteristicsService characteristicsService,
+                                                                 CurrencyService currencyService,
                                                                  StageService stageService,
+                                                                 RedisTemplate<String, Characteristics> characteristicsRedisTemplate,
                                                                  RedisTemplate<String, Currency> currencyRedisTemplate,
                                                                  RedisTemplate<String, Stage> stageRedisTemplate) {
-        return new RedisKeyExpirationListener(currencyService, stageService, currencyRedisTemplate, stageRedisTemplate);
+        return new RedisKeyExpirationListener(characteristicsService, currencyService, stageService, characteristicsRedisTemplate, currencyRedisTemplate, stageRedisTemplate);
     }
 
     @Bean
-    public CacheFlushService cacheFlushService(CurrencyService currencyService,
+    public CacheFlushService cacheFlushService(CharacteristicsService characteristicsService,
+                                               CurrencyService currencyService,
                                                StageService stageService,
+                                               Cache<Characteristics> characteristicsCache,
                                                Cache<Currency> currencyCache,
                                                Cache<Stage> stageCache) {
-        return new RedisCacheFlushServiceImpl(currencyService, stageService, currencyCache, stageCache);
+        return new RedisCacheFlushServiceImpl(characteristicsService, currencyService, stageService, characteristicsCache, currencyCache, stageCache);
     }
 }

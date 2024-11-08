@@ -1,8 +1,10 @@
 package com.lsadf.lsadf_backend.unit.services;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.StageService;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
@@ -24,10 +26,16 @@ class RedisCacheFlushServiceTests {
     RedisCacheFlushServiceImpl redisCacheFlushService;
 
     @Mock
+    private Cache<Characteristics> characteristicsCache;
+
+    @Mock
     private Cache<Currency> currencyCache;
 
     @Mock
     private Cache<Stage> stageCache;
+
+    @Mock
+    private CharacteristicsService characteristicsService;
 
     @Mock
     CurrencyService currencyService;
@@ -38,7 +46,19 @@ class RedisCacheFlushServiceTests {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(currencyService, stageService, currencyCache, stageCache);
+        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(characteristicsService, currencyService, stageService, characteristicsCache, currencyCache, stageCache);
+    }
+
+    @Test
+    void should_flush_characteristics() {
+        Map<String, Characteristics> characteristicsEntries = Map.of(
+                "1", new Characteristics(1L, null, null, null, null),
+                "2", new Characteristics(2L, null, null, null, null));
+        when(characteristicsCache.getAll()).thenReturn(characteristicsEntries);
+
+        redisCacheFlushService.flushCharacteristics();
+        verify(characteristicsService, times(1)).saveCharacteristics("1", new Characteristics(1L, null, null, null, null), false);
+        verify(characteristicsService, times(1)).saveCharacteristics("2", new Characteristics(2L, null, null, null, null), false);
     }
 
     @Test
@@ -63,6 +83,15 @@ class RedisCacheFlushServiceTests {
         redisCacheFlushService.flushStages();
         verify(stageService, times(1)).saveStage("1", new Stage(10L, 20L), false);
         verify(stageService, times(1)).saveStage("2", new Stage(30L, 40L), false);
+    }
+
+    @Test
+    void do_nothing_when_flushing_empty_characteristics_cache() {
+        Map<String, Characteristics> characteristicsEntries = Collections.emptyMap();
+        when(characteristicsCache.getAll()).thenReturn(characteristicsEntries);
+
+        redisCacheFlushService.flushCharacteristics();
+        verifyNoInteractions(characteristicsService);
     }
 
     @Test

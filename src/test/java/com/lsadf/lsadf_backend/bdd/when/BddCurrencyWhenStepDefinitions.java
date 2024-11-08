@@ -30,6 +30,7 @@ public class BddCurrencyWhenStepDefinitions extends BddLoader {
     @When("^the cache is flushed$")
     public void when_the_cache_is_flushed() {
         log.info("Flushing cache...");
+        this.cacheFlushService.flushCharacteristics();
         this.cacheFlushService.flushCurrencies();
         this.cacheFlushService.flushStages();
     }
