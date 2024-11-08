@@ -74,6 +74,7 @@ public class AdminCacheControllerImpl extends BaseController implements AdminCac
         validateUser(jwt);
 
         log.info("Clearing all caches");
+        cacheFlushService.flushCharacteristics();
         cacheFlushService.flushCurrencies();
         cacheFlushService.flushStages();
         redisCacheService.clearCaches();

@@ -1,8 +1,10 @@
 package com.lsadf.lsadf_backend.cache.listeners;
 
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.StageService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +21,24 @@ import static com.lsadf.lsadf_backend.constants.RedisConstants.*;
 @Slf4j
 public class RedisKeyExpirationListener implements MessageListener {
 
+    private final CharacteristicsService characteristicsService;
     private final CurrencyService currencyService;
     private final StageService stageService;
+
+    private final RedisTemplate<String, Characteristics> characteristicsRedisTemplate;
     private final RedisTemplate<String, Currency> currencyRedisTemplate;
     private final RedisTemplate<String, Stage> stageRedisTemplate;
 
-    public RedisKeyExpirationListener(CurrencyService currencyService,
+    public RedisKeyExpirationListener(CharacteristicsService characteristicsService,
+                                      CurrencyService currencyService,
                                       StageService stageService,
+                                      RedisTemplate<String, Characteristics> characteristicsRedisTemplate,
                                       RedisTemplate<String, Currency> currencyRedisTemplate,
                                       RedisTemplate<String, Stage> stageRedisTemplate) {
+        this.characteristicsService = characteristicsService;
         this.currencyService = currencyService;
         this.stageService = stageService;
+        this.characteristicsRedisTemplate = characteristicsRedisTemplate;
         this.currencyRedisTemplate = currencyRedisTemplate;
         this.stageRedisTemplate = stageRedisTemplate;
     }
@@ -44,7 +53,10 @@ public class RedisKeyExpirationListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = message.toString();
         log.info("Redis cache entry expired -> {}", expiredKey);
-        if (expiredKey.startsWith(CURRENCY)) {
+        if (expiredKey.startsWith(CHARACTERISTICS)) {
+            String gameSaveId = expiredKey.substring(CHARACTERISTICS.length());
+            handleExpiredCharacteristics(gameSaveId);
+        } else if (expiredKey.startsWith(CURRENCY)) {
             String gameSaveId = expiredKey.substring(CURRENCY.length());
             handleExpiredCurrency(gameSaveId);
         } else if (expiredKey.startsWith(STAGE)) {
@@ -73,6 +85,28 @@ public class RedisKeyExpirationListener implements MessageListener {
             throw e;
         }
         log.info("Stage of game save {} has been saved to DB", gameSaveId);
+    }
+
+    /**
+     * Handles expired characteristics by saving it to DB.
+     * @param gameSaveId game save id
+     */
+    private void handleExpiredCharacteristics(String gameSaveId) {
+        try {
+            Characteristics characteristics = characteristicsRedisTemplate.opsForValue().get(CHARACTERISTICS_HISTO + gameSaveId);
+            if (characteristics == null) {
+                throw new NotFoundException("Characteristics not found in cache");
+            }
+            characteristicsService.saveCharacteristics(gameSaveId, characteristics, false);
+            Boolean result = characteristicsRedisTemplate.delete(CHARACTERISTICS_HISTO + gameSaveId);
+            if (Boolean.TRUE.equals(result)) {
+                log.info("Deleted entry {}", CHARACTERISTICS_HISTO + gameSaveId);
+            }
+        } catch (DataAccessException | NotFoundException e) {
+            log.error("Error while handling expired characteristics", e);
+            throw e;
+        }
+        log.info("Characteristics of game save {} has been saved to DB", gameSaveId);
     }
 
     /**

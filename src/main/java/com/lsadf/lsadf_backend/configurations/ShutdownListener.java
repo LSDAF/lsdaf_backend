@@ -29,6 +29,7 @@ public class ShutdownListener implements ApplicationListener<ContextClosedEvent>
         if (shutdownProperties.isFlushCacheAtShutdown()) {
             log.info("Flushing the cache before shutting down application");
             cacheFlushService.flushStages();
+            cacheFlushService.flushCharacteristics();
             cacheFlushService.flushCurrencies();
             return;
         }
