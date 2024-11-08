@@ -311,11 +311,11 @@ public class BddUtils {
         String health = row.get(BddFieldConstants.Characteristics.HEALTH);
         String resistance = row.get(BddFieldConstants.Characteristics.RESISTANCE);
 
-        long attackLong = Long.parseLong(attack);
-        long critChanceLong = Long.parseLong(critChance);
-        long critDamageLong = Long.parseLong(critDamage);
-        long healthLong = Long.parseLong(health);
-        long resistanceLong = Long.parseLong(resistance);
+        long attackLong = attack == null ? 1 : Long.parseLong(attack);
+        long critChanceLong = critChance == null ? 1 : Long.parseLong(critChance);
+        long critDamageLong = critDamage == null ? 1 : Long.parseLong(critDamage);
+        long healthLong = health == null ? 1 : Long.parseLong(health);
+        long resistanceLong = resistance == null ? 1 : Long.parseLong(resistance);
 
         return new Characteristics(attackLong, critChanceLong, critDamageLong, healthLong, resistanceLong);
     }
