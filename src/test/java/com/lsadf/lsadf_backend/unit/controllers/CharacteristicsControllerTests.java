@@ -48,7 +48,7 @@ class CharacteristicsControllerTests {
     @SneakyThrows
     void saveCharacteristics_should_return_401_when_user_not_authenticated() {
         // given
-        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L,1L, 1L, 1L);
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         // when
         mockMvc.perform(post("/api/v1/characteristics/{gameSaveId}", "36f27c2a-06e8-4bdb-bf59-56999116f5ef")
                         .contentType(APPLICATION_JSON)
