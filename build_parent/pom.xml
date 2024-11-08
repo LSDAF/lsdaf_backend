@@ -111,7 +111,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc.version}</version>
                     <configuration>
-                        <sourcepath>${delombok.output}</sourcepath>
+                        <sourcepath>${basedir}/target/delombok</sourcepath>
                         <reportOutputDirectory>${basedir}</reportOutputDirectory>
                         <destDir>apidocs</destDir>
                         <doclint>none</doclint>

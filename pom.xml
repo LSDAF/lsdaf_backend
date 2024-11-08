@@ -48,5 +48,6 @@
         <embedded-redis.version>1.4.2</embedded-redis.version>
         <velocity-engine.version>2.3</velocity-engine.version>
         <testcontainers-keycloak.version>3.5.1</testcontainers-keycloak.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
     </properties>
 </project>
