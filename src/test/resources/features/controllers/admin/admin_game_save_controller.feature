@@ -160,6 +160,25 @@ Feature: Admin GameSave Controller BDD tests
     Then the response status code should be 404
     And the number of game saves should be 3
 
+  Scenario: A user updates the characteristics of a game save
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+    And the user requests the admin endpoint to update the characteristics of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following CharacteristicsRequest
+      | attack | crit_chance | crit_damage | health | resistance |
+      | 100    | 100         | 100         | 100    | 100         |
+
+    Then the response status code should be 200
+
+  Scenario: A user updates the characteristics of a non-existing game save
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+    And the user requests the admin endpoint to update the characteristics of the game save with id 861e3a80-eade-402c-8598-3820e870c252 with the following CharacteristicsRequest
+      | attack | crit_chance | crit_damage | health | resistance |
+      | 100    | 100         | 100         | 100    | 100         |
+    Then the response status code should be 404
+
   Scenario: A user updates the currencies of a game save
     When the user logs in with the following credentials
       | username            | password |
