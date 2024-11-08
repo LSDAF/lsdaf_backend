@@ -142,6 +142,11 @@ public class BddThenStepDefinitions extends BddLoader {
         assertThat(gameSaveRepository.count()).isZero();
     }
 
+    @Then("^I should have no characteristics entries in DB$")
+    public void then_i_should_have_no_characteristics_entries_in_db() {
+        assertThat(characteristicsRepository.count()).isZero();
+    }
+
     @Then("^I should have no currency entries in DB$")
     public void then_i_should_have_no_currency_entries_in_db() {
         assertThat(currencyRepository.count()).isZero();
@@ -157,6 +162,25 @@ public class BddThenStepDefinitions extends BddLoader {
     public void then_i_should_throw_a_illegal_argument_exception() {
         Exception exception = exceptionStack.peek();
         assertThat(exception).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Then("^the characteristics should be the following$")
+    public void then_the_characteristics_amount_should_be(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        Characteristics expected = BddUtils.mapToCharacteristics(row);
+
+        Characteristics actual = characteristicsStack.peek();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     @Then("^the currency should be the following$")
@@ -196,6 +220,24 @@ public class BddThenStepDefinitions extends BddLoader {
 
         Stage expected = BddUtils.mapToStage(row);
         Stage actual = (Stage) responseStack.peek().getData();
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Then("^the response should have the following Characteristics$")
+    public void then_the_response_should_have_the_following_characteristics(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        if (rows.size() > 1) {
+            throw new IllegalArgumentException("Expected only one row in the DataTable");
+        }
+
+        Map<String, String> row = rows.get(0);
+
+        Characteristics expected = BddUtils.mapToCharacteristics(row);
+        Characteristics actual = (Characteristics) responseStack.peek().getData();
 
         assertThat(actual)
                 .usingRecursiveComparison()

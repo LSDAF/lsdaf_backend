@@ -13,6 +13,7 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
@@ -441,6 +442,34 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             ResponseEntity<GenericResponse<List<GameSave>>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedGameSaveListResponse());
             GenericResponse<List<GameSave>> body = result.getBody();
             gameSaveListStack.push(body.getData());
+            responseStack.push(body);
+            log.info("Response: {}", result);
+
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("^the user requests the admin endpoint to update the characteristics of the game save with id (.*) with the following CharacteristicsRequest$")
+    public void when_the_user_requests_the_admin_endpoint_to_update_the_characteristics_of_the_game_save_with_id_with_the_following_characteristics_request(String saveId, DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        assertThat(rows).hasSize(1);
+
+        Map<String, String> row = rows.get(0);
+
+        CharacteristicsRequest characteristicsRequest = BddUtils.mapToCharacteristicsRequest(row);
+
+        String fullPath = ControllerConstants.ADMIN_GAME_SAVES + ControllerConstants.AdminGameSave.UPDATE_GAME_SAVE_CHARACTERISTICS.replace("{game_save_id}", saveId);
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<CharacteristicsRequest> request = new HttpEntity<>(characteristicsRequest, headers);
+            ResponseEntity<GenericResponse<GameSave>> result = testRestTemplate.exchange(url, HttpMethod.POST, request, buildParameterizedGameSaveResponse());
+            GenericResponse<GameSave> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
 

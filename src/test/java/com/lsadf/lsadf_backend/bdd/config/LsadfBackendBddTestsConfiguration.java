@@ -32,6 +32,13 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
+    public Stack<Characteristics> characteristicsStack(BddStackCleaner stackCleaner) {
+        Stack<Characteristics> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
+    }
+
+    @Bean
     public Stack<Currency> currencyStack(BddStackCleaner stackCleaner) {
         Stack<Currency> stack = new Stack<>();
         stackCleaner.addStack(stack);

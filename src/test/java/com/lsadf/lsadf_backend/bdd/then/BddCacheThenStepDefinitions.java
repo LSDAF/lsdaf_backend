@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.bdd.then;
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -28,6 +29,8 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         log.info("Checking {} if cache is empty...", cacheType);
         CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
         switch (cacheEntryType) {
+            case CHARACTERISTICS -> assertThat(characteristicsCache.getAll()).isEmpty();
+            case CHARACTERISTICS_HISTO -> assertThat(characteristicsCache.getAllHisto()).isEmpty();
             case CURRENCY -> assertThat(currencyCache.getAll()).isEmpty();
             case CURRENCY_HISTO -> assertThat(currencyCache.getAllHisto()).isEmpty();
             case GAME_SAVE_OWNERSHIP -> assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
@@ -41,6 +44,7 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         log.info("Checking if redis cache is disabled...");
         assertThat(redisCacheService.isEnabled()).isFalse();
         assertThat(stageCache.isEnabled()).isFalse();
+        assertThat(characteristicsCache.isEnabled()).isFalse();
         assertThat(currencyCache.isEnabled()).isFalse();
         assertThat(gameSaveOwnershipCache.isEnabled()).isFalse();
     }
@@ -51,6 +55,22 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         log.info("Checking {} entries in cache...", currencyTypeString);
         CacheEntryType cacheEntryType = CacheEntryType.fromString(currencyTypeString);
         switch (cacheEntryType) {
+            case CHARACTERISTICS -> {
+                var results = characteristicsCache.getAll();
+                for (var entry : stringStringMap) {
+                    String gameSaveId = entry.get(GAME_SAVE_ID);
+                    Characteristics characteristics = BddUtils.mapToCharacteristics(entry);
+                    assertThat(results).containsEntry(gameSaveId, characteristics);
+                }
+            }
+            case CHARACTERISTICS_HISTO -> {
+                var results = characteristicsCache.getAllHisto();
+                for (var entry : stringStringMap) {
+                    String gameSaveId = entry.get(GAME_SAVE_ID);
+                    Characteristics characteristics = BddUtils.mapToCharacteristics(entry);
+                    assertThat(results).containsEntry(gameSaveId, characteristics);
+                }
+            }
             case CURRENCY -> {
                 var results = currencyCache.getAll();
                 for (var entry : stringStringMap) {
@@ -100,6 +120,22 @@ public class BddCacheThenStepDefinitions extends BddLoader {
         log.info("Checking {} entries in cache if they are updated...", cacheType);
         CacheEntryType cacheEntryType = CacheEntryType.fromString(cacheType);
         switch (cacheEntryType) {
+            case CHARACTERISTICS -> {
+                var results = characteristicsCache.getAll();
+                for (var entry : stringStringMap) {
+                    String gameSaveId = entry.get(GAME_SAVE_ID);
+                    Characteristics characteristics = BddUtils.mapToCharacteristics(entry);
+                    assertThat(results).containsEntry(gameSaveId, characteristics);
+                }
+            }
+            case CHARACTERISTICS_HISTO -> {
+                var results = characteristicsCache.getAllHisto();
+                for (var entry : stringStringMap) {
+                    String gameSaveId = entry.get(GAME_SAVE_ID);
+                    Characteristics characteristics = BddUtils.mapToCharacteristics(entry);
+                    assertThat(results).containsEntry(gameSaveId, characteristics);
+                }
+            }
             case CURRENCY -> {
                 var results = currencyCache.getAll();
                 for (var entry : stringStringMap) {

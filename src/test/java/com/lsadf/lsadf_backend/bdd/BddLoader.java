@@ -15,6 +15,7 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
+import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
 import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
 import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
@@ -108,12 +109,18 @@ public class BddLoader {
     protected Cache<String> gameSaveOwnershipCache;
 
     @Autowired
+    protected HistoCache<Characteristics> characteristicsCache;
+
+    @Autowired
     protected HistoCache<Currency> currencyCache;
 
     @Autowired
     protected HistoCache<Stage> stageCache;
 
     // Repositories
+    @Autowired
+    protected CharacteristicsRepository characteristicsRepository;
+
     @Autowired
     protected CurrencyRepository currencyRepository;
 
@@ -139,6 +146,9 @@ public class BddLoader {
 
     @Autowired
     protected ClockService clockService;
+
+    @Autowired
+    protected CharacteristicsService characteristicsService;
 
     @Autowired
     protected CurrencyService currencyService;
@@ -176,6 +186,9 @@ public class BddLoader {
 
     @Autowired
     protected Stack<MimeMessage> mimeMessageStack;
+
+    @Autowired
+    protected Stack<Characteristics> characteristicsStack;
 
     @Autowired
     protected Stack<Currency> currencyStack;
