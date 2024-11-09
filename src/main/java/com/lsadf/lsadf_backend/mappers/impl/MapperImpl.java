@@ -60,12 +60,14 @@ public class MapperImpl implements Mapper {
     @Override
     public GameSave mapGameSaveEntityToGameSave(GameSaveEntity gameSaveEntity) {
         Stage stage = mapStageEntityToStage(gameSaveEntity.getStageEntity());
+        Characteristics characteristics = mapCharacteristicsEntityToCharacteristics(gameSaveEntity.getCharacteristicsEntity());
         Currency currency = mapCurrencyEntityToCurrency(gameSaveEntity.getCurrencyEntity());
 
         return GameSave.builder()
                 .id(gameSaveEntity.getId())
                 .userEmail(gameSaveEntity.getUserEmail())
                 .nickname(gameSaveEntity.getNickname())
+                .characteristics(characteristics)
                 .currency(currency)
                 .stage(stage)
                 .healthPoints(gameSaveEntity.getHealthPoints())
