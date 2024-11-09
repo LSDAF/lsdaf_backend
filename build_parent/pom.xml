@@ -146,6 +146,17 @@
                     <version>${copy-rename-maven-plugin.version}</version>
                     <executions>
                         <execution>
+                            <id>copy-file-example-env</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                                <sourceFile>${maven.multiModuleProjectDirectory}/env/env.EXAMPLE.properties</sourceFile>
+                                <destinationFile>${basedir}/src/main/resources/env.properties</destinationFile>
+                            </configuration>
+                        </execution>
+                        <execution>
                             <id>copy-file-env</id>
                             <phase>generate-sources</phase>
                             <goals>
