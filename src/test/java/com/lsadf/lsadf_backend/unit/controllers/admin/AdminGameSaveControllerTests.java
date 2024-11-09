@@ -107,14 +107,14 @@ class AdminGameSaveControllerTests {
     @SneakyThrows
     void generateNewGameSave_should_return_401_when_user_not_authenticated() {
         // given
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         CurrencyRequest currencyRequest = new CurrencyRequest(100L, 100L, 100L, 100L);
         StageRequest stageRequest = new StageRequest(1L, 10L);
         AdminGameSaveCreationRequest request = AdminGameSaveCreationRequest.builder()
+                .characteristics(characteristicsRequest)
                 .currency(currencyRequest)
                 .stage(stageRequest)
-                .healthPoints(100L)
                 .nickname("test")
-                .attack(100L)
                 .id("3ab69f45-de06-4fce-bded-21d989fdad73")
                 .build();
 
@@ -131,14 +131,14 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
     void generateNewGameSave_should_return_403_when_user_not_admin() {
         // given
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         CurrencyRequest currencyRequest = new CurrencyRequest(100L, 100L, 100L, 100L);
         StageRequest stageRequest = new StageRequest(1L, 10L);
         AdminGameSaveCreationRequest request = AdminGameSaveCreationRequest.builder()
+                .characteristics(characteristicsRequest)
                 .currency(currencyRequest)
                 .stage(stageRequest)
-                .healthPoints(100L)
                 .nickname("test")
-                .attack(100L)
                 .id("3ab69f45-de06-4fce-bded-21d989fdad73")
                 .build();
         // when
@@ -150,24 +150,24 @@ class AdminGameSaveControllerTests {
     }
 
     private static Stream<Arguments> provideGenerateGameSaveInvalidArguments() {
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L); // valid characteristicsRequest
         CurrencyRequest currencyRequest = new CurrencyRequest(100L, 100L, 100L, 100L); // valid currencyRequest
         StageRequest stageRequest = new StageRequest(1L, 10L); // valid stageRequest
 
+        CharacteristicsRequest invalidCharacteristicsRequest = new CharacteristicsRequest(100L, 100L, 100L, -100L, 100L); // invalid characteristicsRequest
         CurrencyRequest invalidCurrencyRequest = new CurrencyRequest(100L, 100L, 100L, -100L); // invalid currencyRequest
         StageRequest invalidStageRequest = new StageRequest(10L, 1L); // invalid stageRequest
 
         return Stream.of(
-                Arguments.of("testtesttest", null, 100L, 100L, "test", currencyRequest, stageRequest), //invalid id
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", null, 100L, 100L, "test", currencyRequest, stageRequest), //invalid email
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "test", 100L, 100L, "test", currencyRequest, stageRequest), //invalid email 2
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", null, 100L, "test", currencyRequest, stageRequest), //invalid hp (null)
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", -10L, 100L, "test", currencyRequest, stageRequest), //invalid hp 2
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, null, "test", currencyRequest, stageRequest), //invalid attack (null)
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, -100L, "test", currencyRequest, stageRequest), //invalid attack 2
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, 100L, "test", null, stageRequest), // invalid currencyRequest (null)
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, 100L, "test", invalidCurrencyRequest, stageRequest), // invalid currencyRequest
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, 100L, "test", currencyRequest, null), // invalid stageRequest (null)
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, 100L, "test", currencyRequest, invalidStageRequest) // invalid stageRequest
+                Arguments.of("testtesttest", null, "test", characteristicsRequest, currencyRequest, stageRequest), //invalid id
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", null, "test", characteristicsRequest, currencyRequest, stageRequest), //invalid email
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "test", "test", characteristicsRequest, currencyRequest, stageRequest), //invalid email 2
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", null, currencyRequest, stageRequest), //invalid characteristicsRequest (null)
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com",  "test", invalidCharacteristicsRequest, currencyRequest, stageRequest), //invalid characteristicsRequest
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, null, stageRequest), // invalid currencyRequest (null)
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, invalidCurrencyRequest, stageRequest), // invalid currencyRequest
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, currencyRequest, null), // invalid stageRequest (null)
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, currencyRequest, invalidStageRequest) // invalid stageRequest
         );
     }
 
@@ -177,18 +177,16 @@ class AdminGameSaveControllerTests {
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
     void generateNewGameSave_should_return_400_when_invalid_request(String id,
                                                                     String userEmail,
-                                                                    Long hp,
-                                                                    Long attack,
                                                                     String nickname,
+                                                                    CharacteristicsRequest characteristics,
                                                                     CurrencyRequest currency,
                                                                     StageRequest stage) {
         // given
         AdminGameSaveCreationRequest request = AdminGameSaveCreationRequest.builder()
                 .id(id)
                 .userEmail(userEmail)
-                .healthPoints(hp)
-                .attack(attack)
                 .nickname(nickname)
+                .characteristics(characteristics)
                 .currency(currency)
                 .stage(stage)
                 .build();
@@ -215,12 +213,13 @@ class AdminGameSaveControllerTests {
     }
 
     private static Stream<Arguments> provideGenerateGameSaveValidArguments() {
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L); // valid characteristicsRequest
         CurrencyRequest currencyRequest = new CurrencyRequest(100L, 100L, 100L, 100L); // valid currencyRequest
         StageRequest stageRequest = new StageRequest(1L, 10L); // valid stageRequest
 
         return Stream.of(
-                Arguments.of(null, "paul.ochon@test.com", 100L, 100L, "test", currencyRequest, stageRequest), // valid: null id
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", 100L, 100L, "test", currencyRequest, stageRequest) // valid
+                Arguments.of(null, "paul.ochon@test.com", "test", characteristicsRequest, currencyRequest, stageRequest), // valid: null id
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, currencyRequest, stageRequest) // valid
         );
     }
 
@@ -230,18 +229,16 @@ class AdminGameSaveControllerTests {
     @MethodSource("provideGenerateGameSaveValidArguments")
     void generateNewGameSave_should_return_200_when_authenticated_user_is_admin_and_valid_inputs(String id,
                                                                                                  String userEmail,
-                                                                                                 Long hp,
-                                                                                                 Long attack,
                                                                                                  String nickname,
+                                                                                                 CharacteristicsRequest characteristics,
                                                                                                  CurrencyRequest currency,
                                                                                                  StageRequest stage) {
         // given
         AdminGameSaveCreationRequest request = AdminGameSaveCreationRequest.builder()
                 .id(id)
                 .userEmail(userEmail)
-                .healthPoints(hp)
-                .attack(attack)
                 .nickname(nickname)
+                .characteristics(characteristics)
                 .currency(currency)
                 .stage(stage)
                 .build();
@@ -413,9 +410,7 @@ class AdminGameSaveControllerTests {
     void updateGameSave_should_return_401_when_user_not_authenticated() {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
-                .attack(100L)
                 .nickname("test")
-                .healthPoints(100L)
                 .build();
 
         // when
@@ -432,9 +427,7 @@ class AdminGameSaveControllerTests {
     void updateGameSave_should_return_403_when_user_not_admin() {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
-                .attack(100L)
                 .nickname("test")
-                .healthPoints(100L)
                 .build();
         // when
         mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
@@ -450,9 +443,7 @@ class AdminGameSaveControllerTests {
     void updateGameSave_should_return_400_when_gameSaveId_is_not_uuid() {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
-                .attack(100L)
                 .nickname("test")
-                .healthPoints(100L)
                 .build();
         // when
         mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "testtesttest")
@@ -464,14 +455,8 @@ class AdminGameSaveControllerTests {
 
     private static Stream<Arguments> provideUpdateGameSaveInvalidArguments() {
         return Stream.of(
-                Arguments.of("zuoezzh!@#&", 100L, 100L), // invalid nickname
-                Arguments.of(null, 100L, 100L), // invalid nickname 2 (null)
-                Arguments.of("test", null, 100L), // invalid hp (null)
-                Arguments.of("test", -100L, 100L), // invalid hp (negative)
-                Arguments.of("test", 0L, 100L), // invalid hp (0)
-                Arguments.of("test", -100L, null), // invalid atk (null)
-                Arguments.of("test", -100L, -100L), // invalid atk (negative)
-                Arguments.of("test", -100L, -100L) // invalid atk (0)
+                Arguments.of("zuoezzh!@#&"), // invalid nickname
+                Arguments.of(null) // invalid nickname 2 (null)
         );
     }
 
@@ -482,9 +467,7 @@ class AdminGameSaveControllerTests {
     void updateGameSave_should_return_400_when_invalid_request(String nickname, Long hp, Long atk) {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
-                .attack(atk)
                 .nickname(nickname)
-                .healthPoints(hp)
                 .build();
         // when
         mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
@@ -514,9 +497,7 @@ class AdminGameSaveControllerTests {
     void updateGameSave_should_return_200_when_authenticated_user_is_admin() {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
-                .attack(100L)
                 .nickname("test")
-                .healthPoints(100L)
                 .build();
         // when
         mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}", "3ab69f45-de06-4fce-bded-21d989fdad73")
@@ -610,10 +591,52 @@ class AdminGameSaveControllerTests {
                 // then
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @SneakyThrows
+    void updateCharacteristics_should_return_401_when_user_not_authenticated() {
+        // given
+        CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/characteristics", "3ab69f45-de06-4fce-bded-21d989fdad73")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
+    void updateCharacteristics_should_return_403_when_user_not_admin() {
+        // given
+        CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/{game_save_id}/characteristics", "3ab69f45-de06-4fce-bded-21d989fdad73")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isForbidden());
+    }
+
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateCharahteristics_should_return_400_when_characteristicsRequest_is_null() {
+    void updateCharacteristics_should_return_400_when_gameSaveId_is_not_uuid() {
+        // given
+        CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/characteristics", "testtesttest")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void updateCharacteristics_should_return_400_when_characteristicsRequest_is_null() {
         // given
         CharacteristicsRequest request = null;
         // when
