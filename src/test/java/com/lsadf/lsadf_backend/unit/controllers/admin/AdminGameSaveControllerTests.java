@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.controllers.admin.impl.AdminGameSaveControllerImp
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.services.GameSaveService;
@@ -604,6 +605,49 @@ class AdminGameSaveControllerTests {
         CurrencyRequest request = new CurrencyRequest(100L, 100L, 100L, 100L);
         // when
         mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/currencies", "3ab69f45-de06-4fce-bded-21d989fdad73")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isOk());
+    }
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void updateCharahteristics_should_return_400_when_characteristicsRequest_is_null() {
+        // given
+        CharacteristicsRequest request = null;
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/characteristics", "3ab69f45-de06-4fce-bded-21d989fdad73")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void updateCharacteristics_should_return_400_when_request_is_invalid() {
+        // given
+        CharacteristicsRequest request = new CharacteristicsRequest(100L, 100L, -100L, 100L, 100L);
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/characteristics", "3ab69f45-de06-4fce-bded-21d989fdad73")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @SneakyThrows
+    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
+    void updateCharacteristics_should_return_200_when_authenticated_user_is_admin() {
+        // given
+        // define response when mock gameSaveService checks game save id existence
+
+        CharacteristicsRequest request = new CharacteristicsRequest(100L, 100L, 100L, 100L, 100L);
+        // when
+        mockMvc.perform(post("/api/v1/admin/game_saves/id/{game_save_id}/characteristics", "3ab69f45-de06-4fce-bded-21d989fdad73")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 // then

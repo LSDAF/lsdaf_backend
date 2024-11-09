@@ -25,6 +25,7 @@ public final class JsonAttributes {
         public static final String USER_EMAIL = "user_email";
         public static final String ATTACK = "attack";
         public static final String NICKNAME = "nickname";
+        public static final String CHARACTERISTICS = "characteristics";
         public static final String CURRENCY = "currency";
         public static final String STAGE = "stage";
     }
