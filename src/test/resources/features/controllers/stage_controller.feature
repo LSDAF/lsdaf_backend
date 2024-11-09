@@ -12,8 +12,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user gets the stages of one of his game saves with cache
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 10       | 10           | 1100   | 1200       | 1300       | 1400   | 1500       |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 99           | 100      |
@@ -30,8 +30,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user gets the stages of one of his game saves without cache
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 500          | 1072   | 10       | 10           |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 100  | 100     | 100     | 100      | 10       | 10           | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -45,8 +45,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user gets the stages of a game save that does not exist
     Given the following game saves
-      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+      | id                                   | userEmail           | gold    | maxStage | currentStage | diamond | emerald | amethyst | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 10       | 10           | 10      | 10      | 10       | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -58,8 +58,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user gets the stages of a non-owned game save
     Given the following game saves
-      | id                                   | userEmail            | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+      | id                                   | userEmail            | gold    | maxStage | currentStage | diamond | emerald | amethyst | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 10       | 10           | 10      | 10      | 10       | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -71,8 +71,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user tries to set the stages of one of his game saves with invalid data
     Given the following game saves
-      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
+      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 10       | 10           | 1100   | 1200       | 1300       | 1400   | 1500       |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 666          | 667      |
@@ -88,8 +88,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user sets the stages of one of his game saves with cache
     Given the following game saves
-      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 500          | 1072   | 10       | 10           |
+      | id                                   | userEmail           | gold    | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 5630280 | 5630280 | 5630280  | 10       | 10           | 1100   | 1200       | 1300       | 1400   | 1500       |
     And the following stage entries in cache
       | gameSaveId                           | currentStage | maxStage |
       | f81b710d-3e02-4871-a86f-390377798dd1 | 666          | 667      |
@@ -109,8 +109,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user sets the stages of one of his game saves without cache
     Given the following game saves
-      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+      | id                                   | userEmail           | gold    | maxStage | currentStage | diamond | emerald | amethyst | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 10       | 10           | 10      | 10      | 10       | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     And the cache is disabled
 
@@ -126,8 +126,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user sets the stages of a non-owned game save
     Given the following game saves
-      | id                                   | userEmail            | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+      | id                                   | userEmail            | gold    | maxStage | currentStage | diamond | emerald | amethyst | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.itesse@test.com | 5630280 | 10       | 10           | 10      | 10      | 10       | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -141,8 +141,8 @@ Feature: Stage Controller BDD tests
 
   Scenario: A user sets the stages of a non-existing game save
     Given the following game saves
-      | id                                   | userEmail           | gold    | healthPoints | attack | maxStage | currentStage | diamond | emerald | amethyst |
-      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 500          | 1072   | 10       | 10           | 10      | 10      | 10       |
+      | id                                   | userEmail           | gold    | maxStage | currentStage | diamond | emerald | amethyst | attack | critChance | critDamage | health | resistance |
+      | f81b710d-3e02-4871-a86f-390377798dd1 | paul.ochon@test.com | 5630280 | 10       | 10           | 10      | 10      | 10       | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
