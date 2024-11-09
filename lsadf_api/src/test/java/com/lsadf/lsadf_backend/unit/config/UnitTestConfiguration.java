@@ -29,10 +29,10 @@ public class UnitTestConfiguration {
     private ShutdownListener shutdownListener;
 
     @MockBean
-    RedisMessageListenerContainer redisMessageListenerContainer;
+    private RedisMessageListenerContainer redisMessageListenerContainer;
 
     @MockBean
-    LettuceConnectionFactory lettuceConnectionFactory;
+    private LettuceConnectionFactory lettuceConnectionFactory;
 
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
