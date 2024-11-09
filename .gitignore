@@ -38,3 +38,5 @@ docker-data/**
 **/env.properties
 
 keycloak_realm/**
+
+.DS_Store

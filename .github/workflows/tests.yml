@@ -44,21 +44,21 @@ jobs:
 
             -   name: 🐈‍⬛ Cat env.properties
                 run: |
-                    cat src/main/resources/env.properties
+                    cat lsadf_api/src/main/resources/env.properties
 
             -   name: 🧪 Test with Maven
                 run: |
-                    mvn -B test --file pom.xml
+                    mvn test
 
             -   name: 📁 List reports
                 run: |
-                    ls -la target/surefire-reports
+                    ls -la lsadf_api/target/surefire-reports
                 if: always()
 
             -   name: 📝 Tests Summary
                 uses: test-summary/action@v2
                 with:
-                    paths: "target/surefire-reports/*.xml"
+                    paths: "lsadf_api/target/surefire-reports/*.xml"
                     output: test-summary.md
                 if: always()
 
