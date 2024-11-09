@@ -50,4 +50,29 @@
         <testcontainers-keycloak.version>3.5.1</testcontainers-keycloak.version>
         <commons-compress.version>1.27.1</commons-compress.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>${rewrite.maven.plugin.version}</version>
+                <configuration>
+                    <exportDatatables>true</exportDatatables>
+                    <activeRecipes>
+                        <recipe>org.openrewrite.java.format.BlankLines</recipe>
+                        <recipe>org.openrewrite.java.format.WrappingAndBraces</recipe>
+                        <recipe>org.openrewrite.java.format.MethodParamPad</recipe>
+                        <recipe>org.openrewrite.java.format.NoWhitespaceBefore</recipe>
+                        <recipe>org.openrewrite.java.format.NoWhitespaceAfter</recipe>
+                        <recipe>org.openrewrite.java.format.RemoveTrailingWhitespace</recipe>
+                        <recipe>org.openrewrite.java.format.Spaces</recipe>
+                        <recipe>org.openrewrite.java.format.EmptyNewlineAtEndOfFile</recipe>
+                        <recipe>org.openrewrite.java.ShortenFullyQualifiedTypeReferences</recipe>
+                    </activeRecipes>
+                    <failOnDryRunResults>true</failOnDryRunResults>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
