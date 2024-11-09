@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lsadf.lsadf_backend.annotations.Nickname;
 import com.lsadf.lsadf_backend.annotations.Uuid;
 import com.lsadf.lsadf_backend.requests.Request;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,6 +60,10 @@ public class AdminGameSaveCreationRequest implements Request {
     @Nickname
     @Schema(description = "Nickname of the user in the game save", example = "Toto")
     private String nickname;
+
+    @Valid
+    @NotNull
+    private CharacteristicsRequest characteristics;
 
     @Valid
     @NotNull

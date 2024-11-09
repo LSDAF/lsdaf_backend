@@ -72,15 +72,4 @@ public class GameSave implements Model {
     @JsonProperty(value = STAGE)
     private Stage stage;
 
-    @JsonView(JsonViews.External.class)
-    @JsonProperty(value = HP)
-    @Schema(description = "Health points", example = "50")
-    @Builder.Default
-    private Long healthPoints = 10L;
-
-    @JsonView(JsonViews.External.class)
-    @JsonProperty(value = ATTACK)
-    @Schema(description = "Attack points", example = "260")
-    @Builder.Default
-    private Long attack = 1L;
 }

@@ -70,8 +70,6 @@ public class MapperImpl implements Mapper {
                 .characteristics(characteristics)
                 .currency(currency)
                 .stage(stage)
-                .healthPoints(gameSaveEntity.getHealthPoints())
-                .attack(gameSaveEntity.getAttack())
                 .createdAt(gameSaveEntity.getCreatedAt())
                 .updatedAt(gameSaveEntity.getUpdatedAt())
                 .build();
