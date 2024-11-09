@@ -31,8 +31,11 @@ Feature: Admin Cache Controller BDD tests
 
   Scenario: Flush the cache
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1000 | 1000    | 1000    | 1000     | 100          | 10     | 1000         | 1000     |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1100   | 1200       | 1300       | 1400   | 1500       |
+    And the following characteristics entries in cache
+      | gameSaveId                           | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 100    | 200        | 300        | 400    | 500        |
     And the following currency entries in cache
       | gameSaveId                           | gold     | diamond  | emerald  | amethyst |
       | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 56302802 | 56302802 | 56302802 | 56302802 |
@@ -47,6 +50,7 @@ Feature: Admin Cache Controller BDD tests
 
     Then the response status code should be 200
 
+    And the characteristics cache should be empty
     And the currency cache should be empty
     And the stage cache should be empty
     And the game_save_ownership cache should be empty
