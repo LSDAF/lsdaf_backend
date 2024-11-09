@@ -48,7 +48,7 @@ jobs:
 
             -   name: 🧪 Test with Maven
                 run: |
-                    mvn -B test --file pom.xml
+                    mvn test
 
             -   name: 📁 List reports
                 run: |
