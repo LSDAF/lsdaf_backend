@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import jakarta.persistence.*;
@@ -74,6 +75,28 @@ public class GameSaveEntity extends AEntity {
     public void setStageEntity(StageEntity stageEntity) {
         this.stageEntity = stageEntity;
         stageEntity.setGameSave(this);
+    }
+
+    /**
+     * Set the characteristics of the game save with a characteristics POJO
+     * @param characteristics Characteristics
+     */
+    public void setCharacteristicsEntity(Characteristics characteristics) {
+        if (characteristics.getAttack() != null) {
+            this.characteristicsEntity.setAttack(characteristics.getAttack());
+        }
+        if (characteristics.getCritChance() != null) {
+            this.characteristicsEntity.setCritChance(characteristics.getCritChance());
+        }
+        if (characteristics.getCritDamage() != null) {
+            this.characteristicsEntity.setCritDamage(characteristics.getCritDamage());
+        }
+        if (characteristics.getHealth() != null) {
+            this.characteristicsEntity.setHealth(characteristics.getHealth());
+        }
+        if (characteristics.getResistance() != null) {
+            this.characteristicsEntity.setResistance(characteristics.getResistance());
+        }
     }
 
     /**

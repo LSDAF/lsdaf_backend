@@ -18,13 +18,13 @@ Feature: GameSave Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSave
-      | userId                               | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage |
-      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 0    | 0       | 0       | 0        | 10           | 1      | 1            | 1        |
+      | userId                               | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | attack | critChance | critDamage | health | resistance |
+      | 9b274f67-d8fd-4e1a-a08c-8ed9a41e1f1d | paul.ochon@test.com | 0    | 0       | 0       | 0        | 1            | 1        | 1      | 1          | 1          | 1      | 1          |
 
   Scenario: A user tries to update a GameSave with invalid id
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 100          | 10     | 1000         | 1000     |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -38,8 +38,8 @@ Feature: GameSave Controller BDD tests
 
   Scenario: A user tries to update a non-owned GameSave
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.itesse@test.com | 1000 | 1000    | 1000    | 1000     | 100          | 10     | 1000         | 1000     |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.itesse@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -53,8 +53,8 @@ Feature: GameSave Controller BDD tests
 
   Scenario: A user updates an owned GameSave with valid custom nickname
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 100          | 10     | 1000         | 1000     | player1  |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | player1  | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -69,9 +69,9 @@ Feature: GameSave Controller BDD tests
   Scenario: A user updates an owned GameSave with valid data but the nickname is already taken
 
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | nickname | currentStage | maxStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 100          | 10     | player1  | 1000         | 1000     |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0be | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 100          | 10     | player2  | 1000         | 1000     |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | nickname | currentStage | maxStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | player1  | 1000         | 1000     | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0be | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | player2  | 1000         | 1000     | 400    | 500        | 600        | 700    | 800        |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -85,10 +85,10 @@ Feature: GameSave Controller BDD tests
 
   Scenario: A user gets its GameSaves without cached data
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 10           | 10     | 100      | 99           |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 100          | 100    | 1000     | 999          |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 1000         | 1000   | 10000    | 9999         |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 100      | 99           | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 1000     | 999          | 400    | 500        | 600        | 700    | 800        |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 10000    | 9999         | 1111   | 1222       | 1333       | 1444   | 1555       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -99,17 +99,21 @@ Feature: GameSave Controller BDD tests
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 10           | 10     | 100      | 99           |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 100          | 100    | 1000     | 999          |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 1000         | 1000   | 10000    | 9999         |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 100      | 99           | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 1000     | 999          | 400    | 500        | 600        | 700    | 800        |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 10000    | 9999         | 1111   | 1222       | 1333       | 1444   | 1555       |
 
   Scenario: A user gets its GameSaves with cached data
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 10           | 10     | 100      | 99           |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 100          | 100    | 1000     | 999          |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 1000         | 1000   | 10000    | 9999         |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10   | 100     | 1000    | 10000    | 100      | 99           | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100  | 1000    | 10000   | 100000   | 1000     | 999          | 400    | 500        | 600        | 700    | 800        |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000 | 10000   | 100000  | 1000000  | 10000    | 9999         | 1111   | 1222       | 1333       | 1444   | 1555       |
+
+    And the following characteristics entries in cache
+      | gameSaveId                           | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | 9999   | 9999       | 9999       | 9999   | 9999       |
 
     And the following currency entries in cache
       | gameSaveId                           | gold  | diamond | emerald | amethyst |
@@ -128,8 +132,8 @@ Feature: GameSave Controller BDD tests
     Then the response status code should be 200
 
     And the response should have the following GameSaves
-      | id                                   | userEmail           | gold  | diamond | emerald | amethyst | healthPoints | attack | maxStage | currentStage |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10000 | 100000  | 1000000 | 10000000 | 10           | 10     | 100      | 100          |
-      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100   | 1000    | 10000   | 100000   | 100          | 100    | 1000     | 999          |
-      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000  | 10000   | 100000  | 1000000  | 1000         | 1000   | 10000    | 9999         |
+      | id                                   | userEmail           | gold  | diamond | emerald | amethyst | maxStage | currentStage | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 10000 | 100000  | 1000000 | 10000000 | 100      | 100          | 9999   | 9999       | 9999       | 9999   | 9999       |
+      | 3bb1a064-79cc-4279-920a-fd0760663ca5 | paul.ochon@test.com | 100   | 1000    | 10000   | 100000   | 1000     | 999          | 400    | 500        | 600        | 700    | 800        |
+      | cf0f3d45-18c0-41f8-8007-41c5ea6d3e0b | paul.ochon@test.com | 1000  | 10000   | 100000  | 1000000  | 10000    | 9999         | 1111   | 1222       | 1333       | 1444   | 1555       |
 
