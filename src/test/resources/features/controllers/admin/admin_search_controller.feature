@@ -14,12 +14,12 @@ Feature: Admin Search Controller BDD tests
 
   Scenario: A user searches for a game save with no search criteria, no ordering
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -30,22 +30,22 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user searches for a game save with no search criteria, no ordering, and cached values
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     And the following currency entries in cache
       | gameSaveId                           | gold | diamond | emerald | amethyst |
@@ -64,22 +64,22 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 10      | 100     | 1000     | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 20      | 200     | 2000     | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 30      | 300     | 3000     | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 40      | 400     | 4000     | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 50      | 500     | 5000     | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 10      | 100     | 1000     | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 20      | 200     | 2000     | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 30      | 300     | 3000     | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 40      | 400     | 4000     | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 50      | 500     | 5000     | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user searches for a game save with one search criteria, no ordering
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -91,19 +91,19 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900   | 1000       |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
 
 
   Scenario: A user searches for a game save with no search criteria, specific ordering
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -114,22 +114,22 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves in exact order
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user searches for a game save with one search criteria and a specific ordering
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -141,19 +141,19 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves in exact order
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
   Scenario: A user searches for a game save with several search criterias
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
@@ -166,18 +166,18 @@ Feature: Admin Search Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user searches for a game save with a search criteria that does not exist
     Given the following game saves
-      | id                                   | userEmail            | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 10     | 100          | 100      | test-2   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 100          | 10     | 1000         | 1000     | test-3   |
-      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 100          | 10     | 10000        | 10000    | test-4   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100          | 10     | 100000       | 100000   | test-5   |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com  | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 3dd8b6d8-7aaa-4580-9a8a-a0bb6cc5bb21 | paul.itesse@test.com | 2    | 4       | 2       | 15       | 100          | 100      | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com  | 3    | 3       | 2       | 35       | 1000         | 1000     | test-3   | 100    | 200        | 300        | 400    | 500        |
+      | 9929ee41-9a7b-4320-90d5-ee963888d876 | paul.itesse@test.com | 4    | 2       | 2       | 45       | 10000        | 10000    | test-4   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com  | 5    | 1       | 2       | 55       | 100000       | 100000   | test-5   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     When the user logs in with the following credentials
       | username            | password |
