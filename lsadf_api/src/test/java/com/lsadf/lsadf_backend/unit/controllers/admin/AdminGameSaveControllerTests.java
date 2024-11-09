@@ -163,7 +163,7 @@ class AdminGameSaveControllerTests {
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", null, "test", characteristicsRequest, currencyRequest, stageRequest), //invalid email
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "test", "test", characteristicsRequest, currencyRequest, stageRequest), //invalid email 2
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", null, currencyRequest, stageRequest), //invalid characteristicsRequest (null)
-                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com",  "test", invalidCharacteristicsRequest, currencyRequest, stageRequest), //invalid characteristicsRequest
+                Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", invalidCharacteristicsRequest, currencyRequest, stageRequest), //invalid characteristicsRequest
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, null, stageRequest), // invalid currencyRequest (null)
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, invalidCurrencyRequest, stageRequest), // invalid currencyRequest
                 Arguments.of("3ab69f45-de06-4fce-bded-21d989fdad73", "paul.ochon@test.com", "test", characteristicsRequest, currencyRequest, null), // invalid stageRequest (null)
