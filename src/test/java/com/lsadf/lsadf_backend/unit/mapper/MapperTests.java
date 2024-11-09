@@ -1,15 +1,14 @@
 package com.lsadf.lsadf_backend.unit.mapper;
 
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.Stage;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
@@ -59,6 +58,46 @@ class MapperTests {
         // then
         assertThat(stage.getCurrentStage()).isEqualTo(25L);
         assertThat(stage.getMaxStage()).isEqualTo(500L);
+    }
+
+    @Test
+    void should_map_characteristics_entity_to_characteristics() {
+        // given
+        GameSaveEntity gameSaveEntity = GameSaveEntity.builder().build();
+        CharacteristicsEntity characteristicsEntity = CharacteristicsEntity.builder()
+                .gameSave(gameSaveEntity)
+                .attack(100L)
+                .critChance(200L)
+                .critDamage(300L)
+                .health(400L)
+                .resistance(500L)
+                .build();
+
+        // when
+        Characteristics characteristics = mapper.mapCharacteristicsEntityToCharacteristics(characteristicsEntity);
+
+        // then
+        assertThat(characteristics.getAttack()).isEqualTo(100L);
+        assertThat(characteristics.getCritChance()).isEqualTo(200L);
+        assertThat(characteristics.getCritDamage()).isEqualTo(300L);
+        assertThat(characteristics.getHealth()).isEqualTo(400L);
+        assertThat(characteristics.getResistance()).isEqualTo(500L);
+    }
+
+    @Test
+    void should_map_characteristics_request_to_characteristics() {
+        // given
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(100L, 200L, 300L, 400L, 500L);
+
+        // when
+        Characteristics characteristics = mapper.mapCharacteristicsRequestToCharacteristics(characteristicsRequest);
+
+        // then
+        assertThat(characteristics.getAttack()).isEqualTo(100L);
+        assertThat(characteristics.getCritChance()).isEqualTo(200L);
+        assertThat(characteristics.getCritDamage()).isEqualTo(300L);
+        assertThat(characteristics.getHealth()).isEqualTo(400L);
+        assertThat(characteristics.getResistance()).isEqualTo(500L);
     }
 
     @Test
@@ -113,6 +152,14 @@ class MapperTests {
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .build();
+        CharacteristicsEntity characteristicsEntity = CharacteristicsEntity.builder()
+                .gameSave(gameSaveEntity)
+                .attack(100L)
+                .critChance(200L)
+                .critDamage(300L)
+                .health(400L)
+                .resistance(500L)
+                .build();
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .goldAmount(100L)
                 .diamondAmount(200L)
@@ -129,6 +176,7 @@ class MapperTests {
                 .gameSave(gameSaveEntity)
                 .userEmail(userEmail)
                 .build();
+        gameSaveEntity.setCharacteristicsEntity(characteristicsEntity);
         gameSaveEntity.setCurrencyEntity(currencyEntity);
         gameSaveEntity.setStageEntity(stageEntity);
 
@@ -139,8 +187,11 @@ class MapperTests {
         assertThat(gameSave.getId()).isEqualTo(gameSaveEntity.getId());
         assertThat(gameSave.getUserEmail()).isEqualTo(gameSaveEntity.getUserEmail());
         assertThat(gameSave.getNickname()).isEqualTo(gameSaveEntity.getNickname());
-        assertThat(gameSave.getHealthPoints()).isEqualTo(gameSaveEntity.getHealthPoints());
-        assertThat(gameSave.getAttack()).isEqualTo(gameSaveEntity.getAttack());
+        assertThat(gameSave.getCharacteristics().getAttack()).isEqualTo(characteristicsEntity.getAttack());
+        assertThat(gameSave.getCharacteristics().getCritChance()).isEqualTo(characteristicsEntity.getCritChance());
+        assertThat(gameSave.getCharacteristics().getCritDamage()).isEqualTo(characteristicsEntity.getCritDamage());
+        assertThat(gameSave.getCharacteristics().getHealth()).isEqualTo(characteristicsEntity.getHealth());
+        assertThat(gameSave.getCharacteristics().getResistance()).isEqualTo(characteristicsEntity.getResistance());
         assertThat(gameSave.getCreatedAt()).isEqualTo(gameSaveEntity.getCreatedAt());
         assertThat(gameSave.getUpdatedAt()).isEqualTo(gameSaveEntity.getUpdatedAt());
         assertThat(gameSave.getCurrency().getGold()).isEqualTo(currencyEntity.getGoldAmount());

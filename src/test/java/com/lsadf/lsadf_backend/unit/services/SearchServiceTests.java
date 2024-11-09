@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.unit.services;
 
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
@@ -49,6 +50,10 @@ class SearchServiceTests {
     private static final StageEntity STAGE2 = new StageEntity("y", null, USER2.getUsername(), 3L, 4L);
     private static final StageEntity STAGE3 = new StageEntity("z", null, USER3.getUsername(), 5L, 6L);
 
+    private static final CharacteristicsEntity CHARACTERISTICS1 = new CharacteristicsEntity("x", null, 1L, 2L, 3L, 4L, 5L);
+    private static final CharacteristicsEntity CHARACTERISTICS2 = new CharacteristicsEntity("y", null, 5L, 6L, 7L, 8L, 9L);
+    private static final CharacteristicsEntity CHARACTERISTICS3 = new CharacteristicsEntity("z", null, 9L, 10L, 11L, 12L, 13L);
+
     private static final CurrencyEntity CURRENCY1 = new CurrencyEntity("x", null, USER1.getUsername(), 1L, 2L, 3L, 4L);
     private static final CurrencyEntity CURRENCY2 = new CurrencyEntity("y", null, USER2.getUsername(), 5L, 6L, 7L, 8L);
     private static final CurrencyEntity CURRENCY3 = new CurrencyEntity("z", null, USER3.getUsername(), 9L, 10L, 11L, 12L);
@@ -56,6 +61,7 @@ class SearchServiceTests {
     private static final GameSaveEntity GAME_SAVE1 = GameSaveEntity
             .builder()
             .id("x")
+            .characteristicsEntity(CHARACTERISTICS1)
             .currencyEntity(CURRENCY1)
             .stageEntity(STAGE1)
             .userEmail(USER1.getUsername())
@@ -68,6 +74,7 @@ class SearchServiceTests {
     private static final GameSaveEntity GAME_SAVE2 = GameSaveEntity
             .builder()
             .id("y")
+            .characteristicsEntity(CHARACTERISTICS2)
             .currencyEntity(CURRENCY2)
             .stageEntity(STAGE2)
             .userEmail(USER2.getUsername())
@@ -80,6 +87,7 @@ class SearchServiceTests {
     private static final GameSaveEntity GAME_SAVE3 = GameSaveEntity
             .builder()
             .id("z")
+            .characteristicsEntity(CHARACTERISTICS3)
             .currencyEntity(CURRENCY3)
             .stageEntity(STAGE3)
             .userEmail(USER3.getUsername())

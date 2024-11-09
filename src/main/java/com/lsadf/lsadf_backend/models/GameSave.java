@@ -61,6 +61,10 @@ public class GameSave implements Model {
     private String nickname;
 
     @JsonView(JsonViews.External.class)
+    @JsonProperty(value = CHARACTERISTICS)
+    private Characteristics characteristics;
+
+    @JsonView(JsonViews.External.class)
     @JsonProperty(value = CURRENCY)
     private Currency currency;
 
