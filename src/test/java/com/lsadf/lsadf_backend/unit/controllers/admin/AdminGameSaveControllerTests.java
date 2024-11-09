@@ -456,7 +456,7 @@ class AdminGameSaveControllerTests {
     private static Stream<Arguments> provideUpdateGameSaveInvalidArguments() {
         return Stream.of(
                 Arguments.of("zuoezzh!@#&"), // invalid nickname
-                Arguments.of(null) // invalid nickname 2 (null)
+                Arguments.of((Object) null) // invalid nickname 2 (null)
         );
     }
 
@@ -464,7 +464,7 @@ class AdminGameSaveControllerTests {
     @SneakyThrows
     @MethodSource("provideUpdateGameSaveInvalidArguments")
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateGameSave_should_return_400_when_invalid_request(String nickname, Long hp, Long atk) {
+    void updateGameSave_should_return_400_when_invalid_request(String nickname) {
         // given
         AdminGameSaveUpdateRequest request = AdminGameSaveUpdateRequest.builder()
                 .nickname(nickname)
