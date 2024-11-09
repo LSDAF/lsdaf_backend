@@ -8,6 +8,7 @@ import com.lsadf.lsadf_backend.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -155,6 +156,28 @@ public interface AdminGameSaveController {
     ResponseEntity<GenericResponse<GameSave>> updateGameSave(@AuthenticationPrincipal Jwt jwt,
                                                              @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
                                                              @Valid @RequestBody AdminGameSaveUpdateRequest adminGameSaveUpdateRequest);
+
+    /**
+     * Updates the characteristics of a game save
+     *
+     * @param jwt Jwt
+     * @param gameSaveId the game save id
+     * @param characteristicsRequest the characteristics request
+     * @return the characteristics
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
+            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
+            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
+            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
+    })
+    @Operation(summary = "Updates the characteristics of a game save")
+    @PostMapping(value = ControllerConstants.AdminGameSave.UPDATE_GAME_SAVE_CHARACTERISTICS)
+    @JsonView(JsonViews.Admin.class)
+    ResponseEntity<GenericResponse<Void>> updateCharacteristics(@AuthenticationPrincipal Jwt jwt,
+                                                                @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
+                                                                @RequestBody @Valid CharacteristicsRequest characteristicsRequest);
 
     /**
      * Updates the currency of a game save

@@ -7,19 +7,18 @@ import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.GameSave;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.CacheService;
-import com.lsadf.lsadf_backend.services.CurrencyService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.StageService;
+import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -46,6 +45,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
     private final GameSaveService gameSaveService;
     private final CacheService redisCacheService;
     private final Mapper mapper;
+    private final CharacteristicsService characteristicsService;
 
 
     @Autowired
@@ -53,12 +53,13 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
                                        StageService stageService,
                                        GameSaveService gameSaveService,
                                        Mapper mapper,
-                                       CacheService redisCacheService) {
+                                       CacheService redisCacheService, CharacteristicsService characteristicsService) {
         this.currencyService = currencyService;
         this.stageService = stageService;
         this.gameSaveService = gameSaveService;
         this.redisCacheService = redisCacheService;
         this.mapper = mapper;
+        this.characteristicsService = characteristicsService;
     }
 
     /**
@@ -159,6 +160,23 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
         validateUser(jwt);
 
         gameSaveService.deleteGameSave(gameSaveId);
+        return generateResponse(HttpStatus.OK);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> updateCharacteristics(Jwt jwt,
+                                                                      String gameSaveId,
+                                                                      CharacteristicsRequest characteristicsRequest) {
+        validateUser(jwt);
+        Characteristics characteristics = mapper.mapCharacteristicsRequestToCharacteristics(characteristicsRequest);
+        if (!gameSaveService.existsById(gameSaveId)) {
+            throw new NotFoundException("Game save not found");
+        }
+        characteristicsService.saveCharacteristics(gameSaveId, characteristics, redisCacheService.isEnabled());
+
         return generateResponse(HttpStatus.OK);
     }
 

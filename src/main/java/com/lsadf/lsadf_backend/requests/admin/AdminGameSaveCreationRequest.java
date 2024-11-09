@@ -45,18 +45,6 @@ public class AdminGameSaveCreationRequest implements Request {
     @Schema(description = "Email of the user", example = "test@test.com")
     private String userEmail;
 
-    @Positive
-    @JsonProperty(value = HP)
-    @Schema(description = "Health points", example = "100")
-    @NotNull
-    private Long healthPoints;
-
-    @Positive
-    @JsonProperty(value = ATTACK)
-    @Schema(description = "Attack points", example = "100")
-    @NotNull
-    private Long attack;
-
     @Nickname
     @Schema(description = "Nickname of the user in the game save", example = "Toto")
     private String nickname;

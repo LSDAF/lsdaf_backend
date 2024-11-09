@@ -67,14 +67,6 @@ public class BddThenStepDefinitions extends BddLoader {
             long gold = gameSave.getCurrencyEntity().getGoldAmount();
             long expectedGold = expected.getCurrencyEntity().getGoldAmount();
             assertThat(gold).isEqualTo(expectedGold);
-
-            long hp = gameSave.getHealthPoints();
-            long expectedHp = expected.getHealthPoints();
-            assertThat(hp).isEqualTo(expectedHp);
-
-            long attack = gameSave.getAttack();
-            long expectedAttack = expected.getAttack();
-            assertThat(attack).isEqualTo(expectedAttack);
         }
     }
 

@@ -34,16 +34,6 @@ public class GameSaveEntity extends AEntity {
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_USER_EMAIL)
     private String userEmail;
 
-    @Builder.Default
-    @Positive
-    @Column(name = EntityAttributes.GameSave.GAME_SAVE_HEALTH_POINTS)
-    private long healthPoints = 10L;
-
-    @Builder.Default
-    @PositiveOrZero
-    @Column(name = EntityAttributes.GameSave.GAME_SAVE_ATTACK)
-    private long attack = 1L;
-
     @Column(name = EntityAttributes.GameSave.GAME_SAVE_NICKNAME, unique = true)
     private String nickname;
 

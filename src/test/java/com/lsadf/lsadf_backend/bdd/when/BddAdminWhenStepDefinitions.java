@@ -413,7 +413,7 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
 
         AdminGameSaveCreationRequest adminRequest = requests.get(0);
 
-        try {
+//        try {
             JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
             String token = jwtAuthentication.getAccessToken();
             HttpHeaders headers = new HttpHeaders();
@@ -424,9 +424,9 @@ public class BddAdminWhenStepDefinitions extends BddLoader {
             gameSaveListStack.push(Collections.singletonList(body.getData()));
             responseStack.push(body);
             log.info("Response: {}", result);
-        } catch (Exception e) {
-            exceptionStack.push(e);
-        }
+//        } catch (Exception e) {
+//            exceptionStack.push(e);
+//        }
     }
 
     @When("^the user requests the admin endpoint to get all the game saves of the user with the following username (.*)$")

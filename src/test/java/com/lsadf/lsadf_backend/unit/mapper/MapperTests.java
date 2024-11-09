@@ -147,8 +147,6 @@ class MapperTests {
                 .id(id)
                 .userEmail(userEmail)
                 .nickname("toto")
-                .healthPoints(100L)
-                .attack(200L)
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .build();

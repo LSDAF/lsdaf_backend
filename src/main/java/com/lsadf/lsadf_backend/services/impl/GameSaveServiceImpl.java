@@ -10,6 +10,7 @@ import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.models.User;
@@ -19,6 +20,7 @@ import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
@@ -44,6 +46,7 @@ public class GameSaveServiceImpl implements GameSaveService {
 
     private final Cache<String> gameSaveOwnershipCache;
     private final HistoCache<Stage> stageCache;
+    private final HistoCache<Characteristics> characteristicsCache;
     private final HistoCache<Currency> currencyCache;
 
 
@@ -54,6 +57,7 @@ public class GameSaveServiceImpl implements GameSaveService {
                                CurrencyRepository currencyRepository,
                                Cache<String> gameSaveOwnershipCache,
                                HistoCache<Stage> stageCache,
+                               HistoCache<Characteristics> characteristicsCache,
                                HistoCache<Currency> currencyCache) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
@@ -62,6 +66,7 @@ public class GameSaveServiceImpl implements GameSaveService {
         this.stageRepository = stageRepository;
         this.gameSaveOwnershipCache = gameSaveOwnershipCache;
         this.stageCache = stageCache;
+        this.characteristicsCache = characteristicsCache;
         this.currencyCache = currencyCache;
     }
 
@@ -124,8 +129,6 @@ public class GameSaveServiceImpl implements GameSaveService {
         User user = userService.getUserByUsername(creationRequest.getUserEmail());
 
         GameSaveEntity entity = GameSaveEntity.builder()
-                .healthPoints(creationRequest.getHealthPoints())
-                .attack(creationRequest.getAttack())
                 .userEmail(user.getUsername())
                 .build();
 
@@ -141,6 +144,18 @@ public class GameSaveServiceImpl implements GameSaveService {
         String nickname = creationRequest.getNickname() != null ? creationRequest.getNickname() : saved.getId();
 
         saved.setNickname(nickname);
+
+        CharacteristicsRequest characteristicsRequest = creationRequest.getCharacteristics();
+        CharacteristicsEntity characteristicsEntity = CharacteristicsEntity.builder()
+                .gameSave(saved)
+                .attack(characteristicsRequest.getAttack())
+                .critChance(characteristicsRequest.getCritChance())
+                .critDamage(characteristicsRequest.getCritDamage())
+                .health(characteristicsRequest.getHealth())
+                .resistance(characteristicsRequest.getResistance())
+                .build();
+
+        saved.setCharacteristicsEntity(characteristicsEntity);
 
         CurrencyRequest currencyRequest = creationRequest.getCurrency();
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
@@ -220,10 +235,14 @@ public class GameSaveServiceImpl implements GameSaveService {
             throw new NotFoundException("Game save with id " + saveId + " not found");
         }
         // Delete entities from currency & stage before deleting the game save
+        characteristicsRepository.deleteById(saveId);
         currencyRepository.deleteById(saveId);
         stageRepository.deleteById(saveId);
 
         gameSaveRepository.deleteById(saveId);
+        if (characteristicsCache.isEnabled()) {
+            characteristicsCache.unset(saveId);
+        }
         if (currencyCache.isEnabled()) {
             currencyCache.unset(saveId);
         }
@@ -279,15 +298,6 @@ public class GameSaveServiceImpl implements GameSaveService {
 
         if (!Objects.equals(gameSaveEntity.getNickname(), adminUpdateRequest.getNickname())) {
             gameSaveEntity.setNickname(adminUpdateRequest.getNickname());
-            hasUpdates = true;
-        }
-
-        if (gameSaveEntity.getAttack() != adminUpdateRequest.getAttack()) {
-            gameSaveEntity.setAttack(adminUpdateRequest.getAttack());
-            hasUpdates = true;
-        }
-        if (gameSaveEntity.getHealthPoints() != adminUpdateRequest.getHealthPoints()) {
-            gameSaveEntity.setHealthPoints(adminUpdateRequest.getHealthPoints());
             hasUpdates = true;
         }
 

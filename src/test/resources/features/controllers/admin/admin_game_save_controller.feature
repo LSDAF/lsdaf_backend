@@ -35,10 +35,10 @@ Feature: Admin GameSave Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves in exact order
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100          | 10     | 100000       | 100000   | test-3   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 100          | 10     | 1000         | 1000     | test-2   |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-3   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 100    | 200        | 300        | 400    | 500        |
 
 
   Scenario: A user gets a game save by its id
@@ -51,8 +51,8 @@ Feature: Admin GameSave Controller BDD tests
     Then the response status code should be 200
 
     And the response should have the following GameSave
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100          | 10     | 100000       | 100000   | test-3   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-3   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user gets a non-existing game save by its id
@@ -71,10 +71,10 @@ Feature: Admin GameSave Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 100          | 10     | 1000         | 1000     | test-2   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100          | 10     | 100000       | 100000   | test-3   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 100    | 200        | 300        | 400    | 500        |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-3   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
 
   Scenario: A user gets all the games saves of a non-existing user
@@ -90,21 +90,21 @@ Feature: Admin GameSave Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 45c2736f-6c3b-4955-9b26-ce515091810b | paul.ochon@test.com | 1    | 2       | 3       | 4        | 5            | 6      | 7            | 8        | newgame  |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 45c2736f-6c3b-4955-9b26-ce515091810b | paul.ochon@test.com | 1    | 2       | 3       | 4        | 7            | 8        | newgame  | 100    | 200        | 300        | 400    | 500        |
 
     Then the response status code should be 200
     And the response should have the following GameSave
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 45c2736f-6c3b-4955-9b26-ce515091810b | paul.ochon@test.com | 1    | 2       | 3       | 4        | 5            | 6      | 7            | 8        | newgame  |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 45c2736f-6c3b-4955-9b26-ce515091810b | paul.ochon@test.com | 1    | 2       | 3       | 4        | 7            | 8        | newgame  | 100    | 200        | 300        | 400    | 500        |
 
   Scenario: A user generates a new game save with an existing id
     When the user logs in with the following credentials
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 2       | 3       | 4        | 5            | 6      | 7            | 8        | newgame  |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 2       | 3       | 4        | 7            | 8        | newgame  | 100    | 200        | 300        | 400    | 500        |
 
     Then the response status code should be 400
 
@@ -113,8 +113,8 @@ Feature: Admin GameSave Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to create a new game save with the following AdminGameSaveCreationRequest
-      | id                                   | userEmail                 | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.kalkbrenner@test.com | 1    | 2       | 3       | 4        | 5            | 6      | 7            | 8        | newgame  |
+      | id                                   | userEmail                 | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.kalkbrenner@test.com | 1    | 2       | 3       | 4        | 7            | 8        | newgame  | 100    | 200        | 300        | 400    | 500        |
 
     Then the response status code should be 404
 
@@ -129,16 +129,16 @@ Feature: Admin GameSave Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSave
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 599    | 100000       | 100000   | test-ZZZ |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-ZZZ | 1100   | 1200       | 1300       | 1400   | 1500       |
 
   Scenario: A user updates a non-existing game save
     When the user logs in with the following credentials
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to update the game save with id 88df00e0-1529-44a1-97d6-c11218bd6003 with the following AdminGameSaveUpdateRequest
-      | healthPoints | attack | nickname |
-      | 100000       | 599    | test-ZZZ |
+      | nickname | attack | critChance | critDamage | health | resistance |
+      | test-ZZZ | 100    | 200        | 300        | 400    | 500        |
 
     Then the response status code should be 404
 
@@ -165,8 +165,8 @@ Feature: Admin GameSave Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to update the characteristics of the game save with id 0530e1fe-3428-4edd-bb32-cb563419d0bd with the following CharacteristicsRequest
-      | attack | crit_chance | crit_damage | health | resistance |
-      | 100    | 100         | 100         | 100    | 100         |
+      | attack | critChance | critDamage | health | resistance |
+      | 100    | 100        | 100        | 100    | 100        |
 
     Then the response status code should be 200
 
@@ -175,8 +175,8 @@ Feature: Admin GameSave Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
     And the user requests the admin endpoint to update the characteristics of the game save with id 861e3a80-eade-402c-8598-3820e870c252 with the following CharacteristicsRequest
-      | attack | crit_chance | crit_damage | health | resistance |
-      | 100    | 100         | 100         | 100    | 100         |
+      | attack | critChance | critDamage | health | resistance |
+      | 100    | 100        | 100        | 100    | 100        |
     Then the response status code should be 404
 
   Scenario: A user updates the currencies of a game save

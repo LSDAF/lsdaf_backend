@@ -29,15 +29,4 @@ public class AdminGameSaveUpdateRequest implements Request {
     @Schema(description = "Nickname of the user", example = "test")
     private String nickname;
 
-    @JsonProperty(value = HP)
-    @Positive
-    @NotNull
-    @Schema(description = "Health points", example = "100")
-    private Long healthPoints;
-
-    @JsonProperty(value = ATTACK)
-    @Positive
-    @NotNull
-    @Schema(description = "Attack points", example = "100")
-    private Long attack;
 }
