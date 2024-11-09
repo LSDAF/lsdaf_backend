@@ -359,6 +359,10 @@ public class GameSaveServiceImpl implements GameSaveService {
      * @return the game save with cached data
      */
     private GameSaveEntity enrichGameSaveWithCachedData(GameSaveEntity gameSave) {
+        if (characteristicsCache.isEnabled()) {
+            Optional<Characteristics> optionalCharacteristics = characteristicsCache.get(gameSave.getId());
+            optionalCharacteristics.ifPresent(gameSave::setCharacteristicsEntity);
+        }
         if (currencyCache.isEnabled()) {
             Optional<Currency> optionalCurrency = currencyCache.get(gameSave.getId());
             optionalCurrency.ifPresent(gameSave::setCurrencyEntity);
