@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
+import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.entities.CurrencyEntity;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.entities.StageEntity;
@@ -113,21 +114,27 @@ public class BddUtils {
         String id = row.get(BddFieldConstants.GameSave.ID);
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
-        String gold = row.get(BddFieldConstants.GameSave.GOLD);
-        String diamond = row.get(BddFieldConstants.GameSave.DIAMOND);
-        String emerald = row.get(BddFieldConstants.GameSave.EMERALD);
-        String amethyst = row.get(BddFieldConstants.GameSave.AMETHYST);
-        String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
-        String attack = row.get(BddFieldConstants.GameSave.ATTACK);
+        String gold = row.get(BddFieldConstants.Currency.GOLD);
+        String diamond = row.get(BddFieldConstants.Currency.DIAMOND);
+        String emerald = row.get(BddFieldConstants.Currency.EMERALD);
+        String amethyst = row.get(BddFieldConstants.Currency.AMETHYST);
+        String attack = row.get(BddFieldConstants.Characteristics.ATTACK);
+        String critChance = row.get(BddFieldConstants.Characteristics.CRIT_CHANCE);
+        String critDamage = row.get(BddFieldConstants.Characteristics.CRIT_DAMAGE);
+        String health = row.get(BddFieldConstants.Characteristics.HEALTH);
+        String resistance = row.get(BddFieldConstants.Characteristics.RESISTANCE);
         String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
         String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
 
-        long attackLong = Long.parseLong(attack);
-        long healthPointsLong = Long.parseLong(healthPoints);
         long goldLong = Long.parseLong(gold);
         long diamondLong = Long.parseLong(diamond);
         long emeraldLong = Long.parseLong(emerald);
         long amethystLong = Long.parseLong(amethyst);
+        long attackLong = Long.parseLong(attack);
+        long critChanceLong = Long.parseLong(critChance);
+        long critDamageLong = Long.parseLong(critDamage);
+        long healthLong = Long.parseLong(health);
+        long resistanceLong = Long.parseLong(resistance);
         long currentStage = Long.parseLong(currentStageString);
         long maxStage = Long.parseLong(maxStageString);
 
@@ -135,9 +142,18 @@ public class BddUtils {
                 .userEmail(userEmail)
                 .nickname(nickname)
                 .id(id)
-                .attack(attackLong)
-                .healthPoints(healthPointsLong)
                 .build();
+
+        CharacteristicsEntity characteristicsEntity = CharacteristicsEntity.builder()
+                .gameSave(gameSaveEntity)
+                .attack(attackLong)
+                .critChance(critChanceLong)
+                .critDamage(critDamageLong)
+                .health(healthLong)
+                .resistance(resistanceLong)
+                .build();
+
+        gameSaveEntity.setCharacteristicsEntity(characteristicsEntity);
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .id(id)
@@ -206,22 +222,28 @@ public class BddUtils {
      * @return AdminGameSaveCreationRequest
      */
     public static AdminGameSaveCreationRequest mapToAdminGameSaveCreationRequest(Map<String, String> row) {
-        String goldString = row.get(BddFieldConstants.GameSave.GOLD);
-        String healthPointsString = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
-        String attackString = row.get(BddFieldConstants.GameSave.ATTACK);
-        String diamondString = row.get(BddFieldConstants.GameSave.DIAMOND);
-        String emeraldString = row.get(BddFieldConstants.GameSave.EMERALD);
-        String amethystString = row.get(BddFieldConstants.GameSave.AMETHYST);
+        String goldString = row.get(BddFieldConstants.Currency.GOLD);
+        String diamondString = row.get(BddFieldConstants.Currency.DIAMOND);
+        String emeraldString = row.get(BddFieldConstants.Currency.EMERALD);
+        String amethystString = row.get(BddFieldConstants.Currency.AMETHYST);
+        String attackString = row.get(BddFieldConstants.Characteristics.ATTACK);
+        String critChanceString = row.get(BddFieldConstants.Characteristics.CRIT_CHANCE);
+        String critDamageString = row.get(BddFieldConstants.Characteristics.CRIT_DAMAGE);
+        String healthString = row.get(BddFieldConstants.Characteristics.HEALTH);
+        String resistanceString = row.get(BddFieldConstants.Characteristics.RESISTANCE);
         String currentStageString = row.get(BddFieldConstants.GameSave.CURRENT_STAGE);
         String maxStageString = row.get(BddFieldConstants.GameSave.MAX_STAGE);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
         Long gold = Long.parseLong(goldString);
-        Long healthPoints = Long.parseLong(healthPointsString);
-        Long attack = Long.parseLong(attackString);
         Long diamond = Long.parseLong(diamondString);
         Long emerald = Long.parseLong(emeraldString);
         Long amethyst = Long.parseLong(amethystString);
+        Long attack = Long.parseLong(attackString);
+        Long critChance = Long.parseLong(critChanceString);
+        Long critDamage = Long.parseLong(critDamageString);
+        Long health = Long.parseLong(healthString);
+        Long resistance = Long.parseLong(resistanceString);
         Long currentStage = Long.parseLong(currentStageString);
         Long maxStage = Long.parseLong(maxStageString);
 
@@ -229,14 +251,14 @@ public class BddUtils {
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
 
         StageRequest stageRequest = new StageRequest(currentStage, maxStage);
+        CharacteristicsRequest characteristicsRequest = new CharacteristicsRequest(attack, critChance, critDamage, health, resistance);
         CurrencyRequest currencyRequest = new CurrencyRequest(gold, diamond, emerald, amethyst);
 
         return AdminGameSaveCreationRequest.builder()
-                .healthPoints(healthPoints)
-                .attack(attack)
                 .nickname(nickname)
                 .id(id)
                 .stage(stageRequest)
+                .characteristics(characteristicsRequest)
                 .currency(currencyRequest)
                 .userEmail(userEmail)
                 .build();
@@ -281,18 +303,15 @@ public class BddUtils {
         String userEmail = row.get(BddFieldConstants.GameSave.USER_EMAIL);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
-        long healthPoints = Long.parseLong(row.get(BddFieldConstants.GameSave.HEALTH_POINTS));
-        long attack = Long.parseLong(row.get(BddFieldConstants.GameSave.ATTACK));
-
+        Characteristics characteristics = mapToCharacteristics(row);
         Currency currency = mapToCurrency(row);
         Stage stage = mapToStage(row);
 
         return GameSave.builder()
-                .attack(attack)
                 .userEmail(userEmail)
                 .nickname(nickname)
                 .id(id)
-                .healthPoints(healthPoints)
+                .characteristics(characteristics)
                 .currency(currency)
                 .stage(stage)
                 .build();
@@ -366,17 +385,9 @@ public class BddUtils {
      * @return AdminGameSaveUpdateRequest
      */
     public static AdminGameSaveUpdateRequest mapToAdminGameSaveUpdateRequest(Map<String, String> row) {
-        String healthPoints = row.get(BddFieldConstants.GameSave.HEALTH_POINTS);
-        String attack = row.get(BddFieldConstants.GameSave.ATTACK);
         String nickname = row.get(BddFieldConstants.GameSave.NICKNAME);
 
-        Long healthPointsLong = Long.parseLong(healthPoints);
-        Long attackLong = Long.parseLong(attack);
-
-
         return AdminGameSaveUpdateRequest.builder()
-                .healthPoints(healthPointsLong)
-                .attack(attackLong)
                 .nickname(nickname)
                 .build();
     }

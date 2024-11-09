@@ -39,8 +39,8 @@ public class BddFieldConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Characteristics {
         public static final String ATTACK = "attack";
-        public static final String CRIT_CHANCE = "crit_chance";
-        public static final String CRIT_DAMAGE = "crit_damage";
+        public static final String CRIT_CHANCE = "critChance";
+        public static final String CRIT_DAMAGE = "critDamage";
         public static final String HEALTH = "health";
         public static final String RESISTANCE = "resistance";
     }
@@ -64,12 +64,6 @@ public class BddFieldConstants {
         public static final String ID = BddFieldConstants.ID;
         public static final String USER_EMAIL = "userEmail";
         public static final String NICKNAME = "nickname";
-        public static final String GOLD = "gold";
-        public static final String DIAMOND = "diamond";
-        public static final String EMERALD = "emerald";
-        public static final String AMETHYST = "amethyst";
-        public static final String HEALTH_POINTS = "healthPoints";
-        public static final String ATTACK = "attack";
         public static final String CURRENT_STAGE = "currentStage";
         public static final String MAX_STAGE = "maxStage";
         public static final String CREATED_AT = BddFieldConstants.CREATED_AT;

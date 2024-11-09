@@ -6,10 +6,10 @@ Feature: Admin GameSave Controller BDD tests
     And a clean database
     And the time clock set to the present
     And the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 100          | 10     | 1000         | 1000     | test-2   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100          | 10     | 100000       | 100000   | test-3   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 100    | 200        | 300        | 400    | 500        |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-3   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
     # We assume we have at least the following user in keycloak
     # paul.ochon@test.com: ADMIN,USER: toto1234: ce60ea41-3765-4562-8c96-8673de8f96b0
@@ -22,10 +22,10 @@ Feature: Admin GameSave Controller BDD tests
 
     Then the response status code should be 200
     And the response should have the following GameSaves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | healthPoints | attack | currentStage | maxStage | nickname |
-      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 100          | 10     | 10           | 10       | test-1   |
-      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 100          | 10     | 1000         | 1000     | test-2   |
-      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100          | 10     | 100000       | 100000   | test-3   |
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | 0530e1fe-3428-4edd-bb32-cb563419d0bd | paul.ochon@test.com | 1    | 5       | 2       | 5        | 10           | 10       | test-1   | 100    | 200        | 300        | 400    | 500        |
+      | 804af894-931b-4ee6-968f-1703689066fb | paul.ochon@test.com | 3    | 3       | 2       | 15       | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
+      | 6a4f12dc-4e83-40f7-992e-8f2e04375d74 | paul.ochon@test.com | 5    | 1       | 2       | 25       | 100000       | 100000   | test-3   | 1100   | 1200       | 1300       | 1400   | 1500       |
 
   Scenario: A user gets all the game saves in a specific order
     When the user logs in with the following credentials
