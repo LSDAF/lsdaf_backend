@@ -21,9 +21,7 @@ public final class JsonAttributes {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class GameSave {
-        public static final String HP = "health_points";
         public static final String USER_EMAIL = "user_email";
-        public static final String ATTACK = "attack";
         public static final String NICKNAME = "nickname";
         public static final String CHARACTERISTICS = "characteristics";
         public static final String CURRENCY = "currency";

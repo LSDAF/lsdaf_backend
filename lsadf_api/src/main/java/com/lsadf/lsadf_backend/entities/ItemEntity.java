@@ -16,8 +16,9 @@ import java.io.Serial;
 @Table(name = EntityAttributes.Items.ITEM_ENTITY)
 @SuperBuilder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ItemEntity implements com.lsadf.lsadf_backend.entities.Entity {
+public class ItemEntity extends AEntity {
 
     @Serial
     private static final long serialVersionUID = 7786624859103259009L;
@@ -25,10 +26,6 @@ public class ItemEntity implements com.lsadf.lsadf_backend.entities.Entity {
     protected ItemEntity() {
         super();
     }
-
-    @Id
-    @Column(name = EntityAttributes.ID)
-    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude

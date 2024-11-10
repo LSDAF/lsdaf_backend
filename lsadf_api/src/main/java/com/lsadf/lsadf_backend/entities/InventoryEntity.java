@@ -17,18 +17,15 @@ import java.util.List;
 @Table(name = EntityAttributes.Inventory.INVENTORY_ENTITY)
 @SuperBuilder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class InventoryEntity implements com.lsadf.lsadf_backend.entities.Entity {
+public class InventoryEntity extends AEntity {
     @Serial
     private static final long serialVersionUID = 7786624859103259009L;
 
     protected InventoryEntity() {
         super();
     }
-
-    @Id
-    @Column(name = EntityAttributes.ID)
-    private String id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
