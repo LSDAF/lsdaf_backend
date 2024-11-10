@@ -2,14 +2,12 @@ package com.lsadf.lsadf_backend.configurations.cache;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisCharacteristicsCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisCurrencyCache;
-import com.lsadf.lsadf_backend.cache.impl.RedisStageCache;
+import com.lsadf.lsadf_backend.cache.impl.*;
 import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
@@ -79,6 +77,17 @@ public class RedisCacheConfiguration {
     }
 
     @Bean
+    public RedisTemplate<String, Inventory> inventoryRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Inventory> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericToStringSerializer<>(Inventory.class));
+        return template;
+    }
+
+    @Bean
     public RedisTemplate<String, Stage> stageRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Stage> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -110,6 +119,13 @@ public class RedisCacheConfiguration {
         return new RedisCurrencyCache(redisTemplate, cacheExpirationProperties.getCurrencyExpirationSeconds(), redisProperties);
     }
 
+    @Bean(name = INVENTORY_CACHE)
+    public HistoCache<Inventory> redisInventoryCache(RedisTemplate<String, Inventory> redisTemplate,
+                                                     CacheExpirationProperties cacheExpirationProperties,
+                                                     RedisProperties redisProperties) {
+        return new RedisInventoryCache(redisTemplate, cacheExpirationProperties.getInventoryExpirationSeconds(), redisProperties);
+    }
+
     @Bean(name = STAGE_CACHE)
     public HistoCache<Stage> redisStageCache(RedisTemplate<String, Stage> redisTemplate,
                                              CacheExpirationProperties cacheExpirationProperties,
@@ -121,8 +137,9 @@ public class RedisCacheConfiguration {
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
                                           HistoCache<Characteristics> characteristicsCache,
                                           HistoCache<Currency> currencyCache,
+                                          HistoCache<Inventory> inventoryCache,
                                           HistoCache<Stage> stageCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, characteristicsCache, currencyCache, stageCache);
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, characteristicsCache, currencyCache, inventoryCache, stageCache);
     }
 
     @Bean
@@ -154,20 +171,24 @@ public class RedisCacheConfiguration {
     @Bean
     public RedisKeyExpirationListener redisKeyExpirationListener(CharacteristicsService characteristicsService,
                                                                  CurrencyService currencyService,
+                                                                 InventoryService inventoryService,
                                                                  StageService stageService,
                                                                  RedisTemplate<String, Characteristics> characteristicsRedisTemplate,
                                                                  RedisTemplate<String, Currency> currencyRedisTemplate,
+                                                                 RedisTemplate<String, Inventory> inventoryRedisTemplate,
                                                                  RedisTemplate<String, Stage> stageRedisTemplate) {
-        return new RedisKeyExpirationListener(characteristicsService, currencyService, stageService, characteristicsRedisTemplate, currencyRedisTemplate, stageRedisTemplate);
+        return new RedisKeyExpirationListener(characteristicsService, currencyService, inventoryService, stageService, characteristicsRedisTemplate, currencyRedisTemplate, inventoryRedisTemplate, stageRedisTemplate);
     }
 
     @Bean
     public CacheFlushService cacheFlushService(CharacteristicsService characteristicsService,
                                                CurrencyService currencyService,
+                                               InventoryService inventoryService,
                                                StageService stageService,
                                                Cache<Characteristics> characteristicsCache,
                                                Cache<Currency> currencyCache,
+                                               Cache<Inventory> inventoryCache,
                                                Cache<Stage> stageCache) {
-        return new RedisCacheFlushServiceImpl(characteristicsService, currencyService, stageService, characteristicsCache, currencyCache, stageCache);
+        return new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, inventoryCache, stageCache);
     }
 }

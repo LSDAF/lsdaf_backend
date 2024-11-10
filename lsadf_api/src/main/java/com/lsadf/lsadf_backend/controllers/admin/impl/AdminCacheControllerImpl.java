@@ -76,6 +76,7 @@ public class AdminCacheControllerImpl extends BaseController implements AdminCac
         log.info("Clearing all caches");
         cacheFlushService.flushCharacteristics();
         cacheFlushService.flushCurrencies();
+        cacheFlushService.flushInventories();
         cacheFlushService.flushStages();
         redisCacheService.clearCaches();
 

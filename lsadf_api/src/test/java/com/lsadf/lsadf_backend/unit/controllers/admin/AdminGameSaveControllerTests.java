@@ -594,7 +594,7 @@ class AdminGameSaveControllerTests {
 
     @Test
     @SneakyThrows
-    void updateCharacteristics_should_return_401_when_user_not_authenticated() {
+    void updateGameSaveCharacteristics_should_return_401_when_user_not_authenticated() {
         // given
         CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         // when
@@ -608,7 +608,7 @@ class AdminGameSaveControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
-    void updateCharacteristics_should_return_403_when_user_not_admin() {
+    void updateGameSaveCharacteristics_should_return_403_when_user_not_admin() {
         // given
         CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         // when
@@ -622,7 +622,7 @@ class AdminGameSaveControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateCharacteristics_should_return_400_when_gameSaveId_is_not_uuid() {
+    void updateGameSaveCharacteristics_should_return_400_when_gameSaveId_is_not_uuid() {
         // given
         CharacteristicsRequest request = new CharacteristicsRequest(1L, 1L, 1L, 1L, 1L);
         // when
@@ -636,7 +636,7 @@ class AdminGameSaveControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateCharacteristics_should_return_400_when_characteristicsRequest_is_null() {
+    void updateCharacteristics_should_return_400_when_GameSave_characteristicsRequest_is_null() {
         // given
         CharacteristicsRequest request = null;
         // when
@@ -650,7 +650,7 @@ class AdminGameSaveControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateCharacteristics_should_return_400_when_request_is_invalid() {
+    void updateGameSaveCharacteristics_should_return_400_when_request_is_invalid() {
         // given
         CharacteristicsRequest request = new CharacteristicsRequest(100L, 100L, -100L, 100L, 100L);
         // when
@@ -664,7 +664,7 @@ class AdminGameSaveControllerTests {
     @Test
     @SneakyThrows
     @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void updateCharacteristics_should_return_200_when_authenticated_user_is_admin() {
+    void updateGameSaveCharacteristics_should_return_200_when_authenticated_user_is_admin() {
         // given
         // define response when mock gameSaveService checks game save id existence
 

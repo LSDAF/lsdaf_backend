@@ -12,6 +12,11 @@ public interface CacheFlushService {
     void flushCurrencies();
 
     /**
+     * Flush the inventory cache, and persists the inventory of every entries in the database
+     */
+    void flushInventories();
+
+    /**
      * Flush the stage cache, and persists the stage of every entries in the database
      */
     void flushStages();

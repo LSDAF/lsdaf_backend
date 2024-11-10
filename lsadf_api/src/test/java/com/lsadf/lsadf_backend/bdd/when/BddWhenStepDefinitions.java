@@ -59,6 +59,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         log.info("Flushing cache...");
         this.cacheFlushService.flushCharacteristics();
         this.cacheFlushService.flushCurrencies();
+        this.cacheFlushService.flushInventories();
         this.cacheFlushService.flushStages();
     }
 

@@ -79,6 +79,11 @@ public final class JsonAttributes {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Inventory {
+        public static final String ITEMS = "items";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class JwtAuthentication {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String REFRESH_TOKEN = "refresh_token";

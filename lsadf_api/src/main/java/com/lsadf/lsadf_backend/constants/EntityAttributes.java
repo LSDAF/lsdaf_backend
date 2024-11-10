@@ -53,8 +53,21 @@ public final class EntityAttributes {
         public static final String GAME_SAVE_ATTACK = "attack";
         public static final String GAME_SAVE_CHARACTERISTICS_ID = "characteristics_id";
         public static final String GAME_SAVE_CURRENCY_ID = "currency_id";
+        public static final String GAME_SAVE_INVENTORY_ID = "inventory_id";
         public static final String GAME_SAVE_STAGE_ID = "stage_id";
         public static final String GAME_SAVE_NICKNAME = "nickname";
+    }
+
+    // INVENTORY
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Inventory {
+        public static final String INVENTORY_ENTITY = "t_inventory";
+    }
+
+    // ITEMS
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Items {
+        public static final String ITEM_ENTITY = "t_item";
     }
 
     // STAGES

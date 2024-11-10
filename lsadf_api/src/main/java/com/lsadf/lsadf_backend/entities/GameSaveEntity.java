@@ -3,15 +3,15 @@ package com.lsadf.lsadf_backend.entities;
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Stage;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * Game Save Entity to persist data of a game save
@@ -47,6 +47,10 @@ public class GameSaveEntity extends AEntity {
     private CurrencyEntity currencyEntity;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_INVENTORY_ID)
+    private InventoryEntity inventoryEntity;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = EntityAttributes.GameSave.GAME_SAVE_STAGE_ID)
     private StageEntity stageEntity;
 
@@ -66,6 +70,15 @@ public class GameSaveEntity extends AEntity {
     public void setCurrencyEntity(CurrencyEntity currencyEntity) {
         this.currencyEntity = currencyEntity;
         currencyEntity.setGameSave(this);
+    }
+
+    /**
+     * Set the inventory of the game save
+     * @param inventoryEntity InventoryEntity
+     */
+    public void setInventoryEntity(InventoryEntity inventoryEntity) {
+        this.inventoryEntity = inventoryEntity;
+        inventoryEntity.setGameSave(this);
     }
 
     /**
@@ -115,6 +128,18 @@ public class GameSaveEntity extends AEntity {
         }
         if (currency.getAmethyst() != null) {
             this.currencyEntity.setAmethystAmount(currency.getAmethyst());
+        }
+    }
+
+    /**
+     * Set the inventory of the game save with a inventory POJO
+     * @param inventory Inventory
+     */
+    public void setInventoryEntity(Inventory inventory) {
+        if (inventory.getItems() != null) {
+            // TODO: get content of items
+            List<ItemEntity> items = inventory.getItems().stream().map(item -> new ItemEntity()).toList();
+            this.inventoryEntity.setItems(items);
         }
     }
 

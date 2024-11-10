@@ -6,6 +6,7 @@ import com.lsadf.lsadf_backend.annotations.Uuid;
 import com.lsadf.lsadf_backend.requests.Request;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
+import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -56,6 +57,10 @@ public class AdminGameSaveCreationRequest implements Request {
     @Valid
     @NotNull
     private CurrencyRequest currency;
+
+    @Valid
+    @NotNull
+    private InventoryRequest inventory;
 
     @Valid
     @NotNull

@@ -1,20 +1,20 @@
 package com.lsadf.lsadf_backend.mappers.impl;
 
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.lsadf_backend.entities.*;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
+import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import lombok.NoArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 public class MapperImpl implements Mapper {
@@ -84,6 +84,44 @@ public class MapperImpl implements Mapper {
                 currencyEntity.getDiamondAmount(),
                 currencyEntity.getEmeraldAmount(),
                 currencyEntity.getAmethystAmount());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Inventory mapInventoryEntityToInventory(InventoryEntity inventoryEntity) {
+        List<Item> items = inventoryEntity.getItems()
+                .stream().map(this::mapItemEntityToItem).toList();
+
+        return new Inventory(items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Inventory mapInventoryRequestToInventory(InventoryRequest inventoryRequest) {
+        List<Item> items = inventoryRequest.getItems()
+                .stream().map(this::mapItemRequestToItem).toList();
+
+        return new Inventory(items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Item mapItemEntityToItem(ItemEntity itemEntity) {
+        return new Item();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Item mapItemRequestToItem(ItemRequest itemRequest) {
+        return new Item();
     }
 
     /**

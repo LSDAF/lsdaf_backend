@@ -1,13 +1,12 @@
 package com.lsadf.lsadf_backend.mappers;
 
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.lsadf_backend.entities.*;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
+import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -52,6 +51,38 @@ public interface Mapper {
      * @return CurrencyEntity
      */
     Currency mapCurrencyEntityToCurrency(CurrencyEntity currencyEntity);
+
+    /**
+     * Maps InventoryRequest to Inventory
+     *
+     * @param inventoryRequest InventoryRequest
+     * @return Inventory
+     */
+    Inventory mapInventoryRequestToInventory(InventoryRequest inventoryRequest);
+
+    /**
+     * Maps Inventory to InventoryEntity
+     *
+     * @param inventoryEntity InventoryEntity
+     * @return InventoryEntity
+     */
+    Inventory mapInventoryEntityToInventory(InventoryEntity inventoryEntity);
+
+    /**
+     * Maps ItemRequest to Item
+     *
+     * @param itemRequest ItemRequest
+     * @return Item
+     */
+    Item mapItemRequestToItem(ItemRequest itemRequest);
+
+    /**
+     * Maps ItemEntity to Item
+     *
+     * @param itemEntity ItemEntity
+     * @return Item
+     */
+    Item mapItemEntityToItem(ItemEntity itemEntity);
 
     /**
      * Maps StageEntity to Stage

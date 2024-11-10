@@ -7,15 +7,13 @@ import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
+import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.*;
@@ -43,6 +41,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
     private final CurrencyService currencyService;
     private final StageService stageService;
     private final GameSaveService gameSaveService;
+    private final InventoryService inventoryService;
     private final CacheService redisCacheService;
     private final Mapper mapper;
     private final CharacteristicsService characteristicsService;
@@ -52,11 +51,13 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
     public AdminGameSaveControllerImpl(CurrencyService currencyService,
                                        StageService stageService,
                                        GameSaveService gameSaveService,
+                                       InventoryService inventoryService,
                                        Mapper mapper,
                                        CacheService redisCacheService, CharacteristicsService characteristicsService) {
         this.currencyService = currencyService;
         this.stageService = stageService;
         this.gameSaveService = gameSaveService;
+        this.inventoryService = inventoryService;
         this.redisCacheService = redisCacheService;
         this.mapper = mapper;
         this.characteristicsService = characteristicsService;
@@ -167,15 +168,32 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateCharacteristics(Jwt jwt,
-                                                                      String gameSaveId,
-                                                                      CharacteristicsRequest characteristicsRequest) {
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveCharacteristics(Jwt jwt,
+                                                                               String gameSaveId,
+                                                                               CharacteristicsRequest characteristicsRequest) {
         validateUser(jwt);
         Characteristics characteristics = mapper.mapCharacteristicsRequestToCharacteristics(characteristicsRequest);
         if (!gameSaveService.existsById(gameSaveId)) {
             throw new NotFoundException("Game save not found");
         }
         characteristicsService.saveCharacteristics(gameSaveId, characteristics, redisCacheService.isEnabled());
+
+        return generateResponse(HttpStatus.OK);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> updateGameSaveInventories(Jwt jwt,
+                                                                           String gameSaveId,
+                                                                           InventoryRequest inventoryRequest) {
+        validateUser(jwt);
+        Inventory inventory = mapper.mapInventoryRequestToInventory(inventoryRequest);
+        if (!gameSaveService.existsById(gameSaveId)) {
+            throw new NotFoundException("Game save not found");
+        }
+        inventoryService.saveInventory(gameSaveId, inventory, redisCacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }
