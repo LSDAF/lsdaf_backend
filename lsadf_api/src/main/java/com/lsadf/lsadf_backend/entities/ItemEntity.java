@@ -31,7 +31,6 @@ public class ItemEntity implements com.lsadf.lsadf_backend.entities.Entity {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private InventoryEntity inventoryEntity;
