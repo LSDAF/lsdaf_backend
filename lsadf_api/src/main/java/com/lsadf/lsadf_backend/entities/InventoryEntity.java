@@ -37,7 +37,6 @@ public class InventoryEntity implements com.lsadf.lsadf_backend.entities.Entity 
     private GameSaveEntity gameSave;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @MapsId
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<ItemEntity> items;

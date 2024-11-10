@@ -35,6 +35,7 @@ public class BddWhenStepDefinitions extends BddLoader {
         int size = switch (cacheEntryType) {
             case CHARACTERISTICS, CHARACTERISTICS_HISTO -> characteristicsCache.getAllHisto().size();
             case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+            case INVENTORY, INVENTORY_HISTO -> inventoryCache.getAllHisto().size();
             case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
             case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
         };
@@ -44,6 +45,7 @@ public class BddWhenStepDefinitions extends BddLoader {
                 int newSize = switch (cacheEntryType) {
                     case CHARACTERISTICS, CHARACTERISTICS_HISTO -> characteristicsCache.getAllHisto().size();
                     case CURRENCY, CURRENCY_HISTO -> currencyCache.getAllHisto().size();
+                    case INVENTORY, INVENTORY_HISTO -> inventoryCache.getAllHisto().size();
                     case STAGE, STAGE_HISTO -> stageCache.getAllHisto().size();
                     case GAME_SAVE_OWNERSHIP -> gameSaveOwnershipCache.getAll().size();
                 };

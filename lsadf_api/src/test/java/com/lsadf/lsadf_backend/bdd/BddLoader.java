@@ -15,10 +15,7 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.StageRepository;
+import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.*;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
@@ -117,6 +114,9 @@ public class BddLoader {
     protected HistoCache<Currency> currencyCache;
 
     @Autowired
+    protected HistoCache<Inventory> inventoryCache;
+
+    @Autowired
     protected HistoCache<Stage> stageCache;
 
     // Repositories
@@ -125,6 +125,9 @@ public class BddLoader {
 
     @Autowired
     protected CurrencyRepository currencyRepository;
+
+    @Autowired
+    protected InventoryRepository inventoryRepository;
 
     @Autowired
     protected StageRepository stageRepository;
@@ -154,6 +157,9 @@ public class BddLoader {
 
     @Autowired
     protected CurrencyService currencyService;
+
+    @Autowired
+    protected InventoryService inventoryService;
 
     @Autowired
     protected StageService stageService;
@@ -194,6 +200,12 @@ public class BddLoader {
 
     @Autowired
     protected Stack<Currency> currencyStack;
+
+    @Autowired
+    protected Stack<Inventory> inventoryStack;
+
+    @Autowired
+    protected Stack<List<Item>> itemStack;
 
     @Autowired
     protected Stack<Stage> stageStack;

@@ -360,6 +360,18 @@ public class BddUtils {
     }
 
     /**
+     * Maps a row from a BDD table to an Inventory
+     *
+     * @param row row from BDD table
+     * @return Inventory
+     */
+    public static Inventory mapToInventory(Map<String, String> row) {
+        // TODO: Implement
+
+        return new Inventory();
+    }
+
+    /**
      * Maps a row from a BDD table to a Stage
      *
      * @param row row from BDD table
