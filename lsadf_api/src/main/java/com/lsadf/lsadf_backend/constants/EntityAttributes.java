@@ -49,8 +49,6 @@ public final class EntityAttributes {
     public static class GameSave {
         public static final String GAME_SAVE_ENTITY = "t_game_save";
         public static final String GAME_SAVE_USER_EMAIL = "user_email";
-        public static final String GAME_SAVE_HEALTH_POINTS = "health_points";
-        public static final String GAME_SAVE_ATTACK = "attack";
         public static final String GAME_SAVE_CHARACTERISTICS_ID = "characteristics_id";
         public static final String GAME_SAVE_CURRENCY_ID = "currency_id";
         public static final String GAME_SAVE_INVENTORY_ID = "inventory_id";

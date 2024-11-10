@@ -71,6 +71,8 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
         CharacteristicsControllerImpl.class,
         CurrencyController.class,
         CurrencyControllerImpl.class,
+        InventoryController.class,
+        InventoryControllerImpl.class,
         StageController.class,
         StageControllerImpl.class,
         OAuth2Controller.class,
