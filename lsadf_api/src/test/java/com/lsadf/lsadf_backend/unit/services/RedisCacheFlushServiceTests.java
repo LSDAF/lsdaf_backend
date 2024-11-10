@@ -1,11 +1,10 @@
 package com.lsadf.lsadf_backend.unit.services;
 
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
+import com.lsadf.lsadf_backend.services.InventoryService;
 import com.lsadf.lsadf_backend.services.StageService;
 import com.lsadf.lsadf_backend.services.impl.RedisCacheFlushServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
@@ -32,6 +32,9 @@ class RedisCacheFlushServiceTests {
     private Cache<Currency> currencyCache;
 
     @Mock
+    private Cache<Inventory> inventoryCache;
+
+    @Mock
     private Cache<Stage> stageCache;
 
     @Mock
@@ -41,12 +44,15 @@ class RedisCacheFlushServiceTests {
     CurrencyService currencyService;
 
     @Mock
+    InventoryService inventoryService;
+
+    @Mock
     StageService stageService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(characteristicsService, currencyService, stageService, characteristicsCache, currencyCache, stageCache);
+        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, inventoryCache, stageCache);
     }
 
     @Test
@@ -71,6 +77,19 @@ class RedisCacheFlushServiceTests {
         redisCacheFlushService.flushCurrencies();
         verify(currencyService, times(1)).saveCurrency("1", new Currency(1L, 2L, null, 3L), false);
         verify(currencyService, times(1)).saveCurrency("2", new Currency(2L, 4L, null, 8L), false);
+    }
+
+    @Test
+    void should_flush_inventories() {
+        // TODO: Implement with items ?
+        Map<String, Inventory> inventoryEntries = Map.of(
+                "1", new Inventory(List.of(new Item())),
+                "2", new Inventory(List.of(new Item())));
+        when(inventoryCache.getAll()).thenReturn(inventoryEntries);
+
+        redisCacheFlushService.flushInventories();
+        verify(inventoryService, times(1)).saveInventory("1", new Inventory(List.of(new Item())), false);
+        verify(inventoryService, times(1)).saveInventory("2", new Inventory(List.of(new Item())), false);
     }
 
     @Test
