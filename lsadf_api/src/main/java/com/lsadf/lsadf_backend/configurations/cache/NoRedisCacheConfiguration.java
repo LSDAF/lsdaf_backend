@@ -3,6 +3,7 @@ package com.lsadf.lsadf_backend.configurations.cache;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.services.impl.NoOpCacheServiceImpl;
@@ -38,6 +39,11 @@ public class NoRedisCacheConfiguration {
 
     @Bean(name = CURRENCY_CACHE)
     public HistoCache<Currency> currencyCache() {
+        return new NoOpHistoCache<>();
+    }
+
+    @Bean(name = INVENTORY_CACHE)
+    public HistoCache<Inventory> inventoryCache() {
         return new NoOpHistoCache<>();
     }
 

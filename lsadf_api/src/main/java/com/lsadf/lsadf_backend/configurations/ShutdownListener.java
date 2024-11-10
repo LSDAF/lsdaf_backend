@@ -31,6 +31,7 @@ public class ShutdownListener implements ApplicationListener<ContextClosedEvent>
             cacheFlushService.flushStages();
             cacheFlushService.flushCharacteristics();
             cacheFlushService.flushCurrencies();
+            cacheFlushService.flushInventories();
             return;
         }
 

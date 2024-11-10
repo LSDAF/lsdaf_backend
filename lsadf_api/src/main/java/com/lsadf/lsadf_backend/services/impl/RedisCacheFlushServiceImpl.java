@@ -2,13 +2,11 @@ package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Stage;
-import com.lsadf.lsadf_backend.services.CacheFlushService;
+import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.services.CharacteristicsService;
-import com.lsadf.lsadf_backend.services.CurrencyService;
-import com.lsadf.lsadf_backend.services.StageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,20 +21,27 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
     private final CurrencyService currencyService;
     private final Cache<Currency> currencyCache;
 
+    private final InventoryService inventoryService;
+    private final Cache<Inventory> inventoryCache;
+
     private final StageService stageService;
     private final Cache<Stage> stageCache;
 
     public RedisCacheFlushServiceImpl(CharacteristicsService characteristicsService,
                                       CurrencyService currencyService,
+                                      InventoryService inventoryService,
                                       StageService stageService,
                                       Cache<Characteristics> characteristicsCache,
                                       Cache<Currency> currencyCache,
+                                      Cache<Inventory> inventoryCache,
                                       Cache<Stage> stageCache) {
         this.characteristicsService = characteristicsService;
         this.currencyService = currencyService;
+        this.inventoryService = inventoryService;
         this.stageService = stageService;
         this.characteristicsCache = characteristicsCache;
         this.currencyCache = currencyCache;
+        this.inventoryCache = inventoryCache;
         this.stageCache = stageCache;
     }
 
@@ -86,6 +91,28 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
         log.info("Flushed {} currencies in DB", currencyEntries.size());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void flushInventories() {
+        log.info("Flushing inventory cache");
+        Map<String, Inventory> inventoryEntries = inventoryCache.getAll();
+        for (Map.Entry<String, Inventory> entry : inventoryEntries.entrySet()) {
+            String gameSaveId = entry.getKey();
+            Inventory inventory = entry.getValue();
+            try {
+                inventoryService.saveInventory(gameSaveId, inventory, false);
+            } catch (NotFoundException e) {
+                log.error("Error while flushing inventory cache entry: InventoryEntity with id {} not found", gameSaveId, e);
+            } catch (Exception e) {
+                log.error("Error while flushing inventory cache entry", e);
+            }
+        }
+
+        log.info("Flushed {} inventories in DB", inventoryEntries.size());
+    }
 
     /**
      * {@inheritDoc}

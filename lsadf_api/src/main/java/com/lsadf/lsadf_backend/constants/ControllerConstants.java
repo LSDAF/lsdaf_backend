@@ -13,6 +13,7 @@ public final class ControllerConstants {
     public static final String CHARACTERISTICS = "/api/v1/characteristics";
     public static final String CURRENCY = "/api/v1/currency";
     public static final String GAME_SAVE = "/api/v1/game_save";
+    public static final String INVENTORY = "/api/v1/inventory";
     public static final String OAUTH2 = "/api/oauth2";
     public static final String STAGE = "/api/v1/stage";
     public static final String USER = "/api/v1/user";
@@ -21,6 +22,7 @@ public final class ControllerConstants {
     public static final String ADMIN = "/api/v1/admin";
     public static final String ADMIN_CACHE = "/api/v1/admin/cache";
     public static final String ADMIN_GAME_SAVES = "/api/v1/admin/game_saves";
+    public static final String ADMIN_INVENTORIES = "/api/v1/admin/inventories";
     public static final String ADMIN_USERS = "/api/v1/admin/users";
     public static final String ADMIN_SEARCH = "/api/v1/admin/search";
     public static final String ADMIN_GLOBAL_INFO = "/api/v1/admin/global_info";
@@ -45,6 +47,7 @@ public final class ControllerConstants {
         public static final String CHARACTERISTICS_CONTROLLER = "Characteristics Controller";
         public static final String CURRENCY_CONTROLLER = "Currency Controller";
         public static final String GAME_SAVE_CONTROLLER = "Game Save Controller";
+        public static final String INVENTORY_CONTROLLER = "Inventory Controller";
         public static final String OAUTH_2_CONTROLLER = "OAuth2 Controller";
         public static final String STAGE_CONTROLLER = "Stage Controller";
         public static final String USER_CONTROLLER = "User Controller";
@@ -53,6 +56,7 @@ public final class ControllerConstants {
         public static final String ADMIN_CACHE_CONTROLLER = "Admin Cache Controller";
         public static final String ADMIN_USERS_CONTROLLER = "Admin Users Controller";
         public static final String ADMIN_GAME_SAVES_CONTROLLER = "Admin Game Saves Controller";
+        public static final String ADMIN_INVENTORIES_CONTROLLER = "Admin Inventories Controller";
         public static final String ADMIN_SEARCH_CONTROLLER = "Admin Search Controller";
         public static final String ADMIN_GLOBAL_INFO_CONTROLLER = "Admin Global Info Controller";
     }
@@ -73,11 +77,17 @@ public final class ControllerConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Inventory {
+        public static final String GAME_SAVE_ID = "/{game_save_id}";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AdminGameSave {
         public static final String USER_GAME_SAVES = "/user/{username}";
         public static final String GAME_SAVE_ID = "/id/{game_save_id}";
         public static final String UPDATE_GAME_SAVE_CHARACTERISTICS = "/id/{game_save_id}/characteristics";
         public static final String UPDATE_GAME_SAVE_CURRENCIES = "/id/{game_save_id}/currencies";
+        public static final String UPDATE_GAME_SAVE_INVENTORIES = "/id/{game_save_id}/inventories";
         public static final String UPDATE_GAME_SAVE_STAGES = "/id/{game_save_id}/stages";
     }
 

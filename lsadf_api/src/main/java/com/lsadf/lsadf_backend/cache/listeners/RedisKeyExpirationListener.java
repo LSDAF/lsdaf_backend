@@ -3,9 +3,11 @@ package com.lsadf.lsadf_backend.cache.listeners;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
+import com.lsadf.lsadf_backend.services.InventoryService;
 import com.lsadf.lsadf_backend.services.StageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -23,23 +25,29 @@ public class RedisKeyExpirationListener implements MessageListener {
 
     private final CharacteristicsService characteristicsService;
     private final CurrencyService currencyService;
+    private final InventoryService inventoryService;
     private final StageService stageService;
 
     private final RedisTemplate<String, Characteristics> characteristicsRedisTemplate;
     private final RedisTemplate<String, Currency> currencyRedisTemplate;
+    private final RedisTemplate<String, Inventory> inventoryRedisTemplate;
     private final RedisTemplate<String, Stage> stageRedisTemplate;
 
     public RedisKeyExpirationListener(CharacteristicsService characteristicsService,
                                       CurrencyService currencyService,
+                                      InventoryService inventoryService,
                                       StageService stageService,
                                       RedisTemplate<String, Characteristics> characteristicsRedisTemplate,
                                       RedisTemplate<String, Currency> currencyRedisTemplate,
+                                      RedisTemplate<String, Inventory> inventoryRedisTemplate,
                                       RedisTemplate<String, Stage> stageRedisTemplate) {
         this.characteristicsService = characteristicsService;
         this.currencyService = currencyService;
+        this.inventoryService = inventoryService;
         this.stageService = stageService;
         this.characteristicsRedisTemplate = characteristicsRedisTemplate;
         this.currencyRedisTemplate = currencyRedisTemplate;
+        this.inventoryRedisTemplate = inventoryRedisTemplate;
         this.stageRedisTemplate = stageRedisTemplate;
     }
 
@@ -59,6 +67,9 @@ public class RedisKeyExpirationListener implements MessageListener {
         } else if (expiredKey.startsWith(CURRENCY)) {
             String gameSaveId = expiredKey.substring(CURRENCY.length());
             handleExpiredCurrency(gameSaveId);
+        } else if (expiredKey.startsWith(INVENTORY)) {
+            String gameSaveId = expiredKey.substring(INVENTORY.length());
+            handleExpiredInventory(gameSaveId);
         } else if (expiredKey.startsWith(STAGE)) {
             String gameSaveId = expiredKey.substring(STAGE.length());
             handleExpiredStage(gameSaveId);
@@ -129,6 +140,28 @@ public class RedisKeyExpirationListener implements MessageListener {
             throw e;
         }
         log.info("Currency of game save {} has been saved to DB", gameSaveId);
+    }
+
+    /**
+     * Handles expired inventory by saving it to DB.
+     * @param gameSaveId game save id
+     */
+    private void handleExpiredInventory(String gameSaveId) {
+        try {
+            Inventory inventory = inventoryRedisTemplate.opsForValue().get(INVENTORY_HISTO + gameSaveId);
+            if (inventory == null) {
+                throw new NotFoundException("Inventory not found in cache");
+            }
+            inventoryService.saveInventory(gameSaveId, inventory, false);
+            Boolean result = inventoryRedisTemplate.delete(INVENTORY_HISTO + gameSaveId);
+            if (Boolean.TRUE.equals(result)) {
+                log.info("Deleted entry {}", INVENTORY_HISTO + gameSaveId);
+            }
+        } catch (DataAccessException | NotFoundException e) {
+            log.error("Error while handling expired inventory", e);
+            throw e;
+        }
+        log.info("Inventory of game save {} has been saved to DB", gameSaveId);
     }
 
 }

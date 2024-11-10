@@ -24,6 +24,14 @@ public class NoOpFlushServiceImpl implements CacheFlushService {
      * {@inheritDoc}
      */
     @Override
+    public void flushInventories() {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void flushStages() {
         // Do nothing
     }

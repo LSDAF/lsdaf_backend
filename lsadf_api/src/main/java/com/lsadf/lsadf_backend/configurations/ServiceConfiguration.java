@@ -7,12 +7,10 @@ import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Stage;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
-import com.lsadf.lsadf_backend.repositories.CurrencyRepository;
-import com.lsadf.lsadf_backend.repositories.GameSaveRepository;
-import com.lsadf.lsadf_backend.repositories.StageRepository;
+import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.services.impl.*;
 import org.keycloak.admin.client.Keycloak;
@@ -46,6 +44,38 @@ public class ServiceConfiguration {
     }
 
     @Bean
+    public GameSaveService gameSaveService(UserService userService,
+                                           GameSaveRepository gameSaveRepository,
+                                           InventoryRepository inventoryRepository,
+                                           StageRepository stageRepository,
+                                           CharacteristicsRepository characteristicsRepository,
+                                           CurrencyRepository currencyRepository,
+                                           @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache,
+                                           HistoCache<Stage> stageHistoCache,
+                                           HistoCache<Characteristics> characteristicsHistoCache,
+                                           HistoCache<Currency> currencyHistoCache,
+                                           HistoCache<Inventory> inventoryHistoCache) {
+        return new GameSaveServiceImpl(userService,
+                gameSaveRepository,
+                inventoryRepository,
+                stageRepository,
+                characteristicsRepository,
+                currencyRepository,
+                gameSaveOwnershipCache,
+                stageHistoCache,
+                characteristicsHistoCache,
+                currencyHistoCache,
+                inventoryHistoCache);
+    }
+
+    @Bean
+    public InventoryService inventoryService(InventoryRepository inventoryRepository,
+                                             Cache<Inventory> inventoryCache,
+                                             Mapper mapper) {
+        return new InventoryServiceImpl(inventoryRepository, inventoryCache, mapper);
+    }
+
+    @Bean
     public StageService stageService(StageRepository stageRepository,
                                      Cache<Stage> stageCache,
                                      Mapper mapper) {
@@ -53,24 +83,9 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public GameSaveService gameSaveService(UserService userService,
-                                           GameSaveRepository gameSaveRepository,
-                                           StageRepository stageRepository,
-                                           CharacteristicsRepository characteristicsRepository,
-                                           CurrencyRepository currencyRepository,
-                                           @Qualifier(GAME_SAVE_OWNERSHIP_CACHE) Cache<String> gameSaveOwnershipCache,
-                                           HistoCache<Stage> stageHistoCache,
-                                           HistoCache<Characteristics> characteristicsHistoCache,
-                                           HistoCache<Currency> currencyHistoCache) {
-        return new GameSaveServiceImpl(userService,
-                gameSaveRepository,
-                stageRepository,
-                characteristicsRepository,
-                currencyRepository,
-                gameSaveOwnershipCache,
-                stageHistoCache,
-                characteristicsHistoCache,
-                currencyHistoCache);
+    public SearchService searchService(UserService userService,
+                                       GameSaveService gameSaveService) {
+        return new SearchServiceImpl(userService, gameSaveService);
     }
 
     @Bean
@@ -84,12 +99,6 @@ public class ServiceConfiguration {
                 keycloakAdminClient,
                 clockService,
                 mapper);
-    }
-
-    @Bean
-    public SearchService searchService(UserService userService,
-                                       GameSaveService gameSaveService) {
-        return new SearchServiceImpl(userService, gameSaveService);
     }
 
     @Bean
