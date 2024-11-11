@@ -207,7 +207,7 @@ public class BddLoader {
     protected Stack<Inventory> inventoryStack;
 
     @Autowired
-    protected Stack<List<Item>> itemStack;
+    protected Stack<Item> itemStack;
 
     @Autowired
     protected Stack<Stage> stageStack;
