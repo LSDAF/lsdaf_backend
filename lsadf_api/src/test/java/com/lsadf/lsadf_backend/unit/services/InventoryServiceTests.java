@@ -2,10 +2,12 @@ package com.lsadf.lsadf_backend.unit.services;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.entities.InventoryEntity;
+import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.lsadf_backend.models.Inventory;
+import com.lsadf.lsadf_backend.models.Item;
 import com.lsadf.lsadf_backend.repositories.InventoryRepository;
 import com.lsadf.lsadf_backend.services.InventoryService;
 import com.lsadf.lsadf_backend.services.impl.InventoryServiceImpl;
@@ -83,6 +85,44 @@ class InventoryServiceTests {
     }
 
     @Test
+    void getInventory_on_existing_gamesave_id_when_cached_not_empty() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .build();
+
+        Item item = Item.builder()
+                .build();
+
+        Item item2 = Item.builder()
+                .build();
+
+        ArrayList<ItemEntity> db_items = new ArrayList<>();
+        db_items.add(itemEntity);
+
+        ArrayList<Item> cache_items = new ArrayList<>();
+        cache_items.add(item);
+        cache_items.add(item2);
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(db_items)
+                .build();
+
+        Inventory inventory = Inventory.builder()
+                .items(cache_items)
+                .build();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+        when(inventoryCache.isEnabled()).thenReturn(true);
+        when(inventoryCache.get(anyString())).thenReturn(Optional.of(inventory));
+
+        // Act
+        Inventory result = inventoryService.getInventory("1");
+
+        // Assert
+        assertThat(result).isEqualTo(inventory);
+    }
+
+    @Test
     void getInventory_on_existing_gamesave_id_when_not_cached_empty() {
         // Arrange
         InventoryEntity inventoryEntity = InventoryEntity.builder()
@@ -102,5 +142,44 @@ class InventoryServiceTests {
 
         // Assert
         assertThat(result).isEqualTo(inventory);
+    }
+
+    @Test
+    void getInventory_on_existing_gamesave_id_when_not_cached_not_empty() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .build();
+
+        Item item = Item.builder()
+                .build();
+
+        Item item2 = Item.builder()
+                .build();
+
+        ArrayList<ItemEntity> db_items = new ArrayList<>();
+        db_items.add(itemEntity);
+
+        ArrayList<Item> cache_items = new ArrayList<>();
+        cache_items.add(item);
+        cache_items.add(item2);
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(db_items)
+                .build();
+
+        Inventory inventory = Inventory.builder()
+                .items(cache_items)
+                .build();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+        when(inventoryCache.isEnabled()).thenReturn(false);
+        when(inventoryCache.get(anyString())).thenReturn(Optional.of(inventory));
+
+        // Act
+        Inventory result = inventoryService.getInventory("1");
+
+        // Assert
+        assertThat(result).isNotEqualTo(inventory);
+        assertThat(result.getItems()).hasSize(1);
     }
 }
