@@ -60,9 +60,5 @@ public class AdminGameSaveCreationRequest implements Request {
 
     @Valid
     @NotNull
-    private InventoryRequest inventory;
-
-    @Valid
-    @NotNull
     private StageRequest stage;
 }
