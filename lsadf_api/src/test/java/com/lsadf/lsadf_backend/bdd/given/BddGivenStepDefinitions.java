@@ -89,16 +89,14 @@ public class BddGivenStepDefinitions extends BddLoader {
         this.characteristicsRepository.deleteAll();
         this.currencyRepository.deleteAll();
         this.stageRepository.deleteAll();
-        this.gameSaveRepository.deleteAll();
-        this.currencyRepository.deleteAll();
         this.inventoryRepository.deleteAll();
+        this.gameSaveRepository.deleteAll();
 
-        assertThat(gameSaveRepository.count()).isZero();
         assertThat(characteristicsRepository.count()).isZero();
         assertThat(currencyRepository.count()).isZero();
         assertThat(stageRepository.count()).isZero();
-        assertThat(currencyRepository.count()).isZero();
         assertThat(inventoryRepository.count()).isZero();
+        assertThat(gameSaveRepository.count()).isZero();
 
 
         // Clear caches
