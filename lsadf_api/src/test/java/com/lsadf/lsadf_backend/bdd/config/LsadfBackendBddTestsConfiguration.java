@@ -60,15 +60,15 @@ public class LsadfBackendBddTestsConfiguration {
     }
 
     @Bean
-    public Stack<List<Inventory>> inventoryStack(BddStackCleaner stackCleaner) {
-        Stack<List<Inventory>> stack = new Stack<>();
+    public Stack<Inventory> inventoryStack(BddStackCleaner stackCleaner) {
+        Stack<Inventory> stack = new Stack<>();
         stackCleaner.addStack(stack);
         return stack;
     }
 
     @Bean
-    public Stack<List<Item>> itemStack(BddStackCleaner stackCleaner) {
-        Stack<List<Item>> stack = new Stack<>();
+    public Stack<Item> itemStack(BddStackCleaner stackCleaner) {
+        Stack<Item> stack = new Stack<>();
         stackCleaner.addStack(stack);
         return stack;
     }
