@@ -56,6 +56,9 @@ public class UnitTestConfiguration {
     private CurrencyService currencyService;
 
     @MockBean
+    private InventoryService inventoryService;
+
+    @MockBean
     @Qualifier(REDIS_CACHE_SERVICE)
     private CacheService redisCacheService;
 
