@@ -2,6 +2,7 @@ package com.lsadf.lsadf_backend.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,14 +43,13 @@ public class DateUtils {
      * @return Converted LocalDateTime
      */
     public static LocalDateTime dateToLocalDateTime(Date dateToConvert) {
-        return new java.sql.Timestamp(
+        return new Timestamp(
                 dateToConvert.getTime()).toLocalDateTime();
     }
 
     /**
      * Convert timestamp to LocalDateTime
      * @param timestamp timestamp to convert
-     * @param isSeconds true if timestamp is in seconds, false if in milliseconds
      * @return Converted LocalDateTime
      */
     public static LocalDateTime timestampToLocalDateTime(long timestamp) {
