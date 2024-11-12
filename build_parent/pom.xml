@@ -11,6 +11,7 @@
 
     <artifactId>lsadf-build-parent</artifactId>
     <packaging>pom</packaging>
+    <name>LSADF Build Parent</name>
 
     <dependencyManagement>
         <dependencies>
