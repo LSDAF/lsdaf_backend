@@ -93,14 +93,17 @@ keycloak:
   realm: BDD_REALM
   issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
 
-auth:
-  refresh-token-secret: ahuizhizgbusgzsyuiguyzgduvzuhjvcgysfzyudzgdvshvcsgydzustyadysgczshvzcsyztasdf
-  token-secret: knshjdvzuhdvkjnbduhfgsxtyzafshkfkcbndugsèarsyutfzxersdkjzdiuzguizh
-  invalidated-token-cleaner-cron: "-"
-  refresh-token-expiration-seconds: 86_400
-  token-expiration-seconds: 3_600
+shutdown:
+  flush-cache-at-shutdown: false
+
+json-view:
+  default-json-view: ADMIN
+  default-json-view-enabled: true
 
 cache:
+  local:
+    invalidated-refresh-token-cache-max-size: ${INVALIDATED_REFRESH_TOKEN_CACHE_MAX_SIZE}
+    local-user-cache-max-size: ${LOCAL_USER_CACHE_MAX_SIZE}
   redis:
     host: localhost
     port: 6379
@@ -111,17 +114,11 @@ cache:
   expiration:
     game-save-ownership-expiration-seconds: -1
     local-user-expiration-seconds: -1
+    characteristics-expiration-seconds: -1
     currency-expiration-seconds: -1
+    inventory-expiration-seconds: -1
+    stage-expiration-seconds: -1
 
-shutdown:
-  flush-cache-at-shutdown: false
-
-user-email-verification:
-  expiration-seconds: 3_600
-
-json-view:
-  default-json-view: ADMIN
-  default-json-view-enabled: true
 
 mail:
   host: smtp.test_mail.com
