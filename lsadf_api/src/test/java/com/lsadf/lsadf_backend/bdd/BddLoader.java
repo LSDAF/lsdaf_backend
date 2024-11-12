@@ -99,7 +99,7 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
         ReactiveOAuth2ResourceServerAutoConfiguration.class,
         ReactiveOAuth2ClientAutoConfiguration.class,
 })
-@ActiveProfiles("test")
+@ActiveProfiles("bdd")
 @Testcontainers
 public class BddLoader {
 

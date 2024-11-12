@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {GlobalExceptionHandler.class, AdminUserController.class, AdminUserControllerImpl.class})
 @Import(UnitTestConfiguration.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
+@ActiveProfiles("test")
 class AdminUserControllerTests {
 
     @Autowired
