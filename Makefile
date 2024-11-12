@@ -5,11 +5,20 @@ install:
 test:
 	@mvn test
 
+test-ci:
+	@mvn test --batch-mode --no-transfer-progress -Dci
+
 clean:
 	@mvn clean
 
+javadoc:
+	@mvn javadoc:aggregate
+
 lint-check:
 	@mvn rewrite:dryRun
+
+lint-check-ci:
+	@mvn rewrite:dryRun --batch-mode --no-transfer-progress
 
 lint:
 	@mvn rewrite:run
@@ -81,6 +90,9 @@ help:
 	@echo "[Java Project]"
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"
 	@echo "> test                |-----------------------------------------|  Runs BDD & unit tests"
+	@echo "> test-ci             |-----------------------------------------|  Runs BDD & unit tests with few logs for CI"
 	@echo "> clean               |-----------------------------------------|  Clean local build files"
+	@echo "> javadoc             |-----------------------------------------|  Generates all project JavaDoc files"
+	@echo "> lint-check-ci       |-----------------------------------------|  Dry lints code for CI. Throws error if code not linted"
 	@echo "> lint-check          |-----------------------------------------|  Dry lints code and lists issues in target/rewrite folder"
 	@echo "> lint                |-----------------------------------------|  Lints and fixes issues in source code"
