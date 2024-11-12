@@ -42,13 +42,13 @@ jobs:
                 run: |
                     mvn clean install -DskipTests -U -fae --no-transfer-progress
 
-            -   name: 🐈‍⬛ Cat env.properties
-                run: |
-                    cat lsadf_api/src/main/resources/env.properties
+#            -   name: 🐈‍⬛ Cat env.properties
+#                run: |
+#                    cat lsadf_api/src/main/resources/env.properties
 
             -   name: 🧪 Test with Maven
                 run: |
-                    mvn test
+                    make test-ci
 
             -   name: 📁 List reports
                 run: |
