@@ -1,6 +1,6 @@
 default: help
 install:
-	@mvn clean install -DskipTests -U -fae
+	@mvn clean install -DskipTests -U -fae -Dcopy-env
 
 test:
 	@mvn test
