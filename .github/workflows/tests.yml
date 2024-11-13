@@ -42,10 +42,6 @@ jobs:
                 run: |
                     mvn clean install -DskipTests -U -fae --no-transfer-progress
 
-#            -   name: 🐈‍⬛ Cat env.properties
-#                run: |
-#                    cat lsadf_api/src/main/resources/env.properties
-
             -   name: 🧪 Test with Maven
                 run: |
                     make test-ci
