@@ -11,13 +11,11 @@ import com.lsadf.lsadf_backend.services.GameSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
 
@@ -33,7 +31,7 @@ public class CharacteristicsControllerImpl extends BaseController implements Cha
     @Autowired
     public CharacteristicsControllerImpl(GameSaveService gameSaveService,
                                          CharacteristicsService characteristicsService,
-                                         @Qualifier(REDIS_CACHE_SERVICE) CacheService cacheService,
+                                         CacheService cacheService,
                                          Mapper mapper) {
         this.gameSaveService = gameSaveService;
         this.characteristicsService = characteristicsService;

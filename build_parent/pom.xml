@@ -11,6 +11,11 @@
 
     <artifactId>lsadf-build-parent</artifactId>
     <packaging>pom</packaging>
+    <name>LSADF Build Parent</name>
+
+    <modules>
+        <module>../lsadf_api</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -85,20 +90,6 @@
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
                     <version>${lombok-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>delombok</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>delombok</goal>
-                            </goals>
-                            <configuration>
-                                <addOutputDirectory>false</addOutputDirectory>
-                                <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-                                <outputDirectory>${project.build.directory}/delombok</outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -127,17 +118,6 @@
                     <version>${copy-rename-maven-plugin.version}</version>
                     <executions>
                         <execution>
-                            <id>copy-file-example-env</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>copy</goal>
-                            </goals>
-                            <configuration>
-                                <sourceFile>${maven.multiModuleProjectDirectory}/env/env.EXAMPLE.properties</sourceFile>
-                                <destinationFile>${basedir}/src/main/resources/env.properties</destinationFile>
-                            </configuration>
-                        </execution>
-                        <execution>
                             <id>copy-file-env</id>
                             <phase>generate-sources</phase>
                             <goals>
@@ -165,8 +145,94 @@
                         </filesets>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${maven-surefire-report-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <reportsDirectories>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/surefire-reports</reportsDirectory>
+                    </reportsDirectories>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>copy-env</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>copy-env</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-file-env</id>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>ci</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>ci</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <printSummary>true</printSummary>
+                            <reportFormat>brief</reportFormat>
+                            <trimStackTrace>true</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

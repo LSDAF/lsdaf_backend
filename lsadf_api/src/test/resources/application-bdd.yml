@@ -1,0 +1,133 @@
+swagger:
+  contact:
+    name: John Doe
+    email: john.doe@example.com
+    url: https://www.example.com
+  title: Example API
+  description: Example API Description
+  version: 1.0.0
+
+http-log:
+  enabled: true
+  color-enabled: false
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+
+cors:
+  allowed-origins:
+    - "*"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+  allowed-headers:
+    - "*"
+  exposed-headers:
+    - "*"
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: off
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss.SSS
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            authorization-uri: ${keycloak.issuer-uri}/protocol/openid-connect/auth
+            token-uri: ${keycloak.issuer-uri}/protocol/openid-connect/token
+            user-info-uri: ${keycloak.issuer-uri}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak.issuer-uri}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            authorization-grant-type: authorization_code
+            client-id: ${keycloak.client-id}
+            redirect-uri: "{baseUrl}/api/oauth2/callback"
+            client-secret: ${keycloak.client-secret}
+            provider: keycloak
+            scope: openid, profile
+          keycloak-admin:
+            authorization-grant-type: client_credentials
+            client-id: ${keycloak.admin.client-id}
+            client-secret: ${keycloak.admin.client-secret}
+            provider: keycloak
+            scope: openid, profile
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri} # Will be replaced by the real keycloak uri in the integration tests
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: FULL
+          keycloak:
+            url: ${keycloak.uri}
+          keycloak-admin:
+            url: ${keycloak.admin-uri}
+
+keycloak:
+  admin:
+    client-id: BDDADMIN
+    client-secret: SECRET_BDDADMIN
+  client-id: BDD-API
+  client-secret: SECRET_BDDAPI
+  uri: http://localhost:8080 # Will be replaced by the real keycloak uri in the integration tests
+  admin-uri: ${keycloak.uri} # Will be replaced by the real keycloak uri in the integration tests
+  realm: BDD_REALM
+  issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
+
+shutdown:
+  flush-cache-at-shutdown: false
+
+json-view:
+  default-json-view: ADMIN
+  default-json-view-enabled: true
+
+cache:
+  local:
+    invalidated-refresh-token-cache-max-size: ${INVALIDATED_REFRESH_TOKEN_CACHE_MAX_SIZE}
+    local-user-cache-max-size: ${LOCAL_USER_CACHE_MAX_SIZE}
+  redis:
+    host: localhost
+    port: 6379
+    password: JIOZHAUIHIAVAZHUSVFAZUSV
+    database: 0
+    enabled: true
+    embedded: true
+  expiration:
+    game-save-ownership-expiration-seconds: -1
+    local-user-expiration-seconds: -1
+    characteristics-expiration-seconds: -1
+    currency-expiration-seconds: -1
+    inventory-expiration-seconds: -1
+    stage-expiration-seconds: -1
+
+
+mail:
+  host: smtp.test_mail.com
+  port: 6666
+  username: test@test.com
+  password: totototo
+  auth: true
+  connection-timeout: 5000
+  timeout: 5000
+  write-timeout: 5000
+  debug: true

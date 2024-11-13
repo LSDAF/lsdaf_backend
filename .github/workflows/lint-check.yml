@@ -40,4 +40,4 @@ jobs:
 
             -   name: ✍️ Lint check
                 run: |
-                    make lint-check
+                    make lint-check-ci

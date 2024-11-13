@@ -33,7 +33,7 @@ spring:
     hibernate:
       ddl-auto: update
   config:
-    import: classpath:env.properties
+    import: optional:classpath:env.properties
   data:
     redis:
       repositories:
@@ -103,15 +103,6 @@ db:
   url: ${DB_URL_LOCALHOST}
   username: ${DB_USERNAME}
   password: ${DB_PASSWORD}
-  init:
-    enabled: true
-    users:
-      - email: ${ADMIN_USER_EMAIL}
-        password: ${ADMIN_USER_PASSWORD}
-        name: ${ADMIN_USER_NAME}
-        roles:
-          - ADMIN
-          - USER
 
 swagger:
   contact:
@@ -170,18 +161,7 @@ oauth2:
       token-uri: https://accounts.google.com/o/oauth2/token
       jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
 
-auth:
-  refresh-token-secret: ${REFRESH_TOKEN_SECRET}
-  token-secret: ${TOKEN_SECRET}
-  invalidated-token-cleaner-cron: 0 0 0 * * ?
-  refresh-token-expiration-seconds: 86_400
-  token-expiration-seconds: 3_600
-
-
 cache:
-  local:
-    invalidated-refresh-token-cache-max-size: ${INVALIDATED_REFRESH_TOKEN_CACHE_MAX_SIZE}
-    local-user-cache-max-size: ${LOCAL_USER_CACHE_MAX_SIZE}
   redis:
     enabled: ${CACHE_ENABLED}
     host: ${REDIS_HOST}
