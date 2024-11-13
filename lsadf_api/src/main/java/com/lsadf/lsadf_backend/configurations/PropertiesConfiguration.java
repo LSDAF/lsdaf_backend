@@ -60,12 +60,6 @@ public class PropertiesConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "cache.local")
-    public LocalCacheProperties localProperties() {
-        return new LocalCacheProperties();
-    }
-
-    @Bean
     @ConfigurationProperties(prefix = "cache.expiration")
     public CacheExpirationProperties cacheExpirationProperties() {
         return new CacheExpirationProperties();

@@ -42,7 +42,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
     private final StageService stageService;
     private final GameSaveService gameSaveService;
     private final InventoryService inventoryService;
-    private final CacheService redisCacheService;
+    private final CacheService cacheService;
     private final Mapper mapper;
     private final CharacteristicsService characteristicsService;
 
@@ -53,12 +53,13 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
                                        GameSaveService gameSaveService,
                                        InventoryService inventoryService,
                                        Mapper mapper,
-                                       CacheService redisCacheService, CharacteristicsService characteristicsService) {
+                                       CacheService cacheService,
+                                       CharacteristicsService characteristicsService) {
         this.currencyService = currencyService;
         this.stageService = stageService;
         this.gameSaveService = gameSaveService;
         this.inventoryService = inventoryService;
-        this.redisCacheService = redisCacheService;
+        this.cacheService = cacheService;
         this.mapper = mapper;
         this.characteristicsService = characteristicsService;
     }
@@ -176,7 +177,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
         if (!gameSaveService.existsById(gameSaveId)) {
             throw new NotFoundException("Game save not found");
         }
-        characteristicsService.saveCharacteristics(gameSaveId, characteristics, redisCacheService.isEnabled());
+        characteristicsService.saveCharacteristics(gameSaveId, characteristics, cacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }
@@ -193,7 +194,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
         if (!gameSaveService.existsById(gameSaveId)) {
             throw new NotFoundException("Game save not found");
         }
-        inventoryService.saveInventory(gameSaveId, inventory, redisCacheService.isEnabled());
+        inventoryService.saveInventory(gameSaveId, inventory, cacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }
@@ -211,7 +212,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
         if (!gameSaveService.existsById(gameSaveId)) {
             throw new NotFoundException("Game save not found");
         }
-        currencyService.saveCurrency(gameSaveId, currency, redisCacheService.isEnabled());
+        currencyService.saveCurrency(gameSaveId, currency, cacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }
@@ -229,7 +230,7 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
         if (!gameSaveService.existsById(gameSaveId)) {
             throw new NotFoundException("Game save not found");
         }
-        stageService.saveStage(gameSaveId, stage, redisCacheService.isEnabled());
+        stageService.saveStage(gameSaveId, stage, cacheService.isEnabled());
 
         return generateResponse(HttpStatus.OK);
     }

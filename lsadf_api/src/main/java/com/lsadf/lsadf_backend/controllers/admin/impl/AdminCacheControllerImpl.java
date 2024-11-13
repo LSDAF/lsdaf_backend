@@ -8,14 +8,11 @@ import com.lsadf.lsadf_backend.services.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.LOCAL_CACHE_SERVICE;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 
 /**
@@ -29,7 +26,7 @@ public class AdminCacheControllerImpl extends BaseController implements AdminCac
     private final CacheFlushService cacheFlushService;
 
     @Autowired
-    public AdminCacheControllerImpl(@Qualifier(REDIS_CACHE_SERVICE) CacheService redisCacheService,
+    public AdminCacheControllerImpl(CacheService redisCacheService,
                                     CacheFlushService cacheFlushService) {
         this.redisCacheService = redisCacheService;
         this.cacheFlushService = cacheFlushService;

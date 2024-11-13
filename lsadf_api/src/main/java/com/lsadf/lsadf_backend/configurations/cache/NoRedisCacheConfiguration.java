@@ -2,16 +2,15 @@ package com.lsadf.lsadf_backend.configurations.cache;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.lsadf_backend.cache.impl.NoOpCache;
+import com.lsadf.lsadf_backend.cache.impl.NoOpHistoCache;
 import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.services.impl.NoOpCacheServiceImpl;
 import com.lsadf.lsadf_backend.services.impl.NoOpFlushServiceImpl;
-import com.lsadf.lsadf_backend.cache.impl.NoOpCache;
-import com.lsadf.lsadf_backend.cache.impl.NoOpHistoCache;
-import com.lsadf.lsadf_backend.models.Currency;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +30,7 @@ public class NoRedisCacheConfiguration {
     public CacheFlushService noOpCacheFlushService() {
         return new NoOpFlushServiceImpl();
     }
+
 
     @Bean(name = CHARACTERISTICS_CACHE)
     public HistoCache<Characteristics> characteristicsCache() {

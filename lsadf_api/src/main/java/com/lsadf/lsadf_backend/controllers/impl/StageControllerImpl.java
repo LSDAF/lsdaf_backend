@@ -11,13 +11,11 @@ import com.lsadf.lsadf_backend.services.StageService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
 import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
 
@@ -35,7 +33,7 @@ public class StageControllerImpl extends BaseController implements StageControll
 
     @Autowired
     public StageControllerImpl(GameSaveService gameSaveService,
-                               @Qualifier(REDIS_CACHE_SERVICE) CacheService cacheService,
+                               CacheService cacheService,
                                Mapper mapper,
                                StageService stageService) {
         this.gameSaveService = gameSaveService;

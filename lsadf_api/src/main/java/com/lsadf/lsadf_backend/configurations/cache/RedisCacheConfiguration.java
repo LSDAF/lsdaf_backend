@@ -4,7 +4,6 @@ import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.cache.impl.*;
 import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
-import com.lsadf.lsadf_backend.constants.EntityAttributes;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.Inventory;
@@ -30,7 +29,6 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.*;
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Service.REDIS_CACHE_SERVICE;
 import static com.lsadf.lsadf_backend.constants.RedisConstants.GAME_SAVE_OWNERSHIP;
 
 @Configuration
@@ -133,7 +131,7 @@ public class RedisCacheConfiguration {
         return new RedisStageCache(redisTemplate, cacheExpirationProperties.getStageExpirationSeconds(), redisProperties);
     }
 
-    @Bean(name = REDIS_CACHE_SERVICE)
+    @Bean
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
                                           HistoCache<Characteristics> characteristicsCache,
                                           HistoCache<Currency> currencyCache,
