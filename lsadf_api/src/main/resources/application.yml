@@ -33,7 +33,7 @@ spring:
     hibernate:
       ddl-auto: update
   config:
-    import: classpath:env.properties
+    import: optional:classpath:env.properties
   data:
     redis:
       repositories:
@@ -162,9 +162,6 @@ oauth2:
       jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
 
 cache:
-  local:
-    invalidated-refresh-token-cache-max-size: ${INVALIDATED_REFRESH_TOKEN_CACHE_MAX_SIZE}
-    local-user-cache-max-size: ${LOCAL_USER_CACHE_MAX_SIZE}
   redis:
     enabled: ${CACHE_ENABLED}
     host: ${REDIS_HOST}
