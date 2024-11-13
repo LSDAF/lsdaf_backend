@@ -13,6 +13,10 @@
     <packaging>pom</packaging>
     <name>LSADF Build Parent</name>
 
+    <modules>
+        <module>../lsadf_api</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -141,9 +145,46 @@
                         </filesets>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${maven-surefire-report-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <reportsDirectories>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/surefire-reports</reportsDirectory>
+                    </reportsDirectories>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
