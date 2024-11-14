@@ -66,6 +66,7 @@ public final class EntityAttributes {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Items {
         public static final String ITEM_ENTITY = "t_item";
+        public static final String ITEM_TYPE = "item_type";
     }
 
     // STAGES

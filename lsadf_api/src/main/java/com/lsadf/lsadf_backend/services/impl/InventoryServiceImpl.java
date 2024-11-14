@@ -111,7 +111,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         ItemEntity itemEntity = optionalItemEntity.get();
 
-        // TODO: Update item
+        itemEntity.setItemType(itemRequest.getItemType());
 
         itemRepository.save(itemEntity);
 

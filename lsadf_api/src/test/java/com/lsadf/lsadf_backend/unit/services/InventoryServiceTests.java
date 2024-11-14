@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.unit.services;
 
+import com.lsadf.lsadf_backend.constants.ItemType;
 import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
@@ -290,6 +291,7 @@ class InventoryServiceTests {
         // Arrange
         ItemEntity itemEntity = ItemEntity.builder()
                 .id("2")
+                .itemType(ItemType.BOOTS)
                 .build();
 
         InventoryEntity inventoryEntity = InventoryEntity.builder()
@@ -297,7 +299,7 @@ class InventoryServiceTests {
                 .build();
 
 
-        ItemRequest itemRequest = new ItemRequest();
+        ItemRequest itemRequest = new ItemRequest(ItemType.SWORD);
 
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
         when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));
@@ -306,9 +308,10 @@ class InventoryServiceTests {
         inventoryService.updateItemInInventory("1", "2", itemRequest);
 
         // Assert
-//        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
-        verify(itemRepository).save(any(ItemEntity.class));
+        ArgumentCaptor<ItemEntity> itemEntityCaptor = ArgumentCaptor.forClass(ItemEntity.class);
+        verify(itemRepository).save(itemEntityCaptor.capture());
         
-//        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
+        ItemEntity capturedItem = itemEntityCaptor.getValue();
+        assertThat(capturedItem.getItemType()).isEqualTo(ItemType.SWORD);
     }
 }
