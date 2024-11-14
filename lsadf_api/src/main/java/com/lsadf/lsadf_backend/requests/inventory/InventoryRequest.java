@@ -21,7 +21,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.Inventory.ITEMS;
 public class InventoryRequest implements Request {
 
     @Serial
-    private static final long serialVersionUID = 33494087785391763L;
+    private static final long serialVersionUID = 9140883232214789509L;
 
     @JsonProperty(value = ITEMS)
     @NotNull

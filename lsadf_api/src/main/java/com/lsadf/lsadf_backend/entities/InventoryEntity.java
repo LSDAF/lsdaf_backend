@@ -21,7 +21,7 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class InventoryEntity extends AEntity {
     @Serial
-    private static final long serialVersionUID = 7786624859103259009L;
+    private static final long serialVersionUID = 8543208469573180701L;
 
     protected InventoryEntity() {
         super();

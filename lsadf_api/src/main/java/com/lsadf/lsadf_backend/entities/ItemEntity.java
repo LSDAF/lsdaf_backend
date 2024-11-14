@@ -21,7 +21,7 @@ import java.io.Serial;
 public class ItemEntity extends AEntity {
 
     @Serial
-    private static final long serialVersionUID = 7786624859103259009L;
+    private static final long serialVersionUID = 7924047722096464427L;
 
     protected ItemEntity() {
         super();

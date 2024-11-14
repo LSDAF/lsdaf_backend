@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.lsadf_backend.constants.JsonViews;
@@ -12,10 +13,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.Inventory.ITEMS;
 
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Schema(name = "Item", description = "Item object")
 @Data
 @Builder
@@ -25,7 +27,10 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.Inventory.ITEMS;
 public class Item implements Model {
 
     @Serial
-    private static final long serialVersionUID = 33494087785391763L;
+    private static final long serialVersionUID = 6615198748250122221L;
 
-
+    @JsonView(JsonViews.Admin.class)
+    @JsonProperty(value = ID)
+    @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
+    private String id;
 }

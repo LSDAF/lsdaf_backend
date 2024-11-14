@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +61,7 @@ class InventoryServiceTests {
     }
 
     @Test
-    void getInventory_on_existing_gamesave_id() {
+    void getInventory_on_existing_gamesave_id_with_empty_inventory() {
         // Arrange
         InventoryEntity inventoryEntity = InventoryEntity.builder()
                 .items(new HashSet<>())
@@ -74,6 +75,43 @@ class InventoryServiceTests {
 
         // Act
         Inventory result = inventoryService.getInventory("1");
+
+        // Assert
+        assertThat(result).isEqualTo(inventory);
+    }
+
+    @Test
+    void getInventory_on_existing_gamesave_id_with_items() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .id("1")
+                .build();
+
+        ItemEntity itemEntity2 = ItemEntity.builder()
+                .id("2")
+                .build();
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(new HashSet<>(List.of(itemEntity, itemEntity2)))
+                .build();
+
+        Item item = Item.builder()
+                .id("1")
+                .build();
+
+        Item item2 = Item.builder()
+                .id("2")
+                .build();
+
+        Inventory inventory = Inventory.builder()
+                .items(new HashSet<>(List.of(item, item2)))
+                .build();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+
+        // Act
+        Inventory result = inventoryService.getInventory("1");
+
 
         // Assert
         assertThat(result).isEqualTo(inventory);

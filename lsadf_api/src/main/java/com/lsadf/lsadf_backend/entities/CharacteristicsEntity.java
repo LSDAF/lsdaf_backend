@@ -18,7 +18,7 @@ import java.io.Serial;
 public class CharacteristicsEntity implements com.lsadf.lsadf_backend.entities.Entity {
 
     @Serial
-    private static final long serialVersionUID = 7786624859103259009L;
+    private static final long serialVersionUID = 2100417080983225675L;
 
     protected CharacteristicsEntity() {
         super();

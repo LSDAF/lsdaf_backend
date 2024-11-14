@@ -115,7 +115,9 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public Item mapItemEntityToItem(ItemEntity itemEntity) {
-        return new Item();
+        return Item.builder()
+                .id(itemEntity.getId())
+                .build();
     }
 
     /**

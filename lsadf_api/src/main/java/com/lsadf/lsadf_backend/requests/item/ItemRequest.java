@@ -15,6 +15,6 @@ import java.io.Serial;
 public class ItemRequest implements Request {
 
     @Serial
-    private static final long serialVersionUID = 33494087785391763L;
+    private static final long serialVersionUID = -1116418739363127022L;
 
 }
