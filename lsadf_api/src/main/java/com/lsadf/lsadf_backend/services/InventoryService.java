@@ -21,4 +21,12 @@ public interface InventoryService {
      * @throws NotFoundException
      */
     ItemEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
+
+    /**
+     * Remove an item from the inventory of a game save
+     * @param gameSaveId the game save id
+     * @param itemRequest the item to add
+     * @throws NotFoundException
+     */
+    void deleteItemFromInventory(String gameSaveId, String itemId) throws NotFoundException;
 }

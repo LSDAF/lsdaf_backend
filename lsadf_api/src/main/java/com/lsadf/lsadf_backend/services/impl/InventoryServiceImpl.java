@@ -64,6 +64,15 @@ public class InventoryServiceImpl implements InventoryService {
         return saved;
     }
 
+    @Override
+    public void deleteItemFromInventory(String gameSaveId, String itemId) throws NotFoundException {
+        if (gameSaveId == null || itemId == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
+
+        throw new NotFoundException();
+    }
+
     /**
      * Get the inventory entity in the database or throw an exception if not found
      *
