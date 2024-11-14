@@ -91,6 +91,34 @@ public class InventoryServiceImpl implements InventoryService {
         inventoryRepository.save(inventoryEntity);
     }
 
+    @Override
+    public ItemEntity updateItemInInventory(String gameSaveId, String itemId, ItemRequest itemRequest) throws NotFoundException {
+        if (gameSaveId == null || itemId == null || itemRequest == null) {
+            throw new IllegalArgumentException("Game save id cannot be null");
+        }
+
+        Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);
+
+        if (optionalInventoryEntity.isEmpty()) {
+            throw new NotFoundException("Inventory not found for game save id " + gameSaveId);
+        }
+
+        Optional<ItemEntity> optionalItemEntity = itemRepository.findById(itemId);
+
+        if (optionalItemEntity.isEmpty()) {
+            throw new NotFoundException("Item not found for item id " + itemId);
+        }
+
+        ItemEntity itemEntity = optionalItemEntity.get();
+
+        // TODO: Update item
+
+        itemRepository.save(itemEntity);
+
+        return itemEntity;
+
+    }
+
     /**
      * Get the inventory entity in the database or throw an exception if not found
      *
