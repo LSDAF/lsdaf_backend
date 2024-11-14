@@ -1,17 +1,19 @@
 # Stage 1: Build the application
 FROM maven:3.9.8-eclipse-temurin-17-alpine AS compiler
 COPY env env/
-COPY src src/
+COPY build_parent build_parent/
+COPY lsadf_dependencies lsadf_dependencies/
+COPY lsadf_api lsadf_api/
 COPY pom.xml .
 COPY ./docker/startup.sh .
 
 RUN mvn clean install -DskipTests
-RUN mv target/*.jar target/lsadf_backend.jar
+RUN mv lsadf_api/target/*.jar lsadf_api/target/lsadf_backend.jar
 
 FROM openjdk:17-alpine AS builder
 
-COPY --from=compiler target/lsadf_backend.jar lsadf_backend.jar
-COPY --from=compiler target/classes/logback-docker.xml logback-docker.xml
+COPY --from=compiler lsadf_api/target/lsadf_backend.jar lsadf_backend.jar
+COPY --from=compiler lsadf_api/target/classes/logback-docker.xml logback-docker.xml
 
 RUN java -Djarmode=layertools -jar lsadf_backend.jar extract
 COPY --from=compiler startup.sh .
