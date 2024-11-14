@@ -310,7 +310,7 @@ class InventoryServiceTests {
         // Assert
         ArgumentCaptor<ItemEntity> itemEntityCaptor = ArgumentCaptor.forClass(ItemEntity.class);
         verify(itemRepository).save(itemEntityCaptor.capture());
-        
+
         ItemEntity capturedItem = itemEntityCaptor.getValue();
         assertThat(capturedItem.getItemType()).isEqualTo(ItemType.SWORD);
     }
