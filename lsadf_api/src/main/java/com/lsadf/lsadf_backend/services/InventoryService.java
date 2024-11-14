@@ -1,23 +1,24 @@
 package com.lsadf.lsadf_backend.services;
 
+import com.lsadf.lsadf_backend.entities.InventoryEntity;
+import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Inventory;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 
 public interface InventoryService {
 
     /**
      * Get the inventory of a game save
      * @param gameSaveId the id of the game save
-     * @return the inventory POJO
+     * @return the inventory entity
      */
-    Inventory getInventory(String gameSaveId);
+    InventoryEntity getInventory(String gameSaveId);
 
     /**
-     * Save the inventory of a game save
-     * @param gameSaveId the id of the game save
-     * @param inventory the inventory POJO
-     * @param toCache true if the inventory should be saved to cache, false otherwise
+     * Upsert an item in the inventory
+     * @param gameSaveId the game save id
+     * @param itemRequest the item to add
      * @throws NotFoundException
      */
-    void saveInventory(String gameSaveId, Inventory inventory, boolean toCache) throws NotFoundException;
+    ItemEntity createItem(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
 }
