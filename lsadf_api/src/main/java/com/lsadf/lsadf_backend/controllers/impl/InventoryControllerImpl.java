@@ -4,6 +4,7 @@ import com.lsadf.lsadf_backend.controllers.InventoryController;
 import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.Inventory;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.services.GameSaveService;
@@ -55,6 +56,49 @@ public class InventoryControllerImpl extends BaseController implements Inventory
         InventoryEntity inventoryEntity = inventoryService.getInventory(gameSaveId);
         Inventory inventory = mapper.mapInventoryEntityToInventory(inventoryEntity);
         return generateResponse(HttpStatus.OK, inventory);
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> createItemInInventory(Jwt jwt,
+                                                                       String gameSaveId,
+                                                                       ItemRequest itemRequest) {
+        validateUser(jwt);
+        String userEmail = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        inventoryService.createItemInInventory(gameSaveId, itemRequest);
+        return generateResponse(HttpStatus.OK);
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> deleteItemFromInventory(Jwt jwt,
+                                                                          String gameSaveId,
+                                                                          String itemId) {
+        validateUser(jwt);
+        String userEmail = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        inventoryService.deleteItemFromInventory(gameSaveId, itemId);
+        return generateResponse(HttpStatus.OK);
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public ResponseEntity<GenericResponse<Void>> updateItemInInventory(Jwt jwt,
+                                                                        String gameSaveId,
+                                                                        String itemId,
+                                                                        ItemRequest itemRequest) {
+        validateUser(jwt);
+        String userEmail = getUsernameFromJwt(jwt);
+        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
+        inventoryService.updateItemInInventory(gameSaveId, itemId, itemRequest);
+        return generateResponse(HttpStatus.OK);
     }
 
     /**

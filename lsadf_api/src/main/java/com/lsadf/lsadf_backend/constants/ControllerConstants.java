@@ -79,6 +79,8 @@ public final class ControllerConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Inventory {
         public static final String GAME_SAVE_ID = "/{game_save_id}";
+        public static final String ITEMS = "/{game_save_id}/items";
+        public static final String ITEM_ID = "{game_save_id}/items/{item_id}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
