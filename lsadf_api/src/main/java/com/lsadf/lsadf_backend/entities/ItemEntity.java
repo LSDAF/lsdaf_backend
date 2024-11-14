@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
+import com.lsadf.lsadf_backend.constants.ItemType;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,7 @@ public class ItemEntity extends AEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private InventoryEntity inventoryEntity;
+
+    @Column(name = EntityAttributes.Items.ITEM_TYPE)
+    private ItemType itemType;
 }
