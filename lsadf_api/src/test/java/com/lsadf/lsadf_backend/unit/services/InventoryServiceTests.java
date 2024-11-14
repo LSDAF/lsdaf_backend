@@ -138,6 +138,30 @@ class InventoryServiceTests {
         verify(inventoryRepository).save(inventoryEntityCaptor.capture());
 
         InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
-        assertThat(capturedInventory.getItems()).hasSize(1); // replace 1 with the expected number of items
+        assertThat(capturedInventory.getItems()).hasSize(1);
+    }
+
+    @Test
+    void createItemInInventory_on_existing_gamesave_id_with_non_empty_inventory() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder().build();
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(new HashSet<>(List.of(itemEntity)))
+                .build();
+
+        ItemRequest itemRequest = new ItemRequest();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+
+        // Act
+        inventoryService.createItemInInventory("1", itemRequest);
+
+        // Assert
+        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
+        verify(inventoryRepository).save(inventoryEntityCaptor.capture());
+
+        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
+        assertThat(capturedInventory.getItems()).hasSize(2);
     }
 }
