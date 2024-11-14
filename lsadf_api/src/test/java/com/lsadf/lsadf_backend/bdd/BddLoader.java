@@ -11,6 +11,7 @@ import com.lsadf.lsadf_backend.controllers.advices.DynamicJsonViewAdvice;
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.*;
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
@@ -202,6 +203,9 @@ public class BddLoader {
 
     @Autowired
     protected Stack<Inventory> inventoryStack;
+
+    @Autowired
+    protected Stack<InventoryEntity> inventoryEntityStack;
 
     @Autowired
     protected Stack<Item> itemStack;
