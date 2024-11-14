@@ -15,10 +15,10 @@ public interface InventoryService {
     InventoryEntity getInventory(String gameSaveId);
 
     /**
-     * Upsert an item in the inventory
+     * Create an item in the inventory of a game save
      * @param gameSaveId the game save id
      * @param itemRequest the item to add
      * @throws NotFoundException
      */
-    ItemEntity createItem(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
+    InventoryEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
 }
