@@ -38,7 +38,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException {
+    public ItemEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException {
         if (gameSaveId == null) {
             throw new IllegalArgumentException("Game save id cannot be null");
         }
@@ -55,11 +55,11 @@ public class InventoryServiceImpl implements InventoryService {
                 .inventoryEntity(inventoryEntity)
                 .build();
 
-        itemRepository.save(itemEntity);
+        ItemEntity saved = itemRepository.save(itemEntity);
 
-        inventoryEntity.getItems().add(itemEntity);
+        inventoryEntity.getItems().add(saved);
 
-        InventoryEntity saved = inventoryRepository.save(inventoryEntity);
+        inventoryRepository.save(inventoryEntity);
 
         return saved;
     }
