@@ -14,14 +14,11 @@ import java.util.Optional;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
-    private final Cache<Inventory> inventoryCache;
     private final Mapper mapper;
 
     public InventoryServiceImpl(InventoryRepository inventoryRepository,
-                                Cache<Inventory> inventoryCache,
                                 Mapper mapper) {
         this.inventoryRepository = inventoryRepository;
-        this.inventoryCache = inventoryCache;
         this.mapper = mapper;
     }
 
@@ -30,16 +27,6 @@ public class InventoryServiceImpl implements InventoryService {
     public Inventory getInventory(String gameSaveId) throws NotFoundException {
         if (gameSaveId == null) {
             throw new IllegalArgumentException("Game save id cannot be null");
-        }
-
-        if (inventoryCache.isEnabled()) {
-            Optional<Inventory> optionalCachedInventory = inventoryCache.get(gameSaveId);
-            if (optionalCachedInventory.isPresent()) {
-                Inventory inventory = optionalCachedInventory.get();
-                if (inventory.getItems() != null) {
-                    return inventory;
-                }
-            }
         }
 
         InventoryEntity inventoryEntity = getInventoryEntity(gameSaveId);

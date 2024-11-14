@@ -117,13 +117,6 @@ public class RedisCacheConfiguration {
         return new RedisCurrencyCache(redisTemplate, cacheExpirationProperties.getCurrencyExpirationSeconds(), redisProperties);
     }
 
-    @Bean(name = INVENTORY_CACHE)
-    public HistoCache<Inventory> redisInventoryCache(RedisTemplate<String, Inventory> redisTemplate,
-                                                     CacheExpirationProperties cacheExpirationProperties,
-                                                     RedisProperties redisProperties) {
-        return new RedisInventoryCache(redisTemplate, cacheExpirationProperties.getInventoryExpirationSeconds(), redisProperties);
-    }
-
     @Bean(name = STAGE_CACHE)
     public HistoCache<Stage> redisStageCache(RedisTemplate<String, Stage> redisTemplate,
                                              CacheExpirationProperties cacheExpirationProperties,
@@ -135,9 +128,8 @@ public class RedisCacheConfiguration {
     public CacheService redisCacheService(RedisCache<String> gameSaveOwnershipCache,
                                           HistoCache<Characteristics> characteristicsCache,
                                           HistoCache<Currency> currencyCache,
-                                          HistoCache<Inventory> inventoryCache,
                                           HistoCache<Stage> stageCache) {
-        return new RedisCacheServiceImpl(gameSaveOwnershipCache, characteristicsCache, currencyCache, inventoryCache, stageCache);
+        return new RedisCacheServiceImpl(gameSaveOwnershipCache, characteristicsCache, currencyCache, stageCache);
     }
 
     @Bean
@@ -185,8 +177,7 @@ public class RedisCacheConfiguration {
                                                StageService stageService,
                                                Cache<Characteristics> characteristicsCache,
                                                Cache<Currency> currencyCache,
-                                               Cache<Inventory> inventoryCache,
                                                Cache<Stage> stageCache) {
-        return new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, inventoryCache, stageCache);
+        return new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, stageCache);
     }
 }

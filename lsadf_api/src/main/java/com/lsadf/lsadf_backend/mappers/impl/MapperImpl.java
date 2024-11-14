@@ -15,6 +15,8 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 public class MapperImpl implements Mapper {
@@ -91,8 +93,8 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public Inventory mapInventoryEntityToInventory(InventoryEntity inventoryEntity) {
-        List<Item> items = inventoryEntity.getItems()
-                .stream().map(this::mapItemEntityToItem).toList();
+        Set<Item> items = inventoryEntity.getItems()
+                .stream().map(this::mapItemEntityToItem).collect(Collectors.toSet());
 
         return new Inventory(items);
     }
@@ -102,8 +104,8 @@ public class MapperImpl implements Mapper {
      */
     @Override
     public Inventory mapInventoryRequestToInventory(InventoryRequest inventoryRequest) {
-        List<Item> items = inventoryRequest.getItems()
-                .stream().map(this::mapItemRequestToItem).toList();
+        Set<Item> items = inventoryRequest.getItems()
+                .stream().map(this::mapItemRequestToItem).collect(Collectors.toSet());
 
         return new Inventory(items);
     }

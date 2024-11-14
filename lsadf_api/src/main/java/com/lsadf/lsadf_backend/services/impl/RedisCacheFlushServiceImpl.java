@@ -22,7 +22,6 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
     private final Cache<Currency> currencyCache;
 
     private final InventoryService inventoryService;
-    private final Cache<Inventory> inventoryCache;
 
     private final StageService stageService;
     private final Cache<Stage> stageCache;
@@ -33,7 +32,6 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
                                       StageService stageService,
                                       Cache<Characteristics> characteristicsCache,
                                       Cache<Currency> currencyCache,
-                                      Cache<Inventory> inventoryCache,
                                       Cache<Stage> stageCache) {
         this.characteristicsService = characteristicsService;
         this.currencyService = currencyService;
@@ -41,7 +39,6 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
         this.stageService = stageService;
         this.characteristicsCache = characteristicsCache;
         this.currencyCache = currencyCache;
-        this.inventoryCache = inventoryCache;
         this.stageCache = stageCache;
     }
 
@@ -89,29 +86,6 @@ public class RedisCacheFlushServiceImpl implements CacheFlushService {
         }
 
         log.info("Flushed {} currencies in DB", currencyEntries.size());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public void flushInventories() {
-        log.info("Flushing inventory cache");
-        Map<String, Inventory> inventoryEntries = inventoryCache.getAll();
-        for (Map.Entry<String, Inventory> entry : inventoryEntries.entrySet()) {
-            String gameSaveId = entry.getKey();
-            Inventory inventory = entry.getValue();
-            try {
-                inventoryService.saveInventory(gameSaveId, inventory, false);
-            } catch (NotFoundException e) {
-                log.error("Error while flushing inventory cache entry: InventoryEntity with id {} not found", gameSaveId, e);
-            } catch (Exception e) {
-                log.error("Error while flushing inventory cache entry", e);
-            }
-        }
-
-        log.info("Flushed {} inventories in DB", inventoryEntries.size());
     }
 
     /**

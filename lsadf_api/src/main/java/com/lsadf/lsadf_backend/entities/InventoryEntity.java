@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.entities;
 
 import com.lsadf.lsadf_backend.constants.EntityAttributes;
-import jakarta.persistence.*;
 import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity(name = EntityAttributes.Inventory.INVENTORY_ENTITY)
@@ -36,5 +36,5 @@ public class InventoryEntity extends AEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<ItemEntity> items;
+    private Set<ItemEntity> items;
 }
