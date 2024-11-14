@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -234,8 +235,6 @@ class InventoryServiceTests {
                 .items(new HashSet<>(List.of(itemEntity, itemEntity2)))
                 .build();
 
-        ItemRequest itemRequest = new ItemRequest();
-
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
         when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity2));
 
@@ -248,5 +247,68 @@ class InventoryServiceTests {
 
         InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
         assertThat(capturedInventory.getItems()).hasSize(1);
+    }
+
+    @Test
+    void updateItemInInventory_on_null_gamesave_id() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.updateItemInInventory(null, "1", new ItemRequest()));
+    }
+
+    @Test
+    void updateItemInInventory_on_null_item_id() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.updateItemInInventory("1", null, new ItemRequest()));
+    }
+
+    @Test
+    void updateItemInInventory_on_null_item_request() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.updateItemInInventory("1", "1", null));
+    }
+
+    @Test
+    void updateItemInInventory_on_non_existing_gamesave_id() {
+        // Arrange
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Assert
+        assertThrows(NotFoundException.class, () -> inventoryService.updateItemInInventory("1", "2", new ItemRequest()));
+    }
+
+    @Test
+    void updateItemInInventory_on_non_existing_item_id() {
+        // Arrange
+        when(itemRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Assert
+        assertThrows(NotFoundException.class, () -> inventoryService.updateItemInInventory("1", "2", new ItemRequest()));
+    }
+
+    @Test
+    void updateItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .id("2")
+                .build();
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(new HashSet<>(List.of(itemEntity)))
+                .build();
+
+
+        ItemRequest itemRequest = new ItemRequest();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+        when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));
+
+        // Act
+        inventoryService.updateItemInInventory("1", "2", itemRequest);
+
+        // Assert
+//        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
+        verify(itemRepository).save(any(ItemEntity.class));
+        
+//        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
     }
 }
