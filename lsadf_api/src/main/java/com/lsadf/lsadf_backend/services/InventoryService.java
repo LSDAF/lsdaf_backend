@@ -20,5 +20,5 @@ public interface InventoryService {
      * @param itemRequest the item to add
      * @throws NotFoundException
      */
-    InventoryEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
+    ItemEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException;
 }
