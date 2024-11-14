@@ -3,6 +3,13 @@ server:
   host-name: localhost
   https: false
 
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: "/actuator"
+      exposure:
+        include: health, info
 spring:
   mail:
     host: ${mail.host}
@@ -120,6 +127,7 @@ springdoc:
     path: /swagger-ui.html
     oauth:
       client-id: ${keycloak.client-id}
+  show-actuator: true
 
 
 logging:

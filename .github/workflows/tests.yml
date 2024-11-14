@@ -3,84 +3,89 @@ name: 🧑‍🔬 Run tests
 run-name: ${{ github.head_ref || github.ref_name }}-run-tests
 
 on:
-    pull_request:
-    workflow_dispatch:
+  pull_request:
+  workflow_dispatch:
 
 
 concurrency:
-    group: run-tests-${{ github.event.number }}
-    cancel-in-progress: true
+  group: run-tests-${{ github.event.number }}
+  cancel-in-progress: true
 
 
 jobs:
-    unit-test:
-        name: "🧪 Run Unit Tests"
-        runs-on: 'ubuntu-22.04'
-        timeout-minutes: 10 # The overall timeout
-        permissions:
-            actions: write
-            checks: write
-            contents: write
-            pull-requests: write
-            statuses: write
+  unit-test:
+    name: "🧪 Run Unit Tests"
+    runs-on: 'ubuntu-22.04'
+    timeout-minutes: 10 # The overall timeout
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      pull-requests: write
+      statuses: write
 
-        steps:
-            # checkout your repository
-            -   name: 📥 Checkout
-                uses: actions/checkout@v4
-                with:
-                    lfs: true
+    steps:
+      # checkout your repository
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-            -   name: 📦 Set up JDK 17
-                uses: actions/setup-java@v4
-                with:
-                    java-version: '17'
-                    distribution: 'temurin'
-                    cache: maven
+      - name: 📦 Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-            -   name: 🚧 Install
-                run: |
-                    mvn clean install -DskipTests -U -fae --no-transfer-progress
+      - name: 🚧 Install
+        run: |
+          mvn clean install -DskipTests -U -fae --no-transfer-progress -DskipSurefireReport
 
-            -   name: 🧪 Test with Maven
-                run: |
-                    make test-ci
+      - name: 🧪 Test with Maven
+        run: |
+          make test-ci
 
-            -   name: 📁 List reports
-                run: |
-                    ls -la lsadf_api/target/surefire-reports
-                if: always()
+      - name: 📁 List reports
+        run: |
+          ls -la lsadf_api/target/surefire-reports
+        if: always()
 
-            -   name: 📝 Tests Summary
-                uses: test-summary/action@v2
-                with:
-                    paths: "lsadf_api/target/surefire-reports/*.xml"
-                    output: test-summary.md
-                if: always()
-
-
-            -   name: 📤 Upload Test Summary
-                uses: actions/upload-artifact@v3
-                with:
-                    name: test-summary
-                    path: test-summary.md
-                if: always()
+      - name: 📝 Tests Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "lsadf_api/target/surefire-reports/*.xml"
+          output: test-summary.md
+        if: always()
 
 
-            - name: 🔎 Find Comment
-              uses: peter-evans/find-comment@v3
-              id: fc
-              with:
-                  issue-number: ${{ github.event.pull_request.number }}
-                  comment-author: 'github-actions[bot]'
-                  body-includes: '<img src="https://svg.test-summary.com/dashboard.svg?'
-              if: always()
+      - name: 📤 Upload Test Summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-summary
+          path: test-summary.md
+        if: always()
 
-            - name: ✏️ Create or update comment
-              uses: peter-evans/create-or-update-comment@v4
-              with:
-                  comment-id: ${{ steps.fc.outputs.comment-id }}
-                  issue-number: ${{ github.event.pull_request.number }}
-                  body-path: 'test-summary.md'
-                  edit-mode: replace
-              if: always()
+
+      - name: 🔎 Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '<img src="https://svg.test-summary.com/dashboard.svg?'
+        if: always()
+
+      - name: 🗑️ Delete Comment
+        uses: detomarco/delete-comments@1.1.0
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+        if: always()
+
+      - name: ✏️ Create Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: 'test-summary.md'
+          edit-mode: replace
+        if: always()

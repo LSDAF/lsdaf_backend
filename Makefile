@@ -1,6 +1,6 @@
 default: help
 install:
-	@mvn clean install -DskipTests -U -fae -Dcopy-env
+	@mvn clean install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
 
 test:
 	@mvn test

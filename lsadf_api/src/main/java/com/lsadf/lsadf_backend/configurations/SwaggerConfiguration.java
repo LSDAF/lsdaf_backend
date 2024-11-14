@@ -7,10 +7,13 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.*;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import java.util.Arrays;
 
 /**
  * Configuration class for the Swagger.
@@ -27,6 +30,18 @@ public class SwaggerConfiguration {
     private static final String BEARER = "bearer";
     private static final String JWT = "JWT";
     private static final String AUTHORIZATION = "Authorization";
+
+    // HIDDEN ENDPOINTS
+    private static final String[] HIDDEN_ENDPOINTS = {
+            "/actuator",
+            "/actuator/health/**",
+    };
+
+    @Bean
+    public OpenApiCustomizer actuatorHealthCustomiser() {
+        return openApi -> Arrays.stream(HIDDEN_ENDPOINTS)
+                .forEach(openApi.getPaths()::remove);
+    }
 
     @Bean
     public OpenAPI openAPI(SwaggerProperties swaggerProperties,
