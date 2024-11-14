@@ -107,8 +107,6 @@ public class BddGivenStepDefinitions extends BddLoader {
         assertThat(characteristicsCache.getAllHisto()).isEmpty();
         assertThat(currencyCache.getAll()).isEmpty();
         assertThat(currencyCache.getAllHisto()).isEmpty();
-        assertThat(inventoryCache.getAll()).isEmpty();
-        assertThat(inventoryCache.getAllHisto()).isEmpty();
         assertThat(stageCache.getAll()).isEmpty();
         assertThat(stageCache.getAllHisto()).isEmpty();
         assertThat(gameSaveOwnershipCache.getAll()).isEmpty();
@@ -149,12 +147,6 @@ public class BddGivenStepDefinitions extends BddLoader {
                 String gameSaveId = row.get(BddFieldConstants.CurrencyCacheEntry.GAME_SAVE_ID);
                 Currency currency = BddUtils.mapToCurrency(row);
                 currencyCache.set(gameSaveId, currency);
-                count.getAndIncrement();
-            });
-            case INVENTORY -> rows.forEach(row -> {
-                String gameSaveId = row.get(BddFieldConstants.InventoryCacheEntry.GAME_SAVE_ID);
-                Inventory inventory = BddUtils.mapToInventory(row);
-                inventoryCache.set(gameSaveId, inventory);
                 count.getAndIncrement();
             });
             case STAGE -> rows.forEach(row -> {

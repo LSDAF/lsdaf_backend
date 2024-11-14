@@ -17,7 +17,6 @@ public class RedisCacheServiceImpl implements CacheService {
     private final Cache<String> gameSaveOwnershipCache;
     private final HistoCache<Characteristics> characteristicsCache;
     private final HistoCache<Currency> currencyCache;
-    private final HistoCache<Inventory> inventoryCache;
     private final HistoCache<Stage> stageCache;
 
     private final AtomicBoolean isEnabled = new AtomicBoolean(true);
@@ -25,11 +24,9 @@ public class RedisCacheServiceImpl implements CacheService {
     public RedisCacheServiceImpl(Cache<String> gameSaveOwnershipCache,
                                  HistoCache<Characteristics> characteristicsCache,
                                  HistoCache<Currency> currencyCache,
-                                 HistoCache<Inventory> inventoryCache,
                                  HistoCache<Stage> stageCache) {
         this.characteristicsCache = characteristicsCache;
         this.currencyCache = currencyCache;
-        this.inventoryCache = inventoryCache;
         this.stageCache = stageCache;
         this.gameSaveOwnershipCache = gameSaveOwnershipCache;
     }
@@ -50,7 +47,6 @@ public class RedisCacheServiceImpl implements CacheService {
         isEnabled.set(newValue);
         characteristicsCache.setEnabled(newValue);
         currencyCache.setEnabled(newValue);
-        inventoryCache.setEnabled(newValue);
         stageCache.setEnabled(newValue);
         gameSaveOwnershipCache.setEnabled(newValue);
     }
@@ -63,7 +59,6 @@ public class RedisCacheServiceImpl implements CacheService {
         log.info("Clearing all caches");
         characteristicsCache.clear();
         currencyCache.clear();
-        inventoryCache.clear();
         stageCache.clear();
         gameSaveOwnershipCache.clear();
         log.info("Caches cleared");

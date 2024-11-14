@@ -42,11 +42,6 @@ public class NoRedisCacheConfiguration {
         return new NoOpHistoCache<>();
     }
 
-    @Bean(name = INVENTORY_CACHE)
-    public HistoCache<Inventory> inventoryCache() {
-        return new NoOpHistoCache<>();
-    }
-
     @Bean(name = GAME_SAVE_OWNERSHIP_CACHE)
     public Cache<String> gameSaveOwnershipCache() {
         return new NoOpCache<>();

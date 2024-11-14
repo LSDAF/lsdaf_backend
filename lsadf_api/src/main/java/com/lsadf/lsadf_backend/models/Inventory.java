@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
-import java.util.List;
+import java.util.Set;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.Inventory.ITEMS;
 
@@ -32,5 +32,5 @@ public class Inventory implements Model {
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = ITEMS)
     @Schema(description = "List of items in the inventory", example = "[\"item1\", \"item2\"]")
-    private List<Item> items;
+    private Set<Item> items;
 }

@@ -9,6 +9,7 @@ import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
@@ -22,10 +23,7 @@ import com.lsadf.lsadf_backend.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -44,8 +42,6 @@ public class GameSaveServiceImpl implements GameSaveService {
     private final HistoCache<Stage> stageCache;
     private final HistoCache<Characteristics> characteristicsCache;
     private final HistoCache<Currency> currencyCache;
-    private final HistoCache<Inventory> inventoryCache;
-
 
     public GameSaveServiceImpl(UserService userService,
                                GameSaveRepository gameSaveRepository,
@@ -56,8 +52,7 @@ public class GameSaveServiceImpl implements GameSaveService {
                                Cache<String> gameSaveOwnershipCache,
                                HistoCache<Stage> stageCache,
                                HistoCache<Characteristics> characteristicsCache,
-                               HistoCache<Currency> currencyCache,
-                               HistoCache<Inventory> inventoryCache) {
+                               HistoCache<Currency> currencyCache) {
         this.userService = userService;
         this.gameSaveRepository = gameSaveRepository;
         this.inventoryRepository = inventoryRepository;
@@ -68,7 +63,6 @@ public class GameSaveServiceImpl implements GameSaveService {
         this.stageCache = stageCache;
         this.characteristicsCache = characteristicsCache;
         this.currencyCache = currencyCache;
-        this.inventoryCache = inventoryCache;
     }
 
     /**
@@ -102,7 +96,7 @@ public class GameSaveServiceImpl implements GameSaveService {
         saved.setCurrencyEntity(currencyEntity);
 
         InventoryEntity inventoryEntity = InventoryEntity.builder()
-                .items(new ArrayList<>())
+                .items(new HashSet<>())
                 .build();
 
         saved.setInventoryEntity(inventoryEntity);
@@ -254,9 +248,6 @@ public class GameSaveServiceImpl implements GameSaveService {
         if (currencyCache.isEnabled()) {
             currencyCache.unset(saveId);
         }
-        if (inventoryCache.isEnabled()) {
-            inventoryCache.unset(saveId);
-        }
         if (stageCache.isEnabled()) {
             stageCache.unset(saveId);
         }
@@ -377,10 +368,6 @@ public class GameSaveServiceImpl implements GameSaveService {
         if (currencyCache.isEnabled()) {
             Optional<Currency> optionalCurrency = currencyCache.get(gameSave.getId());
             optionalCurrency.ifPresent(gameSave::setCurrencyEntity);
-        }
-        if (inventoryCache.isEnabled()) {
-            Optional<Inventory> optionalInventory = inventoryCache.get(gameSave.getId());
-            optionalInventory.ifPresent(gameSave::setInventoryEntity);
         }
         if (stageCache.isEnabled()) {
             Optional<Stage> optionalStage = stageCache.get(gameSave.getId());

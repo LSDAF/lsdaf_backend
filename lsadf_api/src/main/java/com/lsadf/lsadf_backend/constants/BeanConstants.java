@@ -16,7 +16,6 @@ public class BeanConstants {
     public static final class Cache {
         public static final String CHARACTERISTICS_CACHE = "characteristicsCache";
         public static final String CURRENCY_CACHE = "currencyCache";
-        public static final String INVENTORY_CACHE = "inventoryCache";
         public static final String STAGE_CACHE = "stageCache";
         public static final String LOCAL_INVALIDATED_JWT_TOKEN_CACHE = "localInvalidatedJwtTokenCache";
         public static final String INVALIDATED_JWT_TOKEN_CACHE = "invalidatedJwtTokenCache";

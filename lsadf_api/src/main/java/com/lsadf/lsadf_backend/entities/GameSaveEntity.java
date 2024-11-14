@@ -12,6 +12,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Game Save Entity to persist data of a game save
@@ -138,7 +140,7 @@ public class GameSaveEntity extends AEntity {
     public void setInventoryEntity(Inventory inventory) {
         if (inventory.getItems() != null) {
             // TODO: get content of items
-            List<ItemEntity> items = inventory.getItems().stream().map(item -> new ItemEntity()).toList();
+            Set<ItemEntity> items = inventory.getItems().stream().map(item -> new ItemEntity()).collect(Collectors.toSet());
             this.inventoryEntity.setItems(items);
         }
     }

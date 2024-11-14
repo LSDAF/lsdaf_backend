@@ -32,9 +32,6 @@ class RedisCacheFlushServiceTests {
     private Cache<Currency> currencyCache;
 
     @Mock
-    private Cache<Inventory> inventoryCache;
-
-    @Mock
     private Cache<Stage> stageCache;
 
     @Mock
@@ -52,7 +49,7 @@ class RedisCacheFlushServiceTests {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, inventoryCache, stageCache);
+        this.redisCacheFlushService = new RedisCacheFlushServiceImpl(characteristicsService, currencyService, inventoryService, stageService, characteristicsCache, currencyCache, stageCache);
     }
 
     @Test
@@ -77,19 +74,6 @@ class RedisCacheFlushServiceTests {
         redisCacheFlushService.flushCurrencies();
         verify(currencyService, times(1)).saveCurrency("1", new Currency(1L, 2L, null, 3L), false);
         verify(currencyService, times(1)).saveCurrency("2", new Currency(2L, 4L, null, 8L), false);
-    }
-
-    @Test
-    void should_flush_inventories() {
-        // TODO: Implement with items ?
-        Map<String, Inventory> inventoryEntries = Map.of(
-                "1", new Inventory(List.of(new Item())),
-                "2", new Inventory(List.of(new Item())));
-        when(inventoryCache.getAll()).thenReturn(inventoryEntries);
-
-        redisCacheFlushService.flushInventories();
-        verify(inventoryService, times(1)).saveInventory("1", new Inventory(List.of(new Item())), false);
-        verify(inventoryService, times(1)).saveInventory("2", new Inventory(List.of(new Item())), false);
     }
 
     @Test
