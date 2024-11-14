@@ -186,23 +186,6 @@ public class AdminGameSaveControllerImpl extends BaseController implements Admin
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> updateGameSaveInventories(Jwt jwt,
-                                                                           String gameSaveId,
-                                                                           InventoryRequest inventoryRequest) {
-        validateUser(jwt);
-        Inventory inventory = mapper.mapInventoryRequestToInventory(inventoryRequest);
-        if (!gameSaveService.existsById(gameSaveId)) {
-            throw new NotFoundException("Game save not found");
-        }
-        inventoryService.saveInventory(gameSaveId, inventory, cacheService.isEnabled());
-
-        return generateResponse(HttpStatus.OK);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ResponseEntity<GenericResponse<Void>> updateGameSaveCurrencies(Jwt jwt,
                                                                           String gameSaveId,
                                                                           CurrencyRequest currencyRequest) {

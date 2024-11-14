@@ -68,8 +68,9 @@ public class ServiceConfiguration {
 
     @Bean
     public InventoryService inventoryService(InventoryRepository inventoryRepository,
+                                             ItemRepository itemRepository,
                                              Mapper mapper) {
-        return new InventoryServiceImpl(inventoryRepository, mapper);
+        return new InventoryServiceImpl(inventoryRepository, itemRepository, mapper);
     }
 
     @Bean

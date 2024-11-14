@@ -203,28 +203,6 @@ public interface AdminGameSaveController {
                                                                    @Valid @RequestBody CurrencyRequest currencyRequest);
 
     /**
-     * Updates the inventories of a game save
-     *
-     * @param jwt Jwt
-     * @param gameSaveId the game save id
-     * @param inventoryRequest the inventory request
-     * @return the updated game save
-     */
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = ResponseMessages.UNAUTHORIZED),
-            @ApiResponse(responseCode = "403", description = ResponseMessages.FORBIDDEN),
-            @ApiResponse(responseCode = "200", description = ResponseMessages.OK),
-            @ApiResponse(responseCode = "404", description = ResponseMessages.NOT_FOUND),
-            @ApiResponse(responseCode = "500", description = ResponseMessages.INTERNAL_SERVER_ERROR)
-    })
-    @Operation(summary = "Updates the inventory of a game save")
-    @PostMapping(value = ControllerConstants.AdminGameSave.UPDATE_GAME_SAVE_INVENTORIES)
-    @JsonView(JsonViews.Admin.class)
-    ResponseEntity<GenericResponse<Void>> updateGameSaveInventories(@AuthenticationPrincipal Jwt jwt,
-                                                                   @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-                                                                   @Valid @RequestBody InventoryRequest inventoryRequest);
-
-    /**
      * Updates the stages of a game save
      *
      * @param jwt          the requester JWT

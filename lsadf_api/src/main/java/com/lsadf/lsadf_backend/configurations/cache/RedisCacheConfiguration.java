@@ -165,9 +165,8 @@ public class RedisCacheConfiguration {
                                                                  StageService stageService,
                                                                  RedisTemplate<String, Characteristics> characteristicsRedisTemplate,
                                                                  RedisTemplate<String, Currency> currencyRedisTemplate,
-                                                                 RedisTemplate<String, Inventory> inventoryRedisTemplate,
                                                                  RedisTemplate<String, Stage> stageRedisTemplate) {
-        return new RedisKeyExpirationListener(characteristicsService, currencyService, inventoryService, stageService, characteristicsRedisTemplate, currencyRedisTemplate, inventoryRedisTemplate, stageRedisTemplate);
+        return new RedisKeyExpirationListener(characteristicsService, currencyService, inventoryService, stageService, characteristicsRedisTemplate, currencyRedisTemplate, stageRedisTemplate);
     }
 
     @Bean
