@@ -194,4 +194,59 @@ class InventoryServiceTests {
         // Assert
         assertThrows(NotFoundException.class, () -> inventoryService.deleteItemFromInventory("1", "2"));
     }
+
+    @Test
+    void createItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .id("2")
+                .build();
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(new HashSet<>(List.of(itemEntity)))
+                .build();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+        when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));
+
+        // Act
+        inventoryService.deleteItemFromInventory("1", "2");
+
+        // Assert
+        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
+        verify(inventoryRepository).save(inventoryEntityCaptor.capture());
+
+        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
+        assertThat(capturedInventory.getItems()).isEmpty();
+    }
+
+    @Test
+    void createItemInInventory_on_existing_gamesave_id_with_two_items_inventory() {
+        // Arrange
+        ItemEntity itemEntity = ItemEntity.builder()
+                .id("1")
+                .build();
+        ItemEntity itemEntity2 = ItemEntity.builder()
+                .id("2")
+                .build();
+
+        InventoryEntity inventoryEntity = InventoryEntity.builder()
+                .items(new HashSet<>(List.of(itemEntity, itemEntity2)))
+                .build();
+
+        ItemRequest itemRequest = new ItemRequest();
+
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
+        when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity2));
+
+        // Act
+        inventoryService.deleteItemFromInventory("1", "2");
+
+        // Assert
+        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
+        verify(inventoryRepository).save(inventoryEntityCaptor.capture());
+
+        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
+        assertThat(capturedInventory.getItems()).hasSize(1);
+    }
 }

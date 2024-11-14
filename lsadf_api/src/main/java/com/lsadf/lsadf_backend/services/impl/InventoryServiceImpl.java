@@ -70,7 +70,25 @@ public class InventoryServiceImpl implements InventoryService {
             throw new IllegalArgumentException("Game save id cannot be null");
         }
 
-        throw new NotFoundException();
+        Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);
+
+        if (optionalInventoryEntity.isEmpty()) {
+            throw new NotFoundException("Inventory not found for game save id " + gameSaveId);
+        }
+
+        InventoryEntity inventoryEntity = optionalInventoryEntity.get();
+
+        Optional<ItemEntity> optionalItemEntity = itemRepository.findById(itemId);
+
+        if (optionalItemEntity.isEmpty()) {
+            throw new NotFoundException("Item not found for item id " + itemId);
+        }
+
+        ItemEntity itemEntity = optionalItemEntity.get();
+
+        inventoryEntity.getItems().remove(itemEntity);
+
+        inventoryRepository.save(inventoryEntity);
     }
 
     /**
