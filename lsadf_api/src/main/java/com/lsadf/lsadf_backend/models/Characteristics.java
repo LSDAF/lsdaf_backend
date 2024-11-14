@@ -26,7 +26,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.Characteristics.*
 @JsonView(JsonViews.External.class)
 public class Characteristics implements Model {
     @Serial
-    private static final long serialVersionUID = 33494087785391763L;
+    private static final long serialVersionUID = 5623465292659597625L;
 
     @JsonView(JsonViews.External.class)
     @JsonProperty(value = ATTACK)

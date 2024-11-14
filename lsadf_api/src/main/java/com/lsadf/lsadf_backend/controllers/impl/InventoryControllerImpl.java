@@ -47,23 +47,6 @@ public class InventoryControllerImpl extends BaseController implements Inventory
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<GenericResponse<Void>> saveInventory(Jwt jwt,
-                                                               String gameSaveId,
-                                                               InventoryRequest inventoryRequest) {
-        validateUser(jwt);
-        String userEmail = getUsernameFromJwt(jwt);
-        gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-
-        Inventory inventory = mapper.mapInventoryRequestToInventory(inventoryRequest);
-        inventoryService.saveInventory(gameSaveId, inventory, cacheService.isEnabled());
-
-        return generateResponse(HttpStatus.OK);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ResponseEntity<GenericResponse<Void>> getInventory(Jwt jwt,
                                                               String gameSaveId) {
         validateUser(jwt);

@@ -18,7 +18,7 @@ import java.io.Serial;
 public class CurrencyEntity implements com.lsadf.lsadf_backend.entities.Entity {
 
     @Serial
-    private static final long serialVersionUID = 7786624859103259009L;
+    private static final long serialVersionUID = 1142981637978170899L;
 
     protected CurrencyEntity() {
         super();

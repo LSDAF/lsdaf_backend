@@ -25,7 +25,7 @@ import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
 public class Currency implements Model {
 
     @Serial
-    private static final long serialVersionUID = 33494087785391763L;
+    private static final long serialVersionUID = 3614717300669193588L;
 
     private Long gold;
     @JsonView(JsonViews.External.class)
