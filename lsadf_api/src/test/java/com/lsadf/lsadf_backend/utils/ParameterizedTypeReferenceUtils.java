@@ -60,6 +60,15 @@ public class ParameterizedTypeReferenceUtils {
     }
 
     /**
+     * Builds a ParameterizedTypeReference for a GenericResponse of Inventory
+     * @return ParameterizedTypeReference
+     */
+    public static ParameterizedTypeReference<GenericResponse<Inventory>> buildParameterizedInventoryResponse() {
+        return new ParameterizedTypeReference<>() {
+        };
+    }
+
+    /**
      * Builds a ParameterizedTypeReference for a GenericResponse of Stage
      * @return ParameterizedTypeReference
      */
