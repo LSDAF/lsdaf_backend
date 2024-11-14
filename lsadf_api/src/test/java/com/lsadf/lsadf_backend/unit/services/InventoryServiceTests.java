@@ -164,4 +164,34 @@ class InventoryServiceTests {
         InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
         assertThat(capturedInventory.getItems()).hasSize(2);
     }
+
+    @Test
+    void deleteItemFromInventory_on_null_gamesave_id() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.deleteItemFromInventory(null, "1"));
+    }
+
+    @Test
+    void deleteItemFromInventory_on_null_item_id() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.deleteItemFromInventory("1", null));
+    }
+
+    @Test
+    void deleteItemFromInventory_on_non_existing_gamesave_id() {
+        // Arrange
+        when(inventoryRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Assert
+        assertThrows(NotFoundException.class, () -> inventoryService.deleteItemFromInventory("1", "2"));
+    }
+
+    @Test
+    void deleteItemFromInventory_on_non_existing_item_id() {
+        // Arrange
+        when(itemRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Assert
+        assertThrows(NotFoundException.class, () -> inventoryService.deleteItemFromInventory("1", "2"));
+    }
 }
