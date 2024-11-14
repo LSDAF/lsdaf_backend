@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -63,7 +60,9 @@ public class SecurityConfiguration implements WebMvcConfigurer {
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
             "/api/oauth2/callback",
-            "/error"
+            "/error",
+            "/actuator",
+            "/actuator/**"
     };
 
     public static final String ADMIN_URLS = ADMIN + "/**";
@@ -129,23 +128,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(source);
-    }
-
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String roleUser = UserRole.USER.getRole();
-        String roleAdmin = UserRole.ADMIN.getRole();
-        roleHierarchy.setHierarchy(roleAdmin + " > " + roleUser);
-
-        return roleHierarchy;
-    }
-
-    @Bean
-    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
-        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy);
-        return expressionHandler;
     }
 
     @Override
