@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -26,7 +27,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
@@ -106,22 +109,22 @@ class InventoryServiceTests {
     }
 
     @Test
-    void createItem_on_null_gamesave_id() {
+    void createItemInInventory_on_null_gamesave_id() {
         // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> inventoryService.createItem(null, new ItemRequest()));
+        assertThrows(IllegalArgumentException.class, () -> inventoryService.createItemInInventory(null, new ItemRequest()));
     }
 
     @Test
-    void createItem_on_non_existing_gamesave_id() {
+    void createItemInInventory_on_non_existing_gamesave_id() {
         // Arrange
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.empty());
 
         // Assert
-        assertThrows(NotFoundException.class, () -> inventoryService.createItem("1", new ItemRequest()));
+        assertThrows(NotFoundException.class, () -> inventoryService.createItemInInventory("1", new ItemRequest()));
     }
 
     @Test
-    void createItem_on_existing_gamesave_id() {
+    void createItemInInventory_on_existing_gamesave_id_with_empty_inventory() {
         // Arrange
         InventoryEntity inventoryEntity = InventoryEntity.builder()
                 .items(new HashSet<>())
@@ -131,7 +134,14 @@ class InventoryServiceTests {
 
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
 
-        // Act & Assert
-        assertThrows(NotFoundException.class, () -> inventoryService.createItem("1", itemRequest));
+        // Act
+        inventoryService.createItemInInventory("1", itemRequest);
+
+        // Assert
+        ArgumentCaptor<InventoryEntity> inventoryEntityCaptor = ArgumentCaptor.forClass(InventoryEntity.class);
+        verify(inventoryRepository).save(inventoryEntityCaptor.capture());
+
+        InventoryEntity capturedInventory = inventoryEntityCaptor.getValue();
+        assertThat(capturedInventory.getItems()).hasSize(1); // replace 1 with the expected number of items
     }
 }

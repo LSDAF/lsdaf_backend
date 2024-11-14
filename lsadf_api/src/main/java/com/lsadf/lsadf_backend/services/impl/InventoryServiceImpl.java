@@ -5,7 +5,6 @@ import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.repositories.InventoryRepository;
 import com.lsadf.lsadf_backend.repositories.ItemRepository;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
@@ -39,7 +38,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public ItemEntity createItem(String gameSaveId, ItemRequest itemRequest) throws NotFoundException {
+    public InventoryEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest) throws NotFoundException {
         if (gameSaveId == null) {
             throw new IllegalArgumentException("Game save id cannot be null");
         }
@@ -56,11 +55,11 @@ public class InventoryServiceImpl implements InventoryService {
                 .inventoryEntity(inventoryEntity)
                 .build();
 
-        ItemEntity saved = itemRepository.save(itemEntity);
+        itemRepository.save(itemEntity);
 
         inventoryEntity.getItems().add(itemEntity);
 
-//        inventoryRepository.save(inventoryEntity);
+        InventoryEntity saved = inventoryRepository.save(inventoryEntity);
 
         return saved;
     }
