@@ -1,10 +1,8 @@
 package com.lsadf.lsadf_backend.utils;
 
 import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.lsadf_backend.constants.ItemType;
+import com.lsadf.lsadf_backend.entities.*;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
@@ -369,6 +367,30 @@ public class BddUtils {
         // TODO: Implement
 
         return new Inventory();
+    }
+
+    /**
+     * Maps a row from a BDD table to an Item
+     *
+     * @param row row from BDD table
+     * @return Item
+     */
+    public static Item mapToItem(Map<String, String> row) {
+        String id = row.get(BddFieldConstants.Item.ID);
+        return new Item(id);
+    }
+
+    /**
+     * Maps a row from a BDD table to an ItemEntity
+     *
+     * @param row row from BDD table
+     * @return ItemEntity
+     */
+    public static ItemEntity mapToItemEntity(Map<String, String> row) {
+        String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
+        return ItemEntity.builder()
+                .itemType(ItemType.valueOf(itemType))
+                .build();
     }
 
     /**
