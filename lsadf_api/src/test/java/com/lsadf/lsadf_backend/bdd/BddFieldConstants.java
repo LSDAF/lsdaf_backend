@@ -29,11 +29,6 @@ public class BddFieldConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class ItemCacheEntry {
-        public static final String GAME_SAVE_ID = "gameSaveId";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Stage {
         public static final String ID = BddFieldConstants.ID;
         public static final String USER_EMAIL = "userEmail";
@@ -78,6 +73,12 @@ public class BddFieldConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Inventory {
         public static final String ITEMS = "items";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Item {
+        public static final String ID = BddFieldConstants.ID;
+        public static final String ITEM_TYPE = "itemType";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

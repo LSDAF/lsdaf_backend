@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.bdd.config;
 
 import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
 import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -62,6 +63,13 @@ public class LsadfBackendBddTestsConfiguration {
     @Bean
     public Stack<Inventory> inventoryStack(BddStackCleaner stackCleaner) {
         Stack<Inventory> stack = new Stack<>();
+        stackCleaner.addStack(stack);
+        return stack;
+    }
+
+    @Bean
+    public Stack<InventoryEntity> inventoryEntityStack(BddStackCleaner stackCleaner) {
+        Stack<InventoryEntity> stack = new Stack<>();
         stackCleaner.addStack(stack);
         return stack;
     }
