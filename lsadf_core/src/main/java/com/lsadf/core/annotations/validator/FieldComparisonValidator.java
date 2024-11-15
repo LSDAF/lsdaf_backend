@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.annotations.validator;
+package com.lsadf.core.annotations.validator;
 
-import com.lsadf.lsadf_backend.annotations.StageConsistency;
+import com.lsadf.core.annotations.StageConsistency;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;

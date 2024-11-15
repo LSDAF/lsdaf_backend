@@ -1,18 +1,16 @@
 package com.lsadf.lsadf_backend.requests.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lsadf.lsadf_backend.annotations.Nickname;
-import com.lsadf.lsadf_backend.annotations.Uuid;
+import com.lsadf.core.annotations.Nickname;
+import com.lsadf.core.annotations.Uuid;
 import com.lsadf.lsadf_backend.requests.Request;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

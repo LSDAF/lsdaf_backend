@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.annotations;
+package com.lsadf.core.annotations;
 
-import com.lsadf.lsadf_backend.annotations.validator.UuidValidator;
+import com.lsadf.core.annotations.validator.UuidValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

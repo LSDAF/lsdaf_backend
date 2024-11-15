@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.requests.stage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lsadf.lsadf_backend.annotations.StageConsistency;
+import com.lsadf.core.annotations.StageConsistency;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;

@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.controllers.admin;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lsadf.lsadf_backend.annotations.Uuid;
+import com.lsadf.core.annotations.Uuid;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.JsonViews;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;
@@ -10,7 +10,6 @@ import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;

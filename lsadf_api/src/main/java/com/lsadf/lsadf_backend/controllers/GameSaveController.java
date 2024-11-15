@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lsadf.lsadf_backend.annotations.Uuid;
+import com.lsadf.core.annotations.Uuid;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.constants.JsonViews;
 import com.lsadf.lsadf_backend.constants.ResponseMessages;

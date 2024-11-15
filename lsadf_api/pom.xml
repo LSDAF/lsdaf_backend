@@ -21,7 +21,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.lsadf.game_api.LsadfGameApplication</mainClass>
+                    <mainClass>com.lsadf.lsadf_backend.LsadfGameApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>

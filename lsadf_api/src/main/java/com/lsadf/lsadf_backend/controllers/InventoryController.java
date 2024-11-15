@@ -1,8 +1,7 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.annotations.Uuid;
+import com.lsadf.core.annotations.Uuid;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.requests.inventory.InventoryRequest;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.Inventory.ITEM_ID;
 
 /**
  * Controller for inventory related operations.

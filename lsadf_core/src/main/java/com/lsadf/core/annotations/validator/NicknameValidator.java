@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.annotations.validator;
+package com.lsadf.core.annotations.validator;
 
-import com.lsadf.lsadf_backend.annotations.Nickname;
+import com.lsadf.core.annotations.Nickname;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
