@@ -19,6 +19,7 @@
     <modules>
         <module>lsadf_dependencies</module>
         <module>build_parent</module>
+        <module>lsadf_bom</module>
     </modules>
 
     <properties>
