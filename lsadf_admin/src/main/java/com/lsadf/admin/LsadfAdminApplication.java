@@ -17,7 +17,7 @@ import java.net.UnknownHostException;
 @Import(LsadfAdminConfiguration.class)
 @Slf4j
 public class LsadfAdminApplication {
-    public static void main(String[] args) throws UnknownHostException{
+    public static void main(String[] args) throws UnknownHostException {
         SpringApplication application = new SpringApplication(LsadfAdminApplication.class);
         ConfigurableApplicationContext context = application.run(args);
         ApplicationUtils.printAccessUrl(context, log);

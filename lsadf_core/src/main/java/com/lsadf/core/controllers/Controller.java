@@ -1,6 +1,7 @@
 package com.lsadf.core.controllers;
 
 import com.lsadf.core.exceptions.http.UnauthorizedException;
+import org.slf4j.Logger;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 public interface Controller {
@@ -9,7 +10,7 @@ public interface Controller {
      * Gets the controller logger
      * @return the logger
      */
-    org.slf4j.Logger getLogger();
+    Logger getLogger();
 
     /**
      * Validates the user
