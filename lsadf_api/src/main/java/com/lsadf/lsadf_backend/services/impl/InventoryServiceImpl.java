@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.lsadf_backend.constants.ItemType;
 import com.lsadf.lsadf_backend.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
@@ -111,7 +112,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         ItemEntity itemEntity = optionalItemEntity.get();
 
-        itemEntity.setItemType(itemRequest.getItemType());
+        itemEntity.setItemType(ItemType.fromString(itemRequest.getItemType()));
 
         itemRepository.save(itemEntity);
 

@@ -299,7 +299,7 @@ class InventoryServiceTests {
                 .build();
 
 
-        ItemRequest itemRequest = new ItemRequest(ItemType.SWORD);
+        ItemRequest itemRequest = new ItemRequest(ItemType.SWORD.getType());
 
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
         when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));

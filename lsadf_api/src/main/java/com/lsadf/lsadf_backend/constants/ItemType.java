@@ -14,4 +14,13 @@ public enum ItemType {
     SWORD("sword");
 
     private final String type;
+
+    public static ItemType fromString(String itemType) {
+        for (ItemType itemTypeEnum : ItemType.values()) {
+            if (itemTypeEnum.getType().equalsIgnoreCase(itemType)) {
+                return itemTypeEnum;
+            }
+        }
+        throw new IllegalArgumentException("Invalid item type");
+    }
 }
