@@ -25,6 +25,7 @@ import java.util.Stack;
 public class LsadfBddTestsConfiguration {
 
 
+    @Primary
     @Bean
     public BddStackCleaner bddStackCleaner() {
         return new BddStackCleaner();
