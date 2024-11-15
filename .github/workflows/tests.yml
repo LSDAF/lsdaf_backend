@@ -66,7 +66,7 @@ jobs:
           paths: |
             lsadf_api/target/surefire-reports/TEST-*.xml
             lsadf_api/target/failsafe-reports/TEST-*.xml
-          show: all
+          show: fail, skip
           output: test-summary.md
         if: always()
 
