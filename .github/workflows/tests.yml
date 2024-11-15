@@ -52,24 +52,28 @@ jobs:
 
       - name: 📁 List Surefire reports
         run: |
-          ls -la lsadf_api/target/surefire-reports
           ls -la lsadf_admin/target/surefire-reports
+          ls -la lsadf_api/target/surefire-reports
+          ls -la lsadf_core/target/surefire-reports
         if: always()
 
       - name: 📁 List Failsafe reports
         run: |
-          ls -la lsadf_api/target/failsafe-reports
           ls -la lsadf_admin/target/failsafe-reports
+          ls -la lsadf_api/target/failsafe-reports
+          ls -la lsadf_core/target/failsafe-reports
         if: always()
 
       - name: 📝 Tests Summary
         uses: test-summary/action@v2
         with:
           paths: |
-            lsadf_api/target/surefire-reports/TEST-*.xml
-            lsadf_api/target/failsafe-reports/TEST-*.xml
             lsadf_admin/target/surefire-reports/TEST-*.xml
             lsadf_admin/target/failsafe-reports/TEST-*.xml
+            lsadf_api/target/surefire-reports/TEST-*.xml
+            lsadf_api/target/failsafe-reports/TEST-*.xml
+            lsadf_core/target/surefire-reports/TEST-*.xml
+            lsadf_core/target/failsafe-reports/TEST-*.xml
           show: fail, skip
           output: test-summary.md
         if: always()
