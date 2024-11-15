@@ -26,5 +26,5 @@ public class ItemRequest implements Request {
     @Schema(description = "Item type", example = "boots")
     @JsonProperty(value = ITEM_TYPE)
     @NotNull
-    private ItemType itemType;
+    private String itemType;
 }
