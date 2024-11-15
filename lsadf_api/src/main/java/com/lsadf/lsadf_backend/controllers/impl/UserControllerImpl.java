@@ -41,21 +41,13 @@ public class UserControllerImpl extends BaseController implements UserController
      */
     @Override
     public ResponseEntity<GenericResponse<UserInfo>> getUserInfo(Jwt jwt) {
-        try {
-            String username = getUsernameFromJwt(jwt);
-            String name = getNameFromJwt(jwt);
-            boolean verified = getEmailVerifiedFromJwt(jwt);
-            List<GrantedAuthority> authorities = TokenUtils.getRolesFromJwt(jwt);
-            Set<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+        String username = getUsernameFromJwt(jwt);
+        String name = getNameFromJwt(jwt);
+        boolean verified = getEmailVerifiedFromJwt(jwt);
+        List<GrantedAuthority> authorities = TokenUtils.getRolesFromJwt(jwt);
+        Set<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
 
-            UserInfo userInfo = new UserInfo(name, username, verified, roles);
-            return generateResponse(HttpStatus.OK, userInfo);
-        } catch (UnauthorizedException e) {
-            log.error("Unauthorized exception while getting user info: ", e);
-            return generateResponse(HttpStatus.UNAUTHORIZED, "Unauthorized exception while getting user info", null);
-        } catch (Exception e) {
-            log.error("Exception {} while getting user info: ", e.getClass(), e);
-            return generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Exception " + e.getClass() + " while getting user info", null);
-        }
+        UserInfo userInfo = new UserInfo(name, username, verified, roles);
+        return generateResponse(HttpStatus.OK, userInfo);
     }
 }
