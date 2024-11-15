@@ -6,6 +6,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+import java.util.Map;
+
 @Slf4j
 public class ConfigurationLogger implements ApplicationListener<ApplicationReadyEvent> {
 
@@ -22,8 +24,8 @@ public class ConfigurationLogger implements ApplicationListener<ApplicationReady
         if (configurationDisplayProperties.isEnabled()) {
             log.info("Displaying configuration properties:");
             environment.getPropertySources().forEach(source -> {
-                if (source.getSource() instanceof java.util.Map) {
-                    ((java.util.Map<?, ?>) source.getSource()).forEach((key, value) -> {
+                if (source.getSource() instanceof Map) {
+                    ((Map<?, ?>) source.getSource()).forEach((key, value) -> {
                         String resolvedValue = environment.getProperty((String) key);
                         log.info("Property: {} Value: {}", key, resolvedValue);
                     });
