@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.StageController;
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.StageControllerImpl;
-import com.lsadf.lsadf_backend.requests.stage.StageRequest;
+import com.lsadf.core.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
 import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;

@@ -2,8 +2,8 @@ package com.lsadf.core.utils;
 
 import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.models.User;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
+import com.lsadf.core.requests.game_save.GameSaveOrderBy;
+import com.lsadf.core.requests.user.UserOrderBy;
 import lombok.experimental.UtilityClass;
 
 import java.util.Comparator;

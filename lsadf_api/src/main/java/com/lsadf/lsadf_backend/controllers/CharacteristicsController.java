@@ -2,8 +2,8 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.core.annotations.Uuid;
 import com.lsadf.core.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
+import com.lsadf.core.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Controller for characteristics operations

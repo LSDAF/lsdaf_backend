@@ -2,9 +2,9 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 
 import com.lsadf.lsadf_backend.controllers.admin.AdminCacheController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.CacheFlushService;
-import com.lsadf.lsadf_backend.services.CacheService;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.CacheFlushService;
+import com.lsadf.core.services.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 /**
  * The implementation of the AdminCacheController

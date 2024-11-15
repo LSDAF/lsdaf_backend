@@ -2,11 +2,11 @@ package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.core.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.GameSave;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.GameSaveService;
+import com.lsadf.core.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.GameSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
-import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.TokenUtils.getUsernameFromJwt;
 
 /**
  * Implementation of the GameSaveController.

@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 
 import static com.lsadf.core.constants.JsonAttributes.Inventory.ITEMS;
+import static com.lsadf.core.constants.JsonAttributes.Item.ITEM_TYPE;
 
 @NoArgsConstructor
 @AllArgsConstructor

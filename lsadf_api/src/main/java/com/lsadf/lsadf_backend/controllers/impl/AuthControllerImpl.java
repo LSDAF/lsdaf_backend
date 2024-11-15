@@ -2,13 +2,13 @@ package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.controllers.AuthController;
-import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
+import com.lsadf.core.http_clients.KeycloakClient;
 import com.lsadf.core.models.JwtAuthentication;
-import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.properties.ServerProperties;
-import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
-import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.properties.KeycloakProperties;
+import com.lsadf.core.properties.ServerProperties;
+import com.lsadf.core.requests.user.UserLoginRequest;
+import com.lsadf.core.requests.user.UserRefreshLoginRequest;
+import com.lsadf.core.responses.GenericResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 
 /**

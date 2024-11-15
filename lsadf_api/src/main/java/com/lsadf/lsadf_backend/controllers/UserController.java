@@ -4,7 +4,7 @@ import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.constants.ResponseMessages;
 import com.lsadf.core.exceptions.http.UnauthorizedException;
 import com.lsadf.core.models.UserInfo;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,8 +16,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Controller for user operations

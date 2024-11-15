@@ -6,20 +6,20 @@ import com.lsadf.core.models.Currency;
 import com.lsadf.core.models.GameSave;
 import com.lsadf.core.models.Stage;
 import com.lsadf.core.constants.JsonViews;
+import com.lsadf.core.services.*;
 import com.lsadf.lsadf_backend.controllers.admin.AdminGameSaveController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
-import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.requests.stage.StageRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.*;
-import com.lsadf.lsadf_backend.utils.StreamUtils;
+import com.lsadf.core.mappers.Mapper;
+import com.lsadf.core.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.core.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
+import com.lsadf.core.requests.currency.CurrencyRequest;
+import com.lsadf.core.requests.game_save.GameSaveOrderBy;
+import com.lsadf.core.requests.stage.StageRequest;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 /**
  * The implementation of the AdminGameSaveController

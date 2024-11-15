@@ -2,8 +2,8 @@ package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.core.models.UserInfo;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.utils.TokenUtils;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.TokenUtils.*;
 
 
 /**

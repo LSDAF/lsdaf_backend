@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.admin.AdminUserController;
 import com.lsadf.lsadf_backend.controllers.admin.impl.AdminUserControllerImpl;
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.core.requests.admin.AdminUserCreationRequest;
+import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
 import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.lsadf.core.constants.ControllerConstants.Params.ORDER_BY;
-import static com.lsadf.lsadf_backend.requests.user.UserOrderBy.FIRST_NAME_DESC;
+import static com.lsadf.core.requests.user.UserOrderBy.FIRST_NAME_DESC;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

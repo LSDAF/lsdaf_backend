@@ -1,11 +1,11 @@
 package com.lsadf.lsadf_backend.unit.config;
 
+import com.lsadf.core.services.*;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
-import com.lsadf.lsadf_backend.configurations.ShutdownListener;
-import com.lsadf.lsadf_backend.http_clients.KeycloakAdminClient;
-import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.services.*;
+import com.lsadf.core.configurations.ShutdownListener;
+import com.lsadf.core.http_clients.KeycloakAdminClient;
+import com.lsadf.core.http_clients.KeycloakClient;
+import com.lsadf.core.mappers.Mapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;

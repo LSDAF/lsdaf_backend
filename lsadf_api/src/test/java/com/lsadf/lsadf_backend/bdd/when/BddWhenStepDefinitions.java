@@ -7,11 +7,11 @@ import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
-import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
-import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
-import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.core.requests.user.UserCreationRequest;
+import com.lsadf.core.requests.user.UserLoginRequest;
+import com.lsadf.core.requests.user.UserRefreshLoginRequest;
+import com.lsadf.core.responses.GenericResponse;
 import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
@@ -21,6 +21,7 @@ import org.springframework.http.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
 

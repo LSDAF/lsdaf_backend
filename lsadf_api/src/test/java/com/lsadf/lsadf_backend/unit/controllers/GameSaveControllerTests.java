@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.GameSaveControllerImpl;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.core.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
 import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;

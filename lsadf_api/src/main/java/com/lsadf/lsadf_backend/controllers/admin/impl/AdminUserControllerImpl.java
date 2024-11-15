@@ -3,12 +3,12 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 import com.lsadf.lsadf_backend.controllers.admin.AdminUserController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.core.models.User;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
-import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.UserService;
-import com.lsadf.lsadf_backend.utils.StreamUtils;
+import com.lsadf.core.requests.admin.AdminUserCreationRequest;
+import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.core.requests.user.UserOrderBy;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.UserService;
+import com.lsadf.core.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 /**
  * The implementation of the AdminUserController

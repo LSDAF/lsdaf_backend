@@ -3,14 +3,14 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 import com.lsadf.lsadf_backend.controllers.admin.AdminSearchController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.core.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
+import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.GameSave;
 import com.lsadf.core.models.User;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
-import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.SearchService;
+import com.lsadf.core.requests.game_save.GameSaveOrderBy;
+import com.lsadf.core.requests.search.SearchRequest;
+import com.lsadf.core.requests.user.UserOrderBy;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 /**
  * The implementation of the AdminSearchController

@@ -4,7 +4,7 @@ import com.lsadf.core.models.*;
 import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mocks.JavaMailSenderMock;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.responses.GenericResponse;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

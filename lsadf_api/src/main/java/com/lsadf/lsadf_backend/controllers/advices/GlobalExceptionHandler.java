@@ -5,7 +5,7 @@ import com.lsadf.core.exceptions.AlreadyExistingUserException;
 import com.lsadf.core.exceptions.AlreadyTakenNicknameException;
 import com.lsadf.core.exceptions.DynamicJsonViewException;
 import com.lsadf.core.exceptions.http.*;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.responses.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 @RestControllerAdvice
 @Slf4j

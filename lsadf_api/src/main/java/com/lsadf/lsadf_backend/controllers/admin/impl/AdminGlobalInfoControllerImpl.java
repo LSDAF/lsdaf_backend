@@ -3,10 +3,10 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 import com.lsadf.lsadf_backend.controllers.admin.AdminGlobalInfoController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.core.models.GlobalInfo;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.ClockService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.UserService;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.ClockService;
+import com.lsadf.core.services.GameSaveService;
+import com.lsadf.core.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 /**
  * The implementation of the AdminGlobalInfoController

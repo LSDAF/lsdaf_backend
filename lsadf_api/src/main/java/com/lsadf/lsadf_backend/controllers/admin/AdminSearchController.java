@@ -6,8 +6,8 @@ import com.lsadf.core.constants.JsonViews;
 import com.lsadf.core.constants.ResponseMessages;
 import com.lsadf.core.models.GameSave;
 import com.lsadf.core.models.User;
-import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.requests.search.SearchRequest;
+import com.lsadf.core.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 import static com.lsadf.core.constants.ControllerConstants.Params.ORDER_BY;
 
 @RequestMapping(value = ControllerConstants.ADMIN_SEARCH)

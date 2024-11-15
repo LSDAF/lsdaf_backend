@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.models.JwtAuthentication;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

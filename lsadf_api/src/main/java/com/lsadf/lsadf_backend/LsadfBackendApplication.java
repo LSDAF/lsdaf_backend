@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend;
 
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
-import com.lsadf.lsadf_backend.utils.ApplicationUtils;
+import com.lsadf.core.utils.ApplicationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

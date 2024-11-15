@@ -9,16 +9,16 @@ import com.lsadf.core.models.GameSave;
 import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.core.models.User;
 import com.lsadf.core.models.GlobalInfo;
-import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
-import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
-import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
-import com.lsadf.lsadf_backend.requests.common.Filter;
-import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
-import com.lsadf.lsadf_backend.requests.search.SearchRequest;
-import com.lsadf.lsadf_backend.requests.stage.StageRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.requests.admin.AdminGameSaveCreationRequest;
+import com.lsadf.core.requests.admin.AdminGameSaveUpdateRequest;
+import com.lsadf.core.requests.admin.AdminUserCreationRequest;
+import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
+import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
+import com.lsadf.core.requests.common.Filter;
+import com.lsadf.core.requests.currency.CurrencyRequest;
+import com.lsadf.core.requests.search.SearchRequest;
+import com.lsadf.core.requests.stage.StageRequest;
+import com.lsadf.core.responses.GenericResponse;
 import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
 /**
