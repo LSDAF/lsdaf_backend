@@ -25,7 +25,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -128,7 +127,7 @@ class InventoryServiceTests {
                 .items(new HashSet<>())
                 .build();
 
-        ItemRequest itemRequest = new ItemRequest();
+        ItemRequest itemRequest = new ItemRequest(ItemType.BOOTS.getType());
 
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
 
@@ -152,7 +151,7 @@ class InventoryServiceTests {
                 .items(new HashSet<>(List.of(itemEntity)))
                 .build();
 
-        ItemRequest itemRequest = new ItemRequest();
+        ItemRequest itemRequest = new ItemRequest(ItemType.BOOTS.getType());
 
         when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
 

@@ -378,7 +378,8 @@ public class BddUtils {
      */
     public static Item mapToItem(Map<String, String> row) {
         String id = row.get(BddFieldConstants.Item.ID);
-        return new Item(id);
+        String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
+        return new Item(id, itemType);
     }
 
     /**
@@ -392,7 +393,7 @@ public class BddUtils {
         String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
         return ItemEntity.builder()
                 .id(id)
-                .itemType(ItemType.valueOf(itemType))
+                .itemType(ItemType.fromString(itemType))
                 .build();
     }
 
