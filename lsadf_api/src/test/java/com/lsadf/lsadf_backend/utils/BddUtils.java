@@ -404,7 +404,7 @@ public class BddUtils {
      */
     public static ItemRequest mapToItemRequest(Map<String, String> row) {
         String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
-        return new ItemRequest(ItemType.valueOf(itemType));
+        return new ItemRequest(itemType);
     }
 
     /**
