@@ -13,11 +13,11 @@ import org.junit.runner.RunWith;
         glue = {"com.lsadf.lsadf_backend.bdd"},
         plugin = {
                 "pretty",
-                "html:target/cucumber",
-                "json:target/cucumber.json"
+                "html:target/cucumber-lsadf_api.html",
+                "json:target/cucumber-lsadf_api.json"
         },
         stepNotifications = true,
         tags = "not @ignore"
 )
-public class CucumberTests {
+public class CucumberIT {
 }

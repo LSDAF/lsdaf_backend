@@ -46,18 +46,29 @@ jobs:
         run: |
           make test-ci
 
-      - name: 📁 List reports
+      - name: Generate Report
+        run: |
+          make report
+
+      - name: 📁 List Surefire reports
         run: |
           ls -la lsadf_api/target/surefire-reports
+        if: always()
+
+      - name: 📁 List Failsafe reports
+        run: |
+          ls -la lsadf_api/target/failsafe-reports
         if: always()
 
       - name: 📝 Tests Summary
         uses: test-summary/action@v2
         with:
-          paths: "lsadf_api/target/surefire-reports/*.xml"
+          paths: |
+            lsadf_api/target/surefire-reports/TEST-*.xml
+            lsadf_api/target/failsafe-reports/TEST-*.xml
+          show: fail, skip
           output: test-summary.md
         if: always()
-
 
       - name: 📤 Upload Test Summary
         uses: actions/upload-artifact@v3
@@ -65,7 +76,6 @@ jobs:
           name: test-summary
           path: test-summary.md
         if: always()
-
 
       - name: 🔎 Find Comment
         uses: peter-evans/find-comment@v3

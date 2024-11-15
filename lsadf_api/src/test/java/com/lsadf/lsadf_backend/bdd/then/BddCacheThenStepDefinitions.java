@@ -1,6 +1,5 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
-import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.models.Characteristics;

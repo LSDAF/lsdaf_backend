@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.models.Characteristics;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
@@ -16,11 +15,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import java.util.concurrent.TimeUnit;
-
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedCharacteristicsResponse;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 /**
  * Step definitions for the when steps in the BDD scenarios

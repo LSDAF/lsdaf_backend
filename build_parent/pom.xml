@@ -113,6 +113,16 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.java</include>
+                            <include>**/*ITs.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>com.coderplus.maven.plugins</groupId>
                     <artifactId>copy-rename-maven-plugin</artifactId>
                     <version>${copy-rename-maven-plugin.version}</version>
@@ -149,9 +159,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-report-plugin</artifactId>
                     <version>${maven-surefire-report-plugin.version}</version>
+                    <configuration>
+                        <linkXRef>false</linkXRef>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -159,7 +173,6 @@
                 <executions>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>report-only</goal>
                         </goals>
@@ -167,7 +180,10 @@
                 </executions>
                 <configuration>
                     <reportsDirectories>
-                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/surefire-reports</reportsDirectory>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/surefire-reports
+                        </reportsDirectory>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/failsafe-reports
+                        </reportsDirectory>
                     </reportsDirectories>
                 </configuration>
             </plugin>
@@ -224,6 +240,16 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <printSummary>true</printSummary>
+                            <reportFormat>brief</reportFormat>
+                            <trimStackTrace>true</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <printSummary>true</printSummary>
