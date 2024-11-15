@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lsdaf</groupId>
-        <artifactId>lsadf_backend</artifactId>
+        <artifactId>lsadf-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lsadf-build-parent</artifactId>
@@ -15,6 +16,7 @@
 
     <modules>
         <module>../lsadf_api</module>
+        <module>../lsadf_core</module>
     </modules>
 
     <dependencyManagement>

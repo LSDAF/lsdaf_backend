@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lsdaf</groupId>
-        <artifactId>lsadf_backend</artifactId>
+        <artifactId>lsadf-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -40,7 +40,7 @@
             <dependency>
                 <groupId>com.lsdaf</groupId>
                 <artifactId>lsadf_bom</artifactId>
-                <version>${parent.version}</version>
+                <version>${project.parent.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

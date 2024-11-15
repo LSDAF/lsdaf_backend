@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lsdaf</groupId>
-        <artifactId>lsadf_backend</artifactId>
+        <artifactId>lsadf-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -18,7 +18,12 @@
             <dependency>
                 <groupId>com.lsdaf</groupId>
                 <artifactId>lsadf-api</artifactId>
-                <version>${parent.version}</version>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lsdaf</groupId>
+                <artifactId>lsadf-core</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
