@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.exceptions.http;
+package com.lsadf.core.exceptions.http;
 
 /**
  * Exception for when a user is not allowed to access a resource.

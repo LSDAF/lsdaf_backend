@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.exceptions;
+package com.lsadf.core.exceptions;
 
 public class DynamicJsonViewException extends RuntimeException {
     public DynamicJsonViewException(String message) {

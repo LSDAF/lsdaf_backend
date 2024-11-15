@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.models.Stage;
 
 /**

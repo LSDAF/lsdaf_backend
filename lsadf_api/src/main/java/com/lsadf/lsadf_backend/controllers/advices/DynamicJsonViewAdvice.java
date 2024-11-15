@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.core.constants.JsonViews;
-import com.lsadf.lsadf_backend.exceptions.DynamicJsonViewException;
+import com.lsadf.core.exceptions.DynamicJsonViewException;
 import com.lsadf.lsadf_backend.properties.JsonViewProperties;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;

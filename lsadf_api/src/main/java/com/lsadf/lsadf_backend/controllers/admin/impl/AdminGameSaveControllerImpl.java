@@ -9,7 +9,7 @@ import com.lsadf.core.constants.JsonViews;
 import com.lsadf.lsadf_backend.controllers.admin.AdminGameSaveController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
 import com.lsadf.core.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;

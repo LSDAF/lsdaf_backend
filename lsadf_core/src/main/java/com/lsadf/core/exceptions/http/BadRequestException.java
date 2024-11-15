@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.exceptions.http;
+package com.lsadf.core.exceptions.http;
 
 /**
  * Bad Request Exception

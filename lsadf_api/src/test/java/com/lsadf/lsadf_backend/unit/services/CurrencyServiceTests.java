@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.unit.services;
 
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.core.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
 import com.lsadf.core.models.Currency;

@@ -1,10 +1,10 @@
 package com.lsadf.lsadf_backend.controllers.advices;
 
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
-import com.lsadf.lsadf_backend.exceptions.AlreadyTakenNicknameException;
-import com.lsadf.lsadf_backend.exceptions.DynamicJsonViewException;
-import com.lsadf.lsadf_backend.exceptions.http.*;
+import com.lsadf.core.exceptions.AlreadyExistingGameSaveException;
+import com.lsadf.core.exceptions.AlreadyExistingUserException;
+import com.lsadf.core.exceptions.AlreadyTakenNicknameException;
+import com.lsadf.core.exceptions.DynamicJsonViewException;
+import com.lsadf.core.exceptions.http.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

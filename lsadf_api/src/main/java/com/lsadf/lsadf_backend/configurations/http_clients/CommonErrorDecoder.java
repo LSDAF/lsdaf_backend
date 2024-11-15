@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.configurations.http_clients;
 
-import com.lsadf.lsadf_backend.exceptions.http.*;
+import com.lsadf.core.exceptions.http.*;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;

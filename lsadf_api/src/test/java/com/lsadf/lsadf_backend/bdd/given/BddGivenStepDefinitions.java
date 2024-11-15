@@ -4,7 +4,7 @@ import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
 import com.lsadf.core.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
 import com.lsadf.core.models.Stage;

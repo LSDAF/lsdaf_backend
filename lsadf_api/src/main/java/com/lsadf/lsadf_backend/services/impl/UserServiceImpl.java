@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.exceptions.AlreadyExistingUserException;
-import com.lsadf.lsadf_backend.exceptions.http.InternalServerErrorException;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
+import com.lsadf.core.exceptions.AlreadyExistingUserException;
+import com.lsadf.core.exceptions.http.InternalServerErrorException;
+import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.http_clients.KeycloakAdminClient;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.core.models.User;

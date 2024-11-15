@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.exceptions;
+package com.lsadf.core.exceptions;
 
 /**
  * Exception for when a game save already exists
