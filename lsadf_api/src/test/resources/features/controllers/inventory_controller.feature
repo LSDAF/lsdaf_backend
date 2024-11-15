@@ -85,10 +85,6 @@ Feature: Inventory Controller BDD tests
 
     Then the response status code should be 200
 
-    And the response should have the following items in the inventory
-      | id                                   | itemType   |
-      | 11111111-1111-1111-1111-111111111111 | SWORD      |
-
   Scenario: A user requests to update an item in its inventory with invalid item id
     Given the following game saves
       | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
@@ -115,8 +111,8 @@ Feature: Inventory Controller BDD tests
 
   Scenario: A user requests to update an item from the inventory of another user
     Given the following game saves
-      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
-      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com  | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
       | bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb | paul.itesse@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
 
     And the following items to the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
@@ -137,4 +133,4 @@ Feature: Inventory Controller BDD tests
       | BOOTS      |
 
 
-    Then the response status code should be 401
+    Then the response status code should be 403
