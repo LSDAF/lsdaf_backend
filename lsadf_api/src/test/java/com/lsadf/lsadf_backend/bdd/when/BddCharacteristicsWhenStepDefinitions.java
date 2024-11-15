@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;

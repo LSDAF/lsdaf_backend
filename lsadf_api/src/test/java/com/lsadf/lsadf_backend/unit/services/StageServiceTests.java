@@ -1,11 +1,11 @@
 package com.lsadf.lsadf_backend.unit.services;
 
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.core.entities.StageEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.repositories.StageRepository;
 import com.lsadf.lsadf_backend.services.StageService;
 import com.lsadf.lsadf_backend.services.impl.StageServiceImpl;

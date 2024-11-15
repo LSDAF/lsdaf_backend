@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collection;
 
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.ADMIN;
+import static com.lsadf.core.constants.ControllerConstants.ADMIN;
 
 @Configuration
 @Import({

@@ -1,14 +1,14 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.AlreadyExistingGameSaveException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
-import com.lsadf.lsadf_backend.models.User;
-import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.core.models.GameSave;
+import com.lsadf.core.models.JwtAuthentication;
+import com.lsadf.core.models.User;
+import com.lsadf.core.models.GlobalInfo;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;

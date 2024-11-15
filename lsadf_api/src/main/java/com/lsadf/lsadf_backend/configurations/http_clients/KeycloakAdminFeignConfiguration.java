@@ -3,10 +3,9 @@ package com.lsadf.lsadf_backend.configurations.http_clients;
 import feign.RequestInterceptor;
 import org.springframework.cloud.openfeign.security.OAuth2AccessTokenInterceptor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 
-import static com.lsadf.lsadf_backend.constants.HttpClientTypes.KEYCLOAK_ADMIN;
+import static com.lsadf.core.constants.HttpClientTypes.KEYCLOAK_ADMIN;
 
 public class KeycloakAdminFeignConfiguration extends CommonFeignConfiguration {
 

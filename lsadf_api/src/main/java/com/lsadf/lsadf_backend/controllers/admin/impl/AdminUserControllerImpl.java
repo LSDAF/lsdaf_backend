@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 
 import com.lsadf.lsadf_backend.controllers.admin.AdminUserController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;

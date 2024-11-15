@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Stage.CURRENT_STAGE;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Stage.MAX_STAGE;
+import static com.lsadf.core.constants.JsonAttributes.Stage.CURRENT_STAGE;
+import static com.lsadf.core.constants.JsonAttributes.Stage.MAX_STAGE;
 
 @Data
 @NoArgsConstructor

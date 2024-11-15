@@ -1,8 +1,7 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.UserController;
-import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.core.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;

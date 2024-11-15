@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.controllers.admin;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.ResponseMessages;
+import com.lsadf.core.models.GlobalInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

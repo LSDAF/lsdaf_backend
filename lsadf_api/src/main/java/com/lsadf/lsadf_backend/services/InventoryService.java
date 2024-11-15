@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
-import com.lsadf.lsadf_backend.entities.ItemEntity;
+import com.lsadf.core.entities.InventoryEntity;
+import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 

@@ -1,10 +1,10 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
+import com.lsadf.core.entities.CharacteristicsEntity;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.core.models.Characteristics;
 import com.lsadf.lsadf_backend.repositories.CharacteristicsRepository;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import org.springframework.transaction.annotation.Transactional;

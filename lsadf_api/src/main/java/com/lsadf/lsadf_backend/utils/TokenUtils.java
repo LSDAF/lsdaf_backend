@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.lsadf.lsadf_backend.constants.ClaimsConstants.*;
+import static com.lsadf.core.constants.ClaimsConstants.*;
 
 @UtilityClass
 public class TokenUtils {

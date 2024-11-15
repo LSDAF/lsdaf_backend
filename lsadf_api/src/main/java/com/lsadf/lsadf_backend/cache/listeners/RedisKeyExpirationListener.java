@@ -1,10 +1,9 @@
 package com.lsadf.lsadf_backend.cache.listeners;
 
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Currency;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.InventoryService;
@@ -15,7 +14,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import static com.lsadf.lsadf_backend.constants.RedisConstants.*;
+import static com.lsadf.core.constants.RedisConstants.*;
 
 /**
  * Listener for Redis key expiration events.

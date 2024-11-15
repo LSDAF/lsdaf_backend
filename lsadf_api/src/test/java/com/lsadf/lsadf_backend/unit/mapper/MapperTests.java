@@ -1,12 +1,12 @@
 package com.lsadf.lsadf_backend.unit.mapper;
 
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.StageEntity;
+import com.lsadf.core.models.*;
+import com.lsadf.core.entities.CharacteristicsEntity;
+import com.lsadf.core.entities.CurrencyEntity;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.entities.StageEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
-import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;

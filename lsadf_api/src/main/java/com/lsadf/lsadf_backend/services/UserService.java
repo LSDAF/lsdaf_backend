@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;

@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.Params.ORDER_BY;
+import static com.lsadf.core.constants.ControllerConstants.Params.ORDER_BY;
 import static com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy.NICKNAME;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

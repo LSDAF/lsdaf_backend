@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.core.models.Currency;
 
 public interface CurrencyService {
 

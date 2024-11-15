@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.controllers.AuthController;
 import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;

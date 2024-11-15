@@ -1,7 +1,9 @@
 package com.lsadf.lsadf_backend.unit.services;
 
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Currency;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.InventoryService;
@@ -15,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;

@@ -4,10 +4,10 @@ import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.cache.impl.*;
 import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Currency;
+import com.lsadf.core.models.Inventory;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import com.lsadf.lsadf_backend.services.*;
@@ -28,8 +28,8 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.*;
-import static com.lsadf.lsadf_backend.constants.RedisConstants.GAME_SAVE_OWNERSHIP;
+import static com.lsadf.core.constants.BeanConstants.Cache.*;
+import static com.lsadf.core.constants.RedisConstants.GAME_SAVE_OWNERSHIP;
 
 @Configuration
 @ConditionalOnProperty(prefix = "cache.redis", name = "enabled", havingValue = "true")

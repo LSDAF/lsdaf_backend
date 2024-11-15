@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
+import static com.lsadf.core.constants.JsonAttributes.User.*;
 
 @Data
 @NoArgsConstructor

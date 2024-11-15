@@ -2,10 +2,10 @@ package com.lsadf.lsadf_backend.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.core.annotations.Uuid;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.JsonViews;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.JsonViews;
+import com.lsadf.core.constants.ResponseMessages;
+import com.lsadf.core.models.GameSave;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;

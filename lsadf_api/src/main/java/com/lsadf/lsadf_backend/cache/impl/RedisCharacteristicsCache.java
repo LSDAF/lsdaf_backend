@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.cache.impl;
 
 import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.core.models.Characteristics;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.lsadf.lsadf_backend.constants.RedisConstants.CHARACTERISTICS;
-import static com.lsadf.lsadf_backend.constants.RedisConstants.CHARACTERISTICS_HISTO;
+import static com.lsadf.core.constants.RedisConstants.CHARACTERISTICS;
+import static com.lsadf.core.constants.RedisConstants.CHARACTERISTICS_HISTO;
 import static com.lsadf.lsadf_backend.utils.CacheUtils.clearCache;
 import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
 

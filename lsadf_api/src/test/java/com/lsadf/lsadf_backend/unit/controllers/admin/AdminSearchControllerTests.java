@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.Params.ORDER_BY;
+import static com.lsadf.core.constants.ControllerConstants.Params.ORDER_BY;
 import static com.lsadf.lsadf_backend.requests.user.UserOrderBy.ID_DESC;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.requests.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lsadf.lsadf_backend.constants.ItemType;
+import com.lsadf.core.constants.ItemType;
 import com.lsadf.lsadf_backend.requests.Request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Item.ITEM_TYPE;
+import static com.lsadf.core.constants.JsonAttributes.Item.ITEM_TYPE;
 
 @Data
 @NoArgsConstructor

@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.core.annotations.Uuid;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.STAGE;
+import static com.lsadf.core.constants.ControllerConstants.STAGE;
 
 /**
  * Controller for stage related operations.

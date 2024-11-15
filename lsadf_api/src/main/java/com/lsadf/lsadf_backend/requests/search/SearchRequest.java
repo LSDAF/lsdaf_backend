@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.SearchRequest.FILTERS;
+import static com.lsadf.core.constants.JsonAttributes.SearchRequest.FILTERS;
 
 @Data
 @NoArgsConstructor

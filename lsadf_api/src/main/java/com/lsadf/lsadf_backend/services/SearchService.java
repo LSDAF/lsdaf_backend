@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;

@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.mappers.impl;
 
-import com.lsadf.lsadf_backend.entities.*;
+import com.lsadf.core.entities.*;
+import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.properties;
 
-import com.lsadf.lsadf_backend.constants.JsonViews;
+import com.lsadf.core.constants.JsonViews;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

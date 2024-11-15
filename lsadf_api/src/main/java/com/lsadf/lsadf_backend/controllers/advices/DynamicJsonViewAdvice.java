@@ -3,7 +3,7 @@ package com.lsadf.lsadf_backend.controllers.advices;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.lsadf_backend.constants.JsonViews;
+import com.lsadf.core.constants.JsonViews;
 import com.lsadf.lsadf_backend.exceptions.DynamicJsonViewException;
 import com.lsadf.lsadf_backend.properties.JsonViewProperties;
 import com.lsadf.lsadf_backend.responses.GenericResponse;

@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.ResponseMessages;
 import com.lsadf.lsadf_backend.exceptions.http.UnauthorizedException;
-import com.lsadf.lsadf_backend.models.UserInfo;
+import com.lsadf.core.models.UserInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

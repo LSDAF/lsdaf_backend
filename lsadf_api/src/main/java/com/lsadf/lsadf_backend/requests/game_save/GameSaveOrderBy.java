@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.requests.game_save;
 
-import com.lsadf.lsadf_backend.constants.JsonAttributes;
-import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
+import com.lsadf.core.constants.JsonAttributes;
+import com.lsadf.core.constants.SortingOrderParameter;
 import com.lsadf.lsadf_backend.requests.common.OrderBy;
 
 public enum GameSaveOrderBy implements OrderBy {

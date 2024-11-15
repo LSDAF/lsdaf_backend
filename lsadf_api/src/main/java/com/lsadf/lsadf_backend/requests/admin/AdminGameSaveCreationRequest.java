@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
+import static com.lsadf.core.constants.JsonAttributes.GameSave.*;
+import static com.lsadf.core.constants.JsonAttributes.ID;
 
 /**
  * Request for creating a new game save

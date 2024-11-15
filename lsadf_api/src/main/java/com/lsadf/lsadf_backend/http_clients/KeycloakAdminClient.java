@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.http_clients;
 
 import com.lsadf.lsadf_backend.configurations.http_clients.KeycloakAdminFeignConfiguration;
-import com.lsadf.lsadf_backend.constants.HttpClientTypes;
-import com.lsadf.lsadf_backend.constants.JsonAttributes;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.constants.HttpClientTypes;
+import com.lsadf.core.constants.JsonAttributes;
+import com.lsadf.core.models.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

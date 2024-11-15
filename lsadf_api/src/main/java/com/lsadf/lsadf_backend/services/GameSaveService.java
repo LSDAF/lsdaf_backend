@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.services;
 
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.exceptions.*;
 import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;

@@ -1,10 +1,10 @@
 package com.lsadf.lsadf_backend.unit.services;
 
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
-import com.lsadf.lsadf_backend.entities.CurrencyEntity;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.StageEntity;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.entities.CharacteristicsEntity;
+import com.lsadf.core.entities.CurrencyEntity;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.entities.StageEntity;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
 import com.lsadf.lsadf_backend.requests.user.UserOrderBy;
@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
+import static com.lsadf.core.constants.JsonAttributes.ID;
+import static com.lsadf.core.constants.JsonAttributes.User.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;

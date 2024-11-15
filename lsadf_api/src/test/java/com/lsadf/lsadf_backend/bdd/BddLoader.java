@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.bdd;
 
+import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
 import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
@@ -10,10 +11,9 @@ import com.lsadf.lsadf_backend.controllers.admin.impl.*;
 import com.lsadf.lsadf_backend.controllers.advices.DynamicJsonViewAdvice;
 import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.*;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.*;
 import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.repositories.*;
@@ -50,7 +50,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Stack;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
 
 /**
  * BDD Loader class for the Cucumber tests

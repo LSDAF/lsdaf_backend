@@ -1,19 +1,17 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
-import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
-import com.lsadf.lsadf_backend.entities.ItemEntity;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.models.Item;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.entities.InventoryEntity;
+import com.lsadf.core.entities.ItemEntity;
+import com.lsadf.core.models.Inventory;
+import com.lsadf.core.models.Item;
+import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

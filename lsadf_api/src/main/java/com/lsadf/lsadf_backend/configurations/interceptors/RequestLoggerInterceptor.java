@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.configurations.interceptors;
 
-import com.lsadf.lsadf_backend.constants.LogColor;
-import com.lsadf.lsadf_backend.models.RequestLog;
+import com.lsadf.core.constants.LogColor;
+import com.lsadf.core.models.RequestLog;
 import com.lsadf.lsadf_backend.properties.HttpLogProperties;
 import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.utils.ColorUtils;
@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.lsadf.lsadf_backend.constants.LogColor.*;
+import static com.lsadf.core.constants.LogColor.*;
 
 @Slf4j(topic = "[HTTP]")
 public class RequestLoggerInterceptor implements HandlerInterceptor {

@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.*;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Currency.AMETHYST;
+import static com.lsadf.core.constants.JsonAttributes.Currency.*;
+import static com.lsadf.core.constants.JsonAttributes.Currency.AMETHYST;
 
 @Data
 @NoArgsConstructor

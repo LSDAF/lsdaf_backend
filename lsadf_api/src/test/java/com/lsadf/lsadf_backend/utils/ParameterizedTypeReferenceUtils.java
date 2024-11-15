@@ -1,7 +1,6 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.ParameterizedTypeReference;

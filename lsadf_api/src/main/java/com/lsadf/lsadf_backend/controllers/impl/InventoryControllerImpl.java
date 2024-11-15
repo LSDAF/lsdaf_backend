@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.InventoryController;
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
+import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Inventory;
+import com.lsadf.core.models.Inventory;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.CacheService;

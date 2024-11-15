@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.USERNAME;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.PASSWORD;
+import static com.lsadf.core.constants.JsonAttributes.User.USERNAME;
+import static com.lsadf.core.constants.JsonAttributes.User.PASSWORD;
 
 @Data
 @AllArgsConstructor

@@ -5,10 +5,9 @@ import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.http_clients.KeycloakAdminClient;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Currency;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.properties.KeycloakProperties;
 import com.lsadf.lsadf_backend.repositories.*;
 import com.lsadf.lsadf_backend.services.*;
@@ -20,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
 
 
 /**

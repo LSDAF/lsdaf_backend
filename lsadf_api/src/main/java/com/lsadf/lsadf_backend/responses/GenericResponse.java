@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lsadf.lsadf_backend.constants.JsonViews;
+import com.lsadf.core.constants.JsonViews;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GenericResponse.*;
+import static com.lsadf.core.constants.JsonAttributes.GenericResponse.*;
 
 /**
  * Generic POJO Response for all API controllers

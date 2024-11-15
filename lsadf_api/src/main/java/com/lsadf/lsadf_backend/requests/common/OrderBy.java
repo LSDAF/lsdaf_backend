@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.requests.common;
 
-import com.lsadf.lsadf_backend.constants.SortingOrderParameter;
+import com.lsadf.core.constants.SortingOrderParameter;
 
 public interface OrderBy {
     String getFieldName();

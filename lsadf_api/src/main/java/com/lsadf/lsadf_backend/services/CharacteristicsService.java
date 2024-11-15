@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services;
 
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Characteristics;
+import com.lsadf.core.models.Characteristics;
 
 public interface CharacteristicsService {
     /**

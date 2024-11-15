@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.repositories;
 
-import com.lsadf.lsadf_backend.entities.CharacteristicsEntity;
+import com.lsadf.core.entities.CharacteristicsEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

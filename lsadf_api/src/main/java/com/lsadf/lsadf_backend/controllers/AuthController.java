@@ -1,8 +1,8 @@
 package com.lsadf.lsadf_backend.controllers;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.ResponseMessages;
+import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;

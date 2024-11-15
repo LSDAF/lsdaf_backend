@@ -2,7 +2,7 @@ package com.lsadf.lsadf_backend.controllers.admin.impl;
 
 import com.lsadf.lsadf_backend.controllers.admin.AdminGlobalInfoController;
 import com.lsadf.lsadf_backend.controllers.impl.BaseController;
-import com.lsadf.lsadf_backend.models.GlobalInfo;
+import com.lsadf.core.models.GlobalInfo;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.ClockService;
 import com.lsadf.lsadf_backend.services.GameSaveService;

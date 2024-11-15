@@ -1,10 +1,12 @@
 package com.lsadf.lsadf_backend.bdd.when;
 
+import com.lsadf.core.models.GameSave;
+import com.lsadf.core.models.JwtAuthentication;
+import com.lsadf.core.models.UserInfo;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.bdd.CacheEntryType;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.*;
+import static com.lsadf.core.constants.JsonAttributes.GameSave.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

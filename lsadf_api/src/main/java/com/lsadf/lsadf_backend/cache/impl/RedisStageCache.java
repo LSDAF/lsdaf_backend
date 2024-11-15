@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.cache.impl;
 
 import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.lsadf.lsadf_backend.constants.RedisConstants.STAGE;
-import static com.lsadf.lsadf_backend.constants.RedisConstants.STAGE_HISTO;
+import static com.lsadf.core.constants.RedisConstants.STAGE;
+import static com.lsadf.core.constants.RedisConstants.STAGE_HISTO;
 import static com.lsadf.lsadf_backend.utils.CacheUtils.clearCache;
 import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
 

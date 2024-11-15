@@ -4,9 +4,8 @@ import com.lsadf.lsadf_backend.cache.Cache;
 import com.lsadf.lsadf_backend.cache.HistoCache;
 import com.lsadf.lsadf_backend.cache.impl.NoOpCache;
 import com.lsadf.lsadf_backend.cache.impl.NoOpHistoCache;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Currency;
-import com.lsadf.lsadf_backend.models.Inventory;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Currency;
 import com.lsadf.lsadf_backend.services.CacheFlushService;
 import com.lsadf.lsadf_backend.services.CacheService;
 import com.lsadf.lsadf_backend.services.impl.NoOpCacheServiceImpl;
@@ -15,7 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.*;
+import static com.lsadf.core.constants.BeanConstants.Cache.*;
 
 @Configuration
 @ConditionalOnProperty(prefix = "cache.redis", name = "enabled", havingValue = "false")

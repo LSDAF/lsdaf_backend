@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.lsadf.core.annotations.Uuid;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;

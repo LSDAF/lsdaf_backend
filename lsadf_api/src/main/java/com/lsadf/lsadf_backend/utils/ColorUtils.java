@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.utils;
 
-import com.lsadf.lsadf_backend.constants.LogColor;
+import com.lsadf.core.constants.LogColor;
 import lombok.experimental.UtilityClass;
 
 /**

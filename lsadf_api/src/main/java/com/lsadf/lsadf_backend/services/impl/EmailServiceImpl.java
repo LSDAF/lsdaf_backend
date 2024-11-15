@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.lsadf_backend.properties.EmailProperties;
 import com.lsadf.lsadf_backend.properties.ServerProperties;
 import com.lsadf.lsadf_backend.services.EmailService;
@@ -13,7 +13,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 @Slf4j

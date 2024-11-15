@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveOrderBy;
 import com.lsadf.lsadf_backend.requests.search.SearchRequest;
@@ -14,10 +14,10 @@ import com.lsadf.lsadf_backend.utils.StreamUtils;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.NICKNAME;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.GameSave.USER_EMAIL;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.User.*;
+import static com.lsadf.core.constants.JsonAttributes.GameSave.NICKNAME;
+import static com.lsadf.core.constants.JsonAttributes.GameSave.USER_EMAIL;
+import static com.lsadf.core.constants.JsonAttributes.ID;
+import static com.lsadf.core.constants.JsonAttributes.User.*;
 
 /**
  * Implementation of SearchService

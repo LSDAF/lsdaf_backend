@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Filter.TYPE;
-import static com.lsadf.lsadf_backend.constants.JsonAttributes.Filter.VALUE;
+import static com.lsadf.core.constants.JsonAttributes.Filter.TYPE;
+import static com.lsadf.core.constants.JsonAttributes.Filter.VALUE;
 
 @Data
 @NoArgsConstructor

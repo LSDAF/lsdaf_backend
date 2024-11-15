@@ -2,10 +2,10 @@ package com.lsadf.lsadf_backend.controllers.admin;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.core.annotations.Uuid;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.JsonViews;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.User;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.JsonViews;
+import com.lsadf.core.constants.ResponseMessages;
+import com.lsadf.core.models.User;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
@@ -25,7 +25,7 @@ import java.util.List;
 
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
 import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.constants.ControllerConstants.Params.*;
+import static com.lsadf.core.constants.ControllerConstants.Params.*;
 
 @RequestMapping(value = ControllerConstants.ADMIN_USERS)
 @Tag(name = ControllerConstants.Swagger.ADMIN_USERS_CONTROLLER)

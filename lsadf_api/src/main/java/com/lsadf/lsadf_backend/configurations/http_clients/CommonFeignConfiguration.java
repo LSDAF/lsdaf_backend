@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.lsadf.lsadf_backend.constants.HttpClientTypes.DEFAULT;
+import static com.lsadf.core.constants.HttpClientTypes.DEFAULT;
 
 public class CommonFeignConfiguration {
 

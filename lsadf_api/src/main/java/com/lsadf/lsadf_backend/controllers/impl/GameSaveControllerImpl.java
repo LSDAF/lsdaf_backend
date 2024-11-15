@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
+import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.GameSave;
+import com.lsadf.core.models.GameSave;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.services.GameSaveService;

@@ -1,12 +1,11 @@
 package com.lsadf.lsadf_backend.services.impl;
 
 import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.models.Characteristics;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.models.Stage;
+import com.lsadf.core.models.Characteristics;
+import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.services.*;
 import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.Currency;
+import com.lsadf.core.models.Currency;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 

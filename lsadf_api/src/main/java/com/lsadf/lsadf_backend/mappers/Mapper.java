@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.mappers;
 
-import com.lsadf.lsadf_backend.entities.*;
-import com.lsadf.lsadf_backend.models.*;
+import com.lsadf.core.entities.*;
+import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.requests.admin.AdminUserCreationRequest;
 import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
