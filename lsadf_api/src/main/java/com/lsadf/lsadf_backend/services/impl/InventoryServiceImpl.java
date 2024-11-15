@@ -54,6 +54,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         ItemEntity itemEntity = ItemEntity.builder()
                 .inventoryEntity(inventoryEntity)
+                .itemType(ItemType.fromString(itemRequest.getItemType()))
                 .build();
 
         ItemEntity saved = itemRepository.save(itemEntity);

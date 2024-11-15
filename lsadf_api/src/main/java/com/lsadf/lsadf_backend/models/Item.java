@@ -15,6 +15,7 @@ import java.io.Serial;
 
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.ID;
 import static com.lsadf.lsadf_backend.constants.JsonAttributes.Inventory.ITEMS;
+import static com.lsadf.lsadf_backend.constants.JsonAttributes.Item.ITEM_TYPE;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +34,9 @@ public class Item implements Model {
     @JsonProperty(value = ID)
     @Schema(description = "User Id", example = "7d9f92ce-3c8e-4695-9df7-ce10c0bbaaeb")
     private String id;
+
+    @JsonView(JsonViews.External.class)
+    @JsonProperty(value = ITEM_TYPE)
+    @Schema(description = "Item type", example = "boots")
+    private String itemType;
 }
