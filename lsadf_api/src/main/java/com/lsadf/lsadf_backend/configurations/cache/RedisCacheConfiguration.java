@@ -1,9 +1,12 @@
 package com.lsadf.lsadf_backend.configurations.cache;
 
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.cache.impl.*;
-import com.lsadf.lsadf_backend.cache.listeners.RedisKeyExpirationListener;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
+import com.lsadf.core.cache.impl.RedisCache;
+import com.lsadf.core.cache.impl.RedisCharacteristicsCache;
+import com.lsadf.core.cache.impl.RedisCurrencyCache;
+import com.lsadf.core.cache.impl.RedisStageCache;
+import com.lsadf.core.cache.listeners.RedisKeyExpirationListener;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
 import com.lsadf.core.models.Inventory;

@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.core.cache.impl;
 
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.core.models.Currency;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.lsadf.core.constants.RedisConstants.CURRENCY;
 import static com.lsadf.core.constants.RedisConstants.CURRENCY_HISTO;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.clearCache;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
+import static com.lsadf.core.utils.CacheUtils.clearCache;
+import static com.lsadf.core.utils.CacheUtils.getAllEntries;
 
 @Slf4j
 public class RedisCurrencyCache extends RedisCache<Currency> implements HistoCache<Currency> {

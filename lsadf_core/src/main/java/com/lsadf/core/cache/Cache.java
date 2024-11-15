@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.cache;
+package com.lsadf.core.cache;
 
 import org.slf4j.Logger;
 

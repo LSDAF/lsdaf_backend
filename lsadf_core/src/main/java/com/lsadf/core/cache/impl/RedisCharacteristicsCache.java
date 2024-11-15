@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.core.cache.impl;
 
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.lsadf.core.constants.RedisConstants.CHARACTERISTICS;
 import static com.lsadf.core.constants.RedisConstants.CHARACTERISTICS_HISTO;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.clearCache;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
+import static com.lsadf.core.utils.CacheUtils.clearCache;
+import static com.lsadf.core.utils.CacheUtils.getAllEntries;
 
 @Slf4j
 public class RedisCharacteristicsCache extends RedisCache<Characteristics> implements HistoCache<Characteristics> {

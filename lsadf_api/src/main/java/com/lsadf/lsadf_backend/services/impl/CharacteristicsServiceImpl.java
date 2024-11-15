@@ -1,6 +1,6 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.core.cache.Cache;
 import com.lsadf.core.entities.CharacteristicsEntity;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.lsadf_backend.mappers.Mapper;

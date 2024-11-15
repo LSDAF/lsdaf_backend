@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.services.impl;
 
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.services.CacheService;

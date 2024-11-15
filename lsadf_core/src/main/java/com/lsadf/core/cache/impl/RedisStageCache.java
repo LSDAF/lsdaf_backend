@@ -1,8 +1,7 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.core.cache.impl;
 
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.core.models.Stage;
-import com.lsadf.lsadf_backend.properties.RedisProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
@@ -14,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.lsadf.core.constants.RedisConstants.STAGE;
 import static com.lsadf.core.constants.RedisConstants.STAGE_HISTO;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.clearCache;
-import static com.lsadf.lsadf_backend.utils.CacheUtils.getAllEntries;
+import static com.lsadf.core.utils.CacheUtils.clearCache;
+import static com.lsadf.core.utils.CacheUtils.getAllEntries;
 
 @Slf4j
 public class RedisStageCache extends RedisCache<Stage> implements HistoCache<Stage> {

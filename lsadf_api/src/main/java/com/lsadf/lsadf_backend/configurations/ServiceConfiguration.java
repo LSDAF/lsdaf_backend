@@ -1,7 +1,7 @@
 package com.lsadf.lsadf_backend.configurations;
 
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.lsadf_backend.http_clients.KeycloakAdminClient;
 import com.lsadf.lsadf_backend.mappers.Mapper;
 import com.lsadf.lsadf_backend.mappers.impl.MapperImpl;

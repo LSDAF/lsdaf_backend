@@ -1,9 +1,8 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.core.cache.impl;
 
-import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.core.utils.CacheUtils;
+import com.lsadf.core.cache.Cache;
 import com.lsadf.lsadf_backend.properties.RedisProperties;
-import com.lsadf.lsadf_backend.utils.CacheUtils;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;

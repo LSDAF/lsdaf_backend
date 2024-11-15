@@ -1,6 +1,6 @@
-package com.lsadf.lsadf_backend.cache.impl;
+package com.lsadf.core.cache.impl;
 
-import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.core.cache.Cache;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 

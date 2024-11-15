@@ -3,7 +3,7 @@ package com.lsadf.lsadf_backend.unit.services;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
 import com.lsadf.core.models.Stage;
-import com.lsadf.lsadf_backend.cache.Cache;
+import com.lsadf.core.cache.Cache;
 import com.lsadf.lsadf_backend.services.CharacteristicsService;
 import com.lsadf.lsadf_backend.services.CurrencyService;
 import com.lsadf.lsadf_backend.services.InventoryService;

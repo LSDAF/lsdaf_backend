@@ -1,9 +1,9 @@
 package com.lsadf.lsadf_backend.configurations.cache;
 
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.cache.impl.NoOpCache;
-import com.lsadf.lsadf_backend.cache.impl.NoOpHistoCache;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
+import com.lsadf.core.cache.impl.NoOpCache;
+import com.lsadf.core.cache.impl.NoOpHistoCache;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
 import com.lsadf.lsadf_backend.services.CacheFlushService;

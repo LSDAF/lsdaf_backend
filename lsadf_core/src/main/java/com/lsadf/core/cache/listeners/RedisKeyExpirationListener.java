@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.cache.listeners;
+package com.lsadf.core.cache.listeners;
 
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.models.Characteristics;

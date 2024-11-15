@@ -2,8 +2,8 @@ package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
 import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
 import com.lsadf.lsadf_backend.controllers.admin.*;
