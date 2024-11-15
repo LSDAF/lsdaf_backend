@@ -20,7 +20,7 @@
             <maxHistory>7</maxHistory>
             <totalSizeCap>100MB</totalSizeCap>
             <maxFileSize>10MB</maxFileSize>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
