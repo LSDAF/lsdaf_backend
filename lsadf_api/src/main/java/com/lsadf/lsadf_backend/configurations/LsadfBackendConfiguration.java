@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         PropertiesConfiguration.class,
         SwaggerConfiguration.class,
         ServiceConfiguration.class,
-        WebConfiguration.class,
+        CorsConfiguration.class,
         SecurityConfiguration.class,
         LoggingConfiguration.class,
         RedisCacheConfiguration.class,

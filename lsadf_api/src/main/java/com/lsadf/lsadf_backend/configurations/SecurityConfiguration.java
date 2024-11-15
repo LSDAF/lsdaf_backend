@@ -2,8 +2,6 @@ package com.lsadf.lsadf_backend.configurations;
 
 import com.lsadf.lsadf_backend.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.lsadf_backend.configurations.keycloak.KeycloakJwtAuthenticationConverter;
-import com.lsadf.lsadf_backend.constants.UserRole;
-import com.lsadf.lsadf_backend.properties.CorsConfigurationProperties;
 import com.lsadf.lsadf_backend.properties.HttpLogProperties;
 import com.lsadf.lsadf_backend.properties.OAuth2Properties;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -80,7 +76,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
+                        .requestMatchers(ADMIN_URLS).permitAll()//.hasAuthority(UserRole.ADMIN.getRole())
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/login"))
@@ -113,22 +109,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
-    public CorsFilter corsFilter(CorsConfigurationProperties corsConfigurationProperties) {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-
-        corsConfiguration.setAllowCredentials(corsConfigurationProperties.getAllowCredentials());
-        corsConfiguration.setAllowedOriginPatterns(corsConfigurationProperties.getAllowedOrigins());
-        corsConfiguration.setAllowedMethods(corsConfigurationProperties.getAllowedMethods());
-        corsConfiguration.setAllowedHeaders(corsConfigurationProperties.getAllowedHeaders());
-        corsConfiguration.setExposedHeaders(corsConfigurationProperties.getExposedHeaders());
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-
-        return new CorsFilter(source);
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
