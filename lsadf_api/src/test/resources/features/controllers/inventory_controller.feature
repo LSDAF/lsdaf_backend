@@ -78,9 +78,10 @@ Feature: Inventory Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the endpoint to update an item in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
-      | itemId                               | itemType   |
-      | 11111111-1111-1111-1111-111111111111 | SWORD      |
+    And the user requests the endpoint to update an item with id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
+      | itemType   |
+      | SWORD      |
+
 
     Then the response status code should be 200
 
@@ -106,9 +107,9 @@ Feature: Inventory Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the endpoint to update an item in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
-      | itemId                           | itemType   |
-      | invalid_item_id                  | BOOTS      |
+    And the user requests the endpoint to update an item with id invalid_item_id in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
+      | itemType   |
+      | BOOTS      |
 
     Then the response status code should be 400
 
@@ -131,8 +132,9 @@ Feature: Inventory Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the endpoint to update an item in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemUpdateRequest
-      | itemId                               | itemType   |
-      | 11111111-1111-1111-1111-111111111111 | CHESTPLATE |
+    And the user requests the endpoint to update an item with id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemUpdateRequest
+      | itemType   |
+      | BOOTS      |
+
 
     Then the response status code should be 401

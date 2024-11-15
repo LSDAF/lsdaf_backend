@@ -12,6 +12,7 @@ import com.lsadf.lsadf_backend.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.lsadf_backend.requests.common.Filter;
 import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
@@ -393,6 +394,17 @@ public class BddUtils {
                 .id(id)
                 .itemType(ItemType.valueOf(itemType))
                 .build();
+    }
+
+    /**
+     * Maps a row from a BDD table to a ItemRequest
+     *
+     * @param row row from BDD table
+     * @return ItemRequest
+     */
+    public static ItemRequest mapToItemRequest(Map<String, String> row) {
+        String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
+        return new ItemRequest(ItemType.valueOf(itemType));
     }
 
     /**

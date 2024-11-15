@@ -9,9 +9,11 @@ import com.lsadf.lsadf_backend.entities.ItemEntity;
 import com.lsadf.lsadf_backend.models.Inventory;
 import com.lsadf.lsadf_backend.models.Item;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
+import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedInventoryResponse;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -92,6 +95,31 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
             ResponseEntity<GenericResponse<Inventory>> result = testRestTemplate.exchange(url, HttpMethod.GET, request, buildParameterizedInventoryResponse());
             GenericResponse<Inventory> body = result.getBody();
             inventoryStack.push(body.getData());
+            responseStack.push(body);
+            log.info("Response: {}", result);
+        } catch (Exception e) {
+            exceptionStack.push(e);
+        }
+    }
+
+    @When("the user requests the endpoint to update an item with id (.*) in the inventory of the game save with id (.*) with the following ItemUpdateRequest$")
+    public void when_the_user_requests_the_endpoint_to_update_an_item_in_the_inventory_of_the_game_save_with_id_with_the_following_item_update_request(String itemId, String gameSaveId, DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        assertThat(rows).hasSize(1);
+
+        Map<String, String> row = rows.get(0);
+        ItemRequest itemRequest = BddUtils.mapToItemRequest(row);
+
+        String fullPath = ControllerConstants.INVENTORY + ControllerConstants.Inventory.ITEM_ID.replace("{game_save_id}", gameSaveId).replace("{item_id}", itemId);
+        String url = BddUtils.buildUrl(this.serverPort, fullPath);
+        try {
+            JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
+            String token = jwtAuthentication.getAccessToken();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<ItemRequest> request = new HttpEntity<>(itemRequest, headers);
+            ResponseEntity<GenericResponse<Void>> result = testRestTemplate.exchange(url, HttpMethod.PUT, request, buildParameterizedVoidResponse());
+            GenericResponse<Void> body = result.getBody();
             responseStack.push(body);
             log.info("Response: {}", result);
         } catch (Exception e) {
