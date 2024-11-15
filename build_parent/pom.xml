@@ -247,6 +247,16 @@
                             <trimStackTrace>true</trimStackTrace>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <printSummary>true</printSummary>
+                            <reportFormat>brief</reportFormat>
+                            <trimStackTrace>true</trimStackTrace>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
