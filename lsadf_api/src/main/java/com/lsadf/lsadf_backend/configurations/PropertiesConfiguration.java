@@ -18,6 +18,12 @@ public class PropertiesConfiguration {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "configuration-display")
+    public ConfigurationDisplayProperties configurationDisplayProperties() {
+        return new ConfigurationDisplayProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "http-log")
     public HttpLogProperties httpLogProperties() {
         return new HttpLogProperties();
