@@ -1,0 +1,10 @@
+db:
+  url: ${DB_URL_LOCALHOST}
+
+cache:
+  redis:
+    host: ${REDIS_HOST}
+
+keycloak:
+  admin-uri: ${KEYCLOAK_ADMIN_URI}
+  uri: ${KEYCLOAK_URI}

@@ -1,21 +1,21 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.OAuth2Controller;
-import com.lsadf.lsadf_backend.http_clients.KeycloakClient;
-import com.lsadf.lsadf_backend.models.JwtAuthentication;
-import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.properties.ServerProperties;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.http_clients.KeycloakClient;
+import com.lsadf.core.models.JwtAuthentication;
+import com.lsadf.core.properties.KeycloakProperties;
+import com.lsadf.core.properties.ServerProperties;
+import com.lsadf.core.responses.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 @RestController
 @Slf4j
@@ -34,7 +34,7 @@ public class OAuth2ControllerImpl extends BaseController implements OAuth2Contro
     }
 
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 

@@ -9,11 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lsdaf</groupId>
-    <artifactId>lsadf_backend</artifactId>
+    <artifactId>lsadf-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>LSADF Backend Parent</name>
-    <description>lsadf_backend</description>
 
 
     <modules>

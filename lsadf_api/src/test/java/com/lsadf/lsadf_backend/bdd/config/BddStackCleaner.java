@@ -8,7 +8,11 @@ import java.util.Stack;
 
 public class BddStackCleaner {
 
-    private final List<Stack<?>> stackList = new ArrayList<>();
+    private final List<Stack<?>> stackList;
+
+    public BddStackCleaner() {
+        stackList = new ArrayList<>();
+    }
 
     @Before
     public void clearStacks() {

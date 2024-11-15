@@ -1,12 +1,12 @@
 package com.lsadf.lsadf_backend.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lsadf.core.unit.config.UnitTestConfiguration;
+import com.lsadf.core.unit.config.WithMockJwtUser;
 import com.lsadf.lsadf_backend.controllers.StageController;
-import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
+import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.StageControllerImpl;
-import com.lsadf.lsadf_backend.requests.stage.StageRequest;
-import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
-import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
+import com.lsadf.core.requests.stage.StageRequest;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;

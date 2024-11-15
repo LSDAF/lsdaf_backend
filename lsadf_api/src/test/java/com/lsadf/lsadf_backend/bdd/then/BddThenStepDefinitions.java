@@ -1,11 +1,11 @@
 package com.lsadf.lsadf_backend.bdd.then;
 
+import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.bdd.BddLoader;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.exceptions.http.ForbiddenException;
-import com.lsadf.lsadf_backend.exceptions.http.NotFoundException;
-import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.utils.BddUtils;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.exceptions.http.ForbiddenException;
+import com.lsadf.core.exceptions.http.NotFoundException;
+import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import jakarta.mail.MessagingException;

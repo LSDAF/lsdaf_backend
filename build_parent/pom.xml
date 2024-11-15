@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lsdaf</groupId>
-        <artifactId>lsadf_backend</artifactId>
+        <artifactId>lsadf-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lsadf-build-parent</artifactId>
@@ -15,6 +16,8 @@
 
     <modules>
         <module>../lsadf_api</module>
+        <module>../lsadf_core</module>
+        <module>../lsadf_admin</module>
     </modules>
 
     <dependencyManagement>
@@ -101,6 +104,18 @@
                         <destDir>apidocs</destDir>
                         <doclint>none</doclint>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.2</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

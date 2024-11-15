@@ -1,14 +1,15 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.InventoryController;
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.Inventory;
-import com.lsadf.lsadf_backend.requests.item.ItemRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.CacheService;
-import com.lsadf.lsadf_backend.services.GameSaveService;
-import com.lsadf.lsadf_backend.services.InventoryService;
+import com.lsadf.core.entities.InventoryEntity;
+import com.lsadf.core.mappers.Mapper;
+import com.lsadf.core.models.Inventory;
+import com.lsadf.core.requests.item.ItemRequest;
+import com.lsadf.core.responses.GenericResponse;
+import com.lsadf.core.services.CacheService;
+import com.lsadf.core.services.GameSaveService;
+import com.lsadf.core.services.InventoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lsadf.lsadf_backend.utils.ResponseUtils.generateResponse;
-import static com.lsadf.lsadf_backend.utils.TokenUtils.getUsernameFromJwt;
+import static com.lsadf.core.utils.ResponseUtils.generateResponse;
+import static com.lsadf.core.utils.TokenUtils.getUsernameFromJwt;
 
 /**
  * Implementation of the Inventory Controller
@@ -105,7 +106,7 @@ public class InventoryControllerImpl extends BaseController implements Inventory
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 }

@@ -1,10 +1,10 @@
 package com.lsadf.lsadf_backend.unit.controllers;
 
+import com.lsadf.core.unit.config.UnitTestConfiguration;
+import com.lsadf.core.unit.config.WithMockJwtUser;
 import com.lsadf.lsadf_backend.controllers.UserController;
-import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
+import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.UserControllerImpl;
-import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
-import com.lsadf.lsadf_backend.unit.config.WithMockJwtUser;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;

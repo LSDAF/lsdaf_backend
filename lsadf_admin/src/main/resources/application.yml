@@ -1,0 +1,210 @@
+server:
+  port: 8082
+  host-name: localhost
+  https: false
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: "/actuator"
+      exposure:
+        include: health, info
+spring:
+  mail:
+    host: ${mail.host}
+    port: ${mail.port}
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30_000
+      max-lifetime: 1_800_000
+      connection-timeout: 30_000
+      validation-timeout: 5_000
+      connection-test-query: SELECT 1
+      auto-commit: true
+      leak-detection-threshold: 2000
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: LSADF Backend
+  banner:
+    location: classpath:lsadf_banner.txt
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss.SSS
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+  config:
+    import: optional:classpath:env.properties
+  data:
+    redis:
+      repositories:
+        enabled: false
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            authorization-uri: ${keycloak.issuer-uri}/protocol/openid-connect/auth
+            token-uri: ${keycloak.issuer-uri}/protocol/openid-connect/token
+            user-info-uri: ${keycloak.issuer-uri}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak.issuer-uri}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            authorization-grant-type: authorization_code
+            client-id: ${keycloak.client-id}
+            redirect-uri: "{baseUrl}/api/oauth2/callback"
+            client-secret: ${keycloak.client-secret}
+            provider: keycloak
+            scope: openid, profile
+          keycloak-admin:
+            authorization-grant-type: client_credentials
+            client-id: ${keycloak.admin.client-id}
+            client-secret: ${keycloak.admin.client-secret}
+            provider: keycloak
+            scope: openid, profile
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri}
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: FULL
+          keycloak:
+            url: ${keycloak.uri}
+          keycloak-admin:
+            url: ${keycloak.admin-uri}
+
+
+keycloak:
+  admin:
+    client-id: ${KEYCLOAK_ADMIN_CLIENT_ID}
+    client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  realm: ${KEYCLOAK_REALM}
+  issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
+
+http-log:
+  enabled: true
+  logged-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+  color-enabled: true
+
+db:
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+
+swagger:
+  contact:
+    name: ${SWAGGER_CONTACT_NAME}
+    email: ${SWAGGER_CONTACT_EMAIL}
+    url: ${SWAGGER_CONTACT_URL}
+  title: ${SWAGGER_TITLE}
+  description: ${SWAGGER_DESCRIPTION}
+  version: ${SWAGGER_VERSION}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    oauth:
+      client-id: ${keycloak.client-id}
+  show-actuator: true
+
+
+logging:
+  file:
+    path: classpath:logback.xml
+
+cors:
+  allowed-headers:
+    - "*"
+  allowed-origins:
+    - "*"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+  allow-credentials: true
+  exposed-headers:
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Credentials
+
+oauth2:
+  authorized-redirect-uris:
+  # Redefining existing properties normally defined as spring.security.oauth2.client.registration & spring.security.oauth2.client.provider to allow property injection from env.values file
+  registration:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
+    facebook:
+      client-id: ${FACEBOOK_CLIENT_ID}
+      client-secret: ${FACEBOOK_CLIENT_SECRET}
+  provider:
+    facebook:
+      user-info-uri: https://graph.facebook.com/me?fields=id,name,email,picture
+      authorization-uri: https://www.facebook.com/v11.0/dialog/oauth
+      token-uri: https://graph.facebook.com/v11.0/oauth/access_token
+      user-name-attribute: id
+    google:
+      authorization-uri: https://accounts.google.com/o/oauth2/auth
+      token-uri: https://accounts.google.com/o/oauth2/token
+      jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+cache:
+  redis:
+    enabled: ${CACHE_ENABLED}
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DATABASE}
+    embedded: false
+  expiration:
+    game-save-ownership-expiration-seconds: ${GAME_SAVE_OWNERSHIP_EXPIRATION_SECONDS}
+    local-user-expiration-seconds: ${LOCAL_USER_EXPIRATION_SECONDS}
+    characteristics-expiration-seconds: ${CHARACTERISTICS_EXPIRATION_SECONDS}
+    currency-expiration-seconds: ${CURRENCY_EXPIRATION_SECONDS}
+    inventory-expiration-seconds: ${INVENTORY_EXPIRATION_SECONDS}
+    stage-expiration-seconds: ${STAGE_EXPIRATION_SECONDS}
+
+shutdown:
+  flush-cache-at-shutdown: true
+
+mail:
+  host: ${EMAIL_HOST}
+  port: ${EMAIL_PORT}
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
+  auth: true
+  start-tls-enabled: true
+  connection-timeout: 5000
+  timeout: 5000
+  write-timeout: 5000
+  debug: true
+  starttls-required: true
+
+
+clock:
+  time-zone: "Europe/Paris"
+
+json-view:
+  default-json-view: ADMIN
+  default-json-view-enabled: false
+
+configuration-display:
+  enabled: true

@@ -1,24 +1,22 @@
 package com.lsadf.lsadf_backend.bdd;
 
-import com.lsadf.lsadf_backend.bdd.config.LsadfBackendBddTestsConfiguration;
-import com.lsadf.lsadf_backend.cache.Cache;
-import com.lsadf.lsadf_backend.cache.HistoCache;
-import com.lsadf.lsadf_backend.configurations.LsadfBackendConfiguration;
+import com.lsadf.core.models.*;
+import com.lsadf.core.repositories.*;
+import com.lsadf.core.services.*;
+import com.lsadf.lsadf_backend.bdd.config.LsadfBddTestsConfiguration;
+import com.lsadf.core.cache.Cache;
+import com.lsadf.core.cache.HistoCache;
+import com.lsadf.lsadf_backend.configurations.LsadfConfiguration;
 import com.lsadf.lsadf_backend.controllers.*;
-import com.lsadf.lsadf_backend.controllers.admin.*;
-import com.lsadf.lsadf_backend.controllers.admin.impl.*;
-import com.lsadf.lsadf_backend.controllers.advices.DynamicJsonViewAdvice;
-import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
+import com.lsadf.core.controllers.advices.DynamicJsonViewAdvice;
+import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.*;
-import com.lsadf.lsadf_backend.entities.GameSaveEntity;
-import com.lsadf.lsadf_backend.entities.InventoryEntity;
-import com.lsadf.lsadf_backend.mappers.Mapper;
-import com.lsadf.lsadf_backend.models.*;
-import com.lsadf.lsadf_backend.properties.CacheExpirationProperties;
-import com.lsadf.lsadf_backend.properties.KeycloakProperties;
-import com.lsadf.lsadf_backend.repositories.*;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.services.*;
+import com.lsadf.core.entities.GameSaveEntity;
+import com.lsadf.core.entities.InventoryEntity;
+import com.lsadf.core.mappers.Mapper;
+import com.lsadf.core.properties.CacheExpirationProperties;
+import com.lsadf.core.properties.KeycloakProperties;
+import com.lsadf.core.responses.GenericResponse;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.cucumber.spring.CucumberContextConfiguration;
 import jakarta.mail.internet.MimeMessage;
@@ -50,15 +48,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Stack;
 
-import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
 
 /**
  * BDD Loader class for the Cucumber tests
  */
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
-        LsadfBackendConfiguration.class,
-        LsadfBackendBddTestsConfiguration.class,
+        LsadfConfiguration.class,
+        LsadfBddTestsConfiguration.class,
         GlobalExceptionHandler.class,
         DynamicJsonViewAdvice.class,
         // Precise both the interface and the implementation to avoid ambiguity & errors for testing
@@ -78,23 +76,12 @@ import static com.lsadf.lsadf_backend.constants.BeanConstants.Cache.GAME_SAVE_OW
         StageControllerImpl.class,
         OAuth2Controller.class,
         OAuth2ControllerImpl.class,
-        // ADMIN
-        AdminUserController.class,
-        AdminUserControllerImpl.class,
-        AdminGameSaveController.class,
-        AdminGameSaveControllerImpl.class,
-        AdminSearchController.class,
-        AdminSearchControllerImpl.class,
-        AdminGlobalInfoController.class,
-        AdminGlobalInfoControllerImpl.class,
-        AdminCacheController.class,
-        AdminCacheControllerImpl.class,
 })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
 @CucumberContextConfiguration
-@EnableJpaRepositories(basePackages = "com.lsadf.lsadf_backend.repositories")
-@EntityScan(basePackages = "com.lsadf.lsadf_backend.entities")
+@EnableJpaRepositories(basePackages = "com.lsadf.core.repositories")
+@EntityScan(basePackages = "com.lsadf.core.entities")
 @EnableAutoConfiguration(exclude = {
         SecurityAutoConfiguration.class,
         ReactiveOAuth2ResourceServerAutoConfiguration.class,

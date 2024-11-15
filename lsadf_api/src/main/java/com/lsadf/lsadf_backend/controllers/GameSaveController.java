@@ -1,13 +1,13 @@
 package com.lsadf.lsadf_backend.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lsadf.lsadf_backend.annotations.Uuid;
-import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.constants.JsonViews;
-import com.lsadf.lsadf_backend.constants.ResponseMessages;
-import com.lsadf.lsadf_backend.models.GameSave;
-import com.lsadf.lsadf_backend.requests.game_save.GameSaveUpdateNicknameRequest;
-import com.lsadf.lsadf_backend.responses.GenericResponse;
+import com.lsadf.core.annotations.Uuid;
+import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.constants.JsonViews;
+import com.lsadf.core.constants.ResponseMessages;
+import com.lsadf.core.models.GameSave;
+import com.lsadf.core.requests.game_save.GameSaveUpdateNicknameRequest;
+import com.lsadf.core.responses.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
-import static com.lsadf.lsadf_backend.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
 
 /**
  * Controller for game save operations
