@@ -2,10 +2,13 @@
 FROM maven:3.9.8-eclipse-temurin-17-alpine AS compiler
 COPY env env/
 COPY build_parent build_parent/
+COPY lsadf_bom/ lsadf_bom/
 COPY lsadf_dependencies lsadf_dependencies/
 COPY lsadf_api lsadf_api/
 COPY pom.xml .
 COPY ./docker/startup.sh .
+# Delete application-local.yml to prevent ambiguous configurations
+#RUN rm lsadf_api/src/main/resources/application-local.yml
 
 RUN mvn clean install -DskipTests
 RUN mv lsadf_api/target/*.jar lsadf_api/target/lsadf_backend.jar
