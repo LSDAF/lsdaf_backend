@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.AuthController;
 import com.lsadf.core.http_clients.KeycloakClient;
 import com.lsadf.core.models.JwtAuthentication;
@@ -56,7 +57,7 @@ public class AuthControllerImpl extends BaseController implements AuthController
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 

@@ -1,6 +1,7 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
 import com.lsadf.core.constants.ControllerConstants;
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.OAuth2Controller;
 import com.lsadf.core.http_clients.KeycloakClient;
 import com.lsadf.core.models.JwtAuthentication;
@@ -33,7 +34,7 @@ public class OAuth2ControllerImpl extends BaseController implements OAuth2Contro
     }
 
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 

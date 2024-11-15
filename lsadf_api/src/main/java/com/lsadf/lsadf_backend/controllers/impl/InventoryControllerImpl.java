@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.InventoryController;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.mappers.Mapper;
@@ -105,7 +106,7 @@ public class InventoryControllerImpl extends BaseController implements Inventory
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 }

@@ -1,0 +1,8 @@
+<html>
+<body>
+<h2>Hi there !</h2>
+<p>Thank you for registering. Please verify your email by clicking on the link below:</p>
+<a href="$verificationLink">Verify Email</a>
+<p>If you did not create an account, please ignore this email.</p>
+</body>
+</html>

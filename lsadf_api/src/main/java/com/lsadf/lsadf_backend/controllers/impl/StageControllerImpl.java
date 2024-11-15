@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.StageController;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.Stage;
@@ -76,7 +77,7 @@ public class StageControllerImpl extends BaseController implements StageControll
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 }

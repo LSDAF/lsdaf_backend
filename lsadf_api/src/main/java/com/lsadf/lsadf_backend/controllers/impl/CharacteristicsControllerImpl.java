@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.CharacteristicsController;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.Characteristics;
@@ -73,7 +74,7 @@ public class CharacteristicsControllerImpl extends BaseController implements Cha
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 }

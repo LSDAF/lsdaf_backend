@@ -14,8 +14,10 @@ import com.lsadf.core.models.Stage;
 import com.lsadf.core.properties.KeycloakProperties;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.Clock;
 

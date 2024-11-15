@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.UserController;
 import com.lsadf.core.models.UserInfo;
 import com.lsadf.core.responses.GenericResponse;
@@ -30,7 +31,7 @@ public class UserControllerImpl extends BaseController implements UserController
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 

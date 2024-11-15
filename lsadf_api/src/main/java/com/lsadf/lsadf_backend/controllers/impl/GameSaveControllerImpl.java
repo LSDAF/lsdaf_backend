@@ -1,5 +1,6 @@
 package com.lsadf.lsadf_backend.controllers.impl;
 
+import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.lsadf_backend.controllers.GameSaveController;
 import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.mappers.Mapper;
@@ -40,7 +41,7 @@ public class GameSaveControllerImpl extends BaseController implements GameSaveCo
      * {@inheritDoc}
      */
     @Override
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return log;
     }
 

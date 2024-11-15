@@ -1,0 +1,13 @@
+db:
+  url: ${DB_URL_DOCKER}
+
+logging:
+  config: file:logback-docker.xml
+
+cache:
+  redis:
+    host: ${REDIS_HOST_DOCKER}
+
+keycloak:
+  admin-uri: ${KEYCLOAK_ADMIN_URI_DOCKER}
+  uri: ${KEYCLOAK_URI_DOCKER}

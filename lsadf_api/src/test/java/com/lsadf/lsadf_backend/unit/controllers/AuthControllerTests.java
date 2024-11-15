@@ -2,11 +2,11 @@ package com.lsadf.lsadf_backend.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsadf.lsadf_backend.controllers.AuthController;
-import com.lsadf.lsadf_backend.controllers.advices.GlobalExceptionHandler;
+import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.lsadf_backend.controllers.impl.AuthControllerImpl;
 import com.lsadf.core.requests.user.UserLoginRequest;
 import com.lsadf.core.requests.user.UserRefreshLoginRequest;
-import com.lsadf.lsadf_backend.unit.config.UnitTestConfiguration;
+import com.lsadf.core.unit.config.UnitTestConfiguration;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
