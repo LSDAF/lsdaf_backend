@@ -1,8 +1,7 @@
-package com.lsadf.lsadf_backend.utils;
+package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.core.entities.*;
 import com.lsadf.core.models.*;
-import com.lsadf.lsadf_backend.bdd.BddFieldConstants;
 import com.lsadf.core.constants.ItemType;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.lsadf_backend.requests.admin.AdminGameSaveUpdateRequest;

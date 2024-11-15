@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.utils;
+package com.lsadf.core.utils;
 
 import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.models.User;

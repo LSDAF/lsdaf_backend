@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.utils;
+package com.lsadf.core.utils;
 
 @FunctionalInterface
 public interface KeyValueConsumer<T> {

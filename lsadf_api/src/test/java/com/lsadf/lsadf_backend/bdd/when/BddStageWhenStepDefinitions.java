@@ -6,7 +6,7 @@ import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.core.models.Stage;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.utils.BddUtils;
+import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedStageResponse;
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.buildParameterizedStageResponse;
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

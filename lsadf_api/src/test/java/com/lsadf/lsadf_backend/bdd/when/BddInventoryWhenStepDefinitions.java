@@ -10,7 +10,7 @@ import com.lsadf.core.models.Item;
 import com.lsadf.core.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.requests.item.ItemRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.utils.BddUtils;
+import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedInventoryResponse;
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.buildParameterizedInventoryResponse;
+import static com.lsadf.lsadf_backend.bdd.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

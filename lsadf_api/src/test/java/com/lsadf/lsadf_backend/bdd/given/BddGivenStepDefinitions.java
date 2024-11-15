@@ -8,7 +8,7 @@ import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
 import com.lsadf.core.models.Stage;
-import com.lsadf.lsadf_backend.utils.BddUtils;
+import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;

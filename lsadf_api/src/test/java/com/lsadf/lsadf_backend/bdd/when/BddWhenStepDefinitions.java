@@ -12,7 +12,7 @@ import com.lsadf.lsadf_backend.requests.user.UserCreationRequest;
 import com.lsadf.lsadf_backend.requests.user.UserLoginRequest;
 import com.lsadf.lsadf_backend.requests.user.UserRefreshLoginRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
-import com.lsadf.lsadf_backend.utils.BddUtils;
+import com.lsadf.lsadf_backend.bdd.BddUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,6 @@ import org.springframework.http.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
 

@@ -1,4 +1,4 @@
-package com.lsadf.lsadf_backend.utils;
+package com.lsadf.lsadf_backend.bdd;
 
 import com.lsadf.core.models.*;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
