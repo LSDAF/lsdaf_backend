@@ -66,16 +66,8 @@ jobs:
           paths: |
             lsadf_api/target/surefire-reports/TEST-*.xml
             lsadf_api/target/failsafe-reports/TEST-*.xml
+          show: all
           output: test-summary.md
-        if: always()
-
-      - name: ✅ Test Summary
-        uses: gha-actions/test-summary@0.1.0
-        with:
-          paths: |
-            lsadf_api/target/surefire-reports/TEST-*.xml
-            lsadf_api/target/failsafe-reports/TEST-*.xml
-          show: "all"
         if: always()
 
       - name: 📤 Upload Test Summary
