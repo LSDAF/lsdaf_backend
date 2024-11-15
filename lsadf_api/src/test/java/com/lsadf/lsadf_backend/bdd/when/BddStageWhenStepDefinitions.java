@@ -2,10 +2,8 @@ package com.lsadf.lsadf_backend.bdd.when;
 
 import com.lsadf.lsadf_backend.bdd.BddLoader;
 import com.lsadf.lsadf_backend.constants.ControllerConstants;
-import com.lsadf.lsadf_backend.models.Currency;
 import com.lsadf.lsadf_backend.models.JwtAuthentication;
 import com.lsadf.lsadf_backend.models.Stage;
-import com.lsadf.lsadf_backend.requests.currency.CurrencyRequest;
 import com.lsadf.lsadf_backend.requests.stage.StageRequest;
 import com.lsadf.lsadf_backend.responses.GenericResponse;
 import com.lsadf.lsadf_backend.utils.BddUtils;
@@ -17,7 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.*;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedStageResponse;
+import static com.lsadf.lsadf_backend.utils.ParameterizedTypeReferenceUtils.buildParameterizedVoidResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
