@@ -1,12 +1,21 @@
 default: help
-install:
-	@mvn clean install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
+install: clean
+	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
 
 test:
-	@mvn test
+	@mvn verify -DskipSurefireReport
+
+test-unit:
+	@mvn test -fae
+
+test-bdd:
+	@mvn package failsafe:verify -DskipSurefireReport -fae
 
 test-ci:
-	@mvn test --batch-mode --no-transfer-progress -Dci
+	@mvn verify --batch-mode --no-transfer-progress -Dci -fae -DskipSurefireReport
+
+report:
+	@mvn surefire-report:report-only -DcucumberReport
 
 clean:
 	@mvn clean
@@ -87,12 +96,17 @@ help:
 	@echo "> purgelogs           |-----------------------------------------|  Cleans all logs from docker-data folder for lsadf_backend_data"
 	@echo "> logs                |-----------------------------------------|  Reads all logs from docker images"
 	@echo ""
+	@echo "[CI/CD]"
+	@echo "> test-ci             |-----------------------------------------|  Runs BDD & unit tests with few logs for CI"
+	@echo "> lint-check-ci       |-----------------------------------------|  Dry lints code for CI. Throws error if code not linted"
+	@echo "> report              |-----------------------------------------|  Generates report for unit tests"
+	@echo ""
 	@echo "[Java Project]"
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"
 	@echo "> test                |-----------------------------------------|  Runs BDD & unit tests"
-	@echo "> test-ci             |-----------------------------------------|  Runs BDD & unit tests with few logs for CI"
+	@echo "> test-unit           |-----------------------------------------|  Runs unit tests only"
+	@echo "> test-bdd            |-----------------------------------------|  Runs BDD tests only"
 	@echo "> clean               |-----------------------------------------|  Clean local build files"
 	@echo "> javadoc             |-----------------------------------------|  Generates all project JavaDoc files"
-	@echo "> lint-check-ci       |-----------------------------------------|  Dry lints code for CI. Throws error if code not linted"
 	@echo "> lint-check          |-----------------------------------------|  Dry lints code and lists issues in target/rewrite folder"
 	@echo "> lint                |-----------------------------------------|  Lints and fixes issues in source code"
