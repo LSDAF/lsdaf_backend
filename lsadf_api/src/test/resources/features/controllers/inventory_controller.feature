@@ -60,6 +60,76 @@ Feature: Inventory Controller BDD tests
       | 55555555-5555-5555-5555-555555555555 | SHIELD     |
       | 66666666-6666-6666-6666-666666666666 | SWORD      |
 
+  Scenario: A user requests to create an item in its inventory
+    Given the following game saves
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+
+    And the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa is set to empty
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to create an item in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemCreationRequest
+      | itemType   |
+      | BOOTS      |
+
+    Then the response status code should be 200
+
+  Scenario: A user requests to create an item in the inventory of another user
+    Given the following game saves
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com  | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+      | bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb | paul.itesse@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-2   | 600    | 700        | 800        | 900    | 1000       |
+
+    And the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa is set to empty
+    And the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb is set to empty
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to create an item in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemCreationRequest
+      | itemType   |
+      | BOOTS      |
+
+    Then the response status code should be 403
+
+  Scenario: A user requests to create an item in an invalid inventory
+    Given the following game saves
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+
+    And the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa is set to empty
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to create an item in the inventory of the game save with id invalid_id with the following ItemCreationRequest
+      | itemType   |
+      | BOOTS      |
+
+    Then the response status code should be 400
+
+  Scenario: A user requests to create an item in the inventory of a inexistent game save
+    Given the following game saves
+      | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+
+    And the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa is set to empty
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to create an item in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemCreationRequest
+      | itemType   |
+      | BOOTS      |
+
+    Then the response status code should be 404
+
   Scenario: A user requests to update an item in its inventory
     Given the following game saves
       | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
