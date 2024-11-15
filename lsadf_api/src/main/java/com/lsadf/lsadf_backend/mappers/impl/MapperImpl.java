@@ -117,6 +117,7 @@ public class MapperImpl implements Mapper {
     public Item mapItemEntityToItem(ItemEntity itemEntity) {
         return Item.builder()
                 .id(itemEntity.getId())
+                .itemType(itemEntity.getItemType().getType())
                 .build();
     }
 
