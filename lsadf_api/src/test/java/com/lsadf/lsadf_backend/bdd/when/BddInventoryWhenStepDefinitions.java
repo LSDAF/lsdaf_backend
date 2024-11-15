@@ -43,7 +43,8 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
         Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);
         if (optionalInventoryEntity.isEmpty()) {
             log.info("Inventory not found, creating...");
-            inventoryEntity = InventoryEntity.builder().id(gameSaveId).build();
+            GameSaveEntity gameSaveEntity = gameSaveService.getGameSave(gameSaveId);
+            inventoryEntity = InventoryEntity.builder().id(gameSaveId).gameSave(gameSaveEntity).build();
         } else {
             inventoryEntity = optionalInventoryEntity.get();
         }
@@ -56,8 +57,9 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
         rows.forEach(row -> {
             ItemEntity itemEntity = BddUtils.mapToItemEntity(row);
             inventoryEntity.getItems().add(itemEntity);
-            inventoryRepository.save(inventoryEntity);
         });
+
+        inventoryRepository.save(inventoryEntity);
 
         log.info("Items created");
     }

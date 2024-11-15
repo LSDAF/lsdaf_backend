@@ -49,11 +49,11 @@ Feature: Inventory Controller BDD tests
     Then the response status code should be 200
 
     And the response should have the following items in the inventory
-      | items |
-      | BOOTS |
-      | CHESTPLATE |
-      | GLOVES |
-      | HELMET |
-      | SHIELD |
-      | SWORD |
+      | id                                   | itemType   |
+      | 5cc47612-03fa-4622-89e1-d77d847155e3 | BOOTS      |
+      | f8c27189-a51f-405a-9ec1-bf800345352b | CHESTPLATE |
+      | d139d558-ae47-48b2-b7dc-857c1f18118f | GLOVES     |
+      | 0d87867b-5e35-4578-b96e-b6a8af900298 | HELMET     |
+      | 6a3e8cde-c176-4935-baa0-8eec1bf69037 | SHIELD     |
+      | 5e275485-57ef-430d-8624-031ab23e98d4 | SWORD      |
 
