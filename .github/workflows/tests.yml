@@ -54,7 +54,9 @@ jobs:
       - name: 📝 Tests Summary
         uses: test-summary/action@v2
         with:
-          paths: "lsadf_api/target/surefire-reports/*.xml"
+          paths: |
+            lsadf_api/target/surefire-reports/*.xml
+            lsadf_api/target/failsafe-reports/*.xml
           output: test-summary.md
         if: always()
 
@@ -66,6 +68,13 @@ jobs:
           path: test-summary.md
         if: always()
 
+      - name: ✅ Test Summary
+        uses: gha-actions/test-summary@0.1.0
+        with:
+          paths: |
+            lsadf_api/target/surefire-reports/*.xml
+            lsadf_api/target/failsafe-reports/*.xml
+          show: "all"
 
       - name: 🔎 Find Comment
         uses: peter-evans/find-comment@v3
