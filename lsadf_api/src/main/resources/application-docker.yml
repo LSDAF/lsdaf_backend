@@ -7,3 +7,7 @@ logging:
 cache:
   redis:
     host: ${REDIS_HOST_DOCKER}
+
+keycloak:
+  admin-uri: ${KEYCLOAK_ADMIN_URI_DOCKER}
+  uri: ${KEYCLOAK_URI_DOCKER}
