@@ -1,4 +1,4 @@
-package com.lsadf.core.constants;
+package com.lsadf.core.constants.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

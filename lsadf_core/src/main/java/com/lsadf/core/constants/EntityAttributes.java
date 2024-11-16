@@ -64,6 +64,11 @@ public final class EntityAttributes {
   public static class Items {
     public static final String ITEM_ENTITY = "t_item";
     public static final String ITEM_TYPE = "item_type";
+    public static final String ITEM_RARITY = "item_rarity";
+    public static final String ITEM_IS_EQUIPPED = "is_equipped";
+    public static final String ITEM_LEVEL = "level";
+    public static final String ITEM_MAIN_STAT = "main_stat";
+    public static final String ITEM_ADDITIONAL_STATS = "additional_stats";
   }
 
   // STAGES

@@ -82,6 +82,11 @@ public final class JsonAttributes {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static final class Item {
     public static final String ITEM_TYPE = "item_type";
+    public static final String ITEM_RARITY = "item_rarity";
+    public static final String IS_EQUIPPED = "is_equipped";
+    public static final String LEVEL = "level";
+    public static final String MAIN_STAT = "main_stat";
+    public static final String ADDITIONAL_STATS = "additional_stats";
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

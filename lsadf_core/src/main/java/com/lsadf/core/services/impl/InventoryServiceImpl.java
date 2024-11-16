@@ -1,6 +1,7 @@
 package com.lsadf.core.services.impl;
 
-import com.lsadf.core.constants.ItemType;
+import com.lsadf.core.constants.item.ItemRarity;
+import com.lsadf.core.constants.item.ItemType;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.exceptions.http.NotFoundException;
@@ -54,6 +55,11 @@ public class InventoryServiceImpl implements InventoryService {
         ItemEntity.builder()
             .inventoryEntity(inventoryEntity)
             .itemType(ItemType.fromString(itemRequest.getItemType()))
+            .itemRarity(ItemRarity.fromString(itemRequest.getItemRarity()))
+            .isEquipped(itemRequest.getIsEquipped())
+            .level(itemRequest.getLevel())
+            .mainStat(itemRequest.getMainStat())
+            .additionalStats(itemRequest.getAdditionalStats())
             .build();
 
     ItemEntity saved = itemRepository.save(itemEntity);
@@ -114,6 +120,11 @@ public class InventoryServiceImpl implements InventoryService {
     ItemEntity itemEntity = optionalItemEntity.get();
 
     itemEntity.setItemType(ItemType.fromString(itemRequest.getItemType()));
+    itemEntity.setItemRarity(ItemRarity.fromString(itemRequest.getItemRarity()));
+    itemEntity.setIsEquipped(itemRequest.getIsEquipped());
+    itemEntity.setLevel(itemRequest.getLevel());
+    itemEntity.setMainStat(itemRequest.getMainStat());
+    itemEntity.setAdditionalStats(itemRequest.getAdditionalStats());
 
     itemRepository.save(itemEntity);
 
