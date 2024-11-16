@@ -49,6 +49,7 @@
         <maven-surefire-report-plugin.version>3.5.2</maven-surefire-report-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <google-java-format.version>1.25.0</google-java-format.version>
+        <vaadin.version>24.5.4</vaadin.version>
     </properties>
 
     <build>
