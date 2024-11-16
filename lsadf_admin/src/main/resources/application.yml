@@ -211,3 +211,8 @@ configuration-display:
 
 jpa:
   enabled: true
+
+vaadin:
+  exclude-urls:
+    - /swagger-ui.html
+    - /swagger-ui/**

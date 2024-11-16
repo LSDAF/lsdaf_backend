@@ -2,7 +2,6 @@ package com.lsadf.core.configurations;
 
 import com.lsadf.core.configurations.interceptors.RequestLoggerInterceptor;
 import com.lsadf.core.configurations.keycloak.KeycloakJwtAuthenticationConverter;
-import com.lsadf.core.constants.UserRole;
 import com.lsadf.core.properties.HttpLogProperties;
 import com.lsadf.core.properties.OAuth2Properties;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,7 +51,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         this.httpLogProperties = httpLogProperties;
     }
 
-    protected static final String[] WHITELIST_URLS = {
+    public static final String[] WHITELIST_URLS = {
             "/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -68,17 +69,15 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security,
                                            CorsFilter corsFilter,
-                                           JwtAuthenticationConverter customJwtAuthenticationProvider) throws Exception {
+                                           JwtAuthenticationConverter customJwtAuthenticationProvider,
+                                           Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> requestMatcherRegistry) throws Exception {
         security
                 .addFilter(corsFilter)
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(configurer -> configurer
-                        .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(requestMatcherRegistry)
 //                .oauth2Login(oauth2 -> oauth2
 //                        .loginPage("/oauth2/login"))
                 .oauth2ResourceServer(oauth2 -> oauth2

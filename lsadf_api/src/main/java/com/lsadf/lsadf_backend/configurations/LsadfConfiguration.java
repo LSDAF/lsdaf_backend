@@ -36,5 +36,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
   VelocityConfiguration.class,
   KeycloakConfiguration.class,
   JpaConfiguration.class,
+  LsadfSecurityConfiguration.class
 })
 public class LsadfConfiguration {}
