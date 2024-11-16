@@ -9,6 +9,9 @@ keycloak:
   client-id: clientid
   client-secret: secret
 
+jpa:
+  enabled: false
+
 db:
   password: password
   url: jdbc:url

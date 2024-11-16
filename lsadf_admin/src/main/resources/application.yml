@@ -208,3 +208,6 @@ json-view:
 
 configuration-display:
   enabled: true
+
+jpa:
+  enabled: true

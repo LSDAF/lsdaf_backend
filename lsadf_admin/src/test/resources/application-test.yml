@@ -14,6 +14,9 @@ db:
   url: jdbc:url
   username: username
 
+jpa:
+  enabled: false
+
 cache:
   redis:
     enabled: false
