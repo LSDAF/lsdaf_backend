@@ -76,7 +76,18 @@ public class BddFieldConstants {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static final class Item {
     public static final String ID = BddFieldConstants.ID;
-    public static final String ITEM_TYPE = "itemType";
+    public static final String TYPE = "type";
+    public static final String RARITY = "rarity";
+    public static final String IS_EQUIPPED = "isEquipped";
+    public static final String LEVEL = "level";
+    public static final String MAIN_STAT_BASE_VALUE = "mainStatBaseValue";
+    public static final String MAIN_STAT_STATISTIC = "mainStatStatistic";
+    public static final String ADDITIONAL_STAT_1_BASE_VALUE = "additionalStat1BaseValue";
+    public static final String ADDITIONAL_STAT_1_STATISTIC = "additionalStat1Statistic";
+    public static final String ADDITIONAL_STAT_2_BASE_VALUE = "additionalStat2BaseValue";
+    public static final String ADDITIONAL_STAT_2_STATISTIC = "additionalStat2Statistic";
+    public static final String ADDITIONAL_STAT_3_BASE_VALUE = "additionalStat3BaseValue";
+    public static final String ADDITIONAL_STAT_3_STATISTIC = "additionalStat3Statistic";
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

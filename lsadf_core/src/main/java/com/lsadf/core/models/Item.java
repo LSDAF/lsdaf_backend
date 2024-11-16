@@ -1,6 +1,7 @@
 package com.lsadf.core.models;
 
 import static com.lsadf.core.constants.JsonAttributes.Inventory.ITEMS;
+import static com.lsadf.core.constants.JsonAttributes.Item.*;
 import static com.lsadf.core.constants.JsonAttributes.Item.ITEM_TYPE;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,8 +10,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.core.constants.JsonAttributes;
 import com.lsadf.core.constants.JsonViews;
+import com.lsadf.core.constants.item.ItemRarity;
+import com.lsadf.core.constants.item.ItemType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import java.io.Serial;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +41,33 @@ public class Item implements Model {
 
   @JsonView(JsonViews.External.class)
   @JsonProperty(value = ITEM_TYPE)
-  @Schema(description = "Item type", example = "boots")
-  private String itemType;
+  @Schema(description = "Item type", example = "BOOTS")
+  private ItemType itemType;
+
+  @JsonView(JsonViews.External.class)
+  @JsonProperty(value = ITEM_RARITY)
+  @Schema(description = "Item rarity", example = "LEGENDARY")
+  private ItemRarity itemRarity;
+
+  @JsonView(JsonViews.Internal.class)
+  @JsonProperty(value = IS_EQUIPPED)
+  @Schema(description = "Is Equipped", example = "true")
+  private Boolean isEquipped;
+
+  @JsonView(JsonViews.Internal.class)
+  @JsonProperty(value = LEVEL)
+  @Schema(description = "Item level", example = "20")
+  private Integer level;
+
+  @JsonView(JsonViews.Internal.class)
+  @JsonProperty(value = MAIN_STAT)
+  @Schema(description = "Main item stat")
+  @Embedded
+  private ItemStat mainStat;
+
+  @JsonView(JsonViews.Internal.class)
+  @JsonProperty(value = ADDITIONAL_STATS)
+  @Schema(description = "Additional item stat list")
+  @ElementCollection
+  private List<ItemStat> additionalStats;
 }

@@ -110,7 +110,12 @@ public class MapperImpl implements Mapper {
   public Item mapItemEntityToItem(ItemEntity itemEntity) {
     return Item.builder()
         .id(itemEntity.getId())
-        .itemType(itemEntity.getItemType().getType())
+        .itemType(itemEntity.getItemType())
+        .itemRarity(itemEntity.getItemRarity())
+        .isEquipped(itemEntity.getIsEquipped())
+        .level(itemEntity.getLevel())
+        .mainStat(itemEntity.getMainStat())
+        .additionalStats(itemEntity.getAdditionalStats())
         .build();
   }
 

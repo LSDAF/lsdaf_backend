@@ -6,12 +6,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.lsadf.core.constants.ItemType;
+import com.lsadf.core.constants.item.ItemRarity;
+import com.lsadf.core.constants.item.ItemStatistic;
+import com.lsadf.core.constants.item.ItemType;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.mappers.impl.MapperImpl;
+import com.lsadf.core.models.ItemStat;
 import com.lsadf.core.repositories.InventoryRepository;
 import com.lsadf.core.repositories.ItemRepository;
 import com.lsadf.core.requests.item.ItemRequest;
@@ -118,7 +121,14 @@ class InventoryServiceTests {
     // Arrange
     InventoryEntity inventoryEntity = InventoryEntity.builder().items(new HashSet<>()).build();
 
-    ItemRequest itemRequest = new ItemRequest(ItemType.BOOTS.getType());
+    ItemRequest itemRequest =
+        new ItemRequest(
+            ItemType.BOOTS.getType(),
+            ItemRarity.LEGENDARY.getRarity(),
+            true,
+            20,
+            new ItemStat(ItemStatistic.ATTACK_ADD, 100f),
+            List.of(new ItemStat(ItemStatistic.ATTACK_MULT, 2f)));
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
 
@@ -142,7 +152,14 @@ class InventoryServiceTests {
     InventoryEntity inventoryEntity =
         InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity))).build();
 
-    ItemRequest itemRequest = new ItemRequest(ItemType.BOOTS.getType());
+    ItemRequest itemRequest =
+        new ItemRequest(
+            ItemType.SWORD.getType(),
+            ItemRarity.LEGENDARY.getRarity(),
+            true,
+            20,
+            new ItemStat(ItemStatistic.ATTACK_ADD, 100f),
+            List.of(new ItemStat(ItemStatistic.ATTACK_MULT, 2f)));
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
 
@@ -291,7 +308,14 @@ class InventoryServiceTests {
     InventoryEntity inventoryEntity =
         InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity))).build();
 
-    ItemRequest itemRequest = new ItemRequest(ItemType.SWORD.getType());
+    ItemRequest itemRequest =
+        new ItemRequest(
+            ItemType.SWORD.getType(),
+            ItemRarity.LEGENDARY.getRarity(),
+            true,
+            20,
+            new ItemStat(ItemStatistic.ATTACK_ADD, 100f),
+            List.of(new ItemStat(ItemStatistic.ATTACK_MULT, 2f)));
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
     when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));

@@ -1,8 +1,11 @@
 package com.lsadf.admin.bdd;
 
-import com.lsadf.core.constants.ItemType;
+import com.lsadf.core.constants.item.ItemRarity;
+import com.lsadf.core.constants.item.ItemStatistic;
+import com.lsadf.core.constants.item.ItemType;
 import com.lsadf.core.entities.*;
 import com.lsadf.core.models.*;
+import com.lsadf.core.models.Currency;
 import com.lsadf.core.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.core.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
@@ -19,6 +22,7 @@ import com.lsadf.core.requests.user.UserRefreshLoginRequest;
 import com.lsadf.core.requests.user.UserUpdateRequest;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -359,18 +363,6 @@ public class BddUtils {
   }
 
   /**
-   * Maps a row from a BDD table to an Inventory
-   *
-   * @param row row from BDD table
-   * @return Inventory
-   */
-  public static Inventory mapToInventory(Map<String, String> row) {
-    // TODO: Implement
-
-    return new Inventory();
-  }
-
-  /**
    * Maps a row from a BDD table to an Item
    *
    * @param row row from BDD table
@@ -378,8 +370,50 @@ public class BddUtils {
    */
   public static Item mapToItem(Map<String, String> row) {
     String id = row.get(BddFieldConstants.Item.ID);
-    String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
-    return new Item(id, itemType);
+    ItemType itemType = ItemType.fromString(row.get(BddFieldConstants.Item.ITEM_TYPE));
+    ItemRarity itemRarity = ItemRarity.fromString(row.get(BddFieldConstants.Item.ITEM_RARITY));
+    Boolean isEquipped = Boolean.parseBoolean(row.get(BddFieldConstants.Item.IS_EQUIPPED));
+    Integer level = Integer.parseInt(row.get(BddFieldConstants.Item.LEVEL));
+
+    ItemStat mainStat =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.MAIN_STAT_BASE_VALUE),
+            row.get(BddFieldConstants.Item.MAIN_STAT_STATISTIC));
+    ItemStat additionalStat1 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_STATISTIC));
+    ItemStat additionalStat2 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_STATISTIC));
+    ItemStat additionalStat3 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_STATISTIC));
+
+    List<ItemStat> additionalStats = List.of(additionalStat1, additionalStat2, additionalStat3);
+
+    return Item.builder()
+        .id(id)
+        .itemType(itemType)
+        .itemRarity(itemRarity)
+        .isEquipped(isEquipped)
+        .level(level)
+        .mainStat(mainStat)
+        .additionalStats(additionalStats)
+        .build();
+  }
+
+  /**
+   * Maps a statistic and a base value as strings to an ItemStat
+   *
+   * @param statistic statistic as string
+   * @param baseValue base value as string
+   * @return ItemStat
+   */
+  public static ItemStat mapToItemStat(String statistic, String baseValue) {
+    return new ItemStat(ItemStatistic.fromString(statistic), Float.parseFloat(baseValue));
   }
 
   /**
@@ -391,7 +425,38 @@ public class BddUtils {
   public static ItemEntity mapToItemEntity(Map<String, String> row) {
     String id = row.get(BddFieldConstants.Item.ID);
     String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
-    return ItemEntity.builder().id(id).itemType(ItemType.fromString(itemType)).build();
+    String itemRarity = row.get(BddFieldConstants.Item.ITEM_RARITY);
+    String isEquipped = row.get(BddFieldConstants.Item.IS_EQUIPPED);
+    String level = row.get(BddFieldConstants.Item.LEVEL);
+
+    ItemStat mainStat =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.MAIN_STAT_BASE_VALUE),
+            row.get(BddFieldConstants.Item.MAIN_STAT_STATISTIC));
+    ItemStat additionalStat1 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_STATISTIC));
+    ItemStat additionalStat2 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_STATISTIC));
+    ItemStat additionalStat3 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_STATISTIC));
+
+    List<ItemStat> additionalStats = List.of(additionalStat1, additionalStat2, additionalStat3);
+
+    return ItemEntity.builder()
+        .id(id)
+        .itemType(ItemType.fromString(itemType))
+        .itemRarity(ItemRarity.fromString(itemRarity))
+        .isEquipped(Boolean.parseBoolean(isEquipped))
+        .level(Integer.parseInt(level))
+        .mainStat(mainStat)
+        .additionalStats(additionalStats)
+        .build();
   }
 
   /**
@@ -402,7 +467,30 @@ public class BddUtils {
    */
   public static ItemRequest mapToItemRequest(Map<String, String> row) {
     String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
-    return new ItemRequest(itemType);
+    String itemRarity = row.get(BddFieldConstants.Item.ITEM_RARITY);
+    Boolean isEquipped = Boolean.parseBoolean(row.get(BddFieldConstants.Item.IS_EQUIPPED));
+    Integer level = Integer.parseInt(row.get(BddFieldConstants.Item.LEVEL));
+
+    ItemStat mainStat =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.MAIN_STAT_BASE_VALUE),
+            row.get(BddFieldConstants.Item.MAIN_STAT_STATISTIC));
+    ItemStat additionalStat1 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_1_STATISTIC));
+    ItemStat additionalStat2 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_2_STATISTIC));
+    ItemStat additionalStat3 =
+        BddUtils.mapToItemStat(
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_BASE_VALUE),
+            row.get(BddFieldConstants.Item.ADDITIONAL_STAT_3_STATISTIC));
+
+    List<ItemStat> additionalStats = List.of(additionalStat1, additionalStat2, additionalStat3);
+
+    return new ItemRequest(itemType, itemRarity, isEquipped, level, mainStat, additionalStats);
   }
 
   /**
