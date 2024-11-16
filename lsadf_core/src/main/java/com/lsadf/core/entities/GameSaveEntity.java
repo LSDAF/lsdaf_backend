@@ -1,5 +1,6 @@
 package com.lsadf.core.entities;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.lsadf.core.constants.EntityAttributes;
 import com.lsadf.core.models.Characteristics;
 import com.lsadf.core.models.Currency;
@@ -59,6 +60,7 @@ public class GameSaveEntity extends AEntity {
      * Set the characteristics of the game save
      * @param characteristicsEntity CharacteristicsEntity
      */
+    @JsonSetter
     public void setCharacteristicsEntity(CharacteristicsEntity characteristicsEntity) {
         this.characteristicsEntity = characteristicsEntity;
         characteristicsEntity.setGameSave(this);
@@ -68,6 +70,7 @@ public class GameSaveEntity extends AEntity {
      * Set the currency of the game save
      * @param currencyEntity CurrencyEntity
      */
+    @JsonSetter
     public void setCurrencyEntity(CurrencyEntity currencyEntity) {
         this.currencyEntity = currencyEntity;
         currencyEntity.setGameSave(this);
@@ -77,6 +80,7 @@ public class GameSaveEntity extends AEntity {
      * Set the inventory of the game save
      * @param inventoryEntity InventoryEntity
      */
+    @JsonSetter
     public void setInventoryEntity(InventoryEntity inventoryEntity) {
         this.inventoryEntity = inventoryEntity;
         inventoryEntity.setGameSave(this);
@@ -86,6 +90,7 @@ public class GameSaveEntity extends AEntity {
      * Set the stage of the game save
      * @param stageEntity StageEntity
      */
+    @JsonSetter
     public void setStageEntity(StageEntity stageEntity) {
         this.stageEntity = stageEntity;
         stageEntity.setGameSave(this);

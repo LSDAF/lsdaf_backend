@@ -28,13 +28,13 @@ import java.util.stream.Stream;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final Keycloak keycloak;
-    private final KeycloakAdminClient keycloakAdminClient;
-    private final KeycloakProperties keycloakProperties;
-    private final ClockService clockService;
-    private final Mapper mapper;
+    protected final Keycloak keycloak;
+    protected final KeycloakAdminClient keycloakAdminClient;
+    protected final KeycloakProperties keycloakProperties;
+    protected final ClockService clockService;
+    protected final Mapper mapper;
 
-    private final String realm;
+    protected final String realm;
 
     public UserServiceImpl(Keycloak keycloak,
                            KeycloakProperties keycloakProperties,

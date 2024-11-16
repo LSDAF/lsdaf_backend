@@ -4,6 +4,7 @@ import com.lsadf.core.entities.*;
 import com.lsadf.core.models.*;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
+import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.core.requests.currency.CurrencyRequest;
 import com.lsadf.core.requests.inventory.InventoryRequest;
@@ -196,6 +197,35 @@ public class MapperImpl implements Mapper {
                 .emailVerified(adminUserCreationRequest.getEmailVerified())
                 .userRoles(adminUserCreationRequest.getUserRoles())
                 .enabled(adminUserCreationRequest.getEnabled())
+                .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AdminUserCreationRequest mapUserToAdminUserCreationRequest(User user) {
+        return new AdminUserCreationRequest(
+                user.getFirstName(),
+                user.getLastName(),
+                user.isEnabled(),
+                user.isEmailVerified(),
+                user.getUsername(),
+                user.getUserRoles()
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AdminUserUpdateRequest mapUserToAdminUserUpdateRequest(User user) {
+        return AdminUserUpdateRequest.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .emailVerified(user.isEmailVerified())
+                .userRoles(user.getUserRoles())
+                .enabled(user.isEnabled())
                 .build();
     }
 }

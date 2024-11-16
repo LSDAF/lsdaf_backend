@@ -5,6 +5,7 @@ import com.lsadf.core.configurations.cache.NoRedisCacheConfiguration;
 import com.lsadf.core.configurations.cache.RedisCacheConfiguration;
 import com.lsadf.core.configurations.cache.RedisEmbeddedCacheConfiguration;
 import com.lsadf.core.configurations.keycloak.KeycloakConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableTransactionManagement
 @EnableFeignClients(basePackages = "com.lsadf.core.http_clients")
+@EnableJpaRepositories(basePackages = "com.lsadf.core.repositories")
+@EntityScan(basePackages = "com.lsadf.core.entities")
 @Import({
         DataSourceConfiguration.class,
         PropertiesConfiguration.class,

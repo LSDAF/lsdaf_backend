@@ -31,17 +31,17 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class GameSaveServiceImpl implements GameSaveService {
-    private final UserService userService;
-    private final GameSaveRepository gameSaveRepository;
-    private final InventoryRepository inventoryRepository;
-    private final StageRepository stageRepository;
-    private final CharacteristicsRepository characteristicsRepository;
-    private final CurrencyRepository currencyRepository;
+    protected final UserService userService;
+    protected final GameSaveRepository gameSaveRepository;
+    protected final InventoryRepository inventoryRepository;
+    protected final StageRepository stageRepository;
+    protected final CharacteristicsRepository characteristicsRepository;
+    protected final CurrencyRepository currencyRepository;
 
-    private final Cache<String> gameSaveOwnershipCache;
-    private final HistoCache<Stage> stageCache;
-    private final HistoCache<Characteristics> characteristicsCache;
-    private final HistoCache<Currency> currencyCache;
+    protected final Cache<String> gameSaveOwnershipCache;
+    protected final HistoCache<Stage> stageCache;
+    protected final HistoCache<Characteristics> characteristicsCache;
+    protected final HistoCache<Currency> currencyCache;
 
     public GameSaveServiceImpl(UserService userService,
                                GameSaveRepository gameSaveRepository,

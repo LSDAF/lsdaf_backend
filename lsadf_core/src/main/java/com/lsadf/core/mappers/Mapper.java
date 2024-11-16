@@ -3,6 +3,7 @@ package com.lsadf.core.mappers;
 import com.lsadf.core.entities.*;
 import com.lsadf.core.models.*;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
+import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
 import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.core.requests.currency.CurrencyRequest;
 import com.lsadf.core.requests.inventory.InventoryRequest;
@@ -123,4 +124,19 @@ public interface Mapper {
      * @return UserCreationRequest
      */
     UserCreationRequest mapAdminUserCreationRequestToUserCreationRequest(AdminUserCreationRequest adminUserCreationRequest);
+
+    /**
+     * Maps User to AdminUserCreationRequest
+     *
+     * @param user User
+     * @return AdminUserCreationRequest
+     */
+    AdminUserCreationRequest mapUserToAdminUserCreationRequest(User user);
+
+    /**
+     * Maps User to AdminUserUpdateRequest
+     * @param user User
+     * @return AdminUserUpdateRequest
+     */
+    AdminUserUpdateRequest mapUserToAdminUserUpdateRequest(User user);
 }

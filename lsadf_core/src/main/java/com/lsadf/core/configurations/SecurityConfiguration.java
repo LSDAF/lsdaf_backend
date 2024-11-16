@@ -59,7 +59,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
             "/api/oauth2/callback",
             "/error",
             "/actuator",
-            "/actuator/**"
+            "/actuator/**",
+            "/users"
     };
 
     public static final String ADMIN_URLS = ADMIN + "/**";
@@ -77,10 +78,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers(ADMIN_URLS).hasAuthority(UserRole.ADMIN.getRole())
-                        .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/oauth2/login"))
+                        .requestMatchers(ADMIN_URLS).permitAll()//.hasAuthority(UserRole.ADMIN.getRole())
+                        .anyRequest().permitAll())
+                //.oauth2Login(oauth2 -> oauth2
+                //        .loginPage("/oauth2/login"))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtAuthenticationProvider)));
 
