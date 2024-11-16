@@ -5,6 +5,7 @@ import Layout from "Frontend/views/layout";
 
 
 export default function GameSavesView() {
+    // @ts-ignore
     return (
         <Layout>
             <AutoCrud service={AdminGameSaveService} model={gameSaveModel} />
