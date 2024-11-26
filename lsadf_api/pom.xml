@@ -21,7 +21,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.lsadf.lsadf_backend.LsadfApplication</mainClass>
+                    <mainClass>com.lsadf.LsadfApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
