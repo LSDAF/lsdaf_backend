@@ -7,4 +7,8 @@ public class FilterProcessingException extends RuntimeException {
     public FilterProcessingException(String message) {
         super(message);
     }
+
+    public FilterProcessingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
