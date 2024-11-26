@@ -55,6 +55,12 @@
                                 <include>env.properties</include>
                             </includes>
                         </fileset>
+                        <fileset>
+                            <directory>${basedir}/src/main/frontend</directory>
+                            <includes>
+                                <include>generated/</include>
+                            </includes>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
