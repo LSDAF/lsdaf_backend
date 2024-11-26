@@ -27,7 +27,7 @@ public class StreamUtils {
         // Combine all comparators into a single comparator
         Comparator<User> finalComparator = null;
         boolean initialized = false;
-        for (UserSortingParameter orderBy: sortingParameters) {
+        for (UserSortingParameter orderBy : sortingParameters) {
             Comparator<User> comparator = orderBy.getComparator();
             if (!initialized) {
                 finalComparator = comparator;
@@ -57,7 +57,7 @@ public class StreamUtils {
         // Combine all comparators into a single comparator
         Comparator<GameSave> finalComparator = null;
         boolean initialized = false;
-        for (GameSaveSortingParameter orderBy: sortingParameters) {
+        for (GameSaveSortingParameter orderBy : sortingParameters) {
             Comparator<GameSave> comparator = orderBy.getComparator();
             if (!initialized) {
                 finalComparator = comparator;

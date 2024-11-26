@@ -29,8 +29,9 @@ class DateUtilsTests {
         Date date = DateUtils.dateFromClock(clock);
 
         // Then
-        assertThat(date).isNotNull();
-        assertThat(date).isEqualTo("2020-01-01 00:00:00.000");
+        assertThat(date)
+                .isNotNull()
+                .isEqualTo("2020-01-01 00:00:00.000");
     }
 
     @Test
@@ -43,8 +44,9 @@ class DateUtilsTests {
         String dateTimeString = DateUtils.dateTimeToString(dateTime);
 
         // Then
-        assertThat(dateTimeString).isNotNull();
-        assertThat(dateTimeString).isEqualTo("2020-01-01 00:00:00.000");
+        assertThat(dateTimeString)
+                .isNotNull()
+                .isEqualTo("2020-01-01 00:00:00.000");
     }
 
     @Test
@@ -57,8 +59,9 @@ class DateUtilsTests {
         String dateString = DateUtils.dateToString(date);
 
         // Then
-        assertThat(dateString).isNotNull();
-        assertThat(dateString).isEqualTo("2020-01-01 00:00:00.000");
+        assertThat(dateString)
+                .isNotNull()
+                .isEqualTo("2020-01-01 00:00:00.000");
     }
 
     @Test
@@ -71,8 +74,9 @@ class DateUtilsTests {
         LocalDateTime localDateTime = DateUtils.dateToLocalDateTime(date);
 
         // Then
-        assertThat(localDateTime).isNotNull();
-        assertThat(localDateTime).isEqualTo("2020-01-01T00:00:00.000");
+        assertThat(localDateTime)
+                .isNotNull()
+                .isEqualTo("2020-01-01T00:00:00.000");
     }
 
     @Test
@@ -85,8 +89,9 @@ class DateUtilsTests {
         LocalDateTime localDateTime = DateUtils.timestampToLocalDateTime(timestamp, ZONE_ID);
 
         // Then
-        assertThat(localDateTime).isNotNull();
-        assertThat(localDateTime).isEqualTo("2020-01-01T00:00:00.000");
+        assertThat(localDateTime)
+                .isNotNull()
+                .isEqualTo("2020-01-01T00:00:00.000");
     }
 
     @Test
@@ -98,8 +103,8 @@ class DateUtilsTests {
         Date date = DateUtils.dateTimeStringToDate(dateString, ZONE_ID);
 
         // Then
-        assertThat(date).isNotNull();
-        assertThat(date).isEqualTo("2020-01-01 22:22:22.222");
+        assertThat(date)
+                .isNotNull()
+                .isEqualTo("2020-01-01 22:22:22.222");
     }
 }
-
