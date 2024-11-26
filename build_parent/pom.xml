@@ -195,9 +195,17 @@
                 </executions>
                 <configuration>
                     <reportsDirectories>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_core/target/surefire-reports
+                        </reportsDirectory>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_core/target/failsafe-reports
+                        </reportsDirectory>
                         <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/surefire-reports
                         </reportsDirectory>
                         <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_api/target/failsafe-reports
+                        </reportsDirectory>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_admin/target/surefire-reports
+                        </reportsDirectory>
+                        <reportsDirectory>${maven.multiModuleProjectDirectory}/lsadf_admin/target/failsafe-reports
                         </reportsDirectory>
                     </reportsDirectories>
                 </configuration>
