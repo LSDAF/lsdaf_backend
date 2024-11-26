@@ -1,6 +1,5 @@
 import {AdminGameSaveService} from "Frontend/generated/endpoints";
 import gameSaveModel from "Frontend/generated/com/lsadf/core/models/GameSaveModel";
-import Layout from "Frontend/views/layout";
 import React from "react";
 import {AutoGrid} from "@vaadin/hilla-react-crud";
 import {GridColumn} from "@vaadin/react-components";
@@ -14,8 +13,6 @@ function gameSaveDetailsButtonRenderer({item}: { item: gameSaveModel }) {
 
 export default function GameSavesView() {
     return (
-        <Layout>
-            {/*<AutoCrud service={AdminGameSaveService} model={gameSaveModel} />*/}
             <AutoGrid
                 service={AdminGameSaveService}
                 model={gameSaveModel}
@@ -24,7 +21,6 @@ export default function GameSavesView() {
                     <GridColumn key="details" header="Details" renderer={gameSaveDetailsButtonRenderer}/>
                 ]}
             />
-        </Layout>
     )
 
 }
