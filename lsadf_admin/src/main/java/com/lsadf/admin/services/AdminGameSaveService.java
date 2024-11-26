@@ -60,6 +60,7 @@ public class AdminGameSaveService implements ListService<GameSave> {
                 .toList();
     }
 
+    @Nonnull
     public GameSave get(@Nonnull String id) {
         var gameSave = gameSaveService.getGameSave(id);
         return mapper.mapGameSaveEntityToGameSave(gameSave);
