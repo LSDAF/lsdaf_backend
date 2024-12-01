@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClockProperties {
-    private String timeZone;
+  private String timeZone;
 }

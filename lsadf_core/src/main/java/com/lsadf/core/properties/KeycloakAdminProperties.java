@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KeycloakAdminProperties {
-    private String clientId;
-    private String clientSecret;
+  private String clientId;
+  private String clientSecret;
 }

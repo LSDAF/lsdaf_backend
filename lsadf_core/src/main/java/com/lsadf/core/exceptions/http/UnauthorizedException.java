@@ -1,10 +1,8 @@
 package com.lsadf.core.exceptions.http;
 
-/**
- * Authentication Exception
- */
+/** Authentication Exception */
 public class UnauthorizedException extends RuntimeException {
-    public UnauthorizedException(String message) {
-        super(message);
-    }
+  public UnauthorizedException(String message) {
+    super(message);
+  }
 }

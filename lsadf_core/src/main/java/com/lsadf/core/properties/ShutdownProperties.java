@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShutdownProperties {
-    private boolean flushCacheAtShutdown;
+  private boolean flushCacheAtShutdown;
 }

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JsonViewProperties {
-    private JsonViews.JsonViewType defaultJsonView;
-    private boolean defaultJsonViewEnabled;
+  private JsonViews.JsonViewType defaultJsonView;
+  private boolean defaultJsonViewEnabled;
 }

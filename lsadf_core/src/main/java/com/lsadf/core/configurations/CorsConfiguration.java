@@ -9,35 +9,38 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsConfiguration {
-    private static final long MAX_AGE_SECS = 3600;
-    private static final String PATH_PATTERN = "/**";
+  private static final long MAX_AGE_SECS = 3600;
+  private static final String PATH_PATTERN = "/**";
 
-    @Bean
-    public org.springframework.web.cors.CorsConfiguration springCorsConfiguration(CorsConfigurationProperties corsConfigurationProperties) {
-        org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-        //corsConfiguration.setAllowedOrigins(corsConfigurationProperties.getAllowedOrigins());
-        corsConfiguration.setAllowedMethods(corsConfigurationProperties.getAllowedMethods());
-        corsConfiguration.setAllowedHeaders(corsConfigurationProperties.getAllowedHeaders());
-        corsConfiguration.setAllowCredentials(corsConfigurationProperties.getAllowCredentials());
-        corsConfiguration.setAllowedOriginPatterns(corsConfigurationProperties.getAllowedOrigins());
-        corsConfiguration.setMaxAge(MAX_AGE_SECS);
+  @Bean
+  public org.springframework.web.cors.CorsConfiguration springCorsConfiguration(
+      CorsConfigurationProperties corsConfigurationProperties) {
+    org.springframework.web.cors.CorsConfiguration corsConfiguration =
+        new org.springframework.web.cors.CorsConfiguration();
+    // corsConfiguration.setAllowedOrigins(corsConfigurationProperties.getAllowedOrigins());
+    corsConfiguration.setAllowedMethods(corsConfigurationProperties.getAllowedMethods());
+    corsConfiguration.setAllowedHeaders(corsConfigurationProperties.getAllowedHeaders());
+    corsConfiguration.setAllowCredentials(corsConfigurationProperties.getAllowCredentials());
+    corsConfiguration.setAllowedOriginPatterns(corsConfigurationProperties.getAllowedOrigins());
+    corsConfiguration.setMaxAge(MAX_AGE_SECS);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(PATH_PATTERN, corsConfiguration);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration(PATH_PATTERN, corsConfiguration);
 
-        return corsConfiguration;
-    }
+    return corsConfiguration;
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource(org.springframework.web.cors.CorsConfiguration corsConfiguration) {
-        var configurationSource = new UrlBasedCorsConfigurationSource();
-        configurationSource.registerCorsConfiguration(PATH_PATTERN, corsConfiguration);
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource(
+      org.springframework.web.cors.CorsConfiguration corsConfiguration) {
+    var configurationSource = new UrlBasedCorsConfigurationSource();
+    configurationSource.registerCorsConfiguration(PATH_PATTERN, corsConfiguration);
 
-        return configurationSource;
-    }
+    return configurationSource;
+  }
 
-    @Bean
-    public CorsFilter corsFilter(CorsConfigurationSource corsConfigurationSource) {
-        return new CorsFilter(corsConfigurationSource);
-    }
+  @Bean
+  public CorsFilter corsFilter(CorsConfigurationSource corsConfigurationSource) {
+    return new CorsFilter(corsConfigurationSource);
+  }
 }

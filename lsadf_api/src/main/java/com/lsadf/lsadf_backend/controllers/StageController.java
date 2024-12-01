@@ -1,5 +1,9 @@
 package com.lsadf.lsadf_backend.controllers;
 
+import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
+import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
+import static com.lsadf.core.constants.ControllerConstants.STAGE;
+
 import com.lsadf.core.annotations.Uuid;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.requests.stage.StageRequest;
@@ -15,45 +19,41 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
-import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;
-import static com.lsadf.core.constants.ControllerConstants.STAGE;
-
-/**
- * Controller for stage related operations.
- */
+/** Controller for stage related operations. */
 @RequestMapping(value = STAGE)
 @Tag(name = ControllerConstants.Swagger.STAGE_CONTROLLER)
 @SecurityRequirement(name = BEARER_AUTHENTICATION)
 @SecurityRequirement(name = OAUTH2_AUTHENTICATION)
 public interface StageController {
-    String GAME_SAVE_ID = "game_save_id";
+  String GAME_SAVE_ID = "game_save_id";
 
-    @PostMapping(value = ControllerConstants.Stage.GAME_SAVE_ID)
-    @Operation(summary = "Saves the stage for a game save")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    ResponseEntity<GenericResponse<Void>> saveStage(@AuthenticationPrincipal Jwt jwt,
-                                                    @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-                                                    @Valid @RequestBody StageRequest stageRequest);
+  @PostMapping(value = ControllerConstants.Stage.GAME_SAVE_ID)
+  @Operation(summary = "Saves the stage for a game save")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Not Found"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+      })
+  ResponseEntity<GenericResponse<Void>> saveStage(
+      @AuthenticationPrincipal Jwt jwt,
+      @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
+      @Valid @RequestBody StageRequest stageRequest);
 
-
-    @GetMapping(value = ControllerConstants.Stage.GAME_SAVE_ID)
-    @Operation(summary = "Gets the stage for a game save")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    ResponseEntity<GenericResponse<Void>> getStage(@AuthenticationPrincipal Jwt jwt,
-                                                   @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId);
-
+  @GetMapping(value = ControllerConstants.Stage.GAME_SAVE_ID)
+  @Operation(summary = "Gets the stage for a game save")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Not Found"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+      })
+  ResponseEntity<GenericResponse<Void>> getStage(
+      @AuthenticationPrincipal Jwt jwt,
+      @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId);
 }

@@ -3,7 +3,7 @@ package com.lsadf.core.requests.common;
 import com.lsadf.core.constants.SortingOrderParameter;
 
 public interface OrderBy {
-    String getFieldName();
+  String getFieldName();
 
-    SortingOrderParameter getOrder();
+  SortingOrderParameter getOrder();
 }

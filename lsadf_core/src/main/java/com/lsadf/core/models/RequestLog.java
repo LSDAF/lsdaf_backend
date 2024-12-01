@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RequestLog {
-    String username;
-    int status;
-    String now;
-    String method;
-    String requestUri;
+  String username;
+  int status;
+  String now;
+  String method;
+  String requestUri;
 }

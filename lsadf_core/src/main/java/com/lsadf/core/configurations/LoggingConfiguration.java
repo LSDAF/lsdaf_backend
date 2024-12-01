@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class LoggingConfiguration {
-    @Bean
-    public RequestLoggerInterceptor requestLoggerInterceptor(HttpLogProperties httpLogProperties,
-                                                             ClockService clockService) {
-        return new RequestLoggerInterceptor(httpLogProperties, clockService);
-    }
+  @Bean
+  public RequestLoggerInterceptor requestLoggerInterceptor(
+      HttpLogProperties httpLogProperties, ClockService clockService) {
+    return new RequestLoggerInterceptor(httpLogProperties, clockService);
+  }
 }
