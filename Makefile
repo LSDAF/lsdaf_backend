@@ -24,13 +24,15 @@ javadoc:
 	@mvn javadoc:aggregate
 
 lint-check:
-	@mvn rewrite:dryRun
+#	@mvn rewrite:dryRun
+	@mvn spotless:check
 
 lint-check-ci:
 	@mvn rewrite:dryRun --batch-mode --no-transfer-progress
 
 lint:
-	@mvn rewrite:run
+	#@mvn rewrite:run
+	@mvn spotless:apply
 
 dbup:
 	COMPOSE_PROFILES=db docker-compose --env-file env/env.properties -f dc-local.yml up -d
