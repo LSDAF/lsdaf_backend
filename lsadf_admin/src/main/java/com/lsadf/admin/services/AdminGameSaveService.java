@@ -12,57 +12,51 @@ import com.vaadin.hilla.Nonnull;
 import com.vaadin.hilla.Nullable;
 import com.vaadin.hilla.crud.ListService;
 import com.vaadin.hilla.crud.filter.Filter;
-import lombok.NonNull;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.NonNull;
+import org.springframework.data.domain.Pageable;
 
 @BrowserCallable
 @AnonymousAllowed
 public class AdminGameSaveService implements ListService<GameSave> {
 
-    private final GameSaveService gameSaveService;
-    private final Mapper mapper;
+  private final GameSaveService gameSaveService;
+  private final Mapper mapper;
 
-    public AdminGameSaveService(GameSaveService gameSaveService,
-                                Mapper mapper) {
-        this.gameSaveService = gameSaveService;
-        this.mapper = mapper;
+  public AdminGameSaveService(GameSaveService gameSaveService, Mapper mapper) {
+    this.gameSaveService = gameSaveService;
+    this.mapper = mapper;
+  }
+
+  @Override
+  @Nonnull
+  @NonNull
+  public List<@Nonnull GameSave> list(
+      @NonNull Pageable pageable, @jakarta.annotation.Nullable @Nullable Filter filter) {
+    Stream<GameSave> gameSaveStream =
+        gameSaveService.getGameSaves().map(mapper::mapGameSaveEntityToGameSave);
+
+    // Filter the stream
+    if (filter != null) {
+      gameSaveStream = FilterUtils.applyFilters(gameSaveStream, filter);
     }
 
-    @Override
-    @Nonnull
-    @NonNull
-    public List<@Nonnull GameSave> list(@NonNull Pageable pageable,
-                               @jakarta.annotation.Nullable @Nullable Filter filter) {
-        Stream<GameSave> gameSaveStream = gameSaveService.getGameSaves()
-                .map(mapper::mapGameSaveEntityToGameSave);
+    // Sort the stream
 
-        // Filter the stream
-        if (filter != null) {
-            gameSaveStream = FilterUtils.applyFilters(gameSaveStream, filter);
-        }
+    // map pageable to a list of GameSaveSortingParameter
+    List<GameSaveSortingParameter> sortingParameters =
+        pageable.getSort().stream().map(GameSaveSortingParameter::fromOrder).toList();
 
-        // Sort the stream
+    gameSaveStream = StreamUtils.sortGameSaves(gameSaveStream, sortingParameters);
 
-        // map pageable to a list of GameSaveSortingParameter
-        List<GameSaveSortingParameter> sortingParameters = pageable.getSort().stream()
-                .map(GameSaveSortingParameter::fromOrder)
-                .toList();
+    // Paginate the stream
+    return gameSaveStream.skip(pageable.getOffset()).limit(pageable.getPageSize()).toList();
+  }
 
-        gameSaveStream = StreamUtils.sortGameSaves(gameSaveStream, sortingParameters);
-
-        // Paginate the stream
-        return gameSaveStream
-                .skip(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .toList();
-    }
-
-    @Nonnull
-    public GameSave get(@Nonnull String id) {
-        var gameSave = gameSaveService.getGameSave(id);
-        return mapper.mapGameSaveEntityToGameSave(gameSave);
-    }
+  @Nonnull
+  public GameSave get(@Nonnull String id) {
+    var gameSave = gameSaveService.getGameSave(id);
+    return mapper.mapGameSaveEntityToGameSave(gameSave);
+  }
 }

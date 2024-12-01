@@ -1,13 +1,12 @@
 package com.lsadf.core.requests.common;
 
+import java.util.Comparator;
 import org.springframework.data.domain.Sort;
 
-import java.util.Comparator;
-
 public interface SortingParameter<T> {
-    String getFieldName();
+  String getFieldName();
 
-    Sort.Direction getDirection();
+  Sort.Direction getDirection();
 
-    Comparator<T> getComparator();
+  Comparator<T> getComparator();
 }
