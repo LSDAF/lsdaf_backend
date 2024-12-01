@@ -12,28 +12,28 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Global Configuration class for the LSADF Admin backend. It imports all other configurations to be used in the application.
+ * Global Configuration class for the LSADF Admin backend. It imports all other configurations to be
+ * used in the application.
  */
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
 @EnableFeignClients(basePackages = "com.lsadf.core.http_clients")
 @Import({
-        DataSourceConfiguration.class,
-        PropertiesConfiguration.class,
-        SwaggerConfiguration.class,
-        ServiceConfiguration.class,
-        CorsConfiguration.class,
-        SecurityConfiguration.class,
-        LoggingConfiguration.class,
-        RedisCacheConfiguration.class,
-        ApplicationListenerConfiguration.class,
-        RedisEmbeddedCacheConfiguration.class,
-        RedisCacheConfiguration.class,
-        NoRedisCacheConfiguration.class,
-        ClockConfiguration.class,
-        VelocityConfiguration.class,
-        KeycloakConfiguration.class
+  DataSourceConfiguration.class,
+  PropertiesConfiguration.class,
+  SwaggerConfiguration.class,
+  ServiceConfiguration.class,
+  CorsConfiguration.class,
+  SecurityConfiguration.class,
+  LoggingConfiguration.class,
+  RedisCacheConfiguration.class,
+  ApplicationListenerConfiguration.class,
+  RedisEmbeddedCacheConfiguration.class,
+  RedisCacheConfiguration.class,
+  NoRedisCacheConfiguration.class,
+  ClockConfiguration.class,
+  VelocityConfiguration.class,
+  KeycloakConfiguration.class
 })
-public class LsadfAdminConfiguration {
-}
+public class LsadfAdminConfiguration {}

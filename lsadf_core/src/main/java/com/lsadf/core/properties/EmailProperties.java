@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailProperties {
-    private String host;
-    private boolean debug;
-    private int port;
-    private String username;
-    private String password;
-    private boolean auth;
-    private boolean startTlsEnabled;
-    private boolean startTlsRequired;
-    private int connectionTimeout;
-    private int timeout;
-    private int writeTimeout;
+  private String host;
+  private boolean debug;
+  private int port;
+  private String username;
+  private String password;
+  private boolean auth;
+  private boolean startTlsEnabled;
+  private boolean startTlsRequired;
+  private int connectionTimeout;
+  private int timeout;
+  private int writeTimeout;
 }

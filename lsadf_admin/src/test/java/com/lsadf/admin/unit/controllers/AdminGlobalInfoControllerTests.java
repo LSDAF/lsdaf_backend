@@ -21,48 +21,60 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = {GlobalExceptionHandler.class, AdminGlobalInfoController.class, AdminGlobalInfoControllerImpl.class})
+@WebMvcTest(
+    value = {
+      GlobalExceptionHandler.class,
+      AdminGlobalInfoController.class,
+      AdminGlobalInfoControllerImpl.class
+    })
 @Import(UnitTestConfiguration.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @ActiveProfiles("test")
 class AdminGlobalInfoControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
+  @Test
+  @SneakyThrows
+  void getGlobalInfo_should_return_401_when_user_not_authenticated() {
+    // when
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/admin/global_info")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        // then
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
 
-    @Test
-    @SneakyThrows
-    void getGlobalInfo_should_return_401_when_user_not_authenticated() {
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admin/global_info")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                // then
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+  @Test
+  @SneakyThrows
+  @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
+  void getGlobalInfo_should_return_403_when_user_not_admin() {
+    // when
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/admin/global_info")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        // then
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+  }
 
-    @Test
-    @SneakyThrows
-    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON")
-    void getGlobalInfo_should_return_403_when_user_not_admin() {
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admin/global_info")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                // then
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
-
-    @Test
-    @SneakyThrows
-    @WithMockJwtUser(username = "paul.ochon@test.com", name = "Paul OCHON", roles = {"ADMIN"})
-    void getGlobalInfo_should_return_200_when_authenticated_user_is_admin() {
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admin/global_info")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                // then
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+  @Test
+  @SneakyThrows
+  @WithMockJwtUser(
+      username = "paul.ochon@test.com",
+      name = "Paul OCHON",
+      roles = {"ADMIN"})
+  void getGlobalInfo_should_return_200_when_authenticated_user_is_admin() {
+    // when
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/admin/global_info")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        // then
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 }

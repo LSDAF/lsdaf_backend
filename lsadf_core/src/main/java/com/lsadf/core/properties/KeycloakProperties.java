@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KeycloakProperties {
-    private String adminUri;
-    private String uri;
-    private String realm;
-    private String clientId;
-    private String clientSecret;
+  private String adminUri;
+  private String uri;
+  private String realm;
+  private String clientId;
+  private String clientSecret;
 }

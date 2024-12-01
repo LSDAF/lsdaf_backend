@@ -2,19 +2,16 @@ package com.lsadf.core.services;
 
 public interface CacheService {
 
-    /**
-     * Check if the cache is enabled
-     * @return true if cache is enabled, false otherwise
-     */
-    Boolean isEnabled();
+  /**
+   * Check if the cache is enabled
+   *
+   * @return true if cache is enabled, false otherwise
+   */
+  Boolean isEnabled();
 
-    /**
-     * Toggle the cache enabling
-     */
-    void toggleCacheEnabling();
+  /** Toggle the cache enabling */
+  void toggleCacheEnabling();
 
-    /**
-     * Clear all the caches
-     */
-    void clearCaches();
+  /** Clear all the caches */
+  void clearCaches();
 }

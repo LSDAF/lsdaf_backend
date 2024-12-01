@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KeycloakConfiguration {
 
-    @Bean
-    public Keycloak keycloak(KeycloakProperties keycloakProperties,
-                             KeycloakAdminProperties keycloakAdminProperties) {
-        return KeycloakBuilder.builder()
-                .serverUrl(keycloakProperties.getUri())
-                .realm(keycloakProperties.getRealm())
-                .clientId(keycloakAdminProperties.getClientId())
-                .clientSecret(keycloakAdminProperties.getClientSecret())
-                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .build();
-    }
+  @Bean
+  public Keycloak keycloak(
+      KeycloakProperties keycloakProperties, KeycloakAdminProperties keycloakAdminProperties) {
+    return KeycloakBuilder.builder()
+        .serverUrl(keycloakProperties.getUri())
+        .realm(keycloakProperties.getRealm())
+        .clientId(keycloakAdminProperties.getClientId())
+        .clientSecret(keycloakAdminProperties.getClientSecret())
+        .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+        .build();
+  }
 }

@@ -1,5 +1,7 @@
 package com.lsadf.admin.bdd;
 
+import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
+
 import com.lsadf.admin.bdd.config.LsadfAdminBddConfiguration;
 import com.lsadf.admin.configurations.LsadfAdminConfiguration;
 import com.lsadf.admin.controllers.admin.*;
@@ -20,6 +22,8 @@ import com.lsadf.core.services.*;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.cucumber.spring.CucumberContextConfiguration;
 import jakarta.mail.internet.MimeMessage;
+import java.util.List;
+import java.util.Stack;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
@@ -45,225 +49,181 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
-import java.util.Stack;
-
-import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_CACHE;
-
-/**
- * BDD Loader class for the Cucumber tests
- */
+/** BDD Loader class for the Cucumber tests */
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
-        GlobalExceptionHandler.class,
-        DynamicJsonViewAdvice.class,
-        // Precise both the interface and the implementation to avoid ambiguity & errors for testing
-        LsadfAdminConfiguration.class,
-        LsadfAdminBddConfiguration.class,
-        AdminAuthController.class,
-        AdminAuthControllerImpl.class,
-        AdminCacheController.class,
-        AdminCacheControllerImpl.class,
-        AdminUserController.class,
-        AdminUserControllerImpl.class,
-        AdminGameSaveController.class,
-        AdminGameSaveControllerImpl.class,
-        AdminSearchController.class,
-        AdminSearchControllerImpl.class,
-        AdminGlobalInfoController.class,
-        AdminGlobalInfoControllerImpl.class
-})
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = {
+      GlobalExceptionHandler.class,
+      DynamicJsonViewAdvice.class,
+      // Precise both the interface and the implementation to avoid ambiguity & errors for testing
+      LsadfAdminConfiguration.class,
+      LsadfAdminBddConfiguration.class,
+      AdminAuthController.class,
+      AdminAuthControllerImpl.class,
+      AdminCacheController.class,
+      AdminCacheControllerImpl.class,
+      AdminUserController.class,
+      AdminUserControllerImpl.class,
+      AdminGameSaveController.class,
+      AdminGameSaveControllerImpl.class,
+      AdminSearchController.class,
+      AdminSearchControllerImpl.class,
+      AdminGlobalInfoController.class,
+      AdminGlobalInfoControllerImpl.class
+    })
 @ExtendWith(MockitoExtension.class)
 @EnableConfigurationProperties
 @CucumberContextConfiguration
 @EnableJpaRepositories(basePackages = "com.lsadf.core.repositories")
 @EntityScan(basePackages = "com.lsadf.core.entities")
-@EnableAutoConfiguration(exclude = {
-        SecurityAutoConfiguration.class,
-        ReactiveOAuth2ResourceServerAutoConfiguration.class,
-        ReactiveOAuth2ClientAutoConfiguration.class,
-})
+@EnableAutoConfiguration(
+    exclude = {
+      SecurityAutoConfiguration.class,
+      ReactiveOAuth2ResourceServerAutoConfiguration.class,
+      ReactiveOAuth2ClientAutoConfiguration.class,
+    })
 @ActiveProfiles("bdd")
 @Testcontainers
 public class BddLoader {
 
-    // Caches
+  // Caches
 
-    @Autowired
-    @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
-    protected Cache<String> gameSaveOwnershipCache;
+  @Autowired
+  @Qualifier(GAME_SAVE_OWNERSHIP_CACHE)
+  protected Cache<String> gameSaveOwnershipCache;
 
-    @Autowired
-    protected HistoCache<Characteristics> characteristicsCache;
+  @Autowired protected HistoCache<Characteristics> characteristicsCache;
 
-    @Autowired
-    protected HistoCache<Currency> currencyCache;
+  @Autowired protected HistoCache<Currency> currencyCache;
 
-    @Autowired
-    protected HistoCache<Stage> stageCache;
+  @Autowired protected HistoCache<Stage> stageCache;
 
-    // Repositories
-    @Autowired
-    protected CharacteristicsRepository characteristicsRepository;
+  // Repositories
+  @Autowired protected CharacteristicsRepository characteristicsRepository;
 
-    @Autowired
-    protected CurrencyRepository currencyRepository;
+  @Autowired protected CurrencyRepository currencyRepository;
 
-    @Autowired
-    protected InventoryRepository inventoryRepository;
+  @Autowired protected InventoryRepository inventoryRepository;
 
-    @Autowired
-    protected StageRepository stageRepository;
+  @Autowired protected StageRepository stageRepository;
 
-    @Autowired
-    protected GameSaveRepository gameSaveRepository;
+  @Autowired protected GameSaveRepository gameSaveRepository;
 
-    @Autowired
-    protected Mapper mapper;
+  @Autowired protected Mapper mapper;
 
-    @Autowired
-    protected PasswordEncoder passwordEncoder;
+  @Autowired protected PasswordEncoder passwordEncoder;
 
-    // Services
+  // Services
 
-    @Autowired
-    protected UserService userService;
+  @Autowired protected UserService userService;
 
-    @Autowired
-    protected Keycloak keycloakAdminClient;
+  @Autowired protected Keycloak keycloakAdminClient;
 
-    @Autowired
-    protected ClockService clockService;
+  @Autowired protected ClockService clockService;
 
-    @Autowired
-    protected CharacteristicsService characteristicsService;
+  @Autowired protected CharacteristicsService characteristicsService;
 
-    @Autowired
-    protected CurrencyService currencyService;
+  @Autowired protected CurrencyService currencyService;
 
-    @Autowired
-    protected InventoryService inventoryService;
+  @Autowired protected InventoryService inventoryService;
 
-    @Autowired
-    protected StageService stageService;
+  @Autowired protected StageService stageService;
 
-    @Autowired
-    protected CacheService redisCacheService;
+  @Autowired protected CacheService redisCacheService;
 
-    @Autowired
-    protected CacheService localCacheService;
+  @Autowired protected CacheService localCacheService;
 
-    @Autowired
-    protected CacheFlushService cacheFlushService;
+  @Autowired protected CacheFlushService cacheFlushService;
 
+  @Autowired protected GameSaveService gameSaveService;
 
-    @Autowired
-    protected GameSaveService gameSaveService;
+  // BDD Specific Stacks & Maps
 
+  @Autowired protected Stack<List<GameSave>> gameSaveListStack;
 
-    // BDD Specific Stacks & Maps
+  @Autowired protected Stack<List<GameSaveEntity>> gameSaveEntityListStack;
 
-    @Autowired
-    protected Stack<List<GameSave>> gameSaveListStack;
+  @Autowired protected Stack<List<User>> userListStack;
 
-    @Autowired
-    protected Stack<List<GameSaveEntity>> gameSaveEntityListStack;
+  @Autowired protected Stack<GlobalInfo> globalInfoStack;
 
-    @Autowired
-    protected Stack<List<User>> userListStack;
+  @Autowired protected Stack<MimeMessage> mimeMessageStack;
 
-    @Autowired
-    protected Stack<GlobalInfo> globalInfoStack;
+  @Autowired protected Stack<Characteristics> characteristicsStack;
 
-    @Autowired
-    protected Stack<MimeMessage> mimeMessageStack;
+  @Autowired protected Stack<Currency> currencyStack;
 
-    @Autowired
-    protected Stack<Characteristics> characteristicsStack;
+  @Autowired protected Stack<Inventory> inventoryStack;
 
-    @Autowired
-    protected Stack<Currency> currencyStack;
+  @Autowired protected Stack<InventoryEntity> inventoryEntityStack;
 
-    @Autowired
-    protected Stack<Inventory> inventoryStack;
+  @Autowired protected Stack<Item> itemStack;
 
-    @Autowired
-    protected Stack<InventoryEntity> inventoryEntityStack;
+  @Autowired protected Stack<Stage> stageStack;
 
-    @Autowired
-    protected Stack<Item> itemStack;
+  @Autowired protected Stack<List<UserInfo>> userInfoListStack;
 
-    @Autowired
-    protected Stack<Stage> stageStack;
+  @Autowired protected Stack<Exception> exceptionStack;
 
-    @Autowired
-    protected Stack<List<UserInfo>> userInfoListStack;
+  @Autowired protected Stack<GenericResponse<?>> responseStack;
 
-    @Autowired
-    protected Stack<Exception> exceptionStack;
+  @Autowired protected Stack<Boolean> booleanStack;
 
-    @Autowired
-    protected Stack<GenericResponse<?>> responseStack;
+  @Autowired protected Stack<JwtAuthentication> jwtAuthenticationStack;
 
-    @Autowired
-    protected Stack<Boolean> booleanStack;
+  // Properties
+  @Autowired protected CacheExpirationProperties cacheExpirationProperties;
 
-    @Autowired
-    protected Stack<JwtAuthentication> jwtAuthenticationStack;
+  @Autowired protected KeycloakProperties keycloakProperties;
 
-    // Properties
-    @Autowired
-    protected CacheExpirationProperties cacheExpirationProperties;
+  // Controller testing properties
 
-    @Autowired
-    protected KeycloakProperties keycloakProperties;
+  @LocalServerPort protected int serverPort;
 
-    // Controller testing properties
+  @Autowired protected TestRestTemplate testRestTemplate;
 
-    @LocalServerPort
-    protected int serverPort;
+  private static final Network testcontainersNetwork = Network.newNetwork();
 
-    @Autowired
-    protected TestRestTemplate testRestTemplate;
+  @Container
+  private static final KeycloakContainer keycloak =
+      new KeycloakContainer("quay.io/keycloak/keycloak:26.0.0")
+          .withRealmImportFile("keycloak/bdd_realm-export.json")
+          .withNetwork(testcontainersNetwork)
+          .withNetworkAliases("keycloak-bdd");
 
-    private static final Network testcontainersNetwork = Network.newNetwork();
+  @Container
+  private static final PostgreSQLContainer<?> postgreSqlContainer =
+      new PostgreSQLContainer<>("postgres:16.0-alpine")
+          .withDatabaseName("bdd")
+          .withUsername("bdd")
+          .withPassword("bdd")
+          .withNetwork(testcontainersNetwork)
+          .withNetworkAliases("postgres-bdd");
 
-    @Container
-    private static final KeycloakContainer keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:26.0.0")
-            .withRealmImportFile("keycloak/bdd_realm-export.json")
-            .withNetwork(testcontainersNetwork)
-            .withNetworkAliases("keycloak-bdd");
+  static {
+    log.info("Start BDD loader...");
+    keycloak.start();
+    postgreSqlContainer.start();
+  }
 
-    @Container
-    private static final PostgreSQLContainer<?> postgreSqlContainer = new PostgreSQLContainer<>("postgres:16.0-alpine")
-            .withDatabaseName("bdd")
-            .withUsername("bdd")
-            .withPassword("bdd")
-            .withNetwork(testcontainersNetwork)
-            .withNetworkAliases("postgres-bdd");
+  @DynamicPropertySource
+  static void registerPostgresProperties(DynamicPropertyRegistry registry) {
+    String url = postgreSqlContainer.getJdbcUrl();
+    String username = postgreSqlContainer.getUsername();
+    String password = postgreSqlContainer.getPassword();
 
-    static {
-        log.info("Start BDD loader...");
-        keycloak.start();
-        postgreSqlContainer.start();
-    }
+    registry.add("db.url", () -> url);
+    registry.add("db.username", () -> username);
+    registry.add("db.password", () -> password);
+  }
 
-    @DynamicPropertySource
-    static void registerPostgresProperties(DynamicPropertyRegistry registry) {
-        String url = postgreSqlContainer.getJdbcUrl();
-        String username = postgreSqlContainer.getUsername();
-        String password = postgreSqlContainer.getPassword();
-
-        registry.add("db.url", () -> url);
-        registry.add("db.username", () -> username);
-        registry.add("db.password", () -> password);
-    }
-
-    @DynamicPropertySource
-    static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
-        registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> keycloak.getAuthServerUrl() + "/realms/BDD_REALM");
-        registry.add("keycloak.uri", () -> keycloak.getAuthServerUrl());
-        registry.add("keycloak.adminUri", () -> keycloak.getAuthServerUrl());
-    }
-
+  @DynamicPropertySource
+  static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
+    registry.add(
+        "spring.security.oauth2.resourceserver.jwt.issuer-uri",
+        () -> keycloak.getAuthServerUrl() + "/realms/BDD_REALM");
+    registry.add("keycloak.uri", () -> keycloak.getAuthServerUrl());
+    registry.add("keycloak.adminUri", () -> keycloak.getAuthServerUrl());
+  }
 }

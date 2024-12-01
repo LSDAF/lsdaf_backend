@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CacheProperties {
-    private RedisProperties redisProperties;
-    private CacheExpirationProperties cacheExpirationProperties;
+  private RedisProperties redisProperties;
+  private CacheExpirationProperties cacheExpirationProperties;
 }

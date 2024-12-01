@@ -15,21 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Tag(name = ControllerConstants.Swagger.OAUTH_2_CONTROLLER)
 public interface OAuth2Controller {
 
-    String CODE = "code";
+  String CODE = "code";
 
-    /**
-     * Handle OAuth2 callback
-     *
-     * @param code OAuth2 code
-     * @return GenericResponse with JwtAuthentication
-     */
-    @GetMapping(value = ControllerConstants.OAuth2.CALLBACK)
-    @Operation(summary = "Handles the OAuth2 callback", hidden = true)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    ResponseEntity<GenericResponse<JwtAuthentication>> handleOAuth2Callback(String code);
+  /**
+   * Handle OAuth2 callback
+   *
+   * @param code OAuth2 code
+   * @return GenericResponse with JwtAuthentication
+   */
+  @GetMapping(value = ControllerConstants.OAuth2.CALLBACK)
+  @Operation(summary = "Handles the OAuth2 callback", hidden = true)
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Not Found"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+      })
+  ResponseEntity<GenericResponse<JwtAuthentication>> handleOAuth2Callback(String code);
 }

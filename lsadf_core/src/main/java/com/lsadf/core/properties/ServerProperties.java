@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerProperties {
-    private String hostName;
-    private String port;
-    private boolean https;
+  private String hostName;
+  private String port;
+  private boolean https;
 }

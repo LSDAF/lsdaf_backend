@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConfigurationDisplayProperties {
-    private boolean enabled;
+  private boolean enabled;
 }
