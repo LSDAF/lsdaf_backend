@@ -27,7 +27,7 @@ lint-check:
 	@mvn spotless:check
 
 lint-check-ci:
-	@mvn rewrite:dryRun --batch-mode --no-transfer-progress
+	@mvn spotless:check --batch-mode --no-transfer-progress
 
 lint:
 	@mvn spotless:apply
