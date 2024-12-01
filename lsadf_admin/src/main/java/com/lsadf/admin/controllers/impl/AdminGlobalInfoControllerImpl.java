@@ -1,8 +1,8 @@
-package com.lsadf.admin.controllers.admin.impl;
+package com.lsadf.admin.controllers.impl;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
-import com.lsadf.admin.controllers.admin.AdminGlobalInfoController;
+import com.lsadf.admin.controllers.AdminGlobalInfoController;
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.models.GlobalInfo;
 import com.lsadf.core.responses.GenericResponse;

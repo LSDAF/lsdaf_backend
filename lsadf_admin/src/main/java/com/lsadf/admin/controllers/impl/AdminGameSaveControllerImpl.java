@@ -1,9 +1,9 @@
-package com.lsadf.admin.controllers.admin.impl;
+package com.lsadf.admin.controllers.impl;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lsadf.admin.controllers.admin.AdminGameSaveController;
+import com.lsadf.admin.controllers.AdminGameSaveController;
 import com.lsadf.core.constants.JsonViews;
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.entities.GameSaveEntity;

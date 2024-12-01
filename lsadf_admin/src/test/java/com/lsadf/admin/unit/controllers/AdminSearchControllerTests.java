@@ -1,8 +1,8 @@
 package com.lsadf.admin.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.admin.controllers.admin.AdminSearchController;
-import com.lsadf.admin.controllers.admin.impl.AdminSearchControllerImpl;
+import com.lsadf.admin.controllers.AdminSearchController;
+import com.lsadf.admin.controllers.impl.AdminSearchControllerImpl;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.core.requests.common.Filter;

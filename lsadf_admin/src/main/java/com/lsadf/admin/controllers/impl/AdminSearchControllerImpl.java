@@ -1,8 +1,8 @@
-package com.lsadf.admin.controllers.admin.impl;
+package com.lsadf.admin.controllers.impl;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
-import com.lsadf.admin.controllers.admin.AdminSearchController;
+import com.lsadf.admin.controllers.AdminSearchController;
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.GameSave;

@@ -1,8 +1,8 @@
-package com.lsadf.admin.controllers.admin.impl;
+package com.lsadf.admin.controllers.impl;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
-import com.lsadf.admin.controllers.admin.AdminAuthController;
+import com.lsadf.admin.controllers.AdminAuthController;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.http_clients.KeycloakClient;

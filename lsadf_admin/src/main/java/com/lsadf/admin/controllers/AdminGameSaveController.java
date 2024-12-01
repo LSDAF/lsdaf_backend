@@ -1,4 +1,4 @@
-package com.lsadf.admin.controllers.admin;
+package com.lsadf.admin.controllers;
 
 import static com.lsadf.core.configurations.SwaggerConfiguration.BEARER_AUTHENTICATION;
 import static com.lsadf.core.configurations.SwaggerConfiguration.OAUTH2_AUTHENTICATION;

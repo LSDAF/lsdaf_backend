@@ -1,4 +1,4 @@
-package com.lsadf.admin.controllers.admin;
+package com.lsadf.admin.controllers;
 
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.constants.ResponseMessages;

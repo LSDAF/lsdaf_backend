@@ -1,8 +1,8 @@
-package com.lsadf.admin.controllers.admin.impl;
+package com.lsadf.admin.controllers.impl;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
-import com.lsadf.admin.controllers.admin.AdminUserController;
+import com.lsadf.admin.controllers.AdminUserController;
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.models.User;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
