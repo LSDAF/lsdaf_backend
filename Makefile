@@ -24,14 +24,12 @@ javadoc:
 	@mvn javadoc:aggregate
 
 lint-check:
-#	@mvn rewrite:dryRun
 	@mvn spotless:check
 
 lint-check-ci:
 	@mvn rewrite:dryRun --batch-mode --no-transfer-progress
 
 lint:
-	#@mvn rewrite:run
 	@mvn spotless:apply
 
 dbup:
