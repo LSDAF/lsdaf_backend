@@ -9,6 +9,11 @@ import {
 } from "@vaadin/react-components";
 import {Suspense} from "react";
 import {Outlet} from "react-router-dom";
+import {initKeycloak} from "Frontend/keycloak";
+
+initKeycloak().then(() => {
+    console.log("Keycloak initialized");
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
