@@ -5,6 +5,7 @@ import static com.lsadf.core.utils.TokenUtils.getUsernameFromJwt;
 
 import com.lsadf.core.controllers.impl.BaseController;
 import com.lsadf.core.entities.InventoryEntity;
+import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.Inventory;
 import com.lsadf.core.requests.item.ItemRequest;
@@ -64,8 +65,8 @@ public class InventoryControllerImpl extends BaseController implements Inventory
     validateUser(jwt);
     String userEmail = getUsernameFromJwt(jwt);
     gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-    inventoryService.createItemInInventory(gameSaveId, itemRequest);
-    return generateResponse(HttpStatus.OK);
+    ItemEntity itemEntity = inventoryService.createItemInInventory(gameSaveId, itemRequest);
+    return generateResponse(HttpStatus.OK, itemEntity);
   }
 
   /**

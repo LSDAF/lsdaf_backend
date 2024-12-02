@@ -208,7 +208,7 @@ class InventoryServiceTests {
   }
 
   @Test
-  void createItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
+  void deleteItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
     // Arrange
     ItemEntity itemEntity = ItemEntity.builder().id("2").build();
 
@@ -231,7 +231,7 @@ class InventoryServiceTests {
   }
 
   @Test
-  void createItemInInventory_on_existing_gamesave_id_with_two_items_inventory() {
+  void deleteItemInInventory_on_existing_gamesave_id_with_two_items_inventory() {
     // Arrange
     ItemEntity itemEntity = ItemEntity.builder().id("1").build();
     ItemEntity itemEntity2 = ItemEntity.builder().id("2").build();
