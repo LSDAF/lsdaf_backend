@@ -24,6 +24,7 @@
     "@vaadin/vaadin-usage-statistics": "2.1.3",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
+    "keycloak-js": "^26.0.6",
     "lit": "3.2.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -34,6 +35,7 @@
     "@preact/signals-react-transform": "0.4.0",
     "@rollup/plugin-replace": "6.0.1",
     "@rollup/pluginutils": "5.1.2",
+    "@types/keycloak-js": "^2.5.4",
     "@types/react": "18.3.11",
     "@types/react-dom": "18.3.1",
     "@vaadin/hilla-generator-cli": "24.5.4",
@@ -119,7 +121,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "ed90456872af71a8f368453369636c5401d9d5dfa486d99b952b54d37bbf8cba"
+    "hash": "76883c216c7987955c42bb6d651b37e3a61f7dd2a82fb62270a50312c4315083"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -146,6 +148,7 @@
     "date-fns": "$date-fns",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
-    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles"
+    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
+    "keycloak-js": "$keycloak-js"
   }
 }
