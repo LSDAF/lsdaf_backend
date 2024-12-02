@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
   NoRedisCacheConfiguration.class,
   ClockConfiguration.class,
   VelocityConfiguration.class,
-  KeycloakConfiguration.class
+  KeycloakConfiguration.class,
+  JpaConfiguration.class,
 })
 public class LsadfAdminConfiguration {}

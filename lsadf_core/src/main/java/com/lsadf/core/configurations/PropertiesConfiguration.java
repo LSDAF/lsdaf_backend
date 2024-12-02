@@ -10,6 +10,12 @@ import org.springframework.context.annotation.Configuration;
 public class PropertiesConfiguration {
 
   @Bean
+  @ConfigurationProperties(prefix = "jpa")
+  public JpaProperties jpaProperties() {
+    return new JpaProperties();
+  }
+
+  @Bean
   @ConfigurationProperties(prefix = "json-view")
   public JsonViewProperties jsonViewProperties() {
     return new JsonViewProperties();
