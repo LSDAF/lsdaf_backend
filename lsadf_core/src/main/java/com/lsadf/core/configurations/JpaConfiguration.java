@@ -9,5 +9,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ConditionalOnProperty(name = "jpa.enabled", havingValue = "true")
 @EnableJpaRepositories(basePackages = "com.lsadf.core.repositories")
 @EntityScan(basePackages = "com.lsadf.core.entities")
-public class JpaConfiguration {
-}
+public class JpaConfiguration {}
