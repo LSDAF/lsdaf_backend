@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JpaProperties {
-    private boolean enabled;
+  private boolean enabled;
 }
