@@ -8,6 +8,7 @@ export const keycloakAuthMiddleware: Middleware = async function (context, next)
     if (keycloak.token) {
         // add headers + authorization header to request
         request.headers.set('Authorization', `Bearer ${keycloak.token}`);
+        console.log("Added Authorization header to request");
     }
 
     return next(context);
