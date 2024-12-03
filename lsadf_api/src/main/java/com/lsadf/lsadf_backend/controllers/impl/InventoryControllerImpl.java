@@ -8,6 +8,7 @@ import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.Inventory;
+import com.lsadf.core.models.Item;
 import com.lsadf.core.requests.item.ItemRequest;
 import com.lsadf.core.responses.GenericResponse;
 import com.lsadf.core.services.CacheService;
@@ -66,7 +67,8 @@ public class InventoryControllerImpl extends BaseController implements Inventory
     String userEmail = getUsernameFromJwt(jwt);
     gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
     ItemEntity itemEntity = inventoryService.createItemInInventory(gameSaveId, itemRequest);
-    return generateResponse(HttpStatus.OK, itemEntity);
+    Item item = mapper.mapItemEntityToItem(itemEntity);
+    return generateResponse(HttpStatus.OK, item);
   }
 
   /**
