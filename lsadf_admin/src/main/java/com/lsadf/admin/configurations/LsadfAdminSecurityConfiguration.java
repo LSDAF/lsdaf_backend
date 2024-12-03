@@ -5,7 +5,6 @@ import static com.lsadf.core.configurations.SecurityConfiguration.WHITELIST_URLS
 
 import com.lsadf.core.configurations.SecurityConfiguration;
 import com.lsadf.core.constants.UserRole;
-import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -15,7 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 
 @Configuration
 @Import(SecurityConfiguration.class)
-public class LsadfAdminSecurityConfiguration extends VaadinWebSecurity {
+public class LsadfAdminSecurityConfiguration {
 
   @Bean
   public Customizer<
