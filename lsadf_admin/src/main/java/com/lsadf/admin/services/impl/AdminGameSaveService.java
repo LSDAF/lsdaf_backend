@@ -6,19 +6,19 @@ import com.lsadf.core.models.GameSave;
 import com.lsadf.core.requests.game_save.GameSaveSortingParameter;
 import com.lsadf.core.services.GameSaveService;
 import com.lsadf.core.utils.StreamUtils;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
 import com.vaadin.hilla.Nonnull;
 import com.vaadin.hilla.Nullable;
 import com.vaadin.hilla.crud.ListService;
 import com.vaadin.hilla.crud.filter.Filter;
+import jakarta.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.NonNull;
 import org.springframework.data.domain.Pageable;
 
 @BrowserCallable
-@AnonymousAllowed
+@RolesAllowed("ADMIN")
 public class AdminGameSaveService implements ListService<GameSave> {
 
   private final GameSaveService gameSaveService;
