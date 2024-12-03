@@ -47,7 +47,7 @@ monitordown:
 build:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
 
-builddev:
+builddev: install
 	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
 
 build-no-cache:
