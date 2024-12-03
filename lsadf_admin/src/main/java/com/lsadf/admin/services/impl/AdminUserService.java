@@ -1,4 +1,4 @@
-package com.lsadf.admin.services;
+package com.lsadf.admin.services.impl;
 
 import com.lsadf.admin.utils.FilterUtils;
 import com.lsadf.core.mappers.Mapper;
