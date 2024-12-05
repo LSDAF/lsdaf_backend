@@ -1,5 +1,8 @@
 package com.lsadf.core.models;
 
+import static com.lsadf.core.constants.JsonAttributes.ItemStat.BASE_VALUE;
+import static com.lsadf.core.constants.JsonAttributes.ItemStat.STATISTIC;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lsadf.core.constants.JsonViews;
@@ -11,9 +14,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import static com.lsadf.core.constants.JsonAttributes.ItemStat.BASE_VALUE;
-import static com.lsadf.core.constants.JsonAttributes.ItemStat.STATISTIC;
 
 @Data
 @Embeddable
@@ -29,5 +29,6 @@ public class ItemStat implements Model {
   @JsonView(JsonViews.External.class)
   @JsonProperty(value = BASE_VALUE)
   @Schema(description = "Item stat base value", example = "100.0")
-  @Positive private Float baseValue;
+  @Positive
+  private Float baseValue;
 }
