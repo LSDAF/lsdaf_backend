@@ -49,23 +49,23 @@ public class Item implements Model {
   @Schema(description = "Item rarity", example = "LEGENDARY")
   private ItemRarity itemRarity;
 
-  @JsonView(JsonViews.Internal.class)
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = IS_EQUIPPED)
   @Schema(description = "Is Equipped", example = "true")
   private Boolean isEquipped;
 
-  @JsonView(JsonViews.Internal.class)
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = LEVEL)
   @Schema(description = "Item level", example = "20")
   private Integer level;
 
-  @JsonView(JsonViews.Internal.class)
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = MAIN_STAT)
   @Schema(description = "Main item stat")
   @Embedded
   private ItemStat mainStat;
 
-  @JsonView(JsonViews.Internal.class)
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = ADDITIONAL_STATS)
   @Schema(description = "Additional item stat list")
   @ElementCollection

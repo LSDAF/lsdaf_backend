@@ -90,6 +90,12 @@ public final class JsonAttributes {
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static final class ItemStat {
+    public static final String STATISTIC = "statistic";
+    public static final String BASE_VALUE = "base_value";
+  }
+
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static final class JwtAuthentication {
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
