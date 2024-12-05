@@ -1,7 +1,6 @@
 package com.lsadf.core.requests.item;
 
 import static com.lsadf.core.constants.JsonAttributes.Item.*;
-import static com.lsadf.core.constants.JsonAttributes.Item.ITEM_TYPE;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -18,18 +17,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ITEM_TYPE})
+@JsonPropertyOrder({TYPE, RARITY, IS_EQUIPPED, LEVEL, MAIN_STAT, ADDITIONAL_STATS})
 public class ItemRequest implements Request {
 
   @Serial private static final long serialVersionUID = -1116418739363127022L;
 
   @Schema(description = "Item type", example = "boots")
-  @JsonProperty(value = ITEM_TYPE)
+  @JsonProperty(value = TYPE)
   @NotNull
   private String itemType;
 
   @Schema(description = "Item rarity", example = "LEGENDARY")
-  @JsonProperty(value = ITEM_RARITY)
+  @JsonProperty(value = RARITY)
   @NotNull
   private String itemRarity;
 
