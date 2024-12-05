@@ -1,4 +1,4 @@
-import Keycloak, {KeycloakConfig, KeycloakInstance} from "keycloak-js";
+import Keycloak, {KeycloakConfig} from "keycloak-js";
 
 
 const keycloakConfig: KeycloakConfig = {
@@ -7,7 +7,7 @@ const keycloakConfig: KeycloakConfig = {
     clientId: 'lsadf-admin-ui',
 }
 
-const keycloak: KeycloakInstance = new Keycloak(keycloakConfig);
+const keycloak: Keycloak = new Keycloak(keycloakConfig);
 
 export async function initKeycloak() {
     try {
