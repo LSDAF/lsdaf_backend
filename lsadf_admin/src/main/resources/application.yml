@@ -35,7 +35,7 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss.SSS
   jpa:
-    show-sql: true
+    show-sql: false
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
@@ -211,3 +211,8 @@ configuration-display:
 
 jpa:
   enabled: true
+
+vaadin:
+  exclude-urls:
+    - /swagger-ui.html
+    - /swagger-ui/**

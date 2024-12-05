@@ -76,8 +76,9 @@ public class ServiceConfiguration {
   }
 
   @Bean
-  public SearchService searchService(UserService userService, GameSaveService gameSaveService) {
-    return new SearchServiceImpl(userService, gameSaveService);
+  public SearchService searchService(
+      UserService userService, GameSaveService gameSaveService, Mapper mapper) {
+    return new SearchServiceImpl(userService, gameSaveService, mapper);
   }
 
   @Bean

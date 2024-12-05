@@ -4,8 +4,8 @@ import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_C
 
 import com.lsadf.admin.bdd.config.LsadfAdminBddConfiguration;
 import com.lsadf.admin.configurations.LsadfAdminConfiguration;
-import com.lsadf.admin.controllers.admin.*;
-import com.lsadf.admin.controllers.admin.impl.*;
+import com.lsadf.admin.controllers.*;
+import com.lsadf.admin.controllers.impl.*;
 import com.lsadf.core.cache.Cache;
 import com.lsadf.core.cache.HistoCache;
 import com.lsadf.core.controllers.advices.DynamicJsonViewAdvice;

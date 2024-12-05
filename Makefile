@@ -20,6 +20,9 @@ report:
 clean:
 	@mvn clean
 
+admin-install:
+	@npm --prefix ./lsadf_admin install
+
 javadoc:
 	@mvn javadoc:aggregate
 
@@ -103,6 +106,7 @@ help:
 	@echo ""
 	@echo "[Java Project]"
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"
+	@echo "> admin-install       |-----------------------------------------|  Build locally npm project for admin UI"
 	@echo "> test                |-----------------------------------------|  Runs BDD & unit tests"
 	@echo "> test-unit           |-----------------------------------------|  Runs unit tests only"
 	@echo "> test-bdd            |-----------------------------------------|  Runs BDD tests only"

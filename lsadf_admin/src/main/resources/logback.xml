@@ -15,7 +15,7 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <logger name = "com.lsadf.lsadf_backend.http_clients" level="DEBUG" additivity="false">
+    <logger name = "com.lsadf.core.http_clients" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 </configuration>

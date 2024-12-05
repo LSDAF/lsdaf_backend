@@ -1,15 +1,16 @@
 package com.lsadf.admin.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.admin.controllers.admin.AdminSearchController;
-import com.lsadf.admin.controllers.admin.impl.AdminSearchControllerImpl;
+import com.lsadf.admin.controllers.AdminSearchController;
+import com.lsadf.admin.controllers.impl.AdminSearchControllerImpl;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.core.requests.common.Filter;
 import com.lsadf.core.requests.search.SearchRequest;
-import com.lsadf.core.requests.user.UserOrderBy;
+import com.lsadf.core.requests.user.UserSortingParameter;
 import com.lsadf.core.unit.config.UnitTestConfiguration;
 import com.lsadf.core.unit.config.WithMockJwtUser;
+import java.util.Collections;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer;
@@ -177,7 +178,7 @@ class AdminSearchControllerTests {
             MockMvcRequestBuilders.post("/api/v1/admin/search/users")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .param(ControllerConstants.Params.ORDER_BY, UserOrderBy.ID_DESC.name()))
+                .param(ControllerConstants.Params.ORDER_BY, UserSortingParameter.ID_DESC.name()))
         // then
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -195,7 +196,10 @@ class AdminSearchControllerTests {
             MockMvcRequestBuilders.post("/api/v1/admin/search/game_saves")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .param(ControllerConstants.Params.ORDER_BY, UserOrderBy.ID_DESC.name()))
+                .param(
+                    ControllerConstants.Params.ORDER_BY,
+                    Collections.singletonList(UserSortingParameter.ID_DESC.name())
+                        .toArray(new String[0])))
         // then
         .andExpect(MockMvcResultMatchers.status().isOk());
   }

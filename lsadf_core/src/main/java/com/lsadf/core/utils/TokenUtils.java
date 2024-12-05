@@ -2,9 +2,11 @@ package com.lsadf.core.utils;
 
 import static com.lsadf.core.constants.ClaimsConstants.*;
 
+import com.lsadf.core.models.UserInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +44,22 @@ public class TokenUtils {
    */
   public static String getUsernameFromJwt(Jwt jwt) {
     return jwt.getClaimAsString(PREFERRED_USERNAME);
+  }
+
+  /**
+   * Get user info from jwt
+   *
+   * @param jwt the jwt
+   * @return the user info
+   */
+  public static UserInfo getUserInfoFromJwt(Jwt jwt) {
+    String username = getUsernameFromJwt(jwt);
+    String name = getNameFromJwt(jwt);
+    boolean verified = getEmailVerifiedFromJwt(jwt);
+    List<GrantedAuthority> authorities = getRolesFromJwt(jwt);
+    Set<String> roles =
+        authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+    return new UserInfo(name, username, verified, roles);
   }
 
   /**

@@ -1,15 +1,13 @@
 package com.lsadf.admin.unit.controllers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.admin.controllers.admin.AdminUserController;
-import com.lsadf.admin.controllers.admin.impl.AdminUserControllerImpl;
+import com.lsadf.admin.controllers.AdminUserController;
+import com.lsadf.admin.controllers.impl.AdminUserControllerImpl;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
 import com.lsadf.core.requests.admin.AdminUserUpdateRequest;
-import com.lsadf.core.requests.user.UserOrderBy;
+import com.lsadf.core.requests.user.UserSortingParameter;
 import com.lsadf.core.unit.config.UnitTestConfiguration;
 import com.lsadf.core.unit.config.WithMockJwtUser;
 import java.util.List;
@@ -560,7 +558,9 @@ class AdminUserControllerTests {
             MockMvcRequestBuilders.get("/api/v1/admin/users")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .param(ControllerConstants.Params.ORDER_BY, UserOrderBy.FIRST_NAME_DESC.name()))
+                .param(
+                    ControllerConstants.Params.ORDER_BY,
+                    UserSortingParameter.FIRST_NAME_DESC.name()))
         // then
         .andExpect(MockMvcResultMatchers.status().isOk());
   }

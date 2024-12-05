@@ -1,15 +1,15 @@
 package com.lsadf.admin.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.admin.controllers.admin.AdminGameSaveController;
-import com.lsadf.admin.controllers.admin.impl.AdminGameSaveControllerImpl;
+import com.lsadf.admin.controllers.AdminGameSaveController;
+import com.lsadf.admin.controllers.impl.AdminGameSaveControllerImpl;
 import com.lsadf.core.constants.ControllerConstants;
 import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.core.requests.admin.AdminGameSaveCreationRequest;
 import com.lsadf.core.requests.admin.AdminGameSaveUpdateRequest;
 import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.core.requests.currency.CurrencyRequest;
-import com.lsadf.core.requests.game_save.GameSaveOrderBy;
+import com.lsadf.core.requests.game_save.GameSaveSortingParameter;
 import com.lsadf.core.requests.stage.StageRequest;
 import com.lsadf.core.services.GameSaveService;
 import com.lsadf.core.unit.config.UnitTestConfiguration;
@@ -510,7 +510,8 @@ class AdminGameSaveControllerTests {
         .perform(
             MockMvcRequestBuilders.get("/api/v1/admin/game_saves")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .param(ControllerConstants.Params.ORDER_BY, GameSaveOrderBy.NICKNAME.name())
+                .param(
+                    ControllerConstants.Params.ORDER_BY, GameSaveSortingParameter.NICKNAME.name())
                 .accept(MediaType.APPLICATION_JSON_VALUE))
         // then
         .andExpect(MockMvcResultMatchers.status().isOk());

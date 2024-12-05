@@ -49,12 +49,12 @@ public class User implements Model {
   @JsonView(JsonViews.Internal.class)
   @JsonProperty(value = ENABLED)
   @Schema(description = "User enabled", example = "true")
-  private boolean enabled;
+  private Boolean enabled;
 
   @JsonView(JsonViews.Internal.class)
   @JsonProperty(value = EMAIL_VERIFIED)
   @Schema(description = "Email verified", example = "true")
-  private boolean emailVerified;
+  private Boolean emailVerified;
 
   @JsonView(JsonViews.Admin.class)
   @JsonProperty(value = USER_ROLES)

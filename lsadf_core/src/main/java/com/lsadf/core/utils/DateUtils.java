@@ -14,8 +14,6 @@ import lombok.experimental.UtilityClass;
 public class DateUtils {
   public static final DateTimeFormatter formatter =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-  public static final DateTimeFormatter exportDateFormatter =
-      DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS");
   public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   /**
@@ -54,20 +52,19 @@ public class DateUtils {
    * @param timestamp timestamp to convert
    * @return Converted LocalDateTime
    */
-  public static LocalDateTime timestampToLocalDateTime(long timestamp) {
+  public static LocalDateTime timestampToLocalDateTime(long timestamp, ZoneId zoneId) {
     Instant instant = Instant.ofEpochSecond(timestamp);
-    return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    return LocalDateTime.ofInstant(instant, zoneId);
   }
 
   /**
-   * Convert String to Date
+   * Convert date time format string to Date
    *
    * @param date String to convert
    * @return Converted Date
    */
-  public static Date stringToDate(String date) {
-    return Date.from(
-        LocalDateTime.parse(date, formatter).atZone(ZoneId.systemDefault()).toInstant());
+  public static Date dateTimeStringToDate(String date, ZoneId zoneId) {
+    return Date.from(LocalDateTime.parse(date, formatter).atZone(zoneId).toInstant());
   }
 
   /**
@@ -77,6 +74,7 @@ public class DateUtils {
    * @return Date
    */
   public static Date dateFromClock(Clock clock) {
-    return Date.from(Instant.now(clock));
+    Instant instant = Instant.now(clock);
+    return Date.from(instant);
   }
 }

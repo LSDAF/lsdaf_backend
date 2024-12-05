@@ -40,6 +40,33 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}</directory>
+                            <includes>
+                                <include>node_modules/</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>${basedir}/src/main/resources</directory>
+                            <includes>
+                                <include>env.properties</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>${basedir}/src/main/frontend</directory>
+                            <includes>
+                                <include>generated/</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -130,6 +157,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>android-json</artifactId>
+                    <groupId>com.vaadin.external.google</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Spring Boot Starter Test for testing -->
@@ -231,7 +269,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>

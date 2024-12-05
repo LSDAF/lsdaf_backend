@@ -1,8 +1,8 @@
 package com.lsadf.admin.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsadf.admin.controllers.admin.AdminCacheController;
-import com.lsadf.admin.controllers.admin.impl.AdminCacheControllerImpl;
+import com.lsadf.admin.controllers.AdminCacheController;
+import com.lsadf.admin.controllers.impl.AdminCacheControllerImpl;
 import com.lsadf.admin.unit.config.UnitTestConfiguration;
 import com.lsadf.core.controllers.advices.GlobalExceptionHandler;
 import com.lsadf.core.unit.config.WithMockJwtUser;

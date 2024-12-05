@@ -237,9 +237,9 @@ class MapperTests {
     assertThat(user.getLastName()).isEqualTo(userRepresentation.getLastName());
     assertThat(user.getCreatedTimestamp()).isNotNull();
     assertThat(user.getUserRoles()).containsExactlyInAnyOrder("user", "admin");
-    assertThat(user.isEnabled()).isFalse();
+    assertThat(user.getEnabled()).isFalse();
     assertThat(user.getId()).isEqualTo(userRepresentation.getId());
-    assertThat(user.isEmailVerified()).isTrue();
+    assertThat(user.getEmailVerified()).isTrue();
   }
 
   @Test

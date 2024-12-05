@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
   PropertiesConfiguration.class,
   SwaggerConfiguration.class,
   ServiceConfiguration.class,
+  JpaConfiguration.class,
   CorsConfiguration.class,
   SecurityConfiguration.class,
   LoggingConfiguration.class,
@@ -35,6 +36,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
   ClockConfiguration.class,
   VelocityConfiguration.class,
   KeycloakConfiguration.class,
-  JpaConfiguration.class,
+  LsadfAdminSecurityConfiguration.class
 })
 public class LsadfAdminConfiguration {}

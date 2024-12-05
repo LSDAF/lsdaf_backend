@@ -3,41 +3,50 @@ name: 💬 Lint check
 run-name: ${{ github.head_ref || github.ref_name }}-lint-check
 
 on:
-    pull_request:
-    workflow_dispatch:
+  pull_request:
+  workflow_dispatch:
 
 
 concurrency:
-    group: lint-check-${{ github.event.number }}
-    cancel-in-progress: true
+  group: lint-check-${{ github.event.number }}
+  cancel-in-progress: true
 
 
 jobs:
-    unit-test:
-        name: "✍️ Run Lint Check"
-        runs-on: 'ubuntu-22.04'
-        timeout-minutes: 10 # The overall timeout
-        permissions:
-            actions: write
-            checks: write
-            contents: write
-            pull-requests: write
-            statuses: write
+  lint-check:
+    name: "✍️ Run Lint Check"
+    runs-on: 'ubuntu-22.04'
+    timeout-minutes: 10 # The overall timeout
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      pull-requests: write
+      statuses: write
 
-        steps:
-            # checkout your repository
-            -   name: 📥 Checkout
-                uses: actions/checkout@v4
-                with:
-                    lfs: true
+    steps:
+      # checkout your repository
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-            -   name: 📦 Set up JDK 17
-                uses: actions/setup-java@v4
-                with:
-                    java-version: '17'
-                    distribution: 'temurin'
-                    cache: maven
+      - name: 📦 Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-            -   name: ✍️ Lint check
-                run: |
-                    make lint-check-ci
+      - name: 📦 Set up Node.js 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install ESLint + lint deps globally
+        run: npm install -g eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-import prettier eslint-config-prettier
+
+
+      - name: ✍️ Lint check
+        run: |
+          make lint-check-ci
