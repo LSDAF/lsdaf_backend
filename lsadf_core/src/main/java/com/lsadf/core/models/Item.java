@@ -2,7 +2,6 @@ package com.lsadf.core.models;
 
 import static com.lsadf.core.constants.JsonAttributes.Inventory.ITEMS;
 import static com.lsadf.core.constants.JsonAttributes.Item.*;
-import static com.lsadf.core.constants.JsonAttributes.Item.ITEM_TYPE;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,12 +39,12 @@ public class Item implements Model {
   private String id;
 
   @JsonView(JsonViews.External.class)
-  @JsonProperty(value = ITEM_TYPE)
+  @JsonProperty(value = TYPE)
   @Schema(description = "Item type", example = "BOOTS")
   private ItemType itemType;
 
   @JsonView(JsonViews.External.class)
-  @JsonProperty(value = ITEM_RARITY)
+  @JsonProperty(value = RARITY)
   @Schema(description = "Item rarity", example = "LEGENDARY")
   private ItemRarity itemRarity;
 
