@@ -1,0 +1,83 @@
+name: 💬 Lint check
+
+run-name: ${{ github.head_ref || github.ref_name }}-docker-build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: docker-build-${{ github.event.number }}
+  cancel-in-progress: true
+
+
+jobs:
+  docker-build:
+    name: "Build Docker Image"
+    runs-on: 'ubuntu-22.04'
+    timeout-minutes: 10 # The overall timeout
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: 📦 Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 📦 Setup Docker compose
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.30.3'
+
+      - name: 🚧 Build Docker Image
+        run: |
+          make build
+
+  docker-build-dev:
+    name: "Build Docker Dev Image"
+    runs-on: 'ubuntu-22.04'
+    timeout-minutes: 10 # The overall timeout
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: 📦 Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 📦 Setup Docker compose
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.30.3'
+
+      - name: 🚧 Build Package
+        run: |
+          make clean install
+
+      - name: 🚧 Build Docker Image
+        run: |
+          make builddev
