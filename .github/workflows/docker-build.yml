@@ -75,11 +75,7 @@ jobs:
         with:
           version: '2.30.3'
 
-      - name: 🚧 Build Package
+      - name: 🚧 Build Package & Docker Image
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
-          make clean install
-
-      - name: 🚧 Build Docker Image
-        run: |
           make builddev
