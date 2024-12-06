@@ -1,9 +1,11 @@
 FROM openjdk:17-jdk-alpine
 
+ARG module_folder
+
 WORKDIR /app
 
-COPY lsadf_api/target/*.jar app.jar
+COPY $module_folder/target/*.jar app.jar
 COPY ./docker/startup-dev.sh startup.sh
-COPY lsadf_api/src/main/resources/logback-docker.xml logback-docker.xml
+COPY $module_folder/src/main/resources/logback-docker.xml logback-docker.xml
 
 ENTRYPOINT ["./startup.sh"]
