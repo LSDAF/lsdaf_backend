@@ -31,7 +31,7 @@ for file in $STAGED_FILES; do
         filepath=$PWD/$file
         echo -e "${GREEN}Running mvn spotless:apply on ${BOLD}$filepath${NC}"
         echo
-        mvn_output=$(mvn spotless:check -DspotlessFiles="$filepath" 2>&1)
+        mvn_output=$(mvn spotless:apply -DspotlessFiles="$filepath" 2>&1)
         mvn_exit_code=$?
         echo $mvn_output
         echo $mvn_exit_code
