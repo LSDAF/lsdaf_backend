@@ -29,6 +29,8 @@ for file in $STAGED_FILES; do
     echo -e $file
     if [[ $file == **/*.java ]]; then
         echo -e "${GREEN}Running mvn spotless:apply on ${BOLD}./$file${NC}"
+        filepath=$PWD/$file
+        echo
         mvn_output=$(mvn spotless:check -DspotlessFiles="./$file" 2>&1)
         mvn_exit_code=$?
         echo $mvn_output
