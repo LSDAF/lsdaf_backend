@@ -4,7 +4,7 @@ spring:
 
 keycloak:
   admin-url: test
-  uri: test
+  url: test
   realm: test
   client-id: clientid
   client-secret: secret
