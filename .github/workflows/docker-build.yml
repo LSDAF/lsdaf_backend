@@ -1,4 +1,4 @@
-name: 💬 Lint check
+name: 💬 Build Docker images
 
 run-name: ${{ github.head_ref || github.ref_name }}-docker-build
 
