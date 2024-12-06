@@ -54,13 +54,13 @@ build:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
 
 build-ci:
-	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --quiet-pull
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml --progress quiet build
 
 builddev: install
 	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
 
 builddev-ci: install-ci
-	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build --quiet-pull
+	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml --progress quiet build
 
 build-no-cache:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
