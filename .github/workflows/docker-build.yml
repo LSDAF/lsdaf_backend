@@ -43,6 +43,7 @@ jobs:
 
       - name: 🚧 Build Docker Image
         run: |
+          mv env/env.EXAMPLE.properties env/env.properties
           make build
 
   docker-build-dev:
@@ -76,6 +77,7 @@ jobs:
 
       - name: 🚧 Build Package
         run: |
+          mv env/env.EXAMPLE.properties env/env.properties
           make clean install
 
       - name: 🚧 Build Docker Image
