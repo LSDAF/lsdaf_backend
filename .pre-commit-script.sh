@@ -15,8 +15,8 @@ pip install --quiet -r requirements.txt
 # Get a list of staged files
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
-# Run gdformat and gdlint on each staged file
-gdlint_errors=()
+# Run gdformat and mvn on each staged file
+mvn_errors=()
 
 GREEN='\033[0;32m'    # Green color
 RED='\033[0;31m'      # Red color
@@ -25,27 +25,22 @@ NC='\033[0m'          # No Color
 BOLD='\033[1m'        # Bold text
 
 for file in $STAGED_FILES; do
-    echo -e "${GREEN}Staged file: ${BOLD}$file${NC}"
-
-    if [[ $file == *.gd ]]; then
-        if [[ $file == addons/* ]]; then
-          echo -e "${YELLOW}Skipping ${BOLD}$file${NC}"
-            continue
-        fi
-        echo -e "${GREEN}Running gdformat on ${BOLD}$file${NC}"
-        gdformat "$file"
-        echo -e "${GREEN}Running gdlint on ${BOLD}$file${NC}"
-        gdlint_output=$(gdlint "$file" 2>&1)
-        gdlint_exit_code=$?
-        if [ $gdlint_exit_code -ne 0 ]; then
-          gdlint_errors+=("$gdlint_output")
-          echo -e " - ${RED}${BOLD}Gdlint error${NC}:${YELLOW}${BOLD} $gdlint_output${NC}"
+    #echo -e "${GREEN}Staged file: ${BOLD}$file${NC}"
+    echo -e $file
+    if [[ $file == **/*.java ]]; then
+        echo -e "${GREEN}Running mvn spotless:check on ${BOLD}$file${NC}"
+        mvn spotless:check -DspotlessFiles="$file"
+        mvn_output=$(mvn "$file" 2>&1)
+        mvn_exit_code=$?
+        if [ $mvn_exit_code -ne 0 ]; then
+          mvn_errors+=("$mvn_output")
+          echo -e " - ${RED}${BOLD}mvn error${NC}:${YELLOW}${BOLD} $mvn_output${NC}"
         fi
     fi
 done
 
-if [ ${#gdlint_errors[@]} -ne 0 ]; then
-  echo -e "${BOLD}Gdlint errors found, aborting commit${NC}"
+if [ ${#mvn_errors[@]} -ne 0 ]; then
+  echo -e "${BOLD}mvn errors found, aborting commit${NC}"
   exit 1
 fi
 # Optionally, you can add additional commands or checks here
