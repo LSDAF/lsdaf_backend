@@ -9,5 +9,5 @@ cache:
     host: ${REDIS_HOST_DOCKER}
 
 keycloak:
-  admin-uri: ${KEYCLOAK_ADMIN_URI_DOCKER}
-  uri: ${KEYCLOAK_URI_DOCKER}
+  admin-url: ${KEYCLOAK_ADMIN_URI_DOCKER}
+  url: ${KEYCLOAK_URI_DOCKER}

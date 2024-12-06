@@ -223,7 +223,7 @@ public class BddLoader {
     registry.add(
         "spring.security.oauth2.resourceserver.jwt.issuer-uri",
         () -> keycloak.getAuthServerUrl() + "/realms/BDD_REALM");
-    registry.add("keycloak.uri", () -> keycloak.getAuthServerUrl());
-    registry.add("keycloak.adminUri", () -> keycloak.getAuthServerUrl());
+    registry.add("keycloak.url", () -> keycloak.getAuthServerUrl());
+    registry.add("keycloak.adminUrl", () -> keycloak.getAuthServerUrl());
   }
 }

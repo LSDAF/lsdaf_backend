@@ -2,6 +2,9 @@ default: help
 install: clean
 	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
 
+install-ci: clean
+	@mvn install -DskipTests -U -fae -DskipSurefireReport -q --batch-mode --no-transfer-progress
+
 test:
 	@mvn verify -DskipSurefireReport
 
@@ -18,7 +21,7 @@ report:
 	@mvn surefire-report:report-only -DcucumberReport
 
 clean:
-	@mvn clean
+	@mvn clean -q
 
 admin-install:
 	@npm --prefix ./lsadf_admin install
@@ -50,8 +53,14 @@ monitordown:
 build:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
 
+build-ci:
+	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml --progress quiet build
+
 builddev: install
 	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
+
+builddev-ci: install-ci
+	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml --progress quiet build
 
 build-no-cache:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build --no-cache
@@ -90,6 +99,9 @@ install-pre-commit:
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
+	@echo "> builddev            |-----------------------------------------|  Build docker dev images"
+	@echo "> build-ci            |-----------------------------------------|  Build docker images for CI"
+	@echo "> builddev-ci         |-----------------------------------------|  Build docker dev images for CI"
 	@echo "> build-no-cache      |-----------------------------------------|  Build docker images with --no-cache option"
 	@echo "> up                  |-----------------------------------------|  Up docker images"
 	@echo "> down                |-----------------------------------------|  Down docker images"
@@ -110,6 +122,7 @@ help:
 	@echo ""
 	@echo "[Java Project]"
 	@echo "> install             |-----------------------------------------|  Build locally Java Project"
+	@echo "> install-ci          |-----------------------------------------|  Build locally Java Project for CI"
 	@echo "> admin-install       |-----------------------------------------|  Build locally npm project for admin UI"
 	@echo "> test                |-----------------------------------------|  Runs BDD & unit tests"
 	@echo "> test-unit           |-----------------------------------------|  Runs unit tests only"
@@ -118,3 +131,6 @@ help:
 	@echo "> javadoc             |-----------------------------------------|  Generates all project JavaDoc files"
 	@echo "> lint-check          |-----------------------------------------|  Dry lints code and lists issues in target/rewrite folder"
 	@echo "> lint                |-----------------------------------------|  Lints and fixes issues in source code"
+	@echo "[Dev Environment]"
+	@echo "> install-pre-commit  |-----------------------------------------|  Install pre-commit hooks"
+	@echo "> install-venv-help   |-----------------------------------------|  Show help to install virtual environment"
