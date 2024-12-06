@@ -21,7 +21,7 @@ report:
 	@mvn surefire-report:report-only -DcucumberReport
 
 clean:
-	@mvn clean
+	@mvn clean -q
 
 admin-install:
 	@npm --prefix ./lsadf_admin install
