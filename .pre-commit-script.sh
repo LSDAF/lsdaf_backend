@@ -31,6 +31,8 @@ for file in $STAGED_FILES; do
         echo -e "${GREEN}Running mvn spotless:check on ${BOLD}$file${NC}"
         mvn_output=$(mvn spotless:apply -DspotlessFiles="$file" 2>&1)
         mvn_exit_code=$?
+        echo $mvn_output
+        echo $mvn_exit_code
         if [ $mvn_exit_code -ne 0 ]; then
           mvn_errors+=("$mvn_output")
           echo -e " - ${RED}${BOLD}mvn error${NC}:${YELLOW}${BOLD} $mvn_output${NC}"
