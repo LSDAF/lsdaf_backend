@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Tag(name = ControllerConstants.Swagger.CHARACTERISTICS_CONTROLLER)
 @SecurityRequirement(name = BEARER_AUTHENTICATION)
 @SecurityRequirement(name = OAUTH2_AUTHENTICATION)
-public interface        CharacteristicsController {
+public interface CharacteristicsController {
   String GAME_SAVE_ID = "game_save_id";
 
   /**
