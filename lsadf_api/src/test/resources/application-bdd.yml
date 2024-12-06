@@ -79,9 +79,9 @@ spring:
             read-timeout: 5000
             logger-level: FULL
           keycloak:
-            url: ${keycloak.uri}
+            url: ${keycloak.url}
           keycloak-admin:
-            url: ${keycloak.admin-uri}
+            url: ${keycloak.admin-url}
 
 keycloak:
   admin:
@@ -89,10 +89,10 @@ keycloak:
     client-secret: SECRET_BDDADMIN
   client-id: BDD-API
   client-secret: SECRET_BDDAPI
-  uri: http://localhost:8080 # Will be replaced by the real keycloak uri in the integration tests
-  admin-uri: ${keycloak.uri} # Will be replaced by the real keycloak uri in the integration tests
+  url: http://localhost:8080 # Will be replaced by the real keycloak uri in the integration tests
+  admin-url: ${keycloak.url} # Will be replaced by the real keycloak uri in the integration tests
   realm: BDD_REALM
-  issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
+  issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
 
 shutdown:
   flush-cache-at-shutdown: false
