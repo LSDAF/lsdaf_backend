@@ -29,21 +29,17 @@ jobs:
         with:
           lfs: true
 
-      - name: 📦 Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
       - name: 📦 Setup Docker compose
         uses: KengoTODA/actions-setup-docker-compose@v1
         with:
           version: '2.30.3'
 
-      - name: 🚧 Build Docker Image
+      - name: 📦 Copy Fake env file
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
+
+      - name: 🚧 Build Docker Image
+        run: |
           make build-ci
 
   docker-build-dev:
@@ -75,7 +71,10 @@ jobs:
         with:
           version: '2.30.3'
 
-      - name: 🚧 Build Package & Docker Image
+      - name: 📦 Copy Fake env file
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
+
+      - name: 🚧 Build Package & Docker Image
+        run: |
           make builddev-ci
