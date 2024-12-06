@@ -83,6 +83,10 @@ purgelogs:
 	@rm -rf docker/data/lsadf_backend_dev_data/*
 	@echo "Backend logs purged"
 
+install-pre-commit:
+	pre-commit clean
+	pre-commit install
+
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
