@@ -2,6 +2,9 @@ default: help
 install: clean
 	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
 
+install-ci: clean
+	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport -Dci --batch-mode --no-transfer-progress
+
 test:
 	@mvn verify -DskipSurefireReport
 
@@ -51,6 +54,9 @@ build:
 	COMPOSE_PROFILES=backend docker-compose --env-file env/env.properties -f dc-local.yml build
 
 builddev: install
+	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
+
+builddev-ci: install-ci
 	COMPOSE_PROFILES=backend_dev docker-compose --env-file env/env.properties -f dc-local.yml build
 
 build-no-cache:

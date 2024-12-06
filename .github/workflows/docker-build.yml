@@ -78,4 +78,4 @@ jobs:
       - name: 🚧 Build Package & Docker Image
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
-          make builddev
+          make builddev-ci
