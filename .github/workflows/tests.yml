@@ -46,7 +46,7 @@ jobs:
 
       - name: 🚧 Install
         run: |
-          mvn clean install -DskipTests -U -fae --no-transfer-progress -DskipSurefireReport
+          make install-ci
 
       - name: 🧪 Test with Maven
         run: |

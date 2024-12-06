@@ -3,7 +3,7 @@ install: clean
 	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport
 
 install-ci: clean
-	@mvn install -DskipTests -U -fae -Dcopy-env -DskipSurefireReport -q --batch-mode --no-transfer-progress
+	@mvn install -DskipTests -U -fae -DskipSurefireReport -q --batch-mode --no-transfer-progress
 
 test:
 	@mvn verify -DskipSurefireReport
