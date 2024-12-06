@@ -44,7 +44,7 @@ jobs:
       - name: 🚧 Build Docker Image
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
-          make build
+          make build-ci
 
   docker-build-dev:
     name: "Build Docker Dev Image"
