@@ -40,3 +40,7 @@ docker-data/**
 keycloak_realm/**
 
 .DS_Store
+
+.python-version
+
+.venv/
