@@ -371,6 +371,7 @@ public class BddUtils {
   public static Item mapToItem(Map<String, String> row) {
     String id = row.get(BddFieldConstants.Item.ID);
     ItemType itemType = ItemType.fromString(row.get(BddFieldConstants.Item.ITEM_TYPE));
+    String blueprintId = row.get(BddFieldConstants.Item.BLUEPRINT_ID);
     ItemRarity itemRarity = ItemRarity.fromString(row.get(BddFieldConstants.Item.ITEM_RARITY));
     Boolean isEquipped = Boolean.parseBoolean(row.get(BddFieldConstants.Item.IS_EQUIPPED));
     Integer level = Integer.parseInt(row.get(BddFieldConstants.Item.LEVEL));
@@ -397,6 +398,7 @@ public class BddUtils {
     return Item.builder()
         .id(id)
         .itemType(itemType)
+        .blueprintId(blueprintId)
         .itemRarity(itemRarity)
         .isEquipped(isEquipped)
         .level(level)
