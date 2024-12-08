@@ -39,6 +39,13 @@ public class Item implements Model {
   private String id;
 
   @JsonView(JsonViews.External.class)
+  @JsonProperty(value = CLIENT_ID)
+  @Schema(
+      description = "Client generated id, concatenation of inventory id and item id",
+      example = "36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111")
+  private String clientId;
+
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = BLUEPRINT_ID)
   @Schema(description = "Blueprint id", example = "blueprint_id")
   private String blueprintId;

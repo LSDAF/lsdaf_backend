@@ -97,6 +97,7 @@ public class MapperImpl implements Mapper {
   public Item mapItemEntityToItem(ItemEntity itemEntity) {
     return Item.builder()
         .id(itemEntity.getId())
+        .clientId(itemEntity.getClientId())
         .blueprintId(itemEntity.getBlueprintId())
         .itemType(itemEntity.getItemType())
         .itemRarity(itemEntity.getItemRarity())
