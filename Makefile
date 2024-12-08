@@ -96,6 +96,13 @@ install-pre-commit:
 	pre-commit clean
 	pre-commit install
 
+install-venv-help:
+	@echo 'Run the following commands to install the virtual environment:'
+	@echo 'python3 -m venv .venv'
+	@echo 'source .venv/bin/activate'
+	@echo 'pip install -r requirements.txt'
+
+
 help:
 	@echo "[Containers]"
 	@echo "> build               |-----------------------------------------|  Build docker images"
