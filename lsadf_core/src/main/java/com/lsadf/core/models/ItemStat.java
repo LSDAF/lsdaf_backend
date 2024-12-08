@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 public class ItemStat implements Model {
   @JsonView(JsonViews.External.class)
   @JsonProperty(value = STATISTIC)
-  @Schema(description = "Item stat statistic", example = "ATTACK")
+  @Schema(description = "Item stat statistic", example = "ATTACK_ADD")
   private ItemStatistic statistic;
 
   @JsonView(JsonViews.External.class)
