@@ -17,15 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({
-  TYPE,
-  BLUEPRINT_ID,
-  RARITY,
-  IS_EQUIPPED,
-  LEVEL,
-  MAIN_STAT,
-  ADDITIONAL_STATS
-})
+@JsonPropertyOrder({TYPE, BLUEPRINT_ID, RARITY, IS_EQUIPPED, LEVEL, MAIN_STAT, ADDITIONAL_STATS})
 public class ItemRequest implements Request {
 
   @Serial private static final long serialVersionUID = -1116418739363127022L;

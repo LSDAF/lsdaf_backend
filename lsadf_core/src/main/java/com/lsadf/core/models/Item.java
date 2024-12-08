@@ -39,6 +39,11 @@ public class Item implements Model {
   private String id;
 
   @JsonView(JsonViews.External.class)
+  @JsonProperty(value = BLUEPRINT_ID)
+  @Schema(description = "Blueprint id", example = "blueprint_id")
+  private String blueprintId;
+
+  @JsonView(JsonViews.External.class)
   @JsonProperty(value = TYPE)
   @Schema(description = "Item type", example = "BOOTS")
   private ItemType itemType;
