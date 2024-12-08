@@ -84,6 +84,7 @@ class InventoryServiceTests {
     ItemEntity itemEntity =
         ItemEntity.builder()
             .id("1")
+            .clientId("36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111")
             .blueprintId("aze")
             .itemType(ItemType.BOOTS)
             .itemRarity(ItemRarity.LEGENDARY)
@@ -96,6 +97,7 @@ class InventoryServiceTests {
     ItemEntity itemEntity2 =
         ItemEntity.builder()
             .id("2")
+            .clientId("36f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222")
             .blueprintId("rty")
             .itemType(ItemType.SWORD)
             .itemRarity(ItemRarity.RARE)

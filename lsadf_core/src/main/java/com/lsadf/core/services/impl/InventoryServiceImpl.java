@@ -54,6 +54,7 @@ public class InventoryServiceImpl implements InventoryService {
     ItemEntity itemEntity =
         ItemEntity.builder()
             .inventoryEntity(inventoryEntity)
+            .clientId(itemRequest.getClientId())
             .itemType(ItemType.fromString(itemRequest.getItemType()))
             .blueprintId(itemRequest.getBlueprintId())
             .itemRarity(ItemRarity.fromString(itemRequest.getItemRarity()))

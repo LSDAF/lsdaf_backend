@@ -63,6 +63,7 @@ public final class EntityAttributes {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Items {
     public static final String ITEM_ENTITY = "t_item";
+    public static final String ITEM_CLIENT_ID = "client_id";
     public static final String ITEM_BLUEPRINT_ID = "blueprint_id";
     public static final String ITEM_TYPE = "type";
     public static final String ITEM_RARITY = "rarity";
