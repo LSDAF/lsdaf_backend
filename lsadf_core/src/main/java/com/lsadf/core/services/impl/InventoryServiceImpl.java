@@ -55,6 +55,7 @@ public class InventoryServiceImpl implements InventoryService {
         ItemEntity.builder()
             .inventoryEntity(inventoryEntity)
             .itemType(ItemType.fromString(itemRequest.getItemType()))
+            .blueprintId(itemRequest.getBlueprintId())
             .itemRarity(ItemRarity.fromString(itemRequest.getItemRarity()))
             .isEquipped(itemRequest.getIsEquipped())
             .level(itemRequest.getLevel())
@@ -120,6 +121,7 @@ public class InventoryServiceImpl implements InventoryService {
     ItemEntity itemEntity = optionalItemEntity.get();
 
     itemEntity.setItemType(ItemType.fromString(itemRequest.getItemType()));
+    itemEntity.setBlueprintId(itemRequest.getBlueprintId());
     itemEntity.setItemRarity(ItemRarity.fromString(itemRequest.getItemRarity()));
     itemEntity.setIsEquipped(itemRequest.getIsEquipped());
     itemEntity.setLevel(itemRequest.getLevel());

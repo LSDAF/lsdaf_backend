@@ -35,6 +35,9 @@ public class ItemEntity extends AEntity {
   @EqualsAndHashCode.Exclude
   private InventoryEntity inventoryEntity;
 
+  @Column(name = EntityAttributes.Items.ITEM_BLUEPRINT_ID)
+  private String blueprintId;
+
   @Column(name = EntityAttributes.Items.ITEM_TYPE)
   @Enumerated(EnumType.STRING)
   private ItemType itemType;

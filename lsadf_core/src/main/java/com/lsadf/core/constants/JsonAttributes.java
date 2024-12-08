@@ -82,6 +82,7 @@ public final class JsonAttributes {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static final class Item {
     public static final String TYPE = "type";
+    public static final String BLUEPRINT_ID = "blueprint_id";
     public static final String RARITY = "rarity";
     public static final String IS_EQUIPPED = "is_equipped";
     public static final String LEVEL = "level";

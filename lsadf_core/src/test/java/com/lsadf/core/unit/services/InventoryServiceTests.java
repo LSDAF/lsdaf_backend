@@ -81,9 +81,29 @@ class InventoryServiceTests {
   @Test
   void getInventory_on_existing_gamesave_id_with_items() {
     // Arrange
-    ItemEntity itemEntity = ItemEntity.builder().id("1").build();
+    ItemEntity itemEntity =
+        ItemEntity.builder()
+            .id("1")
+            .blueprintId("aze")
+            .itemType(ItemType.BOOTS)
+            .itemRarity(ItemRarity.LEGENDARY)
+            .isEquipped(true)
+            .level(20)
+            .mainStat(new ItemStat(ItemStatistic.ATTACK_MULT, 100f))
+            .additionalStats(List.of(new ItemStat(ItemStatistic.HEALTH_ADD, 200f)))
+            .build();
 
-    ItemEntity itemEntity2 = ItemEntity.builder().id("2").build();
+    ItemEntity itemEntity2 =
+        ItemEntity.builder()
+            .id("2")
+            .blueprintId("rty")
+            .itemType(ItemType.SWORD)
+            .itemRarity(ItemRarity.RARE)
+            .isEquipped(false)
+            .level(25)
+            .mainStat(new ItemStat(ItemStatistic.ATTACK_ADD, 150f))
+            .additionalStats(List.of(new ItemStat(ItemStatistic.HEALTH_MULT, 2f)))
+            .build();
 
     InventoryEntity inventoryEntity =
         InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity, itemEntity2))).build();
@@ -124,6 +144,7 @@ class InventoryServiceTests {
     ItemRequest itemRequest =
         new ItemRequest(
             ItemType.BOOTS.getType(),
+            "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
             true,
             20,
@@ -155,6 +176,7 @@ class InventoryServiceTests {
     ItemRequest itemRequest =
         new ItemRequest(
             ItemType.SWORD.getType(),
+            "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
             true,
             20,
@@ -311,6 +333,7 @@ class InventoryServiceTests {
     ItemRequest itemRequest =
         new ItemRequest(
             ItemType.SWORD.getType(),
+            "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
             true,
             20,
