@@ -438,6 +438,7 @@ public class BddUtils {
    */
   public static ItemEntity mapToItemEntity(Map<String, String> row) {
     String id = row.get(BddFieldConstants.Item.ID);
+    String clientId = row.get(BddFieldConstants.Item.CLIENT_ID);
     String blueprintId = row.get(BddFieldConstants.Item.BLUEPRINT_ID);
     String itemType = row.get(BddFieldConstants.Item.TYPE);
     String itemRarity = row.get(BddFieldConstants.Item.RARITY);
@@ -466,6 +467,7 @@ public class BddUtils {
     return ItemEntity.builder()
         .id(id)
         .blueprintId(blueprintId)
+        .clientId(clientId)
         .itemType(ItemType.fromString(itemType))
         .itemRarity(ItemRarity.fromString(itemRarity))
         .isEquipped(Boolean.parseBoolean(isEquipped))
