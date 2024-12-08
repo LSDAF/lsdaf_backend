@@ -220,6 +220,28 @@ Feature: Inventory Controller BDD tests
 
     Then the response status code should be 403
 
+  Scenario: A user requests to delete an item from the inventory of inexistent client id
+    Given the following game saves
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com  | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+
+    And the following items to the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+      | clientId                                                                   | id                                   | type       | blueprintId | rarity    | isEquipped | level | mainStatBaseValue | mainStatStatistic | additionalStat1BaseValue | additionalStat1Statistic | additionalStat2BaseValue | additionalStat2Statistic | additionalStat3BaseValue | additionalStat3Statistic |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 | 11111111-1111-1111-1111-111111111111 | boots      | leg_boo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222 | 22222222-2222-2222-2222-222222222222 | chestplate | leg_che_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__33333333-3333-3333-3333-333333333333 | 33333333-3333-3333-3333-333333333333 | gloves     | leg_glo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__44444444-4444-4444-4444-444444444444 | 44444444-4444-4444-4444-444444444444 | helmet     | leg_hel_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__55555555-5555-5555-5555-555555555555 | 55555555-5555-5555-5555-555555555555 | shield     | leg_she_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__66666666-6666-6666-6666-666666666666 | 66666666-6666-6666-6666-666666666666 | sword      | leg_swo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to delete an item with client id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+
+    Then the response status code should be 404
+
   Scenario: A user requests to delete an item in the inventory of a inexistent game save
     Given the following game saves
       | id                                   | userEmail           | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
@@ -254,12 +276,37 @@ Feature: Inventory Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the endpoint to update an item with id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
+    And the user requests the endpoint to update an item with client id 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
       | clientId                                                                   | id                                   | type       | blueprintId | rarity    | isEquipped | level | mainStatBaseValue | mainStatStatistic | additionalStat1BaseValue | additionalStat1Statistic | additionalStat2BaseValue | additionalStat2Statistic | additionalStat3BaseValue | additionalStat3Statistic |
       | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 | 11111111-1111-1111-1111-111111111111 | boots      | leg_boo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
 
 
     Then the response status code should be 200
+
+  Scenario: A user requests to update an item with an inexistent client id
+    Given the following game saves
+      | id                                   | userEmail            | gold | diamond | emerald | amethyst | currentStage | maxStage | nickname | attack | critChance | critDamage | health | resistance |
+      | aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa | paul.ochon@test.com  | 1000 | 1000    | 1000    | 1000     | 1000         | 1000     | test-1   | 1100   | 1200       | 1300       | 1400   | 1500       |
+
+    And the following items to the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+      | clientId                                                                   | id                                   | type       | blueprintId | rarity    | isEquipped | level | mainStatBaseValue | mainStatStatistic | additionalStat1BaseValue | additionalStat1Statistic | additionalStat2BaseValue | additionalStat2Statistic | additionalStat3BaseValue | additionalStat3Statistic |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 | 11111111-1111-1111-1111-111111111111 | boots      | leg_boo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222 | 22222222-2222-2222-2222-222222222222 | chestplate | leg_che_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__33333333-3333-3333-3333-333333333333 | 33333333-3333-3333-3333-333333333333 | gloves     | leg_glo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__44444444-4444-4444-4444-444444444444 | 44444444-4444-4444-4444-444444444444 | helmet     | leg_hel_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__55555555-5555-5555-5555-555555555555 | 55555555-5555-5555-5555-555555555555 | shield     | leg_she_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__66666666-6666-6666-6666-666666666666 | 66666666-6666-6666-6666-666666666666 | sword      | leg_swo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+
+    When the user logs in with the following credentials
+      | username            | password |
+      | paul.ochon@test.com | toto1234 |
+
+    And the user requests the endpoint to update an item with client id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa with the following ItemUpdateRequest
+      | clientId                                                                   | id                                   | type       | blueprintId | rarity    | isEquipped | level | mainStatBaseValue | mainStatStatistic | additionalStat1BaseValue | additionalStat1Statistic | additionalStat2BaseValue | additionalStat2Statistic | additionalStat3BaseValue | additionalStat3Statistic |
+      | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 | 11111111-1111-1111-1111-111111111111 | boots      | leg_boo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
+
+
+    Then the response status code should be 404
 
   Scenario: A user requests to update an item from the inventory of another user
     Given the following game saves
@@ -280,9 +327,10 @@ Feature: Inventory Controller BDD tests
       | username            | password |
       | paul.ochon@test.com | toto1234 |
 
-    And the user requests the endpoint to update an item with id 11111111-1111-1111-1111-111111111111 in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemUpdateRequest
+    And the user requests the endpoint to update an item with client id 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 in the inventory of the game save with id bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb with the following ItemUpdateRequest
       | clientId                                                                   | id                                   | type       | blueprintId | rarity    | isEquipped | level | mainStatBaseValue | mainStatStatistic | additionalStat1BaseValue | additionalStat1Statistic | additionalStat2BaseValue | additionalStat2Statistic | additionalStat3BaseValue | additionalStat3Statistic |
       | 36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111 | 11111111-1111-1111-1111-111111111111 | boots      | leg_boo_01  | LEGENDARY | true       | 20    | 100               | attack_add        | 200                      | attack_mult              | 300                      | attack_mult              | 400                      | attack_mult              |
 
 
     Then the response status code should be 403
+

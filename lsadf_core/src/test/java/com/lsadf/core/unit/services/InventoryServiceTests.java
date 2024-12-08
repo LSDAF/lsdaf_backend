@@ -50,6 +50,7 @@ class InventoryServiceTests {
     inventoryService = new InventoryServiceImpl(inventoryRepository, itemRepository, mapper);
   }
 
+  /* GET */
   @Test
   void getInventory_on_null_gamesave_id() {
     // Act & Assert
@@ -120,6 +121,7 @@ class InventoryServiceTests {
     assertThat(result).isEqualTo(inventoryEntity);
   }
 
+  /* CREATE */
   @Test
   void createItemInInventory_on_null_gamesave_id() {
     // Act & Assert
@@ -202,6 +204,7 @@ class InventoryServiceTests {
     assertThat(capturedInventory.getItems()).hasSize(2);
   }
 
+  /* DELETE */
   @Test
   void deleteItemFromInventory_on_null_gamesave_id() {
     // Act & Assert
@@ -310,6 +313,7 @@ class InventoryServiceTests {
     assertThat(capturedInventory.getItems()).hasSize(1);
   }
 
+  /* UPDATE */
   @Test
   void updateItemInInventory_on_null_gamesave_id() {
     // Act & Assert
@@ -319,7 +323,7 @@ class InventoryServiceTests {
   }
 
   @Test
-  void updateItemInInventory_on_null_item_id() {
+  void updateItemInInventory_on_null_client_id() {
     // Act & Assert
     assertThrows(
         IllegalArgumentException.class,
@@ -346,7 +350,7 @@ class InventoryServiceTests {
   }
 
   @Test
-  void updateItemInInventory_on_non_existing_item_id() {
+  void updateItemInInventory_on_non_existing_client_id() {
     // Arrange
     when(itemRepository.findById(anyString())).thenReturn(Optional.empty());
 
@@ -359,10 +363,22 @@ class InventoryServiceTests {
   @Test
   void updateItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
     // Arrange
-    ItemEntity itemEntity = ItemEntity.builder().id("2").itemType(ItemType.BOOTS).build();
+    GameSaveEntity gameSaveEntity =
+        GameSaveEntity.builder().id("1").userEmail("test@test.com").build();
+    ItemEntity itemEntity =
+        ItemEntity.builder()
+            .id("2")
+            .clientId("6f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111")
+            .itemType(ItemType.BOOTS)
+            .build();
 
     InventoryEntity inventoryEntity =
-        InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity))).build();
+        InventoryEntity.builder()
+            .items(new HashSet<>(List.of(itemEntity)))
+            .gameSave(gameSaveEntity)
+            .build();
+
+    itemEntity.setInventoryEntity(inventoryEntity);
 
     ItemRequest itemRequest =
         new ItemRequest(
@@ -376,7 +392,7 @@ class InventoryServiceTests {
             List.of(new ItemStat(ItemStatistic.ATTACK_MULT, 2f)));
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
-    when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));
+    when(itemRepository.findItemEntityByClientId(anyString())).thenReturn(Optional.of(itemEntity));
 
     // Act
     inventoryService.updateItemInInventory("1", "2", itemRequest);

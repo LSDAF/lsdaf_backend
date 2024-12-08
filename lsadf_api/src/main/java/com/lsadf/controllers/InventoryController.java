@@ -70,7 +70,7 @@ public interface InventoryController {
   ResponseEntity<GenericResponse<Void>> deleteItemFromInventory(
       @AuthenticationPrincipal Jwt jwt,
       @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-      @PathVariable(value = CLIENT_ID) String clientId);
+      @PathVariable(value = CLIENT_ID) String itemClientId);
 
   @PutMapping(value = ControllerConstants.Inventory.CLIENT_ID)
   @Operation(summary = "Updates an item in the inventory of a game save")
@@ -85,6 +85,6 @@ public interface InventoryController {
   ResponseEntity<GenericResponse<Void>> updateItemInInventory(
       @AuthenticationPrincipal Jwt jwt,
       @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-      @PathVariable(value = CLIENT_ID) String clientId,
+      @PathVariable(value = CLIENT_ID) String itemClientId,
       @RequestBody @Valid ItemRequest itemRequest);
 }
