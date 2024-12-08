@@ -136,15 +136,15 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
   }
 
   @When(
-      "the user requests the endpoint to delete an item with id (.*) in the inventory of the game save with id (.*)$")
+      "the user requests the endpoint to delete an item with client id (.*) in the inventory of the game save with id (.*)$")
   public void
       when_the_user_requests_the_endpoint_to_delete_an_item_with_id_in_the_inventory_of_the_game_save_with_id(
-          String itemId, String gameSaveId) {
+          String clientId, String gameSaveId) {
     String fullPath =
         ControllerConstants.INVENTORY
-            + ControllerConstants.Inventory.ITEM_ID
+            + ControllerConstants.Inventory.CLIENT_ID
                 .replace("{game_save_id}", gameSaveId)
-                .replace("{item_id}", itemId);
+                .replace("{client_id}", clientId);
     String url = BddUtils.buildUrl(this.serverPort, fullPath);
     try {
       JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();
@@ -167,7 +167,7 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
       "the user requests the endpoint to update an item with id (.*) in the inventory of the game save with id (.*) with the following ItemUpdateRequest$")
   public void
       when_the_user_requests_the_endpoint_to_update_an_item_in_the_inventory_of_the_game_save_with_id_with_the_following_item_update_request(
-          String itemId, String gameSaveId, DataTable dataTable) {
+          String clientId, String gameSaveId, DataTable dataTable) {
     List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
     assertThat(rows).hasSize(1);
 
@@ -176,9 +176,9 @@ public class BddInventoryWhenStepDefinitions extends BddLoader {
 
     String fullPath =
         ControllerConstants.INVENTORY
-            + ControllerConstants.Inventory.ITEM_ID
+            + ControllerConstants.Inventory.CLIENT_ID
                 .replace("{game_save_id}", gameSaveId)
-                .replace("{item_id}", itemId);
+                .replace("{client_id}", clientId);
     String url = BddUtils.buildUrl(this.serverPort, fullPath);
     try {
       JwtAuthentication jwtAuthentication = jwtAuthenticationStack.peek();

@@ -3,6 +3,7 @@ package com.lsadf.core.services;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.exceptions.AlreadyExistingItemClientIdException;
+import com.lsadf.core.exceptions.http.ForbiddenException;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.requests.item.ItemRequest;
 
@@ -30,10 +31,11 @@ public interface InventoryService {
    * Remove an item from the inventory of a game save
    *
    * @param gameSaveId the game save id
-   * @param itemId the item to add
-   * @throws NotFoundException
+   * @param itemClientId the item to remove
+   * @throws NotFoundException, ForbiddenException
    */
-  void deleteItemFromInventory(String gameSaveId, String itemId) throws NotFoundException;
+  void deleteItemFromInventory(String gameSaveId, String itemClientId)
+      throws NotFoundException, ForbiddenException;
 
   /**
    * Update an item in the inventory of a game save

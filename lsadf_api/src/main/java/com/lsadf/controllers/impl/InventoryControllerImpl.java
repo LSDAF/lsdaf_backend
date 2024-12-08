@@ -76,11 +76,11 @@ public class InventoryControllerImpl extends BaseController implements Inventory
    */
   @Override
   public ResponseEntity<GenericResponse<Void>> deleteItemFromInventory(
-      Jwt jwt, String gameSaveId, String itemId) {
+      Jwt jwt, String gameSaveId, String itemClientId) {
     validateUser(jwt);
     String userEmail = getUsernameFromJwt(jwt);
     gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-    inventoryService.deleteItemFromInventory(gameSaveId, itemId);
+    inventoryService.deleteItemFromInventory(gameSaveId, itemClientId);
     return generateResponse(HttpStatus.OK);
   }
 
