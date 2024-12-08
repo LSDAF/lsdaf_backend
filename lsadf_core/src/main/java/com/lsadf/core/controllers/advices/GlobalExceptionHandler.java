@@ -2,10 +2,7 @@ package com.lsadf.core.controllers.advices;
 
 import static com.lsadf.core.utils.ResponseUtils.generateResponse;
 
-import com.lsadf.core.exceptions.AlreadyExistingGameSaveException;
-import com.lsadf.core.exceptions.AlreadyExistingUserException;
-import com.lsadf.core.exceptions.AlreadyTakenNicknameException;
-import com.lsadf.core.exceptions.DynamicJsonViewException;
+import com.lsadf.core.exceptions.*;
 import com.lsadf.core.exceptions.http.*;
 import com.lsadf.core.responses.GenericResponse;
 import java.util.HashMap;
@@ -189,6 +186,20 @@ public class GlobalExceptionHandler {
     log.error("AlreadyExistingGameSaveException: ", e);
     return generateResponse(
         HttpStatus.BAD_REQUEST, "Game save already exists: " + e.getMessage(), null);
+  }
+
+  /**
+   * Exception handler for AlreadyExistingItemClientIdException
+   *
+   * @param e AlreadyExistingItemClientIdException
+   * @return ResponseEntity containing the error
+   */
+  @ExceptionHandler(AlreadyExistingItemClientIdException.class)
+  public ResponseEntity<GenericResponse<Void>> handleAlreadyExistingItemClientIdException(
+      AlreadyExistingItemClientIdException e) {
+    log.error("AlreadyExistingItemClientIdException: ", e);
+    return generateResponse(
+        HttpStatus.BAD_REQUEST, "Item client id already exists: " + e.getMessage(), null);
   }
 
   /**
