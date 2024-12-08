@@ -470,6 +470,7 @@ public class BddUtils {
    * @return ItemRequest
    */
   public static ItemRequest mapToItemRequest(Map<String, String> row) {
+    String clientId = row.get(BddFieldConstants.Item.CLIENT_ID);
     String itemType = row.get(BddFieldConstants.Item.ITEM_TYPE);
     String blueprintId = row.get(BddFieldConstants.Item.BLUEPRINT_ID);
     String itemRarity = row.get(BddFieldConstants.Item.ITEM_RARITY);
@@ -496,7 +497,7 @@ public class BddUtils {
     List<ItemStat> additionalStats = List.of(additionalStat1, additionalStat2, additionalStat3);
 
     return new ItemRequest(
-        itemType, blueprintId, itemRarity, isEquipped, level, mainStat, additionalStats);
+        clientId, itemType, blueprintId, itemRarity, isEquipped, level, mainStat, additionalStats);
   }
 
   /**

@@ -143,6 +143,7 @@ class InventoryServiceTests {
 
     ItemRequest itemRequest =
         new ItemRequest(
+            "36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111",
             ItemType.BOOTS.getType(),
             "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
@@ -175,6 +176,7 @@ class InventoryServiceTests {
 
     ItemRequest itemRequest =
         new ItemRequest(
+            "36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111",
             ItemType.SWORD.getType(),
             "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
@@ -332,6 +334,7 @@ class InventoryServiceTests {
 
     ItemRequest itemRequest =
         new ItemRequest(
+            "36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111",
             ItemType.SWORD.getType(),
             "blueprint_id",
             ItemRarity.LEGENDARY.getRarity(),
