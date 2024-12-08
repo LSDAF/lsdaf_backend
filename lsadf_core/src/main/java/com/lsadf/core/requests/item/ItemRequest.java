@@ -17,10 +17,26 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({TYPE, BLUEPRINT_ID, RARITY, IS_EQUIPPED, LEVEL, MAIN_STAT, ADDITIONAL_STATS})
+@JsonPropertyOrder({
+  CLIENT_ID,
+  TYPE,
+  BLUEPRINT_ID,
+  RARITY,
+  IS_EQUIPPED,
+  LEVEL,
+  MAIN_STAT,
+  ADDITIONAL_STATS
+})
 public class ItemRequest implements Request {
 
   @Serial private static final long serialVersionUID = -1116418739363127022L;
+
+  @Schema(
+      description = "Client generated id, concatenation of inventory id and item id",
+      example = "36f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111")
+  @JsonProperty(value = CLIENT_ID)
+  @NotNull
+  private String clientId;
 
   @Schema(description = "Item type", example = "boots")
   @JsonProperty(value = TYPE)

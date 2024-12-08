@@ -5,8 +5,6 @@ import com.lsadf.core.models.*;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
 import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.core.requests.currency.CurrencyRequest;
-import com.lsadf.core.requests.inventory.InventoryRequest;
-import com.lsadf.core.requests.item.ItemRequest;
 import com.lsadf.core.requests.stage.StageRequest;
 import com.lsadf.core.requests.user.UserCreationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -55,28 +53,12 @@ public interface Mapper {
   Currency mapCurrencyEntityToCurrency(CurrencyEntity currencyEntity);
 
   /**
-   * Maps InventoryRequest to Inventory
-   *
-   * @param inventoryRequest InventoryRequest
-   * @return Inventory
-   */
-  Inventory mapInventoryRequestToInventory(InventoryRequest inventoryRequest);
-
-  /**
    * Maps Inventory to InventoryEntity
    *
    * @param inventoryEntity InventoryEntity
    * @return InventoryEntity
    */
   Inventory mapInventoryEntityToInventory(InventoryEntity inventoryEntity);
-
-  /**
-   * Maps ItemRequest to Item
-   *
-   * @param itemRequest ItemRequest
-   * @return Item
-   */
-  Item mapItemRequestToItem(ItemRequest itemRequest);
 
   /**
    * Maps ItemEntity to Item

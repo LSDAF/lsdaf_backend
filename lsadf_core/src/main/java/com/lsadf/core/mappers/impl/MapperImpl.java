@@ -6,8 +6,6 @@ import com.lsadf.core.models.*;
 import com.lsadf.core.requests.admin.AdminUserCreationRequest;
 import com.lsadf.core.requests.characteristics.CharacteristicsRequest;
 import com.lsadf.core.requests.currency.CurrencyRequest;
-import com.lsadf.core.requests.inventory.InventoryRequest;
-import com.lsadf.core.requests.item.ItemRequest;
 import com.lsadf.core.requests.stage.StageRequest;
 import com.lsadf.core.requests.user.UserCreationRequest;
 import java.util.Date;
@@ -96,17 +94,6 @@ public class MapperImpl implements Mapper {
 
   /** {@inheritDoc} */
   @Override
-  public Inventory mapInventoryRequestToInventory(InventoryRequest inventoryRequest) {
-    Set<Item> items =
-        inventoryRequest.getItems().stream()
-            .map(this::mapItemRequestToItem)
-            .collect(Collectors.toSet());
-
-    return new Inventory(items);
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public Item mapItemEntityToItem(ItemEntity itemEntity) {
     return Item.builder()
         .id(itemEntity.getId())
@@ -118,12 +105,6 @@ public class MapperImpl implements Mapper {
         .mainStat(itemEntity.getMainStat())
         .additionalStats(itemEntity.getAdditionalStats())
         .build();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Item mapItemRequestToItem(ItemRequest itemRequest) {
-    return new Item();
   }
 
   /** {@inheritDoc} */
