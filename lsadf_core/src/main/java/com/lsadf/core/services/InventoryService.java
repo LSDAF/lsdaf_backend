@@ -41,10 +41,10 @@ public interface InventoryService {
    * Update an item in the inventory of a game save
    *
    * @param gameSaveId the game save id
-   * @param itemId the item to update
+   * @param itemClientId the item to update
    * @param itemRequest the item to update
-   * @throws NotFoundException
+   * @throws NotFoundException, ForbiddenException
    */
-  ItemEntity updateItemInInventory(String gameSaveId, String itemId, ItemRequest itemRequest)
-      throws NotFoundException;
+  ItemEntity updateItemInInventory(String gameSaveId, String itemClientId, ItemRequest itemRequest)
+      throws NotFoundException, ForbiddenException;
 }

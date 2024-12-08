@@ -89,11 +89,11 @@ public class InventoryControllerImpl extends BaseController implements Inventory
    */
   @Override
   public ResponseEntity<GenericResponse<Void>> updateItemInInventory(
-      Jwt jwt, String gameSaveId, String itemId, ItemRequest itemRequest) {
+      Jwt jwt, String gameSaveId, String itemClientId, ItemRequest itemRequest) {
     validateUser(jwt);
     String userEmail = getUsernameFromJwt(jwt);
     gameSaveService.checkGameSaveOwnership(gameSaveId, userEmail);
-    inventoryService.updateItemInInventory(gameSaveId, itemId, itemRequest);
+    inventoryService.updateItemInInventory(gameSaveId, itemClientId, itemRequest);
     return generateResponse(HttpStatus.OK);
   }
 

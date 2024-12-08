@@ -113,10 +113,12 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public ItemEntity updateItemInInventory(String gameSaveId, String itemId, ItemRequest itemRequest)
-      throws NotFoundException {
-    if (gameSaveId == null || itemId == null || itemRequest == null) {
-      throw new IllegalArgumentException("Game save id cannot be null");
+  public ItemEntity updateItemInInventory(
+      String gameSaveId, String itemClientId, ItemRequest itemRequest)
+      throws NotFoundException, ForbiddenException {
+    if (gameSaveId == null || itemClientId == null || itemRequest == null) {
+      throw new IllegalArgumentException(
+          "Game save id, item client id and item request cannot be null");
     }
 
     Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);
@@ -125,10 +127,15 @@ public class InventoryServiceImpl implements InventoryService {
       throw new NotFoundException("Inventory not found for game save id " + gameSaveId);
     }
 
-    Optional<ItemEntity> optionalItemEntity = itemRepository.findById(itemId);
+    Optional<ItemEntity> optionalItemEntity = itemRepository.findItemEntityByClientId(itemClientId);
 
     if (optionalItemEntity.isEmpty()) {
-      throw new NotFoundException("Item not found for item id " + itemId);
+      throw new NotFoundException("Item not found for item client id " + itemClientId);
+    }
+
+    if (!optionalItemEntity.get().getInventoryEntity().getGameSave().getId().equals(gameSaveId)) {
+      throw new ForbiddenException(
+          "The given game save id is not the owner of item with the given client id");
     }
 
     ItemEntity itemEntity = optionalItemEntity.get();
