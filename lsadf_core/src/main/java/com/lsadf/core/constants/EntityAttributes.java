@@ -63,6 +63,7 @@ public final class EntityAttributes {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Items {
     public static final String ITEM_ENTITY = "t_item";
+    public static final String ITEM_ADDITIONAL_STATS = "t_additional_stats";
     public static final String ITEM_CLIENT_ID = "client_id";
     public static final String ITEM_BLUEPRINT_ID = "blueprint_id";
     public static final String ITEM_TYPE = "type";
@@ -70,7 +71,6 @@ public final class EntityAttributes {
     public static final String ITEM_IS_EQUIPPED = "is_equipped";
     public static final String ITEM_LEVEL = "level";
     public static final String ITEM_MAIN_STAT = "main_stat";
-    public static final String ITEM_ADDITIONAL_STATS = "additional_stats";
   }
 
   // STAGES
