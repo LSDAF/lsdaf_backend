@@ -5,6 +5,7 @@ import com.lsadf.core.constants.item.ItemType;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.exceptions.AlreadyExistingItemClientIdException;
+import com.lsadf.core.exceptions.http.ForbiddenException;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.repositories.InventoryRepository;
@@ -43,7 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
     if (gameSaveId == null) {
       throw new IllegalArgumentException("Game save id cannot be null");
     }
-    if (itemRepository.findItemEntitiesByClientId(itemRequest.getClientId()).isPresent()) {
+    if (itemRepository.findItemEntityByClientId(itemRequest.getClientId()).isPresent()) {
       throw new AlreadyExistingItemClientIdException(
           "Game save with id " + itemRequest.getClientId() + " already exists");
     }
@@ -79,9 +80,10 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public void deleteItemFromInventory(String gameSaveId, String itemId) throws NotFoundException {
-    if (gameSaveId == null || itemId == null) {
-      throw new IllegalArgumentException("Game save id cannot be null");
+  public void deleteItemFromInventory(String gameSaveId, String itemClientId)
+      throws NotFoundException, ForbiddenException {
+    if (gameSaveId == null || itemClientId == null) {
+      throw new IllegalArgumentException("Game save id and item client id cannot be null");
     }
 
     Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);
@@ -92,10 +94,15 @@ public class InventoryServiceImpl implements InventoryService {
 
     InventoryEntity inventoryEntity = optionalInventoryEntity.get();
 
-    Optional<ItemEntity> optionalItemEntity = itemRepository.findById(itemId);
+    Optional<ItemEntity> optionalItemEntity = itemRepository.findItemEntityByClientId(itemClientId);
 
     if (optionalItemEntity.isEmpty()) {
-      throw new NotFoundException("Item not found for item id " + itemId);
+      throw new NotFoundException("Item not found for item client id " + itemClientId);
+    }
+
+    if (!optionalItemEntity.get().getInventoryEntity().getGameSave().getId().equals(gameSaveId)) {
+      throw new ForbiddenException(
+          "The given game save id is not the owner of item with the given client id");
     }
 
     ItemEntity itemEntity = optionalItemEntity.get();

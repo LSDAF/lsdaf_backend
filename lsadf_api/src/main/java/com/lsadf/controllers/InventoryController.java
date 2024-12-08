@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public interface InventoryController {
 
   String GAME_SAVE_ID = "game_save_id";
-  String ITEM_ID = "item_id";
+  String CLIENT_ID = "client_id";
 
   @GetMapping(value = ControllerConstants.Inventory.GAME_SAVE_ID)
   @Operation(summary = "Gets the inventory for a game save")
@@ -57,7 +57,7 @@ public interface InventoryController {
       @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
       @RequestBody @Valid ItemRequest itemRequest);
 
-  @DeleteMapping(value = ControllerConstants.Inventory.ITEM_ID)
+  @DeleteMapping(value = ControllerConstants.Inventory.CLIENT_ID)
   @Operation(summary = "Deletes an item from the inventory of a game save")
   @ApiResponses(
       value = {
@@ -70,9 +70,9 @@ public interface InventoryController {
   ResponseEntity<GenericResponse<Void>> deleteItemFromInventory(
       @AuthenticationPrincipal Jwt jwt,
       @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-      @PathVariable(value = ITEM_ID) @Uuid String itemId);
+      @PathVariable(value = CLIENT_ID) String clientId);
 
-  @PutMapping(value = ControllerConstants.Inventory.ITEM_ID)
+  @PutMapping(value = ControllerConstants.Inventory.CLIENT_ID)
   @Operation(summary = "Updates an item in the inventory of a game save")
   @ApiResponses(
       value = {
@@ -85,6 +85,6 @@ public interface InventoryController {
   ResponseEntity<GenericResponse<Void>> updateItemInInventory(
       @AuthenticationPrincipal Jwt jwt,
       @PathVariable(value = GAME_SAVE_ID) @Uuid String gameSaveId,
-      @PathVariable(value = ITEM_ID) @Uuid String itemId,
+      @PathVariable(value = CLIENT_ID) String clientId,
       @RequestBody @Valid ItemRequest itemRequest);
 }

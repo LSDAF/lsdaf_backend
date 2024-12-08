@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.lsadf.core.constants.item.ItemRarity;
 import com.lsadf.core.constants.item.ItemStatistic;
 import com.lsadf.core.constants.item.ItemType;
+import com.lsadf.core.entities.GameSaveEntity;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
 import com.lsadf.core.exceptions.http.NotFoundException;
@@ -236,16 +237,28 @@ class InventoryServiceTests {
   @Test
   void deleteItemInInventory_on_existing_gamesave_id_with_one_item_inventory() {
     // Arrange
-    ItemEntity itemEntity = ItemEntity.builder().id("2").build();
+    GameSaveEntity gameSaveEntity =
+        GameSaveEntity.builder().id("1").userEmail("test@test.com").build();
+    ItemEntity itemEntity =
+        ItemEntity.builder()
+            .id("2")
+            .clientId("6f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222")
+            .build();
 
     InventoryEntity inventoryEntity =
-        InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity))).build();
+        InventoryEntity.builder()
+            .items(new HashSet<>(List.of(itemEntity)))
+            .gameSave(gameSaveEntity)
+            .build();
+
+    itemEntity.setInventoryEntity(inventoryEntity);
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
-    when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity));
+    when(itemRepository.findItemEntityByClientId(anyString())).thenReturn(Optional.of(itemEntity));
 
     // Act
-    inventoryService.deleteItemFromInventory("1", "2");
+    inventoryService.deleteItemFromInventory(
+        "1", "6f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222");
 
     // Assert
     ArgumentCaptor<InventoryEntity> inventoryEntityCaptor =
@@ -259,17 +272,34 @@ class InventoryServiceTests {
   @Test
   void deleteItemInInventory_on_existing_gamesave_id_with_two_items_inventory() {
     // Arrange
-    ItemEntity itemEntity = ItemEntity.builder().id("1").build();
-    ItemEntity itemEntity2 = ItemEntity.builder().id("2").build();
+    GameSaveEntity gameSaveEntity =
+        GameSaveEntity.builder().id("1").userEmail("test@test.com").build();
+    ItemEntity itemEntity =
+        ItemEntity.builder()
+            .id("1")
+            .clientId("6f27c2a-06e8-4bdb-bf59-56999116f5ef__11111111-1111-1111-1111-111111111111")
+            .build();
+    ItemEntity itemEntity2 =
+        ItemEntity.builder()
+            .id("2")
+            .clientId("6f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222")
+            .build();
 
     InventoryEntity inventoryEntity =
-        InventoryEntity.builder().items(new HashSet<>(List.of(itemEntity, itemEntity2))).build();
+        InventoryEntity.builder()
+            .items(new HashSet<>(List.of(itemEntity, itemEntity2)))
+            .gameSave(gameSaveEntity)
+            .build();
+
+    itemEntity.setInventoryEntity(inventoryEntity);
+    itemEntity2.setInventoryEntity(inventoryEntity);
 
     when(inventoryRepository.findById(anyString())).thenReturn(Optional.of(inventoryEntity));
-    when(itemRepository.findById(anyString())).thenReturn(Optional.of(itemEntity2));
+    when(itemRepository.findItemEntityByClientId(anyString())).thenReturn(Optional.of(itemEntity2));
 
     // Act
-    inventoryService.deleteItemFromInventory("1", "2");
+    inventoryService.deleteItemFromInventory(
+        "1", "6f27c2a-06e8-4bdb-bf59-56999116f5ef__22222222-2222-2222-2222-222222222222");
 
     // Assert
     ArgumentCaptor<InventoryEntity> inventoryEntityCaptor =

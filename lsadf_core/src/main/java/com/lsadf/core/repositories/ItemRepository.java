@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemRepository extends CrudRepository<ItemEntity, String> {
-  Optional<ItemEntity> findItemEntitiesByClientId(String clientId);
+  Optional<ItemEntity> findItemEntityByClientId(String clientId);
 }
