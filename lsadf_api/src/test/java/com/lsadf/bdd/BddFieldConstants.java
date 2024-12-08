@@ -76,6 +76,7 @@ public class BddFieldConstants {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static final class Item {
     public static final String ID = BddFieldConstants.ID;
+    public static final String BLUEPRINT_ID = "blueprintId";
     public static final String TYPE = "type";
     public static final String RARITY = "rarity";
     public static final String IS_EQUIPPED = "isEquipped";
