@@ -4,6 +4,7 @@ import com.lsadf.core.constants.item.ItemRarity;
 import com.lsadf.core.constants.item.ItemType;
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
+import com.lsadf.core.exceptions.AlreadyExistingItemClientIdException;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.repositories.InventoryRepository;
@@ -38,9 +39,13 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public ItemEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest)
-      throws NotFoundException {
+      throws NotFoundException, AlreadyExistingItemClientIdException {
     if (gameSaveId == null) {
       throw new IllegalArgumentException("Game save id cannot be null");
+    }
+    if (itemRepository.findItemEntitiesByClientId(itemRequest.getClientId()).isPresent()) {
+      throw new AlreadyExistingItemClientIdException(
+          "Game save with id " + itemRequest.getClientId() + " already exists");
     }
 
     Optional<InventoryEntity> optionalInventoryEntity = inventoryRepository.findById(gameSaveId);

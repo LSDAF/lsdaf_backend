@@ -2,6 +2,7 @@ package com.lsadf.core.services;
 
 import com.lsadf.core.entities.InventoryEntity;
 import com.lsadf.core.entities.ItemEntity;
+import com.lsadf.core.exceptions.AlreadyExistingItemClientIdException;
 import com.lsadf.core.exceptions.http.NotFoundException;
 import com.lsadf.core.requests.item.ItemRequest;
 
@@ -23,7 +24,7 @@ public interface InventoryService {
    * @throws NotFoundException
    */
   ItemEntity createItemInInventory(String gameSaveId, ItemRequest itemRequest)
-      throws NotFoundException;
+      throws NotFoundException, AlreadyExistingItemClientIdException;
 
   /**
    * Remove an item from the inventory of a game save
