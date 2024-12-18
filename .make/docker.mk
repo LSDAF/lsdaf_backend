@@ -10,11 +10,11 @@ updev:
 
 down:
 	@echo "Using GIT_BRANCH=$(GIT_BRANCH)"
-	BRANCH_NAME=$(GIT_BRANCH) COMPOSE_PROFILES=db,backend,monitoring,backend_dev docker-compose --env-file env/env.properties -f dc-local.yml down
+	BRANCH_NAME=$(GIT_BRANCH) COMPOSE_PROFILES=db,backend,monitoring,backend_dev,backend_admin_dev docker-compose --env-file env/env.properties -f dc-local.yml down
 
 logs:
 	@echo "Using GIT_BRANCH=$(GIT_BRANCH)"
-	BRANCH_NAME=$(GIT_BRANCH) COMPOSE_PROFILES=db,backend,monitoring docker-compose --env-file env/env.properties -f dc-local.yml logs -f
+	BRANCH_NAME=$(GIT_BRANCH) COMPOSE_PROFILES=db,backend,backend_dev,backend_admin_dev,monitoring docker-compose --env-file env/env.properties -f dc-local.yml logs -f
 
 dbup:
 	@echo "Using GIT_BRANCH=$(GIT_BRANCH)"
