@@ -1,4 +1,7 @@
-install-ci: clean
+clean-ci:
+	@mvn clean -q
+
+install-ci: clean-ci
 	@mvn install -DskipTests -U -fae -DskipSurefireReport -q --batch-mode --no-transfer-progress
 
 test-ci:

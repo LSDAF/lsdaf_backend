@@ -1,5 +1,5 @@
 clean:
-	@mvn clean -q
+	@mvn clean
 
 prune:
 	@docker system prune -a -f
