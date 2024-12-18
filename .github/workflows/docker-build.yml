@@ -75,6 +75,10 @@ jobs:
         run: |
           mv env/env.EXAMPLE.properties env/env.properties
 
-      - name: 🚧 Build Package & Docker Image
+      - name: 🚧 Build Package & LSADF API Docker Image
         run: |
-          make builddev-ci
+          make build-dev-ci
+
+      - name: 🚧 Build Package & LSADF Admin API Docker Image
+        run: |
+          make build-admin-dev-ci
