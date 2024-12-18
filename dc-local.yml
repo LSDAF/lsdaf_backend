@@ -5,6 +5,7 @@ services:
       - db
       - backend
       - backend_dev
+      - backend_admin_dev
     container_name: keycloak
     env_file: env/env.properties
     environment:
@@ -34,6 +35,7 @@ services:
       - db
       - backend
       - backend_dev
+      - backend_admin_dev
     container_name: postgres
     env_file: env/env.properties
     environment:
@@ -136,7 +138,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-dev
+      args:
+        module_folder: lsadf_api
     container_name: lsadf_backend_dev
+    image: lsadf-api:${BRANCH_NAME}
     profiles:
       - backend_dev
     ports:
@@ -147,6 +152,29 @@ services:
       - backend
     volumes:
       - ./docker/data/lsadf_backend_dev_data/:/app/logs
+    depends_on:
+      - postgres
+
+  lsadf_admin_dev:
+    platform: linux/amd64
+    env_file: env/env.properties
+    image: lsadf-admin-api:${BRANCH_NAME}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-dev
+      args:
+        module_folder: lsadf_admin
+    container_name: lsadf_admin_dev
+    profiles:
+      - backend_admin_dev
+    ports:
+      - "8082:8082"
+    environment:
+      - SLEEP_ENABLED=true
+    networks:
+      - backend
+    volumes:
+      - ./docker/data/lsadf_admin_dev_data/:/app/logs
     depends_on:
       - postgres
 
