@@ -90,8 +90,8 @@ keycloak:
   admin:
     client-id: ${KEYCLOAK_ADMIN_CLIENT_ID}
     client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
-  client-id: ${KEYCLOAK_CLIENT_ID}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  client-id: ${KEYCLOAK_LSADF_API_CLIENT_ID}
+  client-secret: ${KEYCLOAK_LSADF_API_CLIENT_SECRET}
   realm: ${KEYCLOAK_REALM}
   issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
 
