@@ -44,21 +44,9 @@
                     <failOnError>false</failOnError>
                     <filesets>
                         <fileset>
-                            <directory>${basedir}</directory>
-                            <includes>
-                                <include>node_modules/</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
                             <directory>${basedir}/src/main/resources</directory>
                             <includes>
                                 <include>env.properties</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>${basedir}/src/main/frontend</directory>
-                            <includes>
-                                <include>generated/</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -67,6 +55,10 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -304,4 +296,47 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>docker</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-core</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.vaadin</groupId>
+                            <artifactId>vaadin-dev</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-frontend</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
