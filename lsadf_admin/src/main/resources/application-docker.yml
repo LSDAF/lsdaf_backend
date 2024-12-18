@@ -12,8 +12,3 @@ keycloak:
   url: ${KEYCLOAK_ADMIN_URI_DOCKER}
   admin-url: ${KEYCLOAK_ADMIN_URI_DOCKER}
 
-
-vaadin:
-  productionMode: true
-  frontend:
-    hotdeploy: false
