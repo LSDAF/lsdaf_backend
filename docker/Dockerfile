@@ -13,11 +13,11 @@ COPY ./docker/startup.sh .
 # Delete application-local.yml to prevent ambiguous configurations
 #RUN rm lsadf_api/src/main/resources/application-local.yml
 
-RUN mvn clean install -DskipTests
 # Delete the test jar to reduce the image size and fix docker build duplicate jar issue
-RUN rm lsadf_api/target/*-tests.jar
+RUN mvn clean install -DskipTests \
+    && rm lsadf_api/target/*-tests.jar \
+    && mv lsadf_api/target/*.jar lsadf_api/target/lsadf_api.jar
 
-RUN mv lsadf_api/target/*.jar lsadf_api/target/lsadf_api.jar
 
 FROM openjdk:17-alpine AS builder
 
@@ -32,8 +32,6 @@ FROM openjdk:17-alpine
 
 EXPOSE 8080
 
-#ENV SLEEP_ENABLED=true
-
 # Copy layers from the build stage
 COPY --from=builder dependencies/ ./
 COPY --from=builder spring-boot-loader/ ./
@@ -42,8 +40,6 @@ COPY --from=builder application/ ./
 COPY --from=builder startup.sh ./
 COPY --from=builder logback-docker.xml ./
 
-RUN mkdir logs
-
-RUN chmod +x startup.sh
+RUN mkdir logs && chmod +x startup.sh
 
 ENTRYPOINT ["./startup.sh"]
