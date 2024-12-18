@@ -3,7 +3,6 @@ package com.lsadf.core.services.impl;
 import com.lsadf.core.exceptions.AlreadyExistingUserException;
 import com.lsadf.core.exceptions.http.InternalServerErrorException;
 import com.lsadf.core.exceptions.http.NotFoundException;
-import com.lsadf.core.http_clients.KeycloakAdminClient;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.models.User;
 import com.lsadf.core.properties.KeycloakProperties;
@@ -28,7 +27,6 @@ import org.springframework.http.HttpStatus;
 public class UserServiceImpl implements UserService {
 
   private final Keycloak keycloak;
-  private final KeycloakAdminClient keycloakAdminClient;
   private final KeycloakProperties keycloakProperties;
   private final ClockService clockService;
   private final Mapper mapper;
@@ -38,10 +36,8 @@ public class UserServiceImpl implements UserService {
   public UserServiceImpl(
       Keycloak keycloak,
       KeycloakProperties keycloakProperties,
-      KeycloakAdminClient keycloakAdminClient,
       ClockService clockService,
       Mapper mapper) {
-    this.keycloakAdminClient = keycloakAdminClient;
     this.keycloakProperties = keycloakProperties;
     this.clockService = clockService;
     this.keycloak = keycloak;
@@ -188,14 +184,14 @@ public class UserServiceImpl implements UserService {
     if (id == null) {
       throw new IllegalArgumentException("Id cannot be null");
     }
-    User existingUser = keycloakAdminClient.getUserById(realm, id);
+    UserRepresentation existingUser = getUserRepresentation(id);
     if (updateRequest.getFirstName() != null) {
       existingUser.setFirstName(updateRequest.getFirstName());
     }
     if (updateRequest.getLastName() != null) {
       existingUser.setLastName(updateRequest.getLastName());
     }
-    keycloakAdminClient.updateUser(realm, id, existingUser);
+    getUsersResource().get(id).update(existingUser);
   }
 
   /** {@inheritDoc} */

@@ -116,6 +116,7 @@ swagger:
   title: ${SWAGGER_TITLE}
   description: ${SWAGGER_DESCRIPTION}
   version: ${SWAGGER_VERSION}
+  authentication-uri: ${SWAGGER_AUTHENTICATION_URI}
 
 springdoc:
   api-docs:
@@ -123,7 +124,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     oauth:
-      client-id: ${keycloak.client-id}
+      client-id: ${keycloak.admin.client-id}
   show-actuator: true
 
 

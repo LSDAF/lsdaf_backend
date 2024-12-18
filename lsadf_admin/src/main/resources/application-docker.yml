@@ -9,5 +9,11 @@ cache:
     host: ${REDIS_HOST_DOCKER}
 
 keycloak:
+  url: ${KEYCLOAK_ADMIN_URI_DOCKER}
   admin-url: ${KEYCLOAK_ADMIN_URI_DOCKER}
-  url: ${KEYCLOAK_URI_DOCKER}
+
+
+vaadin:
+  productionMode: true
+  frontend:
+    hotdeploy: false
