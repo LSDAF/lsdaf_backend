@@ -57,6 +57,9 @@ services:
     command: "sh -xc 'redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli -a $$REDIS_PASSWORD config set notify-keyspace-events KEA && sleep infinity'"
     profiles:
       - db
+      - backend
+      - backend_dev
+      - backend_admin_dev
     ports:
       - "6379:6379"
     networks:
