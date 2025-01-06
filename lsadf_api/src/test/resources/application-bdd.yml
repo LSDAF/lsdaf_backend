@@ -90,7 +90,6 @@ keycloak:
   client-id: BDD-API
   client-secret: SECRET_BDDAPI
   url: http://localhost:8080 # Will be replaced by the real keycloak uri in the integration tests
-  admin-url: ${keycloak.url} # Will be replaced by the real keycloak uri in the integration tests
   realm: BDD_REALM
   issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
 

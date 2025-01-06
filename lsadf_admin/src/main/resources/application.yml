@@ -90,8 +90,8 @@ keycloak:
   admin:
     client-id: ${KEYCLOAK_ADMIN_CLIENT_ID}
     client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
-  client-id: ${KEYCLOAK_CLIENT_ID}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  client-id: ${KEYCLOAK_LSADF_ADMIN_API_CLIENT_ID}
+  client-secret: ${KEYCLOAK_LSADF_ADMIN_API_CLIENT_SECRET}
   realm: ${KEYCLOAK_REALM}
   issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
 
@@ -116,6 +116,7 @@ swagger:
   title: ${SWAGGER_TITLE}
   description: ${SWAGGER_DESCRIPTION}
   version: ${SWAGGER_VERSION}
+  authentication-uri: ${SWAGGER_AUTHENTICATION_URI}
 
 springdoc:
   api-docs:

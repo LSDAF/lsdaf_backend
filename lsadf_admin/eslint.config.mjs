@@ -20,7 +20,7 @@ const compat = new FlatCompat({
 });
 
 export default [{
-    ignores: ["**/node_modules/", "**/target/", 'esling.config.mjs'],
+    ignores: ["**/node_modules/", "**/target/", 'esling.config.mjs', 'src/main/frontend/generated/'],
 }, ...compat.extends("eslint:recommended"), {
     plugins: {
         react,

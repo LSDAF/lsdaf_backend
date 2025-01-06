@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.*;
 import java.util.Arrays;
 import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,15 +37,12 @@ public class SwaggerConfiguration {
   }
 
   @Bean
-  public OpenAPI openAPI(
-      SwaggerProperties swaggerProperties, OAuth2ClientProperties auth2ClientProperties) {
+  public OpenAPI openAPI(SwaggerProperties swaggerProperties) {
     Info info = new Info();
 
     info.setContact(buildContact(swaggerProperties.getContact()));
     info.setDescription(swaggerProperties.getDescription());
     info.setTitle(swaggerProperties.getTitle());
-
-    OAuth2ClientProperties.Provider provider = auth2ClientProperties.getProvider().get(KEYCLOAK);
 
     return new OpenAPI()
         .addSecurityItem(new SecurityRequirement().addList(BEARER_AUTHENTICATION))
@@ -54,7 +50,8 @@ public class SwaggerConfiguration {
             new Components()
                 .addSecuritySchemes(BEARER_AUTHENTICATION, createApiKeyScheme())
                 .addSecuritySchemes(
-                    OAUTH2_AUTHENTICATION, createOAuthScheme(provider.getAuthorizationUri())))
+                    OAUTH2_AUTHENTICATION,
+                    createOAuthScheme(swaggerProperties.getAuthenticationUri())))
         .info(info);
   }
 

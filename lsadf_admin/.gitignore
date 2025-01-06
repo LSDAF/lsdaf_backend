@@ -1,3 +1,5 @@
 node_modules/
 package-lock.json
 src/main/frontend/generated/
+src/main/bundles/
+package.json

@@ -12,5 +12,6 @@ public class SwaggerProperties {
   private String title;
   private String description;
   private String version;
+  private String authenticationUri;
   private SwaggerContactProperties contact;
 }

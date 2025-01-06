@@ -4,7 +4,6 @@ import static com.lsadf.core.constants.BeanConstants.Cache.GAME_SAVE_OWNERSHIP_C
 
 import com.lsadf.core.cache.Cache;
 import com.lsadf.core.cache.HistoCache;
-import com.lsadf.core.http_clients.KeycloakAdminClient;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.mappers.impl.MapperImpl;
 import com.lsadf.core.models.Characteristics;
@@ -85,11 +84,9 @@ public class ServiceConfiguration {
   public UserService userService(
       Keycloak keycloak,
       KeycloakProperties keycloakProperties,
-      KeycloakAdminClient keycloakAdminClient,
       ClockService clockService,
       Mapper mapper) {
-    return new UserServiceImpl(
-        keycloak, keycloakProperties, keycloakAdminClient, clockService, mapper);
+    return new UserServiceImpl(keycloak, keycloakProperties, clockService, mapper);
   }
 
   @Bean

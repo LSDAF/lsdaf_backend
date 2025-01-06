@@ -3,7 +3,6 @@ spring:
     banner-mode: off
 
 keycloak:
-  admin-url: test
   url: test
   realm: test
   client-id: clientid
