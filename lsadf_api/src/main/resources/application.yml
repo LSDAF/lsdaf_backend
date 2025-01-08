@@ -36,9 +36,9 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss.SSS
   jpa:
     show-sql: true
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   config:
     import: optional:classpath:env.properties
   data:
@@ -84,6 +84,8 @@ spring:
             url: ${keycloak.url}
           keycloak-admin:
             url: ${keycloak.admin-url}
+  flyway:
+    baseline-on-migrate: true
 
 
 keycloak:

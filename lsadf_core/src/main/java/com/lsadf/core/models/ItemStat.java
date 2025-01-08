@@ -9,6 +9,8 @@ import com.lsadf.core.constants.JsonViews;
 import com.lsadf.core.constants.item.ItemStatistic;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ public class ItemStat implements Model {
   @JsonView(JsonViews.External.class)
   @JsonProperty(value = STATISTIC)
   @Schema(description = "Item stat statistic", example = "ATTACK_ADD")
+  @Enumerated(EnumType.STRING)
   private ItemStatistic statistic;
 
   @JsonView(JsonViews.External.class)

@@ -50,6 +50,7 @@
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <google-java-format.version>1.25.0</google-java-format.version>
         <vaadin.version>24.5.7</vaadin.version>
+        <flyway.version>11.1.0</flyway.version>
     </properties>
 
     <build>
