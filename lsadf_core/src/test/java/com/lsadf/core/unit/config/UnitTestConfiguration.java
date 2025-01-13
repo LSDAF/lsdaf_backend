@@ -1,7 +1,6 @@
 package com.lsadf.core.unit.config;
 
 import com.lsadf.core.configurations.ShutdownListener;
-import com.lsadf.core.http_clients.KeycloakAdminClient;
 import com.lsadf.core.http_clients.KeycloakClient;
 import com.lsadf.core.mappers.Mapper;
 import com.lsadf.core.services.*;
@@ -23,8 +22,6 @@ public class UnitTestConfiguration {
   @MockBean private RedisMessageListenerContainer redisMessageListenerContainer;
 
   @MockBean private LettuceConnectionFactory lettuceConnectionFactory;
-
-  @MockBean private KeycloakAdminClient keycloakAdminClient;
 
   @MockBean private StageService stageService;
 
