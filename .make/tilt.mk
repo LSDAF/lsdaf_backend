@@ -1,5 +1,8 @@
-tiltup:
-	BRANCH_NAME=$(GIT_BRANCH) tilt up
+tiltup: install-docker
+	tilt up
 
 tiltdown:
-	BRANCH_NAME=$(GIT_BRANCH) tilt down
+	tilt down
+
+tiltmonitorup: install-docker
+	TILT_PROFILES="db monitoring" tilt up
