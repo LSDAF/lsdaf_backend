@@ -44,3 +44,5 @@ keycloak_realm/**
 .python-version
 
 .venv/
+
+**/values.yaml
