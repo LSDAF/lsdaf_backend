@@ -118,6 +118,7 @@ services:
   lsadf_backend:
     platform: linux/amd64
     env_file: env/env.properties
+    image: lsadf/lsadf-api
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -144,7 +145,7 @@ services:
       args:
         module_folder: lsadf_api
     container_name: lsadf_backend_dev
-    image: lsadf-api:${BRANCH_NAME}
+    image: lsadf/lsadf-api-dev
     profiles:
       - backend_dev
     ports:
@@ -161,7 +162,7 @@ services:
   lsadf_admin_dev:
     platform: linux/amd64
     env_file: env/env.properties
-    image: lsadf-admin-api:${BRANCH_NAME}
+    image: lsadf/lsadf-admin-dev
     build:
       context: .
       dockerfile: docker/Dockerfile-dev
