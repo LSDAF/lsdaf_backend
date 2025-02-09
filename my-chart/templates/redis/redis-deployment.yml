@@ -16,6 +16,8 @@ spec:
       containers:
         - name: redis
           image: redis:7.4.0-alpine
+          command: [ "/bin/sh" ]
+          args: [ "-c", "redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli -a $$REDIS_PASSWORD config set notify-keyspace-events KEA && sleep infinity"]
           envFrom:
             - secretRef:
                 name: redis-secret
