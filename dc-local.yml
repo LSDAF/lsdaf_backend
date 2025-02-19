@@ -105,6 +105,7 @@ services:
       - redis
 
   mailhog:
+    platform: linux/amd64
     image: mailhog/mailhog:latest
     container_name: mailhog
     profiles:
