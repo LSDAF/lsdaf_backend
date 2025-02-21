@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: redisinsight
-          image: redis/redisinsight:2.66
+          image: redis/redisinsight:2.66-arm64
           ports:
             - containerPort: 8001
           envFrom:
