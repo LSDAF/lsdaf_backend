@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lsadf-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lsadf-api
+  template:
+    metadata:
+      labels:
+        app: lsadf-api
+    spec:
+      containers:
+        - name: lsadf-api
+          image: lsadf/lsadf-api-dev-arm64:latest
+          imagePullPolicy: Never
+          env:
+            - name: SLEEP_ENABLED
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: lsadf-api-secret
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /app/logs
+              name: lsadf-api-volume
+      volumes:
+        - name: lsadf-api-volume
+          persistentVolumeClaim:
+            claimName: lsadf-api-volume-claim
