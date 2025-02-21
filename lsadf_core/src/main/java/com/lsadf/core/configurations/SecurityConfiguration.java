@@ -23,7 +23,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
@@ -108,7 +108,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
+  public PasswordEncoder passwordEncoder(JwtDecoder jwtDecoder) {
     return new BCryptPasswordEncoder();
   }
 
@@ -117,6 +117,11 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     if (httpLogProperties.isEnabled()) {
       registry.addInterceptor(requestLoggerInterceptor);
     }
+  }
+
+  @Bean
+  public JwtDecoder jwtDecoder() {
+    return JwtDecoders.fromOidcIssuerLocation("https://keycloak.local:8081/realms/LSADF");
   }
 
   //  @Bean
