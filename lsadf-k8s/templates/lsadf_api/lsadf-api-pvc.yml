@@ -5,7 +5,6 @@ metadata:
   labels:
     app: lsadf-api
 spec:
-  storageClassName: fast
   accessModes:
     - ReadWriteMany
   resources:
