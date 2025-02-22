@@ -118,37 +118,4 @@ public class SecurityConfiguration implements WebMvcConfigurer {
       registry.addInterceptor(requestLoggerInterceptor);
     }
   }
-
-  @Bean
-  public JwtDecoder jwtDecoder() {
-    return JwtDecoders.fromOidcIssuerLocation("https://keycloak.local:8081/realms/LSADF");
-  }
-
-  //  @Bean
-  //  public JwtDecoder jwtDecoder(KeycloakProperties keycloakProperties,
-  //                               OAuth2ResourceServerProperties oAuth2ResourceServerProperties) {
-  //    String issuerUri = oAuth2ResourceServerProperties.getJwt().getIssuerUri();
-  //    return new JwtMultiIssuerDecoder(issuerUri, keycloakProperties.getUrl());
-  //  }
-
-  //  @Primary
-  //  @Bean
-  //  public JwtDecoder jwtDecoder() {
-  //    NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder
-  //            .withIssuerLocation("http://keycloak:8081/auth/realms/LSADF")
-  //            .build();
-  //    jwtDecoder.setJwtValidator(
-  //            JwtValidators.createDefaultWithIssuer("http://keycloak:8081/auth/realms/LSADF")
-  //    );
-  //    return jwtDecoder;
-  //  }
-
-  //  @Bean
-  //  @Primary
-  //  public JwtDecoder jwtDecoder(
-  //      KeycloakProperties keycloakProperties,
-  //      OAuth2ResourceServerProperties oAuth2ResourceServerProperties) {
-  //    String issuerUri = oAuth2ResourceServerProperties.getJwt().getIssuerUri();
-  //    return new JwtMultiIssuerDecoder(issuerUri, keycloakProperties.getUrl());
-  //  }
 }
