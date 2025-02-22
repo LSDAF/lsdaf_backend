@@ -1,7 +1,7 @@
 
 
 up: secret ministart
-	helm upgrade --install local my-chart/ -f my-chart/values.yml -f my-chart/values-local.yml -f my-chart/values-secret.yml
+	helm upgrade --install local lsadf-k8s/ -f lsadf-k8s/values.yml -f lsadf-k8s/values-local.yml -f lsadf-k8s/values-secret.yml
 
 down:
 	helm uninstall local
@@ -26,4 +26,4 @@ minidelete: ministop
 
 
 monitorup: ministart
-	helm upgrade --install local my-chart/ -f my-chart/values.yml -f my-chart/values-monitor.yml -f my-chart/values-secret.yml
+	helm upgrade --install local lsadf-k8s/ -f lsadf-k8s/values.yml -f lsadf-k8s/values-monitor.yml -f lsadf-k8s/values-secret.yml
