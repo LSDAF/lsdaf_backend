@@ -22,4 +22,5 @@ spec:
                 name: redis-secret
           ports:
             - containerPort: 6379
+              name: http
 

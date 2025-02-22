@@ -18,14 +18,14 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
+              name: http
           envFrom:
             - secretRef:
                 name: postgres-secret
           volumeMounts:
-            - name: postgresdata
+            - name: postgres-storage
               mountPath: /var/lib/postgresql/data
-              subPath: data
       volumes:
-        - name: postgresdata
+        - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-volume-claim

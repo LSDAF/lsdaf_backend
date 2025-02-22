@@ -17,6 +17,7 @@ spec:
           image: redis/redisinsight:2.66-arm64
           ports:
             - containerPort: 8001
+              name: http
           envFrom:
             - configMapRef:
                 name: redisinsight-config
