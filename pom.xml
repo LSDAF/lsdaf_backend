@@ -103,7 +103,7 @@
                                         <argument>yaml</argument>
                                         <argument>-fvd</argument>
                                         <argument>${maven.multiModuleProjectDirectory}/env/env.properties</argument>
-                                        <argument>my-chart/values-secret.yaml</argument>
+                                        <argument>my-chart/values-secret.yml</argument>
                                     </arguments>
                                     <classpathScope>runtime</classpathScope>
                                 </configuration>
