@@ -7,7 +7,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 5432
+    - port: {{ .Values.POSTGRESQL_PORT }}
       name: http
       protocol: TCP
   selector:

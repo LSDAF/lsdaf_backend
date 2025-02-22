@@ -8,8 +8,8 @@ spec:
   type: NodePort
   ports:
     - protocol: TCP
-      port: 8001
-      nodePort: 31093
+      port: {{ .Values.REDISINSIGHT_PORT }}
+      nodePort: {{ .Values.REDISINSIGHT_NODE_PORT }}
       name: http
   selector:
     app: redisinsight

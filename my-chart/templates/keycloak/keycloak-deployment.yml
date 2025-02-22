@@ -18,11 +18,11 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:26.0.0-arm64
-          args: [ "start-dev", "--http-port", "8081" ]
+          args: [ "start-dev", "--http-port", "{{ .Values.KEYCLOAK_PORT}}" ]
           envFrom:
             - secretRef:
                 name: keycloak-secret
           ports:
             - name: http
-              containerPort: 8081
+              containerPort: {{ .Values.KEYCLOAK_PORT }}
 {{ end }}

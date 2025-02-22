@@ -7,6 +7,6 @@ spec:
     app: lsadf-api
   ports:
     - protocol: TCP
-      port: 8080
+      port: {{ .Values.LSADF_API_PORT }}
       name: http
   type: ClusterIP

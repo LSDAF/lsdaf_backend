@@ -9,5 +9,5 @@ spec:
     - protocol: TCP
       port: 80
       name: http
-      nodePort: 31092
+      nodePort: {{ .Values.PGADMIN_NODE_PORT }}
   type: NodePort

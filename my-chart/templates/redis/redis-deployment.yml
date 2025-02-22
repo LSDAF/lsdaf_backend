@@ -22,6 +22,6 @@ spec:
             - secretRef:
                 name: redis-secret
           ports:
-            - containerPort: 6379
+            - containerPort: {{ .Values.REDIS_PORT }}
               name: http
 {{ end }}

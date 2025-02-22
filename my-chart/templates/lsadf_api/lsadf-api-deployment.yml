@@ -14,7 +14,7 @@ spec:
         app: lsadf-api
     spec:
       hostAliases:
-        - ip: "192.168.49.2"
+        - ip: {{ .Values.K8S_IP }}
           hostnames:
             - "keycloak.local"
       containers:
@@ -28,7 +28,7 @@ spec:
             - secretRef:
                 name: lsadf-api-secret
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.LSADF_API_PORT }}
               name: http
           volumeMounts:
             - mountPath: /app/logs

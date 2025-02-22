@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: redisinsight-config
 data:
-  RI_APP_PORT: "8001"
+  RI_APP_PORT: "{{ .Values.REDISINSIGHT_PORT }}"
