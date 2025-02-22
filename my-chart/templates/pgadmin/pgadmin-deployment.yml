@@ -1,4 +1,4 @@
----
+{{ if .Values.pgadmin.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,4 +25,4 @@ spec:
           ports:
             - containerPort: 80
               name: http
-
+{{ end }}

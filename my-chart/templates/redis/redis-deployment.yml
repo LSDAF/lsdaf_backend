@@ -1,3 +1,4 @@
+{{ if .Values.redis.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,11 +17,11 @@ spec:
         - name: redis
           image: redis:7.4.0-alpine
           command: [ "/bin/sh" ]
-          args: [ "-c", "redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli -a $$REDIS_PASSWORD config set notify-keyspace-events KEA && sleep infinity"]
+          args: [ "-c", "redis-server --daemonize yes --requirepass $$REDIS_PASSWORD && redis-cli -a $$REDIS_PASSWORD config set notify-keyspace-events KEA && sleep infinity" ]
           envFrom:
             - secretRef:
                 name: redis-secret
           ports:
             - containerPort: 6379
               name: http
-
+{{ end }}

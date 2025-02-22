@@ -1,3 +1,4 @@
+{{ if .Values.lsadf_api.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,6 +13,10 @@ spec:
       labels:
         app: lsadf-api
     spec:
+      hostAliases:
+        - ip: "192.168.49.2"
+          hostnames:
+            - "keycloak.local"
       containers:
         - name: lsadf-api
           image: lsadf/lsadf-api-dev-arm64:latest
@@ -24,6 +29,7 @@ spec:
                 name: lsadf-api-secret
           ports:
             - containerPort: 8080
+              name: http
           volumeMounts:
             - mountPath: /app/logs
               name: lsadf-api-volume
@@ -31,3 +37,4 @@ spec:
         - name: lsadf-api-volume
           persistentVolumeClaim:
             claimName: lsadf-api-volume-claim
+{{ end }}
