@@ -1,3 +1,6 @@
+server:
+  port: ${LSADF_ADMIN_API_PORT}
+
 db:
   url: ${DB_URL_DOCKER}
 
@@ -11,4 +14,11 @@ cache:
 keycloak:
   url: ${KEYCLOAK_URI_DOCKER}
   admin-url: ${KEYCLOAK_ADMIN_URI_DOCKER}
+  issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
 
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri}

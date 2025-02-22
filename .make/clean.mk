@@ -1,7 +1,7 @@
 clean:
 	@mvn clean
 
-prune:
+prune: minidelete
 	@docker system prune -a -f
 	@docker image prune -f
 

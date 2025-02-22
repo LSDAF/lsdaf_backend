@@ -88,7 +88,7 @@ services:
       - backend
 
   redisinsight:
-    image: redis/redisinsight:latest
+    image: redis/redisinsight:2.66
     container_name: redisinsight
     env_file: env/env.properties
     environment:
