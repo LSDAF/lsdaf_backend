@@ -1,0 +1,14 @@
+postgres:
+  enabled: false
+redis:
+  enabled: false
+redisinsight:
+  enabled: false
+pgadmin:
+  enabled: false
+keycloak:
+  enabled: false
+lsadf_api:
+  enabled: false
+lsadf_admin_api:
+  enabled: false

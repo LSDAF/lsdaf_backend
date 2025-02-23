@@ -51,6 +51,7 @@
         <google-java-format.version>1.25.0</google-java-format.version>
         <vaadin.version>24.5.7</vaadin.version>
         <flyway.version>11.1.0</flyway.version>
+        <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
     </properties>
 
     <build>
@@ -64,4 +65,52 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>generate-yaml-secret</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>generate-yaml-secret</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.lsadf</groupId>
+                    <artifactId>yaproc</artifactId>
+                    <version>0.0.1-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>run-shaded-jar</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.lsadf.yaproc.YaprocApplication</mainClass>
+                                    <arguments>
+                                        <argument>yaml</argument>
+                                        <argument>-fvd</argument>
+                                        <argument>${maven.multiModuleProjectDirectory}/env/env.properties</argument>
+                                        <argument>lsadf-k8s/values-secret.yml</argument>
+                                    </arguments>
+                                    <classpathScope>runtime</classpathScope>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
