@@ -15,11 +15,15 @@ spec:
     spec:
       containers:
         - name: redisinsight
-          image: redis/redisinsight:2.66-arm64
+          image: {{ .Values.REDISINSIGHT_DOCKER_IMAGE }}
           ports:
             - containerPort: {{ .Values.REDISINSIGHT_PORT }}
               name: http
           envFrom:
             - configMapRef:
                 name: redisinsight-config
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: "50m"
 {{ end }}

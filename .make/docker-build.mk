@@ -23,3 +23,6 @@ build-admin: install-docker admin-install
 
 build-admin-dev: install-docker admin-install
 	COMPOSE_PROFILES=backend_admin_dev docker-compose --env-file env/env.properties -f dc-local.yml build
+
+build-api-ghcr: install-no-env
+	docker build -t ghcr.io/lsdaf/lsadf_api:latest -f docker/Dockerfile . --build-arg module_folder=lsadf_api

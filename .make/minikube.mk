@@ -1,10 +1,9 @@
 
 
-up: secret ministart
-	helm upgrade --install local lsadf-k8s/ -f lsadf-k8s/values.yml -f lsadf-k8s/values-local.yml -f lsadf-k8s/values-secret.yml
+miniup: secret ministart helmup
 
-down:
-	helm uninstall local
+minidown:
+	helm uninstall lsadf
 
 
 miniload:
@@ -13,7 +12,8 @@ miniload:
         minikube image load lsadf/lsadf-api-dev-arm64:latest
 
 ministart:
-	minikube start --driver=docker --container-runtime=containerd --cpus=4 --memory=8192 --disk-size=20g --addons ingress
+	minikube start --driver=docker --container-runtime=containerd --cpus=2 --memory=2048 --disk-size=5g --addons ingress
+	minikube addons enable metrics-server
 	make build-api-dev build-keycloak build-redisinsight
 	make miniload
 
@@ -25,5 +25,4 @@ minidelete: ministop
 	minikube delete --all --purge
 
 
-monitorup: ministart
-	helm upgrade --install local lsadf-k8s/ -f lsadf-k8s/values.yml -f lsadf-k8s/values-monitor.yml -f lsadf-k8s/values-secret.yml
+monitorup: ministart helmup

@@ -19,8 +19,8 @@ spec:
             - "keycloak.local"
       containers:
         - name: lsadf-api
-          image: lsadf/lsadf-api-dev-arm64:latest
-          imagePullPolicy: Never
+          image: {{ .Values.LSADF_API_DOCKER_IMAGE }}
+          imagePullPolicy: Always
           env:
             - name: SLEEP_ENABLED
               value: "true"
@@ -33,6 +33,10 @@ spec:
           volumeMounts:
             - mountPath: /app/logs
               name: lsadf-api-volume
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
       volumes:
         - name: lsadf-api-volume
           persistentVolumeClaim:
